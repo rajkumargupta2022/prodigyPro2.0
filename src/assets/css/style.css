@@ -5,11 +5,6 @@ body{
 
 }
 
-.row>* {
-  padding-right: 0;
-  padding-left: 0;
-}
-
 .login_hight_fixed{
   height: 100vh;
 }
@@ -35,3 +30,21 @@ p {
       height: 36px;
     }
    
+    /* form personal Details style sart  */
+.personal_form_container{
+max-width: 1050px;
+margin: 0 auto;
+}
+
+.form_shadow{
+  box-shadow: rgba(0, 0, 0, 0.09) 0px 3px 12px;
+}
+
+.breadcrumb-item + .breadcrumb-item::before{
+  content: ">";
+  padding: 0 5px;
+  color: #6c757d;
+  background-color:#F2F4FB";
+}
+
+    /* form  personal Details style end  */
