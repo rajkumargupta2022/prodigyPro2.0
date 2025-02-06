@@ -2,7 +2,7 @@ body{
   margin: 0px;
   padding: 0px;
   font-family: Tahoma, Verdana, sans-serif;
-
+  background-color: #F6F8FA;
 }
 
 .login_hight_fixed{
@@ -59,6 +59,7 @@ margin: 0 auto;
 
   .fs12px{
     font-size: 12px;
+    color: #6c757d;
   }
   .otpBox {
     width: 40px;
@@ -77,3 +78,17 @@ margin: 0 auto;
   }
     
    
+.back_absolute_btn{
+  position: absolute;
+  top: -50%;
+  color: #011EFE;
+}
+.congratesColor{
+  color:#06A358 ;
+}
+.errorColor{
+  color: #CB414E;
+  /* font-size: small; */
+  font-size: 12px;
+}
+

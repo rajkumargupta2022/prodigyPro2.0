@@ -20,3 +20,19 @@
     height: 60px;
   }
 }
+@media (min-width: 1400px) and (max-width: 2560px) {
+  .back_absolute_btn{
+    top: -35%;
+  }
+}
+@media (min-width: 1000px) and (max-width: 1300px) {
+  .back_absolute_btn{
+    top: -35%;
+  }
+}
+@media only screen and (max-width: 1000px) {
+  .back_absolute_btn{
+    top: 5%;
+  }
+}
+
