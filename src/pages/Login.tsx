@@ -1,16 +1,11 @@
-import LeftImage from "../assets/img/leftLogin.png"
 import Logo from "../assets/img/logo/logo.png"
+import LoginLeftImage from "../components/LoginLeftImage"
 const Login = () => {
   return (
 
     <div className="container-fluid">
       <div className="row">
-        <div className="col-md-6 col-12 hideImage">
-          <div className="leftLogin">
-            <img className="w-100 login_hight_fixed" src={LeftImage} alt="leftLogin" />
-          </div>
-        </div>
-
+       <LoginLeftImage/>
         <div className="col-12 col-md-6 align-self-center">
           <div className="mrgin_With20">
             <img src={Logo} alt="" className="logoImage"/>

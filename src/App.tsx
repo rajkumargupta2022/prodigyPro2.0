@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./pages/Login";
 import "./assets/css/style.css"
 import "./assets/css/media.css"
+import Otp from "./pages/Otp";
 
 function App() {
   const [count, setCount] = useState<number>(0);
@@ -12,8 +13,8 @@ function App() {
     <>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Login />}>
-          </Route>
+          <Route path="/" element={<Login />}/>
+          <Route path="/otp" element={<Otp />}/>
         </Routes>
       </BrowserRouter>
     </>
