@@ -8,6 +8,7 @@ import BankDetails from "./pages/Bank-Details";
 import NominationDetails from "./pages/Nomination-details";
 import "./assets/css/style.css";
 import "./assets/css/media.css";
+import Otp from "./pages/Otp";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="/address-details" element={<AddressDetails />} />
           <Route path="/bank-details" element={<BankDetails />} />
           <Route path="/nomination-details" element={<NominationDetails />} />
+          <Route path="/otp" element={<Otp />} />
         </Routes>
       </BrowserRouter>
     </>
