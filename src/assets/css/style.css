@@ -48,3 +48,32 @@ margin: 0 auto;
 }
 
     /* form  personal Details style end  */
+
+    .logoImage{
+      width: 250px;
+    }
+    .mobileIcon{
+      height: 70px;
+      margin-bottom: 30px;
+    }
+
+  .fs12px{
+    font-size: 12px;
+  }
+  .otpBox {
+    width: 40px;
+    height: 45px;
+    font-size: 15px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    margin: 0 8px; /* Adds spacing between OTP boxes */
+    outline: none;
+  }
+  
+  .otpBox:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  }
+    
+   
