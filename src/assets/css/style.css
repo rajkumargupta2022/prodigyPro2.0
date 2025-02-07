@@ -1,8 +1,15 @@
 body{
   margin: 0px;
   padding: 0px;
-  font-family: Tahoma, Verdana, sans-serif;
+  /* font-family: Tahoma, Verdana, sans-serif; */
+  /* font-family: 'Inter', sans-serif; */
+  font-family: 'Inter', 'Poppins', sans-serif;
   background-color: #F6F8FA;
+
+
+  /* background-color: #0d0d0d; */
+
+  
 }
 
 .login_hight_fixed{
@@ -15,7 +22,7 @@ body{
 }
 
 p {
-  font-family: Tahoma, Verdana, sans-serif;
+  font-family: Tahoma, Verdana, sans-serif !important;
   color: #646464;
   }
   .fontFamily{
@@ -47,6 +54,40 @@ margin: 0 auto;
   background-color:#F2F4FB";
 }
 
+.declaration-button {
+  border-radius: 15px;
+  margin-right: 1%;
+  color: #011efe;
+}
+
+
+.custom-checkbox {
+  width: 24px;
+  height: 24px;
+  border: 2px solid #007bff; /* Bootstrap primary color */
+  transition: all 0.2s ease-in-out;
+  display: inline-block;
+  position: relative;
+
+}
+
+.custom-checkbox:checked {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.custom-checkbox:checked::after {
+  content: "";
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+    /* form  personal Details style end  */
     /* form  personal Details style end  */
 
     .logoImage{
@@ -91,4 +132,21 @@ margin: 0 auto;
   /* font-size: small; */
   font-size: 12px;
 }
+.textColor{
+  color: #6c757d;
+}
+.errorColor2{
+  color: #CB414E;
+}
+.negativeMargin{
+   margin-top: -5%;
+}
+.adjustText{
+  font-size: 12px;
+  margin: 6px;
+}
+.crPointer{
+  cursor: pointer;
+}
+
 

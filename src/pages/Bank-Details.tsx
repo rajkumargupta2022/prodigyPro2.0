@@ -2,7 +2,7 @@ import NavBar from "../components/Navbar";
 import NextBar from "../components/Next-bar";
 import Breadcrumb from "react-bootstrap/Breadcrumb";
 
-const PersonalDetails = () => {
+const BankDetails = () => {
   return (
     <>
       <NavBar />
@@ -20,20 +20,20 @@ const PersonalDetails = () => {
       </div>
       <div className="container pt-5">
         <div className="personal_form_container pt-4">
-          <h3 className="mb-4 text-dark fw-bolder">Personal Details</h3>
+          <h3 className="mb-4 text-dark fw-bolder">Bank Details</h3>
           <form className="bg-white px-5 py-4 rounded form_shadow">
             {/* First Name & Last Name */}
 
             <div className="row mb-3">
               <div className="col-md-6">
                 <label className="form-label fw-light text-secondary">
-                  FULL NAME
+                  ACCOUNT NUMBER
                 </label>
                 <input type="text" name="fullname" className="form-control" />
               </div>
               <div className="col-md-6">
                 <label className="form-label fw-light text-secondary">
-                  EMAIL ADDRESS
+                  RE-ENTER ACCOUNT NUMBER
                 </label>
                 <input type="email" name="email" className="form-control" />
               </div>
@@ -42,19 +42,43 @@ const PersonalDetails = () => {
             {/* Email & Phone */}
             <div className="row mb-3">
               <div className="col-md-6">
-                <label className="form-label fw-light text-secondary">
-                  EMAIL RELATION
+                <span className="mt-2 fw-light text-secondary">
+                  RESIDENT STATUS
+                </span>
+                <br />
+                <input
+                  type="radio"
+                  className="btn-check"
+                  name="a2"
+                  id="option11"
+                  autoComplete="off"
+                />
+                <label
+                  className="btn btn-outline-primary declaration-button"
+                  htmlFor="option11"
+                >
+                  Saving Account
                 </label>
-                <select name="email_relation" className="form-select">
-                  <option value="">Choose...</option>
-                  <option value="self">SELF</option>
-                </select>
+
+                <input
+                  type="radio"
+                  className="btn-check"
+                  name="a2"
+                  id="option11"
+                  autoComplete="off"
+                />
+                <label
+                  className="btn btn-outline-primary declaration-button"
+                  htmlFor="option11"
+                >
+                  Current Account
+                </label>
               </div>
               <div className="col-md-6">
                 <label className="form-label fw-light text-secondary">
-                  MOBILE NO
+                  IFSC CODE
                 </label>
-                <input type="tel" name="phone" className="form-control" />
+                <input type="text" name="pob" className="form-control" />
               </div>
             </div>
 
@@ -62,37 +86,15 @@ const PersonalDetails = () => {
             <div className="row mb-3">
               <div className="col-md-6">
                 <label className="form-label fw-light text-secondary">
-                  MOBILE RELATION
-                </label>
-                <select name="mobile_relation" className="form-select">
-                  <option value="">Choose...</option>
-                  <option value="selg">SELF</option>
-                </select>
-              </div>
-              <div className="col-md-6">
-                <label className="form-label fw-light text-secondary">
-                  DATE OF BIRTH
-                </label>
-                <input type="date" name="dob" className="form-control" />
-              </div>
-            </div>
-
-            <div className="row mb-3">
-              <div className="col-md-6">
-                <label className="form-label fw-light text-secondary">
-                  PLACE OF BIRTH
+                  BANK
                 </label>
                 <input type="text" name="pob" className="form-control" />
               </div>
-
               <div className="col-md-6">
                 <label className="form-label fw-light text-secondary">
-                  OCCUPATION
+                  BRANCH
                 </label>
-                <select name="occupation" className="form-select">
-                  <option value="">Choose...</option>
-                  <option value="example">example</option>
-                </select>
+                <input type="text" name="pob" className="form-control" />
               </div>
             </div>
           </form>
@@ -103,4 +105,4 @@ const PersonalDetails = () => {
   );
 };
 
-export default PersonalDetails;
+export default BankDetails;

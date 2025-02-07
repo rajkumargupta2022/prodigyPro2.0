@@ -2,7 +2,7 @@ import NavBar from "../components/Navbar";
 import NextBar from "../components/Next-bar";
 import Breadcrumb from "react-bootstrap/Breadcrumb";
 
-const PersonalDetails = () => {
+const NominationDetails = () => {
   return (
     <>
       <NavBar />
@@ -20,54 +20,16 @@ const PersonalDetails = () => {
       </div>
       <div className="container pt-5">
         <div className="personal_form_container pt-4">
-          <h3 className="mb-4 text-dark fw-bolder">Personal Details</h3>
+          <h3 className="mb-4 text-dark fw-bolder">Nomination Details</h3>
           <form className="bg-white px-5 py-4 rounded form_shadow">
             {/* First Name & Last Name */}
 
             <div className="row mb-3">
               <div className="col-md-6">
                 <label className="form-label fw-light text-secondary">
-                  FULL NAME
+                  NAME
                 </label>
                 <input type="text" name="fullname" className="form-control" />
-              </div>
-              <div className="col-md-6">
-                <label className="form-label fw-light text-secondary">
-                  EMAIL ADDRESS
-                </label>
-                <input type="email" name="email" className="form-control" />
-              </div>
-            </div>
-
-            {/* Email & Phone */}
-            <div className="row mb-3">
-              <div className="col-md-6">
-                <label className="form-label fw-light text-secondary">
-                  EMAIL RELATION
-                </label>
-                <select name="email_relation" className="form-select">
-                  <option value="">Choose...</option>
-                  <option value="self">SELF</option>
-                </select>
-              </div>
-              <div className="col-md-6">
-                <label className="form-label fw-light text-secondary">
-                  MOBILE NO
-                </label>
-                <input type="tel" name="phone" className="form-control" />
-              </div>
-            </div>
-
-            {/* Country & State */}
-            <div className="row mb-3">
-              <div className="col-md-6">
-                <label className="form-label fw-light text-secondary">
-                  MOBILE RELATION
-                </label>
-                <select name="mobile_relation" className="form-select">
-                  <option value="">Choose...</option>
-                  <option value="selg">SELF</option>
-                </select>
               </div>
               <div className="col-md-6">
                 <label className="form-label fw-light text-secondary">
@@ -77,22 +39,30 @@ const PersonalDetails = () => {
               </div>
             </div>
 
+            {/* Email & Phone */}
             <div className="row mb-3">
               <div className="col-md-6">
                 <label className="form-label fw-light text-secondary">
-                  PLACE OF BIRTH
+                  RELATIONSHIP
                 </label>
-                <input type="text" name="pob" className="form-control" />
+                <select name="email_relation" className="form-select">
+                  <option value="">Choose...</option>
+                  <option value="self">SELF</option>
+                </select>
               </div>
-
               <div className="col-md-6">
                 <label className="form-label fw-light text-secondary">
-                  OCCUPATION
+                  ALLOCATION PERCENTAGE
                 </label>
-                <select name="occupation" className="form-select">
-                  <option value="">Choose...</option>
-                  <option value="example">example</option>
-                </select>
+                <input type="tel" name="phone" className="form-control" />
+              </div>
+            </div>
+
+            {/* Country & State */}
+
+            <div className="row  mb-3">
+              <div className="col-md-6">
+                <button className="btn btn-primary"> Add Nominee</button>
               </div>
             </div>
           </form>
@@ -103,4 +73,4 @@ const PersonalDetails = () => {
   );
 };
 
-export default PersonalDetails;
+export default NominationDetails;
