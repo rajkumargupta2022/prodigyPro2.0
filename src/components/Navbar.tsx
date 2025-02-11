@@ -1,5 +1,5 @@
 import { Navbar, Container, Nav } from "react-bootstrap";
-import { QuestionCircle, Person } from "react-bootstrap-icons";
+import { QuestionCircle, Person, Bell, ChevronDown, HouseExclamation, HouseDoor } from "react-bootstrap-icons";
 import logo from "../assets/img/logo/logo.png";
 
 const MyNavbar = () => {
@@ -16,12 +16,31 @@ const MyNavbar = () => {
         </Navbar.Brand>
 
         {/* Icons on the right */}
+
         <Nav className="ms-auto d-flex align-items-center">
+          <Nav.Link href="#" >
+            <HouseDoor size={20}className="marginNavbar" /> <small >Home</small>
+          </Nav.Link>
+          <Nav.Link href="#" >
+            <HouseDoor size={20} />  <small>Explore</small>
+          </Nav.Link>
+          <Nav.Link href="#" >
+            <HouseDoor size={20} />  <small>Portfolio</small>
+          </Nav.Link>
+          <Nav.Link href="#" >
+            <HouseDoor size={20} /> <small>Account</small>
+          </Nav.Link>
           <Nav.Link href="#">
             <QuestionCircle size={24} />
           </Nav.Link>
           <Nav.Link href="#">
+            <Bell size={24} />
+          </Nav.Link>
+          <Nav.Link href="#">
             <Person size={24} />
+          </Nav.Link>
+          <Nav.Link href="#" className="profileNameSize">
+            Rajkumar Gupta <ChevronDown />
           </Nav.Link>
         </Nav>
       </Container>
