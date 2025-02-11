@@ -1,19 +1,29 @@
 import MyNavbar from "../components/Navbar";
+import correct from "../assets/img/correct.png";
+import group from "../assets/img/Group.png";
 
 const SuccessPage = () => {
   return (
     <>
       <MyNavbar />
-      <div className="d-flex justify-content-center align-items-center vh-100">
+      <div className="d-flex justify-content-center align-items-center mt-2 mb-2">
         <div
           className="bg-primary text-white text-center p-5 rounded-4 shadow-lg"
-          style={{ maxWidth: "500px" }}
+          style={{ maxWidth: "600px" }}
         >
-          <div className="mb-3">
-            <div className="d-inline-block p-3 bg-white rounded-circle">
-              <span className="text-primary fs-3">✔</span>
-            </div>
+          {/* Image Wrapper */}
+          <div className="position-relative d-inline-block">
+            {/* Background Image */}
+            <img src={group} alt="Group" className="img-fluid" />
+            {/* Overlay Image */}
+            <img
+              src={correct}
+              alt="Correct Symbol"
+              className="position-absolute top-50 start-50 translate-middle"
+              style={{ width: "50px", height: "50px" }} // Adjust size as needed
+            />
           </div>
+
           <h2>Congratulations!</h2>
           <p className="text-white">
             Your IIN application has been submitted successfully.
