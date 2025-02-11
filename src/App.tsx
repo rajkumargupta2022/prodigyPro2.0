@@ -6,6 +6,11 @@ import Declaration from "./pages/Declaration";
 import AddressDetails from "./pages/Address-details";
 import BankDetails from "./pages/Bank-Details";
 import NominationDetails from "./pages/Nomination-details";
+import ProofIdentity from "./pages/proof-identity";
+import ProofIdentity2 from "./pages/proof-identity2";
+import DigitalSignature from "./pages/digital-signature";
+import E_Sign from "./pages/e-sign";
+import SuccessPage from "./pages/congratulation";
 import "./assets/css/style.css";
 import "./assets/css/media.css";
 import Otp from "./pages/Otp";
@@ -22,6 +27,11 @@ function App() {
           <Route path="/bank-details" element={<BankDetails />} />
           <Route path="/nomination-details" element={<NominationDetails />} />
           <Route path="/otp" element={<Otp />} />
+          <Route path="/proof-identity" element={<ProofIdentity />} />
+          <Route path="/proof-identity2" element={<ProofIdentity2 />} />
+          <Route path="/digital-signature" element={<DigitalSignature />} />
+          <Route path="/e-sign" element={<E_Sign />} />
+          <Route path="/congratulation" element={<SuccessPage />} />
         </Routes>
       </BrowserRouter>
     </>

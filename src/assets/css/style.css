@@ -110,4 +110,14 @@ margin: 0 auto;
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
   }
     
-   
+  .uploader { 
+    border: 1px solid #D3D3D3;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    height: 300px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+  }
