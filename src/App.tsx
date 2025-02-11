@@ -11,6 +11,7 @@ import "./assets/css/media.css";
 import Otp from "./pages/Otp";
 import PanVarification from "./pages/PanVarification";
 import Dashboard from "./pages/Dashboard";
+import Explore from "./pages/Explore";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
           <Route path="/bank-details" element={<BankDetails />} />
           <Route path="/nomination-details" element={<NominationDetails />} />
           <Route path="/otp" element={<Otp />} />
+          <Route path="/explore" element={< Explore/>} />
         </Routes>
       </BrowserRouter>
     </>
