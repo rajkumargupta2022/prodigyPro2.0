@@ -16,6 +16,7 @@ import "./assets/css/media.css";
 import Otp from "./pages/Otp";
 import PanVarification from "./pages/PanVarification";
 import Dashboard from "./pages/Dashboard";
+import Explore from "./pages/Explore";
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
           <Route path="/digital-signature" element={<DigitalSignature />} />
           <Route path="/e-sign" element={<E_Sign />} />
           <Route path="/congratulation" element={<SuccessPage />} />
+          <Route path="/explore" element={< Explore/>} />
         </Routes>
       </BrowserRouter>
     </>
