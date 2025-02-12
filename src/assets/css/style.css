@@ -118,6 +118,7 @@ margin: 0 auto;
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
   }
     
+<<<<<<< HEAD
    
 .back_absolute_btn{
   position: absolute;
@@ -150,3 +151,16 @@ margin: 0 auto;
 }
 
 
+=======
+  .uploader { 
+    border: 1px solid #D3D3D3;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    height: 300px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+  }
+>>>>>>> f017b81edc4c5d9410a927f5b98fae85ce4008be
