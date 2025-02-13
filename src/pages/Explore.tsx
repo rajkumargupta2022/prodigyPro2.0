@@ -3,8 +3,14 @@ import Breadcrumb from "react-bootstrap/Breadcrumb";
 import icici from "../assets/img/bank-logo/icici.png"
 import { ChevronRight } from "react-bootstrap-icons";
 import { Link } from "react-router-dom";
+import { useState } from "react";
+import SchemeDetails from "../components/SchemeDetails";
 
 const Explore = () => {
+  const [openSchemeDetail,setOpenSchemeDetail] = useState<boolean>(false)
+  const handleSchemeDetail = ()=>{
+    setOpenSchemeDetail(true)
+  }
   return (
     <>
       <NavBar />
@@ -73,9 +79,10 @@ const Explore = () => {
             </div>
           </div>
           <Link className="logoBlueColor text-decoration-none mt-4" to="#">+ Add New Fund</Link><br/>
-          <button type="button"  className="customButton mt-2 px-2">Continue</button>
+          <button type="button"  className="customButton mt-2 px-2" onClick={handleSchemeDetail}>Continue</button>
         </div>
       </div>
+      <SchemeDetails show={openSchemeDetail} setShow={setOpenSchemeDetail}/>
     </>
   );
 };

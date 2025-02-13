@@ -5,13 +5,22 @@ body{
   /* font-family: 'Inter', sans-serif; */
   font-family: 'Inter', 'Poppins', sans-serif;
   background-color: #F6F8FA;
-
-
-  /* background-color: #0d0d0d; */
-
-  
 }
-
+.logobg_color{
+  background-color: #011EFE;
+  color: #fff !important;
+}
+.modal-bg{
+  background-color: #F6F8FA;
+  border: none !important;
+}
+.scheme-bg{
+  background-color: #E6E8FF !important;
+  color: #4D4D4D;
+}
+link{
+  color: #011EFE;
+}
 .login_hight_fixed{
   height: 100vh;
 }
@@ -43,6 +52,30 @@ p {
       height: 33px;
       font-size: 12px;
     }
+    .customButton:hover{
+      color: #FFF;
+      background-color: #011EFE;
+      border-radius: 9px;
+      border: none;
+      height: 33px;
+      font-size: 12px;
+    }
+    .customCancelButton{
+      color: #011EFE;
+      background-color: #FFF;
+      border-radius: 9px;
+      border:1px solid #D0DBEA;
+      height: 33px;
+      font-size: 12px;
+    }
+    .customCancelButton:hover{
+      color: #011EFE;;
+      background-color: #FFF;
+      border-radius: 9px;
+      border:1px solid #D0DBEA;
+      height: 33px;
+      font-size: 12px;
+    }
    
     /* form personal Details style sart  */
 .personal_form_container{
@@ -67,7 +100,7 @@ margin: 0 auto;
   color: #011efe;
 }
 .logoBlueColor{
-  color: #011efe;
+  color: #011efe !important;
 }
 
 .custom-checkbox {
@@ -127,7 +160,6 @@ margin: 0 auto;
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
   }
     
-<<<<<<< HEAD
    
 .back_absolute_btn{
   position: absolute;
@@ -180,6 +212,25 @@ margin: 0 auto;
   font-size: 12px;
   border: none;
 }
+.shortcutValue{
+  background-color: #fff;
+  color: #011EFE !important;
+  height: 25px ;
+  padding: 0 8px ;
+  border-radius: 20px;
+  font-size: 12px;
+  border: 1px solid #D0DBEA;
+}
+.shortcutValue:hover{
+  background-color: #011EFE;
+  color: #fff !important;
+  height: 25px ;
+  padding: 0 8px ;
+  border-radius: 20px;
+  font-size: 12px;
+  border:1px solid #D0DBEA;
+}
+
 .contactSupportButton{
   background-color: #011EFE !important;
   color: #FFF;
@@ -259,19 +310,53 @@ margin: 0 auto;
 }
 
 
+.modal-header,
+.modal-footer {
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.monthly_btn{
+  font-size: 13px;
+  padding: 5px 3px;
+  line-height: 20.16px;
+  font-weight: 100;
+  border-radius: 12px;
+  color: #011EFE;
+}
 
 
+.prod_icon_heading h4{
+  font-size: 15px;
+  font-weight: 500;
+  margin-bottom: 0;
+  color: #000;
+}
+.prod_icon_heading p{
+  font-size: 12px;
+  font-weight: 100;
+  margin-bottom: 0;
+}
 
-=======
-  .uploader { 
-    border: 1px solid #D3D3D3;
-    padding: 20px;
-    text-align: center;
-    cursor: pointer;
-    height: 300px;
-    border-radius: 10px;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-  }
->>>>>>> f017b81edc4c5d9410a927f5b98fae85ce4008be
+hr {
+  margin: 0.9rem 0 !important;
+  color: #696c6e !important;
+}
+
+.prod_view_fund div{
+font-size: 13px;
+font-weight: 500;
+}
+.dateIcon{
+  font-size: larger !important;
+}
+.footerRadius{
+  border-radius: 0 0 10px 10px;
+}
+.headerRadius{
+  border-radius: 10px 10px 0 0;
+}
+.buttunCenter{
+  display: block;
+  margin: auto;
+}
