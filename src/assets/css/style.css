@@ -360,3 +360,51 @@ font-weight: 500;
   display: block;
   margin: auto;
 }
+  .uploader { 
+    border: 1px solid #D3D3D3;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    height: 300px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  .add_family_layout {
+    margin-left: 12%;
+    margin-right: 12%;
+    margin-top: 2%;
+  }
+
+  .sideBarAddFamily {
+    border-radius: 2%;
+  }
+
+  .active-nav {
+    background-color: #f8f9ff;
+    position: relative;
+  }
+  
+
+
+  .active > a {
+    color:#0b5ed7;
+    border-left: 2px solid #808eff;
+    font-weight: 800;
+  }
+
+
+
+  .nav-link {
+    display: block;
+    padding: var(--bs-nav-link-padding-y) var(--bs-nav-link-padding-x);
+    font-size: var(--bs-nav-link-font-size);
+    font-weight: var(--bs-nav-link-font-weight);
+    color: black;
+    text-decoration: none;
+    background: 0 0;
+    border: 0;
+    transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out;
+}

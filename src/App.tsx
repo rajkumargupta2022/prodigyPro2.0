@@ -17,6 +17,7 @@ import Otp from "./pages/Otp";
 import PanVarification from "./pages/PanVarification";
 import Dashboard from "./pages/Dashboard";
 import Explore from "./pages/Explore";
+import AddFamilyMember from "./pages/Add-family-member";
 
 function App() {
   return (
@@ -25,8 +26,8 @@ function App() {
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/personal-details" element={<PersonalDetails />} />
-          <Route path="/pan-varification" element={<PanVarification />}/>
-          <Route path="/dashboard" element={<Dashboard />}/>
+          <Route path="/pan-varification" element={<PanVarification />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/declaration" element={<Declaration />} />
           <Route path="/address-details" element={<AddressDetails />} />
           <Route path="/bank-details" element={<BankDetails />} />
@@ -37,7 +38,8 @@ function App() {
           <Route path="/digital-signature" element={<DigitalSignature />} />
           <Route path="/e-sign" element={<E_Sign />} />
           <Route path="/congratulation" element={<SuccessPage />} />
-          <Route path="/explore" element={< Explore/>} />
+          <Route path="/explore" element={<Explore />} />
+          <Route path="/add-family-member" element={<AddFamilyMember />} />
         </Routes>
       </BrowserRouter>
     </>
