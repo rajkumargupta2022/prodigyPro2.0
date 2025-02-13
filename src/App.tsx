@@ -14,6 +14,7 @@ import SuccessPage from "./pages/congratulation";
 import "./assets/css/style.css";
 import "./assets/css/media.css";
 import Otp from "./pages/Otp";
+import AddFamilyMember from "./pages/Add-family-member";
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
           <Route path="/digital-signature" element={<DigitalSignature />} />
           <Route path="/e-sign" element={<E_Sign />} />
           <Route path="/congratulation" element={<SuccessPage />} />
+          <Route path="/add-family-member" element={<AddFamilyMember />} />
         </Routes>
       </BrowserRouter>
     </>
