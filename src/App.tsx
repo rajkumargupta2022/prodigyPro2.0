@@ -16,6 +16,7 @@ import "./assets/css/style.css";
 import "./assets/css/media.css";
 import Otp from "./pages/Otp";
 import AddFamilyMember from "./pages/Add-family-member";
+import BankDetailsVarification from "./pages/bank-details-varification";
 
 function App() {
   return (
@@ -36,6 +37,10 @@ function App() {
           <Route path="/congratulation" element={<SuccessPage />} />
           <Route path="/add-family-member" element={<AddFamilyMember />} />
           <Route path="/kyc-status-check" element={<KycStatusCheck />} />
+          <Route
+            path="/bank-details-varification"
+            element={<BankDetailsVarification />}
+          />
         </Routes>
       </BrowserRouter>
     </>
