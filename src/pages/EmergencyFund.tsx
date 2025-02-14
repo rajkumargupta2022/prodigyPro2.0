@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import SchemeDetails from "../components/SchemeDetails";
 
-const Explore = () => {
+const EmergencyFund = () => {
   const [openSchemeDetail,setOpenSchemeDetail] = useState<boolean>(false)
   const handleSchemeDetail = ()=>{
     setOpenSchemeDetail(true)
@@ -87,4 +87,4 @@ const Explore = () => {
   );
 };
 
-export default Explore;
+export default EmergencyFund;

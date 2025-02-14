@@ -37,20 +37,22 @@ const BankMandate: React.FC<bankMandate> = ({ show, setShow }) => {
                 </div>
                 <div className="ms-2 prod_icon_heading">
                   <h4>ICICI Prudential bluechip Funds</h4>
-                  <p>Digital Autopay: | <span className='congratesColor'>dfsf</span></p>
+                  <p>Digital Autopay: | <span className='congratesColor'>Approved</span></p>
                   <p>Mandate ID: 123211</p>
                 </div>
               </div>
                 <div className=" round"> <input type="checkbox" id="mandate" />
                 <label htmlFor="mandate"></label></div>
               </div>
-              <div className="row">
+              <div className="row mt-2">
                 <div className="col-6">
-                <p className='fs12px'>Digital Autopay:</p> 
-                <small>Mandate ID: 123211</small>
-
+                <div className='fs12px'>ACCOUNT NUMBER</div> 
+                <div className='fs12px text-dark fw-bold'>*****3211</div>
                 </div>
-                <div className="col-6"></div>
+                <div className="col-6">
+                <div className='fs12px'>MAX LIMIT</div> 
+                <div className='fs12px text-dark fw-bold'><CurrencyRupee/>25,000</div>
+                </div>
               </div>
           </div>
           <div className="borderColor p-3 rounded bg-white mt-2">
@@ -61,12 +63,48 @@ const BankMandate: React.FC<bankMandate> = ({ show, setShow }) => {
                 </div>
                 <div className="ms-2 prod_icon_heading">
                   <h4>ICICI Prudential bluechip Funds</h4>
-                  <p>Digital Autopay: | <span className='congratesColor'>dfsf</span></p>
+                  <p>Digital Autopay: | <span className='congratesColor'>Approved</span></p>
                   <p>Mandate ID: 123211</p>
                 </div>
               </div>
-                <div className=" round"> <input type="checkbox" id="mandate" />
-                <label htmlFor="mandate"></label></div>
+                <div className=" round"> <input type="checkbox" id="mandate2" />
+                <label htmlFor="mandate2"></label></div>
+              </div>
+              <div className="row mt-2">
+                <div className="col-6">
+                <div className='fs12px'>ACCOUNT NUMBER</div> 
+                <div className='fs12px text-dark fw-bold'>*****3211</div>
+                </div>
+                <div className="col-6">
+                <div className='fs12px'>MAX LIMIT</div> 
+                <div className='fs12px text-dark fw-bold'><CurrencyRupee/>25,000</div>
+                </div>
+              </div>
+          </div>
+          <div className="borderColor p-3 rounded bg-white mt-2">
+            <div className="d-flex justify-content-between">
+              <div className="d-flex">
+                <div className="prod_icon_img">
+                  <img src={icici} height={35} width={35} alt="" />
+                </div>
+                <div className="ms-2 prod_icon_heading">
+                  <h4>ICICI Prudential bluechip Funds</h4>
+                  <p>Digital Autopay: | <span className='congratesColor'>Approved</span></p>
+                  <p>Mandate ID: 123211</p>
+                </div>
+              </div>
+                <div className=" round"> <input type="checkbox" id="mandate3" />
+                <label htmlFor="mandate3"></label></div>
+              </div>
+              <div className="row mt-2">
+                <div className="col-6">
+                <div className='fs12px'>ACCOUNT NUMBER</div> 
+                <div className='fs12px text-dark fw-bold'>*****3211</div>
+                </div>
+                <div className="col-6">
+                <div className='fs12px'>MAX LIMIT</div> 
+                <div className='fs12px text-dark fw-bold'><CurrencyRupee/>25,000</div>
+                </div>
               </div>
           </div>
 

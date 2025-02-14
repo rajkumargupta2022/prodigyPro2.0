@@ -20,6 +20,10 @@ body{
 }
 link{
   color: #011EFE;
+  /* text-decoration: none; */
+}
+a{
+  text-decoration: none;
 }
 .login_hight_fixed{
   height: 100vh;
@@ -28,6 +32,9 @@ link{
 .mrgin_With20{
   margin: 0 auto;
   width: 60%;
+}
+.lightBlack{
+  color: #646464;
 }
 small{
   font-family: Tahoma, Verdana, sans-serif !important;
@@ -144,6 +151,10 @@ margin: 0 auto;
     font-size: 12px;
     color: #6c757d;
   }
+  .fs14px{
+    font-size: 14px;
+    color: #6c757d;
+  }
   .otpBox {
     width: 40px;
     height: 45px;
@@ -227,6 +238,24 @@ margin: 0 auto;
   height: 25px ;
   padding: 0 8px ;
   border-radius: 20px;
+  font-size: 12px;
+  border:1px solid #D0DBEA;
+}
+.riskProfileBtn{
+  background-color: #fff;
+  color: #011EFE !important;
+  height: 28px ;
+  padding: 0 8px ;
+  border-radius: 10px;
+  font-size: 12px;
+  border: 1px solid #D0DBEA;
+}
+.riskProfileBtn:hover{
+  background-color: #011EFE;
+  color: #fff !important;
+  height: 28px ;
+  padding: 0 8px ;
+  border-radius: 10px;
   font-size: 12px;
   border:1px solid #D0DBEA;
 }

@@ -20,10 +20,12 @@ import car from "../assets/img/icons/car 1.svg"
 import vacation from "../assets/img/icons/vacation.svg"
 import ring from "../assets/img/icons/engagement-ring 1.svg"
 import icici from "../assets/img/bank-logo/icici.png"
+import sbi from "../assets/img/bank-logo/sbi.png"
 import Overlay from 'react-bootstrap/Overlay';
 import Popover from 'react-bootstrap/Popover';
 import { useRef, useState } from "react";
 import PortfolioSwitch from "../components/PortfolioSwitch";
+import { Link } from "react-router-dom";
 
 
 const Dashboard = () => {
@@ -37,7 +39,7 @@ const Dashboard = () => {
   };
   return (
     <>
-      <MyNavbar />
+      <MyNavbar />''
       <section>
         <div className="container-fluid">
           <div className="row mt-3 justify-content-md-center">
@@ -48,7 +50,7 @@ const Dashboard = () => {
                     <div className="col d-flex">
                       <h6 className="fw-semibold">Your KYC is under review </h6>
                     </div>
-                    <p >Please contact customer service if you have any <br /> concerns or questions during the review process.</p>
+                    <p className="fs14px" >Please contact customer service if you have any <br /> concerns or questions during the review process.</p>
                   </div>
                   <button type="button" className="btn contactSupportButton">Contact Support</button>
                 </Card.Body>
@@ -68,12 +70,12 @@ const Dashboard = () => {
                 <Card.Body>
                   <div className="row ">
                     <h6 className="fw-semibold mb-4">Our Services</h6>
-                    <div className="col text-center" ><img src={money} alt="" className="" height={24} /><small className="d-block adjustText">Emergengy Fund </small></div>
-                    <div className="col text-center" ><img src={recomended} alt="" className="" height={24} /><small className="d-block  adjustText">Emergengy Fund</small></div>
-                    <div className="col text-center" ><img src={taxSaving} alt="" className="" height={24} /><small className="d-block  adjustText">Emergengy Fund</small></div>
-                    <div className="col text-center" ><img src={portfolio} alt="" className="" height={24} /><small className="d-block  adjustText">Emergengy Fund</small></div>
-                    <div className="col text-center" ><img src={nfo} alt="" className="" height={24} /><small className="d-block  adjustText">Emergengy Fund</small></div>
-                    <div className="col text-center" ><img src={transact} alt="" className="" height={24} /><small className="d-block  adjustText">Emergengy Fund</small></div>
+                    <Link className="col text-center" to="/emergency-funds"><img src={money} alt="" className="" height={24} /><small className="d-block adjustText">Emergengy Fund </small></Link>
+                    <Link to="/recommended-funds" className="col text-center " ><img src={recomended} alt="" className="" height={24} /><small className="d-block  adjustText">Recommended Funds</small></Link>
+                    <Link to="/tax-saving"  className="col text-center " ><img src={taxSaving} alt="" className="" height={24} /><small className="d-block  adjustText">Tax Saving</small></Link>
+                    <Link to="/emergency-funds" className="col text-center" ><img src={portfolio} alt="" className="" height={24} /><small className="d-block  adjustText">Portfolio Review</small></Link>
+                    <Link to="/emergency-funds" className="col text-center" ><img src={nfo} alt="" className="" height={24} /><small className="d-block  adjustText">NFO Live</small></Link>
+                    <Link to="/emergency-funds" className="col text-center" ><img src={transact} alt="" className="" height={24} /><small className="d-block  adjustText">All Orders</small></Link>
 
                   </div>
                 </Card.Body>
@@ -97,7 +99,7 @@ const Dashboard = () => {
                   <div className="row">
                     <div className="col-sm-12 col-lg-7 d-flex justify-content-between w-100">
                       <div className="fw-semibold">Popular Funds</div>
-                      <div className="text-end text-primary">View all</div>
+                      <div className="text-end logoBlueColor crPointer">View all</div>
                     </div>
                     <div className="col-12 mt-2">
                       <button type="button" className="btn btn-light popularButton">Large Cap</button>
@@ -116,10 +118,43 @@ const Dashboard = () => {
                       </div>
                       <div className="row border-bottom borderColor py-2">
                         <div className="col-1">
+                          <img src={sbi} height={50} width={50} alt="" />
+                        </div>
+                        <div className="col-10">
+                          <small className="">SBI Large Cap funds <br />  <small className="congratesColor">25.08%</small> 3Y Returns <small> Min. SIP <CurrencyRupee /></small>100</small>
+                        </div>
+                      </div>
+                      <div className="row border-bottom borderColor py-2">
+                        <div className="col-1">
                           <img src={icici} height={50} width={50} alt="" />
                         </div>
                         <div className="col-10">
                           <small className="">ICICI Prudential bluechip Funds <br />  <small className="congratesColor">25.08%</small> 3Y Returns <small> Min. SIP <CurrencyRupee /></small>100</small>
+                        </div>
+                      </div>
+                      <div className="row border-bottom borderColor py-2">
+                        <div className="col-1">
+                          <img src={sbi} height={50} width={50} alt="" />
+                        </div>
+                        <div className="col-10">
+                          <small className="">SBI Large Cap funds <br />  <small className="congratesColor">25.08%</small> 3Y Returns <small> Min. SIP <CurrencyRupee /></small>100</small>
+                        </div>
+                      </div>
+
+                      <div className="row border-bottom borderColor py-2">
+                        <div className="col-1">
+                          <img src={icici} height={50} width={50} alt="" />
+                        </div>
+                        <div className="col-10">
+                          <small className="">ICICI Prudential bluechip Funds <br />  <small className="congratesColor">25.08%</small> 3Y Returns <small> Min. SIP <CurrencyRupee /></small>100</small>
+                        </div>
+                      </div>
+                      <div className="row border-bottom borderColor py-2">
+                        <div className="col-1">
+                          <img src={sbi} height={50} width={50} alt="" />
+                        </div>
+                        <div className="col-10">
+                          <small className="">SBI Large Cap funds <br />  <small className="congratesColor">25.08%</small> 3Y Returns <small> Min. SIP <CurrencyRupee /></small>100</small>
                         </div>
                       </div>
                       <div className="row border-bottom borderColor py-2">

@@ -16,8 +16,10 @@ import "./assets/css/media.css";
 import Otp from "./pages/Otp";
 import PanVarification from "./pages/PanVarification";
 import Dashboard from "./pages/Dashboard";
-import Explore from "./pages/Explore";
+import EmergencyFunds from "./pages/EmergencyFund";
 import AddFamilyMember from "./pages/Add-family-member";
+import RecommendedFunds from "./pages/RecommendedFunds";
+import TaxSaving from "./pages/TaxSaving";
 
 function App() {
   return (
@@ -38,7 +40,9 @@ function App() {
           <Route path="/digital-signature" element={<DigitalSignature />} />
           <Route path="/e-sign" element={<E_Sign />} />
           <Route path="/congratulation" element={<SuccessPage />} />
-          <Route path="/explore" element={<Explore />} />
+          <Route path="/emergency-funds" element={<EmergencyFunds />} />
+          <Route path="/recommended-funds" element={<RecommendedFunds />} />
+          <Route path="/tax-saving" element={<TaxSaving />} />
           <Route path="/add-family-member" element={<AddFamilyMember />} />
         </Routes>
       </BrowserRouter>
