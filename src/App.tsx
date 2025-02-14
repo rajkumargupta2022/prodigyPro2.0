@@ -11,6 +11,7 @@ import ProofIdentity2 from "./pages/proof-identity2";
 import DigitalSignature from "./pages/digital-signature";
 import E_Sign from "./pages/e-sign";
 import SuccessPage from "./pages/congratulation";
+import KycStatusCheck from "./pages/kyc-status-check";
 import "./assets/css/style.css";
 import "./assets/css/media.css";
 import Otp from "./pages/Otp";
@@ -34,6 +35,7 @@ function App() {
           <Route path="/e-sign" element={<E_Sign />} />
           <Route path="/congratulation" element={<SuccessPage />} />
           <Route path="/add-family-member" element={<AddFamilyMember />} />
+          <Route path="/kyc-status-check" element={<KycStatusCheck />} />
         </Routes>
       </BrowserRouter>
     </>
