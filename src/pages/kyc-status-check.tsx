@@ -1,5 +1,6 @@
 import LoginLeftImage from "../components/LoginLeftImage";
-
+import { ArrowLeft } from "react-bootstrap-icons";
+import { Link } from "react-router-dom";
 const KycStatusCheck = () => {
   return (
     <div className="container-fluid">
@@ -7,6 +8,13 @@ const KycStatusCheck = () => {
         <LoginLeftImage />
         <div className="col-12 col-md-6 align-self-center">
           <div className="mrgin_With20">
+            <Link
+              className="back_absolute_btn text-decoration-none"
+              style={{ color: "#1a34fe" }}
+              to="/"
+            >
+              <ArrowLeft /> Back
+            </Link>
             <h4 className="font-weight-bold">Are you Investment Ready?</h4>
             <p className="py-2">Know it within the seconds</p>
             <form className="pt-3">
