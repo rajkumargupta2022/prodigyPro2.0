@@ -20,6 +20,8 @@ import EmergencyFunds from "./pages/EmergencyFund";
 import AddFamilyMember from "./pages/Add-family-member";
 import RecommendedFunds from "./pages/RecommendedFunds";
 import TaxSaving from "./pages/TaxSaving";
+import NFOLive from "./pages/NFOLive";
+import NFOApply from "./pages/NFOApply";
 
 function App() {
   return (
@@ -43,6 +45,8 @@ function App() {
           <Route path="/emergency-funds" element={<EmergencyFunds />} />
           <Route path="/recommended-funds" element={<RecommendedFunds />} />
           <Route path="/tax-saving" element={<TaxSaving />} />
+          <Route path="/nfo-live" element={<NFOLive />} />
+          <Route path="/nfo-apply" element={<NFOApply />} />
           <Route path="/add-family-member" element={<AddFamilyMember />} />
         </Routes>
       </BrowserRouter>

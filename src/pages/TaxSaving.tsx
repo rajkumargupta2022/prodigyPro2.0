@@ -15,7 +15,7 @@ const TaxSaving = () => {
   return (
     <>
       <NavBar />
-
+    
       <div className="breadcum_area" style={{ backgroundColor: "#F2F4FB" }}>
         <div className="personal_form_container p-3">
           <Breadcrumb>
@@ -35,7 +35,6 @@ const TaxSaving = () => {
               <p className="fs14px">Invest in tax-saving funds and enjoy dual benefits—tax deductions and long-term financial growth.</p>
             </div>
           </div>
-         
         </div>
       </div>
       <div className="container pt-2">
