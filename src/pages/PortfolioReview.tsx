@@ -5,7 +5,7 @@ import { useState } from "react";
 import { Card } from "react-bootstrap";
 import BankMandate from "../components/BankMandate";
 
-const NFOApply = () => {
+const PortfolioReview = () => {
   const [openBankMandate,setOpenBankMandate] = useState<boolean>(false)
 
   const handleBankMandate = ()=>{
@@ -18,15 +18,11 @@ const NFOApply = () => {
       <div className="container px-4 mt-3" >
         <div className="row">
           <div className="col-12 d-flex align-items-start">
-            <img src={sbi} alt="" />
-            <div className="d-flex flex-column ps-3">
-              <small className="mb-0">Kotak Nifty Small Cap 250 Index Fund - Regular (G)</small>
-              <small className="fs12px">Equity: Small Cap</small>
-            </div>
+          <h4>Portfolio Review</h4>
           </div>
           <div className="col-8">
             <div className="col-12 bg-white rounded-2 p-2 px-2 mt-4">
-              <small className="fs14px">Nav</small><br />
+              <h6 className="fs18px">Fund Performance Summary</h6>
               <small><CurrencyRupee className="" />100</small>
             </div>
             <div className="col-12 bg-white rounded-2 p-2 px-2 my-3">
@@ -113,4 +109,4 @@ const NFOApply = () => {
   );
 };
 
-export default NFOApply;
+export default PortfolioReview;
