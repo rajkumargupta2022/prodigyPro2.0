@@ -19,6 +19,7 @@ import AddFamilyMember from "./pages/Add-family-member";
 import BankDetailsVarification from "./pages/bank-details-varification";
 import NominationList from "./pages/Nomination-List";
 import KnowYourRiskProfile from "./pages/Know-Your-Risk-Profile";
+import Explore from "./pages/explore";
 
 function App() {
   return (
@@ -48,6 +49,7 @@ function App() {
             path="/know-your-risk-profile"
             element={<KnowYourRiskProfile />}
           />
+          <Route path="/explore" element={<Explore />} />
         </Routes>
       </BrowserRouter>
     </>
