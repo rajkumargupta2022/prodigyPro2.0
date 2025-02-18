@@ -1,9 +1,7 @@
 body{
   margin: 0px;
   padding: 0px;
-  /* font-family: Tahoma, Verdana, sans-serif; */
-  /* font-family: 'Inter', sans-serif; */
-  font-family: 'Inter', 'Poppins', sans-serif;
+  font-family: 'Outfit', sans-serif;
   background-color: #F6F8FA;
 }
 .logobg_color{
@@ -162,6 +160,21 @@ margin: 0 auto;
   .fs18px{
     font-size: 18px;
     color: #000;
+  }
+  .height6px{
+    height: 6px;
+  }
+  .switchBgColor{
+    background-color: #CB414E;
+  }
+  .satisfactoryBg{
+    background-color: #06A358;
+  }
+  .underwatchBg{
+    background-color: #12EA27;
+  }
+  .redumptionBg{
+    background-color: #D05460;
   }
   .otpBox {
     width: 40px;

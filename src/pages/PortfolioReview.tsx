@@ -6,9 +6,9 @@ import { Card } from "react-bootstrap";
 import BankMandate from "../components/BankMandate";
 
 const PortfolioReview = () => {
-  const [openBankMandate,setOpenBankMandate] = useState<boolean>(false)
+  const [openBankMandate, setOpenBankMandate] = useState<boolean>(false)
 
-  const handleBankMandate = ()=>{
+  const handleBankMandate = () => {
     setOpenBankMandate(true)
   }
 
@@ -18,12 +18,53 @@ const PortfolioReview = () => {
       <div className="container px-4 mt-3" >
         <div className="row">
           <div className="col-12 d-flex align-items-start">
-          <h4>Portfolio Review</h4>
+            <h4>Portfolio Review</h4>
           </div>
           <div className="col-8">
             <div className="col-12 bg-white rounded-2 p-2 px-2 mt-4">
-              <h6 className="fs18px">Fund Performance Summary</h6>
-              <small><CurrencyRupee className="" />100</small>
+                <h5>Fund Performance Summary</h5>
+              <div className="mb-3">
+                <div className="d-flex justify-content-between">
+                  <span>Switch (2)</span>
+                  <span>₹2.51L</span>
+                </div>
+                <div className="progress height6px">
+                  <div className="progress-bar switchBgColor" style={{ width: "60%" }}></div>
+                </div>
+              </div>
+
+              {/* Satisfactory Performance */}
+              <div className="mb-3">
+                <div className="d-flex justify-content-between">
+                  <span>Satisfactory Performance (3)</span>
+                  <span>₹8.09K</span>
+                </div>
+                <div className="progress height6px">
+                  <div className="progress-bar satisfactoryBg" style={{ width: "40%" }}></div>
+                </div>
+              </div>
+
+              {/* Under Watch */}
+              <div className="mb-3">
+                <div className="d-flex justify-content-between">
+                  <span>Under Watch (2)</span>
+                  <span>₹62K</span>
+                </div>
+                <div className="progress height6px">
+                  <div className="progress-bar underwatchBg" style={{ width: "20%" }}></div>
+                </div>
+              </div>
+
+              {/* Redemption */}
+              <div className="mb-3">
+                <div className="d-flex justify-content-between">
+                  <span>Redemption (2)</span>
+                  <span>₹32K</span>
+                </div>
+                <div className="progress height6px">
+                  <div className="progress-bar redumptionBg" style={{ width: "10%" }}></div>
+                </div>
+              </div>
             </div>
             <div className="col-12 bg-white rounded-2 p-2 px-2 my-3">
               <div className="row px-3 my-3">
@@ -85,18 +126,18 @@ const PortfolioReview = () => {
               <div className="col-1 mt-5 px-2">
                 <small className="crPointer dateIcon"><Calendar4 className='' /></small>
               </div>
-             
+
               <hr />
               <div className="col-12 form-group">
-              <label htmlFor="exampleInputEmail1" className="fs12px">INVESTMENT AMOUNT</label>
+                <label htmlFor="exampleInputEmail1" className="fs12px">INVESTMENT AMOUNT</label>
                 <input type="email" className="form-control" placeholder="1000" />
               </div>
               <div className=" mt-2">
-                  <button type="button" className="btn shortcutValue">Min.</button>
-                  <button type="button" className="btn shortcutValue mx-1"><CurrencyRupee className='mb-1' />1,000</button>
-                  <button type="button" className="btn shortcutValue mx-1"><CurrencyRupee className='mb-1' />2,000</button>
-                  <button type="button" className="btn shortcutValue mx-1"><CurrencyRupee className='mb-1' />5,000</button>
-                </div>
+                <button type="button" className="btn shortcutValue">Min.</button>
+                <button type="button" className="btn shortcutValue mx-1"><CurrencyRupee className='mb-1' />1,000</button>
+                <button type="button" className="btn shortcutValue mx-1"><CurrencyRupee className='mb-1' />2,000</button>
+                <button type="button" className="btn shortcutValue mx-1"><CurrencyRupee className='mb-1' />5,000</button>
+              </div>
             </div>
             <Card.Header className='scheme-bg footerRadius px-3 py-2 fs12px'>NAV applicable once amount credited to AMC’s bank account</Card.Header>
           </div>
@@ -104,7 +145,7 @@ const PortfolioReview = () => {
       </div>
 
 
-      <BankMandate show={openBankMandate} setShow={setOpenBankMandate}/>
+      <BankMandate show={openBankMandate} setShow={setOpenBankMandate} />
     </>
   );
 };
