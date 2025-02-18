@@ -1,6 +1,11 @@
+import { useNavigate } from "react-router-dom"
 import Logo from "../assets/img/logo/logo.png"
 import LoginLeftImage from "../components/LoginLeftImage"
 const Login = () => {
+  const navigate = useNavigate()
+  const getOpt = ()=>{
+    navigate("/otp")
+}
   return (
 
     <div className="container-fluid">
@@ -14,10 +19,10 @@ const Login = () => {
               <label className="form-label fontFamily fw-bold pb-1">Enter your phone number</label>
 
               <div className="input-group mb-3">
-                <button className="btn rounded border" type="button" data-bs-toggle="dropdown" aria-expanded="false">+91</button>              
-                <input type="text" className="form-control mx-1 rounded" aria-label="Text input with dropdown button" placeholder="Phone Number" />
+                <button className="btn rounded border" type="button" >+91</button>              
+                <input type="text" className="form-control mx-1 rounded"  placeholder="Phone Number" />
               </div>
-              <button type="button" className="customButton col-12">Get OTP</button>
+              <button type="button" onClick={getOpt} className="customButton col-12">Get OTP</button>
             </form>
             <p className="mt-3">By logging in, you agree to our Terms & Conditions</p>
           </div>
