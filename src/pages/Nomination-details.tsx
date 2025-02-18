@@ -6,7 +6,6 @@ const NominationDetails = () => {
   return (
     <>
       <NavBar />
-
       <div className="breadcum_area" style={{ backgroundColor: "#F2F4FB" }}>
         <div className="personal_form_container p-3">
           <Breadcrumb>

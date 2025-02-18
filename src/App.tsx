@@ -17,6 +17,8 @@ import "./assets/css/media.css";
 import Otp from "./pages/Otp";
 import AddFamilyMember from "./pages/Add-family-member";
 import BankDetailsVarification from "./pages/bank-details-varification";
+import NominationList from "./pages/Nomination-List";
+import KnowYourRiskProfile from "./pages/Know-Your-Risk-Profile";
 
 function App() {
   return (
@@ -40,6 +42,11 @@ function App() {
           <Route
             path="/bank-details-varification"
             element={<BankDetailsVarification />}
+          />
+          <Route path="/nomination-list" element={<NominationList />} />
+          <Route
+            path="/know-your-risk-profile"
+            element={<KnowYourRiskProfile />}
           />
         </Routes>
       </BrowserRouter>
