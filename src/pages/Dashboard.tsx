@@ -39,7 +39,7 @@ const Dashboard = () => {
   };
   return (
     <>
-      <MyNavbar />''
+      <MyNavbar />
       <section>
         <div className="container-fluid">
           <div className="row mt-3 justify-content-md-center">
@@ -73,8 +73,8 @@ const Dashboard = () => {
                     <Link className="col text-center" to="/emergency-funds"><img src={money} alt="" className="" height={24} /><small className="d-block adjustText">Emergengy Fund </small></Link>
                     <Link to="/recommended-funds" className="col text-center " ><img src={recomended} alt="" className="" height={24} /><small className="d-block  adjustText">Recommended Funds</small></Link>
                     <Link to="/tax-saving"  className="col text-center " ><img src={taxSaving} alt="" className="" height={24} /><small className="d-block  adjustText">Tax Saving</small></Link>
-                    <Link to="/emergency-funds" className="col text-center" ><img src={portfolio} alt="" className="" height={24} /><small className="d-block  adjustText">Portfolio Review</small></Link>
-                    <Link to="/emergency-funds" className="col text-center" ><img src={nfo} alt="" className="" height={24} /><small className="d-block  adjustText">NFO Live</small></Link>
+                    <Link to="/portfolio-review" className="col text-center" ><img src={portfolio} alt="" className="" height={24} /><small className="d-block  adjustText">Portfolio Review</small></Link>
+                    <Link to="/nfo-live" className="col text-center" ><img src={nfo} alt="" className="" height={24} /><small className="d-block  adjustText">NFO Live</small></Link>
                     <Link to="/emergency-funds" className="col text-center" ><img src={transact} alt="" className="" height={24} /><small className="d-block  adjustText">All Orders</small></Link>
 
                   </div>

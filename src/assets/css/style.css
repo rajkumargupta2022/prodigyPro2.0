@@ -1,9 +1,7 @@
 body{
   margin: 0px;
   padding: 0px;
-  /* font-family: Tahoma, Verdana, sans-serif; */
-  /* font-family: 'Inter', sans-serif; */
-  font-family: 'Inter', 'Poppins', sans-serif;
+  font-family: 'Outfit', sans-serif;
   background-color: #F6F8FA;
 }
 .logobg_color{
@@ -154,6 +152,29 @@ margin: 0 auto;
   .fs14px{
     font-size: 14px;
     color: #6c757d;
+  }
+  .fs16px{
+    font-size: 16px;
+    color: #000;
+  }
+  .fs18px{
+    font-size: 18px;
+    color: #000;
+  }
+  .height6px{
+    height: 6px;
+  }
+  .switchBgColor{
+    background-color: #CB414E;
+  }
+  .satisfactoryBg{
+    background-color: #06A358;
+  }
+  .underwatchBg{
+    background-color: #12EA27;
+  }
+  .redumptionBg{
+    background-color: #D05460;
   }
   .otpBox {
     width: 40px;
@@ -437,3 +458,28 @@ font-weight: 500;
     border: 0;
     transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out;
 }
+.col7{
+ width: 7%;
+}
+.col11{
+  width: 93%;
+ }
+ .activeBtn{
+  background: blue;
+  color: white;
+  height: 33px;
+  border: none;
+  border-radius: 15px;
+  width: 99%;
+  font-size: small;
+ }
+ .deActiveBtn{
+  background: #fff;
+  color: #011EFE;
+  font-size: small;
+  height: 33px;
+  border: 1px solid #D0DBEA;
+  border-radius: 15px;
+  width: 99%;
+ }
+ 
