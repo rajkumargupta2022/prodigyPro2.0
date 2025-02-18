@@ -11,6 +11,7 @@ import ProofIdentity2 from "./pages/proof-identity2";
 import DigitalSignature from "./pages/digital-signature";
 import E_Sign from "./pages/e-sign";
 import SuccessPage from "./pages/congratulation";
+import KycStatusCheck from "./pages/kyc-status-check";
 import "./assets/css/style.css";
 import "./assets/css/media.css";
 import Otp from "./pages/Otp";
@@ -23,6 +24,9 @@ import TaxSaving from "./pages/TaxSaving";
 import NFOLive from "./pages/NFOLive";
 import NFOApply from "./pages/NFOApply";
 import PortfolioReview from "./pages/PortfolioReview";
+import BankDetailsVarification from "./pages/bank-details-varification";
+import NominationList from "./pages/Nomination-List";
+import KnowYourRiskProfile from "./pages/Know-Your-Risk-Profile";
 
 function App() {
   return (
@@ -50,6 +54,16 @@ function App() {
           <Route path="/nfo-apply" element={<NFOApply />} />
           <Route path="/add-family-member" element={<AddFamilyMember />} />
           <Route path="/portfolio-review" element={<PortfolioReview />} />
+          <Route path="/kyc-status-check" element={<KycStatusCheck />} />
+          <Route
+            path="/bank-details-varification"
+            element={<BankDetailsVarification />}
+          />
+          <Route path="/nomination-list" element={<NominationList />} />
+          <Route
+            path="/know-your-risk-profile"
+            element={<KnowYourRiskProfile />}
+          />
         </Routes>
       </BrowserRouter>
     </>
