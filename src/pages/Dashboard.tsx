@@ -7,7 +7,7 @@ import taxSaving from "../assets/img/icons/tax 1.svg"
 import portfolio from "../assets/img/icons/portfolio review.svg"
 import nfo from "../assets/img/icons/nfo.svg"
 import transact from "../assets/img/icons/transcat.svg"
-import { CurrencyRupee, ArrowUpCircleFill, ArrowDownCircleFill, PlusCircle, ChevronRight, ChevronDown } from "react-bootstrap-icons";
+import { CurrencyRupee , ArrowUpCircleFill, ArrowDownCircleFill, PlusCircle, ChevronRight, ChevronDown } from "react-bootstrap-icons";
 import Star from "../assets/img/icons/star-1.svg"
 import topRated from "../assets/img/icons/award 1.svg"
 import taxSaver from "../assets/img/icons/tax.svg"
@@ -61,16 +61,16 @@ const Dashboard = () => {
                     <div className="col d-flex">
                       <h6 className="fw-semibold">PORTFOLIO SUMMARY </h6> <span className="fs12px ms-2" > As on 14 Jan 2024</span>
                     </div>
-                    <h3 className="fw-bold"><CurrencyRupee />10,91,550 <small className="fs-6" onClick={handleClick}><ChevronDown /></small></h3>
+                    <h3 className="fw-bold"><CurrencyRupee className="mb-1" />10,91,550 <small className="fs-6" onClick={handleClick}><ChevronDown /></small></h3>
                   </div>
-                  <div className="mt-2 textColor">1 Day change <span className="congratesColor"><ArrowUpCircleFill /><CurrencyRupee />1,246 (02.5%)</span> <span className="errorColor2"><ArrowDownCircleFill /><CurrencyRupee />1,246 (02.5%)</span></div>
+                  <div className="mt-2 textColor">1 Day change <span className="congratesColor"><ArrowUpCircleFill /><CurrencyRupee className="mb-1" />1,246 (02.5%)</span> <span className="errorColor2"><ArrowDownCircleFill /><CurrencyRupee className="mb-1" />1,246 (02.5%)</span></div>
                 </Card.Body>
               </Card>
               <Card border="light mb-3 cardRadius">
                 <Card.Body>
                   <div className="row ">
                     <h6 className="fw-semibold mb-4">Our Services</h6>
-                    <Link className="col text-center" to="/emergency-funds"><img src={money} alt="" className="" height={24} /><small className="d-block adjustText">Emergengy Fund </small></Link>
+                    <Link className="col text-center"  to="/emergency-funds"><img src={money} alt="" className="" height={24} /><small className="d-block adjustText ">Emergengy Fund </small></Link>
                     <Link to="/recommended-funds" className="col text-center " ><img src={recomended} alt="" className="" height={24} /><small className="d-block  adjustText">Recommended Funds</small></Link>
                     <Link to="/tax-saving"  className="col text-center " ><img src={taxSaving} alt="" className="" height={24} /><small className="d-block  adjustText">Tax Saving</small></Link>
                     <Link to="/portfolio-review" className="col text-center" ><img src={portfolio} alt="" className="" height={24} /><small className="d-block  adjustText">Portfolio Review</small></Link>
@@ -84,12 +84,12 @@ const Dashboard = () => {
                 <Card.Body>
                   <div className="row">
                     <h6 className="fw-semibold mb-4">Goal Planing</h6>
-                    <div className="col text-center" ><img src={retirment} alt="" className="" height={24} /><small className="d-block adjustText">Retirment </small><PlusCircle color="blue" /></div>
-                    <div className="col text-center" ><img src={education} alt="" className="" height={24} /><small className="d-block adjustText">Education</small> <PlusCircle color="blue" /></div>
-                    <div className="col text-center" ><img src={house} alt="" className="" height={24} /><small className="d-block adjustText">House</small> <PlusCircle color="blue" /></div>
-                    <div className="col text-center" ><img src={car} alt="" className="" height={24} /><small className="d-block adjustText">Car</small> <PlusCircle color="blue" /></div>
-                    <div className="col text-center" ><img src={vacation} alt="" className="" height={24} /><small className="d-block adjustText">Vacation</small> <PlusCircle color="blue" /></div>
-                    <div className="col text-center" ><img src={ring} alt="" className="" height={24} /><small className="d-block adjustText">Marriage</small> <PlusCircle color="blue" /></div>
+                    <div className="col text-center" ><img src={retirment} alt="" className="" height={24} /><small className="d-block adjustTextGrey">Retirment </small><PlusCircle color="blue" /></div>
+                    <div className="col text-center" ><img src={education} alt="" className="" height={24} /><small className="d-block adjustTextGrey">Education</small> <PlusCircle color="blue" /></div>
+                    <div className="col text-center" ><img src={house} alt="" className="" height={24} /><small className="d-block adjustTextGrey">House</small> <PlusCircle color="blue" /></div>
+                    <div className="col text-center" ><img src={car} alt="" className="" height={24} /><small className="d-block adjustTextGrey">Car</small> <PlusCircle color="blue" /></div>
+                    <div className="col text-center" ><img src={vacation} alt="" className="" height={24} /><small className="d-block adjustTextGrey">Vacation</small> <PlusCircle color="blue" /></div>
+                    <div className="col text-center" ><img src={ring} alt="" className="" height={24} /><small className="d-block adjustTextGrey">Marriage</small> <PlusCircle color="blue" /></div>
 
                   </div>
                 </Card.Body>
@@ -113,7 +113,7 @@ const Dashboard = () => {
                           <img src={icici} height={50} width={50} alt="" />
                         </div>
                         <div className="col-10">
-                          <small className="">ICICI Prudential bluechip Funds <br />  <small className="congratesColor">25.08%</small> 3Y Returns <small> Min. SIP <CurrencyRupee /></small>100</small>
+                          <small className="">ICICI Prudential bluechip Funds <br />  <small className="congratesColor">25.08%</small> 3Y Returns <small> Min. SIP <CurrencyRupee className="mb-1" /></small>100</small>
                         </div>
                       </div>
                       <div className="row border-bottom borderColor py-2">
@@ -121,7 +121,7 @@ const Dashboard = () => {
                           <img src={sbi} height={50} width={50} alt="" />
                         </div>
                         <div className="col-10">
-                          <small className="">SBI Large Cap funds <br />  <small className="congratesColor">25.08%</small> 3Y Returns <small> Min. SIP <CurrencyRupee /></small>100</small>
+                          <small className="">SBI Large Cap funds <br />  <small className="congratesColor">25.08%</small> 3Y Returns <small> Min. SIP <CurrencyRupee className="mb-1" /></small>100</small>
                         </div>
                       </div>
                       <div className="row border-bottom borderColor py-2">
@@ -129,7 +129,7 @@ const Dashboard = () => {
                           <img src={icici} height={50} width={50} alt="" />
                         </div>
                         <div className="col-10">
-                          <small className="">ICICI Prudential bluechip Funds <br />  <small className="congratesColor">25.08%</small> 3Y Returns <small> Min. SIP <CurrencyRupee /></small>100</small>
+                          <small className="">ICICI Prudential bluechip Funds <br />  <small className="congratesColor">25.08%</small> 3Y Returns <small> Min. SIP <CurrencyRupee className="mb-1" /></small>100</small>
                         </div>
                       </div>
                       <div className="row border-bottom borderColor py-2">
@@ -137,7 +137,7 @@ const Dashboard = () => {
                           <img src={sbi} height={50} width={50} alt="" />
                         </div>
                         <div className="col-10">
-                          <small className="">SBI Large Cap funds <br />  <small className="congratesColor">25.08%</small> 3Y Returns <small> Min. SIP <CurrencyRupee /></small>100</small>
+                          <small className="">SBI Large Cap funds <br />  <small className="congratesColor">25.08%</small> 3Y Returns <small> Min. SIP <CurrencyRupee className="mb-1" /></small>100</small>
                         </div>
                       </div>
 
@@ -146,7 +146,7 @@ const Dashboard = () => {
                           <img src={icici} height={50} width={50} alt="" />
                         </div>
                         <div className="col-10">
-                          <small className="">ICICI Prudential bluechip Funds <br />  <small className="congratesColor">25.08%</small> 3Y Returns <small> Min. SIP <CurrencyRupee /></small>100</small>
+                          <small className="">ICICI Prudential bluechip Funds <br />  <small className="congratesColor">25.08%</small> 3Y Returns <small> Min. SIP <CurrencyRupee className="mb-1" /></small>100</small>
                         </div>
                       </div>
                       <div className="row border-bottom borderColor py-2">
@@ -154,7 +154,7 @@ const Dashboard = () => {
                           <img src={sbi} height={50} width={50} alt="" />
                         </div>
                         <div className="col-10">
-                          <small className="">SBI Large Cap funds <br />  <small className="congratesColor">25.08%</small> 3Y Returns <small> Min. SIP <CurrencyRupee /></small>100</small>
+                          <small className="">SBI Large Cap funds <br />  <small className="congratesColor">25.08%</small> 3Y Returns <small> Min. SIP <CurrencyRupee className="mb-1" /></small>100</small>
                         </div>
                       </div>
                       <div className="row border-bottom borderColor py-2">
@@ -162,7 +162,7 @@ const Dashboard = () => {
                           <img src={icici} height={50} width={50} alt="" />
                         </div>
                         <div className="col-10">
-                          <small className="">ICICI Prudential bluechip Funds <br />  <small className="congratesColor">25.08%</small> 3Y Returns <small> Min. SIP <CurrencyRupee /></small>100</small>
+                          <small className="">ICICI Prudential bluechip Funds <br />  <small className="congratesColor">25.08%</small> 3Y Returns <small> Min. SIP <CurrencyRupee className="mb-1" /></small>100</small>
                         </div>
                       </div>
 
@@ -177,7 +177,7 @@ const Dashboard = () => {
                 <Card.Body>
                   <div className="row">
                     <h6 className="fw-semibold mb-4">Discover Funds</h6>
-                    <div className="col-4 text-center" ><img src={money} alt="" className="" height={24} /><small className="d-block adjustText">Start with <CurrencyRupee />100</small></div>
+                    <div className="col-4 text-center" ><img src={money} alt="" className="" height={24} /><small className="d-block adjustText">Start with <CurrencyRupee className="mb-1" />100</small></div>
                     <div className="col-4 text-center" ><img src={Star} alt="" className="" height={24} /><small className="adjustText d-block">Best Return Funds</small></div>
                     <div className="col-4 text-center" ><img src={topRated} alt="" className="" height={24} /><small className="adjustText d-block">Top Rated Funds</small></div>
                     <div className="col-4 text-center" ><img src={taxSaver} alt="" className="" height={24} /><small className="adjustText d-block">Tax Saver</small></div>
@@ -193,11 +193,11 @@ const Dashboard = () => {
                     <h6 className="fw-semibold mb-4">Quick Link</h6>
                     <div className="col-9 adjustText border-bottom pb-2 crPointer borderColor" >All Orders</div>
                     <div className="col-3 adjustText  pb-2 crPointer border-bottom text-end" ><ChevronRight /></div>
-                    <div className="col-9 adjustText border-bottom pb-2 crPointer borderColor" >All Orders</div>
+                    <div className="col-9 adjustText border-bottom pb-2 crPointer borderColor" >Linked Bank Accounts</div>
                     <div className="col-3 adjustText  pb-2 crPointer border-bottom text-end" ><ChevronRight /></div>
-                    <div className="col-9 adjustText border-bottom pb-2 crPointer borderColor" >All Orders</div>
+                    <div className="col-9 adjustText border-bottom pb-2 crPointer borderColor" >Statements</div>
                     <div className="col-3 adjustText  pb-2 crPointer border-bottom text-end" ><ChevronRight /></div>
-                    <div className="col-9 adjustText  pb-2 crPointer borderColor" >All Orders</div>
+                    <div className="col-9 adjustText  pb-2 crPointer borderColor" >Financial Calculators</div>
                     <div className="col-3 adjustText  pb-2 crPointer  text-end" ><ChevronRight /></div>
 
 

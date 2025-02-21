@@ -1,6 +1,6 @@
 import Logo from "../assets/img/logo/logo.png"
 import LoginLeftImage from "../components/LoginLeftImage"
-import leftImage from "../assets/img/otpLeft.png"
+import leftImage from "../assets/img/rich.svg"
 import MobileIcon from "../assets/img/login/mobile_icon.png"
 import OtpInput from 'react-otp-input';
 import { useState } from "react";

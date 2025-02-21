@@ -1,9 +1,13 @@
 body{
   margin: 0px;
   padding: 0px;
-  font-family: 'Outfit', sans-serif;
+  font-family: "Outfit", serif;
+  font-optical-sizing: auto;
+  font-style: normal;
   background-color: #F6F8FA;
 }
+
+
 .logobg_color{
   background-color: #011EFE;
   color: #fff !important;
@@ -15,6 +19,13 @@ body{
 .scheme-bg{
   background-color: #E6E8FF !important;
   color: #4D4D4D;
+}
+.lightTrxBtn{
+  color: #4D62FE;
+  background-color: #E6E8FF;
+  padding: 8px;
+  font-size: 10px;
+ 
 }
 link{
   color: #011EFE;
@@ -35,23 +46,19 @@ a{
   color: #646464;
 }
 small{
-  font-family: Tahoma, Verdana, sans-serif !important;
   color: #1A1C1E;
 }
-/* h1,h2,h3,h4,h5,h6{
-  font-family: Tahoma, Verdana, sans-serif !important;
-} */
+.orangeBg{
+background-color: #FF9500;
+}
+
 p {
-  font-family: Tahoma, Verdana, sans-serif !important;
   color: #646464;
   }
-  .fontFamily{
-    font-family: Tahoma, Verdana, sans-serif;
-    /* color: #646464; */
-    }
+
     .customButton{
       color: #FFF;
-      background-color: #011EFE;
+      background-color: #011EFE !important;
       border-radius: 9px;
       border: none;
       height: 33px;
@@ -59,14 +66,14 @@ p {
     }
     .customButton:hover{
       color: #FFF;
-      background-color: #011EFE;
+      background-color: #011EFE !important;
       border-radius: 9px;
       border: none;
       height: 33px;
       font-size: 12px;
     }
     .customCancelButton{
-      color: #011EFE;
+      color: #011EFE !important;
       background-color: #FFF;
       border-radius: 9px;
       border:1px solid #D0DBEA;
@@ -74,7 +81,7 @@ p {
       font-size: 12px;
     }
     .customCancelButton:hover{
-      color: #011EFE;;
+      color: #011EFE !important;
       background-color: #FFF;
       border-radius: 9px;
       border:1px solid #D0DBEA;
@@ -216,8 +223,13 @@ margin: 0 auto;
    margin-top: -5%;
 }
 .adjustText{
-  font-size: 12px;
+  font-size: 14px;
   margin: 6px 0px;
+}
+.adjustTextGrey{
+  font-size: 14px;
+  margin: 6px 0px;
+  color: #6c757d;;
 }
 .crPointer{
   cursor: pointer;
@@ -243,6 +255,24 @@ margin: 0 auto;
   border-radius: 6px;
   font-size: 12px;
   border: none;
+}
+.transactBtn{
+  border: none;
+  background-color: #CCD2FF;
+  color: #011EFE;
+  border-radius: 15px;
+  height: 28px;
+  font-size: 16px;
+  padding-top: 2px;
+}
+.transactBtn:hover{
+  border: none;
+  background-color: #CCD2FF;
+  color: #011EFE;
+  border-radius: 15px;
+  height: 28px;
+  font-size: 16px;
+  padding-top: 2px;
 }
 .shortcutValue{
   background-color: #fff;
@@ -372,19 +402,24 @@ margin: 0 auto;
   line-height: 20.16px;
   font-weight: 100;
   border-radius: 12px;
+  
   color: #011EFE;
 }
+.loginBg{
+  background-color: #011EFE;
+}
+
 
 
 .prod_icon_heading h4{
   font-size: 15px;
-  font-weight: 500;
+  /* font-weight: 500; */
   margin-bottom: 0;
   color: #000;
 }
 .prod_icon_heading p{
   font-size: 12px;
-  font-weight: 100;
+  /* font-weight: 100; */
   margin-bottom: 0;
 }
 
@@ -473,6 +508,17 @@ font-weight: 500;
   width: 99%;
   font-size: small;
  }
+ .unitBtnActive{
+  background: blue;
+  color: white;
+  height: 33px;
+  border: none;
+  border-radius: 10px;
+  width: 99%;
+  font-size: small;
+  padding-top: 5px;
+  cursor: pointer;
+ }
  .deActiveBtn{
   background: #fff;
   color: #011EFE;
@@ -481,5 +527,20 @@ font-weight: 500;
   border: 1px solid #D0DBEA;
   border-radius: 15px;
   width: 99%;
+ }
+ .unitDeActiveBtn{
+  background: #fff;
+  color: #011EFE !important;
+  font-size: small;
+  height: 33px;
+  border: 1px solid #D0DBEA;
+  border-radius:10px;
+  width: 99%;
+  padding-top: 5px;
+  cursor: pointer;
+ }
+ .sqrBar{
+  padding: 0px !important;
+  border-radius: 0px;
  }
  

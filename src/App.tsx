@@ -23,6 +23,8 @@ import TaxSaving from "./pages/TaxSaving";
 import NFOLive from "./pages/NFOLive";
 import NFOApply from "./pages/NFOApply";
 import PortfolioReview from "./pages/PortfolioReview";
+import PortfolioImport from "./pages/PortfolioImport";
+import PortfolioUnderReview from "./pages/PortfolioUnderReview";
 
 function App() {
   return (
@@ -50,6 +52,8 @@ function App() {
           <Route path="/nfo-apply" element={<NFOApply />} />
           <Route path="/add-family-member" element={<AddFamilyMember />} />
           <Route path="/portfolio-review" element={<PortfolioReview />} />
+          <Route path="/portfolio-import" element={<PortfolioImport />} />
+          <Route path="/portfolio-under-review" element={<PortfolioUnderReview />} />
         </Routes>
       </BrowserRouter>
     </>

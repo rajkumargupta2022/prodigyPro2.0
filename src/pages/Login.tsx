@@ -16,7 +16,7 @@ const Login = () => {
             <img src={Logo} alt="" className="logoImage"/>
             <p className="py-2">From BFC Capital Private Limited</p>
             <form className="pt-3" action="">
-              <label className="form-label fontFamily fw-bold pb-1">Enter your phone number</label>
+              <label className="form-label fw-bold pb-1">Enter your phone number</label>
 
               <div className="input-group mb-3">
                 <button className="btn rounded border" type="button" >+91</button>              
