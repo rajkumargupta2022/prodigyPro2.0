@@ -483,3 +483,9 @@ font-weight: 500;
   width: 99%;
  }
  
+.search_input::placeholder {
+  font-weight: 400;
+  opacity: 0.5;
+  font-size:22px;
+  padding-left: 22px;
+}

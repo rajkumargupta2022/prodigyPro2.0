@@ -28,6 +28,7 @@ import BankDetailsVarification from "./pages/bank-details-varification";
 import NominationList from "./pages/Nomination-List";
 import KnowYourRiskProfile from "./pages/Know-Your-Risk-Profile";
 import Explore from "./pages/explore";
+import AllMutualFunds from "./pages/All-Mutual-Funds";
 
 function App() {
   return (
@@ -66,6 +67,7 @@ function App() {
             element={<KnowYourRiskProfile />}
           />
           <Route path="/explore" element={<Explore />} />
+          <Route path="/all-mutual-funds" element={<AllMutualFunds />} />
         </Routes>
       </BrowserRouter>
     </>
