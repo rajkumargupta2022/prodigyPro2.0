@@ -25,6 +25,7 @@ const MyNavbar = () => {
           <Nav.Link href="#">
             <Bell size={24} />
           </Nav.Link>
+          
           <Nav.Link href="#">
             <Person size={24} />
           </Nav.Link>

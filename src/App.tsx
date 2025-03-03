@@ -24,14 +24,12 @@ import TaxSaving from "./pages/TaxSaving";
 import NFOLive from "./pages/NFOLive";
 import NFOApply from "./pages/NFOApply";
 import PortfolioReview from "./pages/PortfolioReview";
-<<<<<<< HEAD
 import BankDetailsVarification from "./pages/bank-details-varification";
 import NominationList from "./pages/Nomination-List";
 import KnowYourRiskProfile from "./pages/Know-Your-Risk-Profile";
-=======
 import PortfolioImport from "./pages/PortfolioImport";
 import PortfolioUnderReview from "./pages/PortfolioUnderReview";
->>>>>>> raj
+import Portfolio from "./pages/Portfolio";
 
 function App() {
   return (
@@ -59,7 +57,6 @@ function App() {
           <Route path="/nfo-apply" element={<NFOApply />} />
           <Route path="/add-family-member" element={<AddFamilyMember />} />
           <Route path="/portfolio-review" element={<PortfolioReview />} />
-<<<<<<< HEAD
           <Route path="/kyc-status-check" element={<KycStatusCheck />} />
           <Route
             path="/bank-details-varification"
@@ -70,10 +67,9 @@ function App() {
             path="/know-your-risk-profile"
             element={<KnowYourRiskProfile />}
           />
-=======
           <Route path="/portfolio-import" element={<PortfolioImport />} />
           <Route path="/portfolio-under-review" element={<PortfolioUnderReview />} />
->>>>>>> raj
+          <Route path="/portfolio" element={<Portfolio />} />
         </Routes>
       </BrowserRouter>
     </>

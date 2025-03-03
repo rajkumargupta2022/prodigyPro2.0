@@ -265,6 +265,15 @@ margin: 0 auto;
   font-size: 16px;
   padding-top: 2px;
 }
+.gainLossBtn{
+  border: none;
+  background-color: #E9E9E980;
+  color: #4D4D4D;
+  border-radius: 10px;
+  height: 28px;
+  font-size: 14px;
+  padding-top: 2px;
+}
 .transactBtn:hover{
   border: none;
   background-color: #CCD2FF;
@@ -408,6 +417,7 @@ margin: 0 auto;
 .loginBg{
   background-color: #011EFE;
 }
+
 
 
 
