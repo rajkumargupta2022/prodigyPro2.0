@@ -489,3 +489,28 @@ font-weight: 500;
   font-size:22px;
   padding-left: 22px;
 }
+
+.bottom-border {
+  padding-bottom: 2%;
+  border-bottom:1px solid #f1f1f1;
+}
+
+.paddingLeftRight  {
+  padding-left:50px;
+  padding-right:50px;
+}
+
+
+.paddingLeftRight2  {
+  padding-left:150px;
+  padding-right:150px;
+}
+
+.badge {
+  border-radius: 12px;
+  border:1px solid #f1f1f1;
+  color:#3048fe;
+  padding:2%;
+  font-weight: 400;
+  font-size: 14px;
+}

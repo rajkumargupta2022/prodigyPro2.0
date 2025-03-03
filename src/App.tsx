@@ -29,6 +29,7 @@ import NominationList from "./pages/Nomination-List";
 import KnowYourRiskProfile from "./pages/Know-Your-Risk-Profile";
 import Explore from "./pages/explore";
 import AllMutualFunds from "./pages/All-Mutual-Funds";
+import FundDetails from "./pages/Fund-Details";
 
 function App() {
   return (
@@ -68,6 +69,7 @@ function App() {
           />
           <Route path="/explore" element={<Explore />} />
           <Route path="/all-mutual-funds" element={<AllMutualFunds />} />
+          <Route path="/fund-details" element={<FundDetails />} />
         </Routes>
       </BrowserRouter>
     </>

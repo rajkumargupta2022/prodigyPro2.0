@@ -1,12 +1,4 @@
-import {
-  Form,
-  InputGroup,
-  Card,
-  Container,
-  Row,
-  Col,
-  Image,
-} from "react-bootstrap";
+import { Form, Card, Container, Row, Col, Image } from "react-bootstrap";
 import { Search } from "react-bootstrap-icons";
 import MyNavbar from "../components/Navbar";
 import AMCLOGO from "../assets/img/icons/AMC Logo.svg";
