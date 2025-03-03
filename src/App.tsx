@@ -36,6 +36,7 @@ import Portfolio from "./pages/Portfolio";
 import Explore from "./pages/explore";
 import AllMutualFunds from "./pages/All-Mutual-Funds";
 import FundDetails from "./pages/Fund-Details";
+import SelectFolio from "./pages/select-folio";
 
 function App() {
   return (
@@ -82,6 +83,7 @@ function App() {
           <Route path="/explore" element={<Explore />} />
           <Route path="/all-mutual-funds" element={<AllMutualFunds />} />
           <Route path="/fund-details" element={<FundDetails />} />
+          <Route path="/select-folio" element={<SelectFolio />} />
         </Routes>
       </BrowserRouter>
     </>
