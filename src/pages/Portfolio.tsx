@@ -45,7 +45,11 @@ const Portfolio = () => {
       <div className="container py-2 personal_form_container">
         <div className="row ">
           <div className="col-6 text-start"><h6 >OVERALL PROFIT</h6> </div>
-          <div className="col-6 text-end">              <button type="button" className="btn gainLossBtn ">Gain/Loss <ArrowDownUp/></button></div>
+          <div className="col-6 text-end">              <button type="button" className="btn gainLossBtn ">Gain/Loss <ArrowDownUp/>
+          {/* &#x25B2;
+<br/>
+<small>&#x25BC;</small> */}
+</button></div>
         </div>
       </div>
       <div className="container py-2">
