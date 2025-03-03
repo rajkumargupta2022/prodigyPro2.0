@@ -24,26 +24,18 @@ import TaxSaving from "./pages/TaxSaving";
 import NFOLive from "./pages/NFOLive";
 import NFOApply from "./pages/NFOApply";
 import PortfolioReview from "./pages/PortfolioReview";
-<<<<<<< HEAD
 import BankDetailsVarification from "./pages/bank-details-varification";
 import NominationList from "./pages/Nomination-List";
 import KnowYourRiskProfile from "./pages/Know-Your-Risk-Profile";
 import PortfolioImport from "./pages/PortfolioImport";
 import PortfolioUnderReview from "./pages/PortfolioUnderReview";
 import Portfolio from "./pages/Portfolio";
-=======
 
-import BankDetailsVarification from "./pages/bank-details-varification";
-import NominationList from "./pages/Nomination-List";
-import KnowYourRiskProfile from "./pages/Know-Your-Risk-Profile";
 
-import PortfolioImport from "./pages/PortfolioImport";
-import PortfolioUnderReview from "./pages/PortfolioUnderReview";
 
 import Explore from "./pages/explore";
 import AllMutualFunds from "./pages/All-Mutual-Funds";
 import FundDetails from "./pages/Fund-Details";
->>>>>>> 9677b827eb23dd6c921f69050905154c06aec7e9
 
 function App() {
   return (
@@ -81,22 +73,15 @@ function App() {
             path="/know-your-risk-profile"
             element={<KnowYourRiskProfile />}
           />
-<<<<<<< HEAD
           <Route path="/portfolio-import" element={<PortfolioImport />} />
           <Route path="/portfolio-under-review" element={<PortfolioUnderReview />} />
           <Route path="/portfolio" element={<Portfolio />} />
-=======
 
-          <Route path="/portfolio-import" element={<PortfolioImport />} />
-          <Route
-            path="/portfolio-under-review"
-            element={<PortfolioUnderReview />}
-          />
+        
 
           <Route path="/explore" element={<Explore />} />
           <Route path="/all-mutual-funds" element={<AllMutualFunds />} />
           <Route path="/fund-details" element={<FundDetails />} />
->>>>>>> 9677b827eb23dd6c921f69050905154c06aec7e9
         </Routes>
       </BrowserRouter>
     </>
