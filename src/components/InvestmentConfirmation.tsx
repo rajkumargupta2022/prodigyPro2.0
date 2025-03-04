@@ -3,7 +3,6 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Card from 'react-bootstrap/Card';
 import { Calendar4, CurrencyRupee } from 'react-bootstrap-icons';
-import CreateNewFolio from './CreateNewFolio';
 import icici from "../assets/img/bank-logo/icici.png"
 import BankMandate from './BankMandate';
 interface investmetProps {

@@ -1,5 +1,4 @@
 import MyNavbar from "../components/Navbar"
-import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import money from "../assets/img/icons/rupee 1.svg"
 import recomended from "../assets/img/icons/Recommended Funds.svg"
@@ -24,7 +23,6 @@ import sbi from "../assets/img/bank-logo/sbi.png"
 import Overlay from 'react-bootstrap/Overlay';
 import Popover from 'react-bootstrap/Popover';
 import { useRef, useState } from "react";
-import PortfolioSwitch from "../components/PortfolioSwitch";
 import { Link } from "react-router-dom";
 
 

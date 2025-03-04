@@ -3,8 +3,10 @@ import NextBar from "../components/Next-bar";
 import Breadcrumb from "react-bootstrap/Breadcrumb";
 import { Button } from "react-bootstrap";
 import { Upload } from "react-bootstrap-icons";
+import { useNavigate } from "react-router-dom";
 
 const BankDetailsVarification = () => {
+  const navigate = useNavigate()
   return (
     <>
       <NavBar />
@@ -122,7 +124,7 @@ const BankDetailsVarification = () => {
           </form>
         </div>
       </div>
-      <NextBar onBack={() => {}} onSaveContinue={() => {}} />
+      <NextBar onBack={() => {}} onSaveContinue={() => {navigate("/nomination-details")}} />
     </>
   );
 };

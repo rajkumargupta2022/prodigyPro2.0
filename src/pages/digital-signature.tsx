@@ -1,26 +1,29 @@
 import SignatureCanvas from "react-signature-canvas";
 import NavBar from "../components/Navbar";
 import NextBar from "../components/Next-bar";
-import { useRef, useState } from "react";
+import { useRef } from "react";
+import { useNavigate } from "react-router-dom";
 
 const DigitalSignature = () => {
+  const navigate = useNavigate()
   const sigCanvas = useRef(null);
-  const [signature, setSignature] = useState(null);
+  // const [signature, setSignature] = useState(null);
+  const signature =null;
 
   // Save signature as image
-  const handleSave = () => {
-    if (sigCanvas && sigCanvas.current && sigCanvas.current.isEmpty()) {
-      alert("Please provide a signature first!");
-      return;
-    }
-    setSignature(sigCanvas.current.getTrimmedCanvas().toDataURL("image/png"));
-  };
+  // const handleSave = () => {
+  //   if (sigCanvas && sigCanvas.current && sigCanvas.current.isEmpty()) {
+  //     alert("Please provide a signature first!");
+  //     return;
+  //   }
+  //   setSignature(sigCanvas.current.getTrimmedCanvas().toDataURL("image/png"));
+  // };
 
   // Clear the signature pad
-  const handleClear = () => {
-    sigCanvas.current.clear();
-    setSignature(null);
-  };
+  // const handleClear = () => {
+  //   sigCanvas.current.clear();
+  //   setSignature(null);
+  // };
 
   return (
     <>
@@ -82,7 +85,7 @@ const DigitalSignature = () => {
           </div>
         </div>
       </div>
-      <NextBar onBack={() => {}} onSaveContinue={handleSave} />
+      <NextBar onBack={() => {}} onSaveContinue={()=>{navigate("/e-sign")}} />
     </>
   );
 };

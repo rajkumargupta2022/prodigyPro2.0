@@ -1,7 +1,8 @@
 import LoginLeftImage from "../components/LoginLeftImage";
 import { ArrowLeft } from "react-bootstrap-icons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 const KycStatusCheck = () => {
+  const navigate = useNavigate()
   return (
     <div className="container-fluid">
       <div className="row">
@@ -45,7 +46,7 @@ const KycStatusCheck = () => {
               </div>
 
               <div>
-                <button className="btn btn-primary w-100">Proceed</button>
+                <button type="button" onClick={()=>{navigate("/personal-details")}} className="btn btn-primary w-100">Proceed</button>
               </div>
             </form>
           </div>

@@ -1,5 +1,4 @@
 import Modal from "react-bootstrap/Modal";
-import Card from "react-bootstrap/Card";
 import correct from "../assets/img/correct.png";
 import group from "../assets/img/Group.png";
 

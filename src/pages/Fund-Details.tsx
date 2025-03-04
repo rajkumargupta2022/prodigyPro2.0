@@ -4,8 +4,11 @@ import MyNavbar from "../components/Navbar";
 import HDFC from "../assets/img/icons/hdfc.svg";
 import SimpleLineChart from "../components/chart";
 import MyStackBar from "../components/Stack-bar";
+import { useState } from "react";
+import SelectFolioPopup from "../components/select-folio-popup";
 
 const FundDetails = () => {
+  const [openSelectFolio , setOpenSelectFolio] = useState(false)
   return (
     <>
       <MyNavbar />
@@ -247,6 +250,7 @@ const FundDetails = () => {
                   <span className="badge m-2">₹2,000</span>
                   <span className="badge m-2">₹5,000</span>
                 </div>
+                <button className="btn btn-primary" onClick={()=>{setOpenSelectFolio(true)}}>Invest</button>
               </div>
               <span
                 className="text-center p-3"
@@ -262,6 +266,7 @@ const FundDetails = () => {
           </Col>
         </Row>
       </Container>
+      <SelectFolioPopup show={openSelectFolio} setShow={setOpenSelectFolio}/>
     </>
   );
 };

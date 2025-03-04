@@ -1,8 +1,10 @@
+import { useNavigate } from "react-router-dom";
 import NavBar from "../components/Navbar";
 import NextBar from "../components/Next-bar";
 import Breadcrumb from "react-bootstrap/Breadcrumb";
 
 const BankDetails = () => {
+  const navigate = useNavigate()
   return (
     <>
       <NavBar />
@@ -100,7 +102,7 @@ const BankDetails = () => {
           </form>
         </div>
       </div>
-      <NextBar onBack={() => {}} onSaveContinue={() => {}} />
+      <NextBar onBack={() => {}} onSaveContinue={() => {navigate('/bank-details-varification')}} />
     </>
   );
 };

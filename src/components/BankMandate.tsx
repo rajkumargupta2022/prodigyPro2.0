@@ -2,6 +2,8 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { CurrencyRupee } from "react-bootstrap-icons";
 import icici from "../assets/img/bank-logo/icici.png";
+import { useState } from "react";
+import OrderPlaces from "./order-places";
 interface bankMandate {
   show: boolean;
   setShow: (show: boolean) => void;
@@ -9,6 +11,7 @@ interface bankMandate {
 
 const BankMandate: React.FC<bankMandate> = ({ show, setShow }) => {
   // const [openCreateFolio,setOpenCreateFolio] = useState<boolean>(false)
+  const [openSuccess,setOpenSuccess] = useState(false)
 
   return (
     <>
@@ -129,9 +132,10 @@ const BankMandate: React.FC<bankMandate> = ({ show, setShow }) => {
           </div>
         </Modal.Body>
         <Modal.Footer className="modal-bg ">
-          <Button className="customButton buttunCenter">Continue</Button>
+          <Button className="customButton buttunCenter" onClick={()=>{setOpenSuccess(true)}}>Continue</Button>
         </Modal.Footer>
       </Modal>
+      <OrderPlaces show={openSuccess} setShow={setOpenSuccess}/>
     </>
   );
 };

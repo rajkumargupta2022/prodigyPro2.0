@@ -17,7 +17,7 @@ const MyNavbar = () => {
     <Navbar expand="lg" className="bg-white">
       <Container>
         <Navbar.Brand href="#">
-          <Navbar.Brand href="#">
+          <Navbar.Brand href="/dashboard">
             <img
               src={logo} // Replace with your logo URL
               alt="Logo"
@@ -32,7 +32,7 @@ const MyNavbar = () => {
             style={{ maxHeight: "100px" }}
             navbarScroll
           >
-            <Nav.Link className="prodgy_menu m-2" href="#action1">
+            <Nav.Link className="prodgy_menu m-2" href={"/dashboard"}>
               <div className="d-flex gap-2">
                 <div className="">
                   {" "}
@@ -41,7 +41,7 @@ const MyNavbar = () => {
                 <div className="">Home</div>
               </div>
             </Nav.Link>
-            <Nav.Link className="prodgy_menu  m-2" href="#action2">
+            <Nav.Link className="prodgy_menu  m-2" href={"/explore"}>
               <div className="d-flex gap-2">
                 <div className="">
                   {" "}
@@ -50,7 +50,7 @@ const MyNavbar = () => {
                 <div className="">Explore</div>
               </div>
             </Nav.Link>
-            <Nav.Link className="prodgy_menu  m-2" href="#action2">
+            <Nav.Link className="prodgy_menu  m-2" href={"/portfolio"}>
               <div className="d-flex gap-2">
                 <div className="">
                   {" "}
@@ -59,7 +59,7 @@ const MyNavbar = () => {
                 <div className="">Portfolio</div>
               </div>
             </Nav.Link>
-            <Nav.Link className="prodgy_menu  m-2" href="#action2">
+            <Nav.Link className="prodgy_menu  m-2" href={"/add-family-member"}>
               <div className="d-flex gap-2">
                 <div className="">
                   {" "}

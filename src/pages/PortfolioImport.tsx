@@ -1,8 +1,6 @@
 import NavBar from "../components/Navbar";
 import sadFace from "../assets/img/sad-face.svg"
 import { useState } from "react";
-import { Card } from "react-bootstrap";
-import BankMandate from "../components/BankMandate";
 import OtpField from "../components/OtpField";
 
 const PortfolioImport = () => {

@@ -1,9 +1,11 @@
 import { Form, Card, Container, Row, Col, Image } from "react-bootstrap";
-import { Search } from "react-bootstrap-icons";
+import {  ChevronRight, Search } from "react-bootstrap-icons";
 import MyNavbar from "../components/Navbar";
 import AMCLOGO from "../assets/img/icons/AMC Logo.svg";
+import { useNavigate } from "react-router-dom";
 
 const AllMutualFunds = () => {
+  const navigate = useNavigate()
   return (
     <>
       <MyNavbar />
@@ -85,7 +87,7 @@ const AllMutualFunds = () => {
           <Col md={9}>
             <Row className="justify-content-between py-4 align-items-center">
               <Col md={6} className="">
-                <h3 className="fw-bold mb-0">431 Mutual Funds</h3>
+                <h5 className="fw-bold mb-0">431 Mutual Funds</h5>
               </Col>
               <Col md={6}>
                 <div className="position-relative">
@@ -122,8 +124,8 @@ const AllMutualFunds = () => {
                         </Card.Title>
                       </div>
                     </Col>
-                    <Col md={2} className="text-md-end">
-                      <Search size={25} />
+                    <Col md={2} className="text-md-end" onClick={()=>{navigate("/fund-details")}}>
+                      <ChevronRight size={25} />
                     </Col>
                   </Row>
                   <Row className="pt-3">

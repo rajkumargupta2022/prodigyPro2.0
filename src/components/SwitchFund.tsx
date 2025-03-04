@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Card from 'react-bootstrap/Card';
-import { ArrowBarDown, ArrowDown, CurrencyRupee } from 'react-bootstrap-icons';
+import { ArrowDown } from 'react-bootstrap-icons';
 import sbi from "../assets/img/bank-logo/sbi.png"
 import SwitchConfirmation from './SwitchConfirmation';
 interface SwitchFundProp {

@@ -1,12 +1,15 @@
 import { useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import { X } from "react-bootstrap-icons";
+import { useNavigate } from "react-router-dom";
+
 
 const NomineeModal = ({ toggle }: { toggle: boolean }) => {
   const [show, setShow] = useState(toggle);
 
   const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const navigate = useNavigate()
+
 
   return (
     <>
@@ -57,7 +60,7 @@ const NomineeModal = ({ toggle }: { toggle: boolean }) => {
             </Form.Group>
 
             {/* Submit Button */}
-            <Button variant="primary" onClick={handleClose}>
+            <Button variant="primary" onClick={()=>navigate("/congratulation")}>
               Add Nominee
             </Button>
           </Form>

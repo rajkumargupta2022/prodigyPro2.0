@@ -1,9 +1,5 @@
-import Logo from "../assets/img/logo/logo.png"
 import LoginLeftImage from "../components/LoginLeftImage"
 import leftImage from "../assets/img/rich.svg"
-import MobileIcon from "../assets/img/login/mobile_icon.png"
-import OtpInput from 'react-otp-input';
-import { useState } from "react";
 import { ArrowLeft } from "react-bootstrap-icons";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -11,14 +7,13 @@ import { Link, useNavigate } from "react-router-dom";
 
 const PanVarification = () => {
   const navigate = useNavigate()
-  const [otp, setOtp] = useState<string>();
   const getOpt = ()=>{
-           navigate("/otp")
+           navigate("/personal-details")
   }
   return (
 
     <div className="container-fluid">
-      <div className="row">
+      <div className="row login_hight_fixed">
         <LoginLeftImage LeftImage={leftImage} />
         <div className="col-12 col-md-6 align-self-center position-relative">
          

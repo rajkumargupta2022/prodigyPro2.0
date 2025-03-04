@@ -1,7 +1,9 @@
+import { useNavigate } from "react-router-dom";
 import MyNavbar from "../components/Navbar";
 import { ArrowLeft, ChevronRight } from "react-bootstrap-icons";
 
 const AddFamilyMember = () => {
+  const navigate = useNavigate()
   return (
     <>
       <MyNavbar />
@@ -118,7 +120,7 @@ const AddFamilyMember = () => {
                 <select id="holding-nature" className="form-control">
                   <option>Single</option>
                 </select>
-                <button type="submit" className="btn btn-primary mt-2">
+                <button type="button" onClick={()=>{navigate("/kyc-status-check")}} className="btn btn-primary mt-2">
                   Proceed
                 </button>
               </div>
