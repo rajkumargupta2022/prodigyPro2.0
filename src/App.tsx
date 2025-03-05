@@ -30,13 +30,11 @@ import KnowYourRiskProfile from "./pages/Know-Your-Risk-Profile";
 import PortfolioImport from "./pages/PortfolioImport";
 import PortfolioUnderReview from "./pages/PortfolioUnderReview";
 import Portfolio from "./pages/Portfolio";
-
-
-
 import Explore from "./pages/explore";
 import AllMutualFunds from "./pages/All-Mutual-Funds";
 import FundDetails from "./pages/Fund-Details";
 import SelectFolio from "./pages/select-folio";
+import Account from "./pages/account";
 
 function App() {
   return (
@@ -75,15 +73,17 @@ function App() {
             element={<KnowYourRiskProfile />}
           />
           <Route path="/portfolio-import" element={<PortfolioImport />} />
-          <Route path="/portfolio-under-review" element={<PortfolioUnderReview />} />
+          <Route
+            path="/portfolio-under-review"
+            element={<PortfolioUnderReview />}
+          />
           <Route path="/portfolio" element={<Portfolio />} />
-
-        
 
           <Route path="/explore" element={<Explore />} />
           <Route path="/all-mutual-funds" element={<AllMutualFunds />} />
           <Route path="/fund-details" element={<FundDetails />} />
           <Route path="/select-folio" element={<SelectFolio />} />
+          <Route path="/account" element={<Account />} />
         </Routes>
       </BrowserRouter>
     </>

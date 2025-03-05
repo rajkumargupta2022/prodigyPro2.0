@@ -5,8 +5,9 @@ import HDFC from "../assets/img/icons/hdfc.svg";
 import SimpleLineChart from "../components/chart";
 import MyStackBar from "../components/Stack-bar";
 import Popup from "../components/select-folio-popup";
-import SelectPaymentMethod from "../components/BankMandate";
+// import SelectPaymentMethod from "../components/BankMandate";
 import OrderPlaces from "../components/order-places";
+import SelectPaymentMode from "../components/Select-payment-mode";
 
 const SelectFolio = () => {
   return (
@@ -14,8 +15,8 @@ const SelectFolio = () => {
       <MyNavbar />
       <Container className="mt-4">
         {/* <Popup setShow={() => {}} show={false} /> */}
-        {/* <SelectPaymentMethod setShow={() => {}} show={true} /> */}
-        {<OrderPlaces setShow={() => {}} show={true} />}
+        <SelectPaymentMode setShow={() => {}} show={true} />
+        {/* {<OrderPlaces setShow={() => {}} show={true} />} */}
         <div className="d-flex align-items-center">
           <img src={HDFC} alt="Image not found" width={70} height={70} />
           <div style={{ marginLeft: "2%", marginTop: "2%" }}>
