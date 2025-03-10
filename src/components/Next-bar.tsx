@@ -13,14 +13,15 @@ const Footer = ({
       <Container>
         <Row>
           <Col className="text-start">
-            <Button variant="outline-primary" onClick={onBack}>
+            <Button  className="customCancelButton px-3" onClick={onBack}>
               Back
             </Button>
           </Col>
           <Col className="text-end">
-            <Button variant="primary" onClick={onSaveContinue}>
-              Save and Continue
+            <Button variant="primary" className="customButton px-2" onClick={onSaveContinue}>
+              Save & Continue
             </Button>
+            
           </Col>
         </Row>
       </Container>

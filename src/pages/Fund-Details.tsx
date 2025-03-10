@@ -187,37 +187,37 @@ const FundDetails = () => {
                 <h5 className="fw-bold bottom-border">Invest Now</h5>
 
                 <div className="d-flex justify-content-around">
-                  <div>
-                    <input
-                      type="radio"
-                      className="btn-check"
-                      name="options"
-                      id="option3"
-                      autoComplete="off"
-                    />
-                    <label
-                      className="btn btn-outline-primary declaration-button w-100 paddingLeftRight"
-                      htmlFor="option3"
-                    >
-                      Monthly SIP
-                    </label>
-                  </div>
+                    <div>
+                      <input
+                        type="radio"
+                        className="btn-check"
+                        name="options"
+                        id="option3"
+                        autoComplete="off"
+                      />
+                      <label
+                        className="btn btn-outline-primary declaration-button w-100 paddingLeftRight"
+                        htmlFor="option3"
+                      >
+                        Monthly SIP
+                      </label>
+                    </div>
 
-                  <div>
-                    <input
-                      type="radio"
-                      className="btn-check"
-                      name="options"
-                      id="option1"
-                      autoComplete="off"
-                    />
-                    <label
-                      className="btn btn-outline-primary declaration-button w-100 paddingLeftRight"
-                      htmlFor="option1"
-                    >
-                      One-time
-                    </label>
-                  </div>
+                    <div>
+                      <input
+                        type="radio"
+                        className="btn-check"
+                        name="options"
+                        id="option1"
+                        autoComplete="off"
+                      />
+                      <label
+                        className="btn btn-outline-primary declaration-button w-100 paddingLeftRight"
+                        htmlFor="option1"
+                      >
+                        One-time
+                      </label>
+                    </div>
                 </div>
 
                 <div className="mt-2">

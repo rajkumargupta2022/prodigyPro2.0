@@ -67,7 +67,7 @@ const Declaration = () => {
                   name="option6"
                   style={{ borderRadius: "2.25em" }}
                 />
-                <label className="form-check-label m-2" htmlFor="option1">
+                <label className="form-check-label mx-1" htmlFor="option1">
                   I hereby declare that i'm not a politically person.
                 </label>
               </div>
@@ -81,7 +81,7 @@ const Declaration = () => {
                   name="option5"
                   style={{ borderRadius: "2.25em" }}
                 />
-                <label className="form-check-label m-2" htmlFor="option2">
+                <label className="form-check-label mx-1" htmlFor="option2">
                   I'm not the Tax Payer of any other country other than india.
                 </label>
               </div>

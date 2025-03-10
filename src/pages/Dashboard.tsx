@@ -81,7 +81,10 @@ const Dashboard = () => {
               <Card border="light mb-3 cardRadius">
                 <Card.Body>
                   <div className="row">
-                    <h6 className="fw-semibold mb-4">Goal Planing</h6>
+                  <div className="col-sm-12 col-lg-7 d-flex justify-content-between w-100 mb-3">
+                      <div className="fw-semibold">Goal Planning</div>
+                      <Link to="/goal-planning" className="text-end logoBlueColor crPointer">View all</Link>
+                    </div>
                     <div className="col text-center" ><img src={retirment} alt="" className="" height={24} /><small className="d-block adjustTextGrey">Retirment </small><PlusCircle color="blue" /></div>
                     <div className="col text-center" ><img src={education} alt="" className="" height={24} /><small className="d-block adjustTextGrey">Education</small> <PlusCircle color="blue" /></div>
                     <div className="col text-center" ><img src={house} alt="" className="" height={24} /><small className="d-block adjustTextGrey">House</small> <PlusCircle color="blue" /></div>
@@ -189,14 +192,14 @@ const Dashboard = () => {
                 <Card.Body>
                   <div className="row px-2">
                     <h6 className="fw-semibold mb-4">Quick Link</h6>
-                    <div className="col-9 adjustText border-bottom pb-2 crPointer borderColor" >All Orders</div>
-                    <div className="col-3 adjustText  pb-2 crPointer border-bottom text-end" ><ChevronRight /></div>
-                    <div className="col-9 adjustText border-bottom pb-2 crPointer borderColor" >Linked Bank Accounts</div>
-                    <div className="col-3 adjustText  pb-2 crPointer border-bottom text-end" ><ChevronRight /></div>
-                    <div className="col-9 adjustText border-bottom pb-2 crPointer borderColor" >Statements</div>
-                    <div className="col-3 adjustText  pb-2 crPointer border-bottom text-end" ><ChevronRight /></div>
-                    <div className="col-9 adjustText  pb-2 crPointer borderColor" >Financial Calculators</div>
-                    <div className="col-3 adjustText  pb-2 crPointer  text-end" ><ChevronRight /></div>
+                    <Link to="/all-orders" className="col-9 adjustText border-bottom pb-2 text-dark borderColor" >All Orders</Link>
+                    <Link to="/all-orders" className="col-3 adjustText  pb-2 text-dark border-bottom text-end" ><ChevronRight /></Link>
+                    <Link to="/bank-accounts" className="col-9 adjustText border-bottom pb-2 text-dark borderColor" >Linked Bank Accounts</Link>
+                    <Link to="/bank-accounts" className="col-3 adjustText  pb-2 text-dark border-bottom text-end" ><ChevronRight /></Link>
+                    <Link to="/statements" className="col-9 adjustText border-bottom pb-2 text-dark borderColor" >Statements</Link>
+                    <Link to="/statements" className="col-3 adjustText  pb-2 text-dark border-bottom text-end" ><ChevronRight /></Link>
+                    <Link to="/calculator-list" className="col-9 adjustText  pb-2 text-dark borderColor" >Financial Calculators</Link>
+                    <Link to="/calculator-list" className="col-3 adjustText  pb-2 text-dark  text-end" ><ChevronRight /></Link>
 
 
                   </div>
