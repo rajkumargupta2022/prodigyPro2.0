@@ -1,10 +1,98 @@
 import MyNavbar from "../components/Navbar";
-import GIRLDP from "../assets/img/girl-dp.png";
-import { ArrowLeft, ChevronRight } from "react-bootstrap-icons";
+import { ChevronRight } from "react-bootstrap-icons";
+import Profile from "../components/Profile";
+import MyProfile from "../components/My-Profile";
+import LocateUs from "../components/Locate-us";
+import AboutUs from "../components/About-Us";
+import AddFamilyMember from "../components/Add-family-member";
+import { useEffect, useState } from "react";
 
-const AddFamilyMember = () => {
+const Account = () => {
+  const [routingStack, setRoutingStack] = useState<string[]>([]);
+  const [currentActive, setCurrentActive] = useState("my-profile");
+
+  useEffect(() => {
+    activeInactive("my-profile");
+  }, []);
+
+  const renderComponent = () => {
+    switch (currentActive) {
+      case "my-profile":
+        return (
+          <Profile activeInactive={activeInactive} backButton={backButton} />
+        );
+      case "locate-us":
+        return <LocateUs backButton={backButton} />;
+      case "about-us":
+        return <AboutUs backButton={backButton} />;
+      case "my-profile/profile-details":
+        return <MyProfile backButton={backButton} />;
+      case "add-family-member":
+        return <AddFamilyMember />;
+    }
+  };
+
+  const activeInactive = (route: string) => {
+    let previousRoute = null;
+    if (routingStack.length < 1) {
+      routingStack.push(route);
+      setActiveClass(route);
+    } else if (currentActive === route) return;
+    else {
+      // its for nesting routing
+      if (route.indexOf("/") != -1) {
+        setCurrentActive(route);
+        routingStack.push(route);
+        return;
+      }
+      previousRoute = routingStack[routingStack.length - 1] as string;
+      setUnActiveClass(previousRoute, route, false);
+      setActiveClass(route);
+    }
+  };
+
+  const setActiveClass = (currentActive: string) => {
+    let route = currentActive;
+    if (currentActive.includes("/")) {
+      route = currentActive.split("/")[0];
+    }
+    const element = document.getElementById(route);
+    element?.classList.add("active");
+    setCurrentActive(currentActive);
+  };
+
+  const setUnActiveClass = (
+    previousRoute: string,
+    currentActive: string,
+    isBack: boolean
+  ) => {
+    if (previousRoute.indexOf("/") !== -1) {
+      previousRoute = previousRoute.split("/")[0];
+    }
+    const element = document.getElementById(previousRoute);
+    element?.classList.remove("active");
+    if (!isBack) {
+      routingStack.push(currentActive);
+    }
+  };
+
+  const backButton = () => {
+    if (routingStack.length > 1) {
+      let previousRoute = routingStack.pop() as string;
+      if (previousRoute.indexOf("/") != -1) {
+        const arrayOfRoutes = previousRoute.split("/");
+        previousRoute = arrayOfRoutes[0];
+        setCurrentActive(previousRoute);
+        return;
+      }
+      setActiveClass(routingStack[routingStack.length - 1]);
+      setUnActiveClass(previousRoute, "", true);
+    }
+  };
+
   return (
     <>
+      {console.log(routingStack)}
       <MyNavbar />
       <div className="container-fluid">
         <div className="row add_family_layout">
@@ -13,48 +101,65 @@ const AddFamilyMember = () => {
             <nav className="shadow-sm rounded-4">
               <div className="position-sticky">
                 <ul className="nav flex-column">
-                  <li className="nav-item d-flex justify-content-between align-items-center border-bottom active">
+                  <li
+                    onClick={() => activeInactive("my-profile")}
+                    id="my-profile"
+                    className="nav-item d-flex justify-content-between align-items-center border-bottom"
+                  >
                     <a className="nav-link" href="#">
                       My Profile
                     </a>
                     <ChevronRight size={15} className="text-secondary" />
                   </li>
-                  <li className="nav-item d-flex justify-content-between align-items-center  border-bottom ">
+                  <li
+                    onClick={() => activeInactive("all-orders")}
+                    id="all-orders"
+                    className="nav-item d-flex justify-content-between align-items-center  border-bottom"
+                  >
                     <a className="nav-link navItemBorder " href="#">
                       All Orders
                     </a>
                     <ChevronRight size={15} className="text-secondary" />
                   </li>
-                  <li className="nav-item  border-bottom  d-flex justify-content-between align-items-center">
+                  <li
+                    onClick={() => activeInactive("linked-bank")}
+                    id="linked-bank"
+                    className="nav-item  border-bottom  d-flex justify-content-between align-items-center"
+                  >
                     <a className="nav-link" href="#">
                       Linked Bank Accounts
                     </a>
                     <ChevronRight size={15} className="text-secondary" />
                   </li>
-                  <li className="nav-item  border-bottom d-flex justify-content-between align-items-center">
+                  <li
+                    onClick={() => activeInactive("risk-profile")}
+                    id="risk-profile"
+                    className="nav-item  border-bottom d-flex justify-content-between align-items-center"
+                  >
                     <a className="nav-link" href="#">
                       Risk Profile
                     </a>
                     <ChevronRight size={15} className="text-secondary" />
                   </li>
 
-                  <li className="nav-item  border-bottom d-flex justify-content-between align-items-center">
+                  <li
+                    onClick={() => activeInactive("statements")}
+                    id="statements"
+                    className="nav-item  border-bottom d-flex justify-content-between align-items-center"
+                  >
                     <a className="nav-link" href="#">
                       Statements
                     </a>
                     <ChevronRight size={15} className="text-secondary" />
                   </li>
 
-                  <li className="nav-item  border-bottom d-flex justify-content-between align-items-center">
+                  <li
+                    onClick={() => activeInactive("add-family-member")}
+                    id="add-family-member"
+                    className="nav-item  border-bottom d-flex justify-content-between align-items-center"
+                  >
                     <a className="nav-link" href="#">
-                      Change Password
-                    </a>
-                    <ChevronRight size={15} className="text-secondary" />
-                  </li>
-
-                  <li className="nav-item d-flex justify-content-between align-items-center">
-                    <a className="nav-link" href="#">
-                      Help & Support
+                      Add Family Member
                     </a>
                     <ChevronRight size={15} className="text-secondary" />
                   </li>
@@ -65,70 +170,58 @@ const AddFamilyMember = () => {
             <nav className="shadow-sm mt-4  rounded-4">
               <div className="position-sticky">
                 <ul className="nav flex-column ">
-                  <li className="nav-item border-bottom d-flex justify-content-between align-items-center">
-                    <a className="nav-link   pb-2" href="#">
+                  <li
+                    onClick={() => activeInactive("change-password")}
+                    id="change-password"
+                    className="nav-item  border-bottom d-flex justify-content-between align-items-center"
+                  >
+                    <a className="nav-link" href="#">
                       Change Password
                     </a>
-                    <ChevronRight size={15} className="fw-light" />
+                    <ChevronRight size={15} className="text-secondary" />
                   </li>
 
-                  <li className="nav-item d-flex justify-content-between align-items-center">
-                    <a className="nav-link " href="#">
+                  <li
+                    onClick={() => activeInactive("help&support")}
+                    id="help&support"
+                    className="border-bottom nav-item d-flex justify-content-between align-items-center"
+                  >
+                    <a className="nav-link" href="#">
                       Help & Support
                     </a>
-                    <ChevronRight size={15} className="fw-light" />
+                    <ChevronRight size={15} className="text-secondary" />
+                  </li>
+
+                  <li
+                    onClick={() => activeInactive("about-us")}
+                    id="about-us"
+                    className="nav-item  border-bottom d-flex justify-content-between align-items-center"
+                  >
+                    <a className="nav-link" href="#">
+                      About Us
+                    </a>
+                    <ChevronRight size={15} className="text-secondary" />
+                  </li>
+
+                  <li
+                    onClick={() => activeInactive("locate-us")}
+                    id="locate-us"
+                    className="nav-item d-flex justify-content-between align-items-center"
+                  >
+                    <a className="nav-link" href="#">
+                      Locate Us
+                    </a>
+                    <ChevronRight size={15} className="text-secondary" />
                   </li>
                 </ul>
               </div>
             </nav>
           </div>
-
-          {/* Form Section */}
-          <main className="col-md-9 ms-sm-auto col-lg-9 px-md-4 py-4">
-            <h2>
-              <ArrowLeft size={25} /> My Profile
-            </h2>
-            <hr className="fw-light text-secondary" />
-            <form className="d-flex p-4 shadow-sm bg-white border-0 rounded-4">
-              <div>
-                <img src={GIRLDP} alt="Image not found" />
-              </div>
-              <div className="m-2">
-                <h5>Nandani Sahu</h5>
-                <p>Member since 2023</p>
-              </div>
-              <div className="">
-                <p
-                  className="
-                "
-                  style={{ color: "#2841fe" }}
-                >
-                  Profile Details
-                </p>
-              </div>
-            </form>
-            <div style={{ marginTop: "2%" }}>
-              <span className="font-weight-bold ">Note:</span>
-
-              <p className="fw-light text-secondary">
-                Please be ready with these documents before creation of Minor's
-                profile to mention the bank account details and upload the bank
-                and birth proof-
-              </p>
-              <p className="fw-light text-secondary">
-                1. Bank Account should be in the name of Minor it can either be
-                jointly or under the guardianship of the same person as you have
-                selected in profile.
-              </p>
-              <p className="fw-light text-secondary">
-                2. Guardian name must be there in birthproof.
-              </p>
-            </div>
-          </main>
+          {renderComponent()}
         </div>
       </div>
     </>
   );
 };
 
-export default AddFamilyMember;
+export default Account;
