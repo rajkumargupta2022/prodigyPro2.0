@@ -1,8 +1,11 @@
+import { useNavigate } from "react-router-dom";
 import NavBar from "../components/Navbar";
 import NextBar from "../components/Next-bar";
 import Breadcrumb from "react-bootstrap/Breadcrumb";
 
+
 const Declaration = () => {
+  const navigate = useNavigate()
   return (
     <>
       <NavBar />
@@ -18,101 +21,26 @@ const Declaration = () => {
           </Breadcrumb>
         </div>
       </div>
-      <div className="container pt-5">
-        <div className="personal_form_container pt-4">
-          <h3 className="mb-4 text-dark fw-bolder">Declarations</h3>
-          <form className="bg-white px-5 py-4 rounded form_shadow">
+      <div className="container ">
+        <div className="personal_form_container ">
+          <h5 className="mb-4">Declarations</h5>
+          <form className="bg-white px-5 py-4 rounded-4 form_shadow">
             {/* First Name & Last Name */}
-            <span className="fw-light text-secondary">INCOME RANGE</span>
-            <div role="group" aria-label="Outline radio toggle">
-              <input
-                type="radio"
-                className="btn-check"
-                name="options"
-                id="option1"
-                autoComplete="off"
-              />
-              <label
-                className="btn btn-outline-primary declaration-button"
-                htmlFor="option1"
-              >
-                Below 1 lakh
-              </label>
-
-              <input
-                type="radio"
-                className="btn-check"
-                name="options"
-                id="option2"
-                autoComplete="off"
-              />
-              <label
-                className="btn btn-outline-primary declaration-button"
-                htmlFor="option2"
-              >
-                1-5 Lakh
-              </label>
-
-              <input
-                type="radio"
-                className="btn-check"
-                name="options"
-                id="option3"
-                autoComplete="off"
-              />
-              <label
-                className="btn btn-outline-primary declaration-button"
-                htmlFor="option3"
-              >
-                5-10 Lakh
-              </label>
-
-              <input
-                type="radio"
-                className="btn-check"
-                name="options"
-                id="option3"
-                autoComplete="off"
-              />
-              <label
-                className="btn btn-outline-primary declaration-button"
-                htmlFor="option3"
-              >
-                10-25 Lakh
-              </label>
-
-              <input
-                type="radio"
-                className="btn-check"
-                name="options"
-                id="option3"
-                autoComplete="off"
-              />
-              <label
-                className="btn btn-outline-primary declaration-button"
-                htmlFor="option3"
-              >
-                25Lakh-1Crore
-              </label>
-
-              <input
-                type="radio"
-                className="btn-check"
-                name="options"
-                id="option3"
-                autoComplete="off"
-              />
-              <label
-                className="btn btn-outline-primary declaration-button"
-                htmlFor="option3"
-              >
-                1Crore
-              </label>
-            </div>
+            <div className="row">
+            <div className=" col">
+              <small className="fs14px lightBlack">INCOME RANGE</small><br/>
+                <button type="button" className="btn riskProfileBtn">Below 1 Lakh</button>
+                <button type="button" className="btn riskProfileBtn mx-1">1-5 Lakh</button>
+                <button type="button" className="btn riskProfileBtn mx-1">5-10 Lakh</button>
+                <button type="button" className="btn riskProfileBtn mx-1">10-25 Lakh</button>
+                <button type="button" className="btn riskProfileBtn mx-1">25 Lakh  - 1 Crore</button>
+                <button type="button" className="btn riskProfileBtn mx-1">Above 1 Crore</button>
+              </div>
+          </div>
 
             <div className="row mb-3">
-              <div className="col-md-6 mt-5">
-                <span className="mt-2 fw-light text-secondary">
+              <div className="col-md-6 mt-2">
+                <span className="mt-2 fs14px">
                   RESIDENT STATUS
                 </span>
                 <br />
@@ -123,12 +51,10 @@ const Declaration = () => {
                   id="option11"
                   autoComplete="off"
                 />
-                <label
-                  className="btn btn-outline-primary declaration-button"
-                  htmlFor="option11"
-                >
-                  Indian
-                </label>
+              <div className=" col">
+                <button type="button" className="btn riskProfileBtn">Indian</button>
+             
+            </div>
               </div>
             </div>
 
@@ -141,7 +67,7 @@ const Declaration = () => {
                   name="option6"
                   style={{ borderRadius: "2.25em" }}
                 />
-                <label className="form-check-label m-2" htmlFor="option1">
+                <label className="form-check-label mx-1" htmlFor="option1">
                   I hereby declare that i'm not a politically person.
                 </label>
               </div>
@@ -155,7 +81,7 @@ const Declaration = () => {
                   name="option5"
                   style={{ borderRadius: "2.25em" }}
                 />
-                <label className="form-check-label m-2" htmlFor="option2">
+                <label className="form-check-label mx-1" htmlFor="option2">
                   I'm not the Tax Payer of any other country other than india.
                 </label>
               </div>
@@ -163,7 +89,7 @@ const Declaration = () => {
           </form>
         </div>
       </div>
-      <NextBar onBack={() => {}} onSaveContinue={() => {}} />
+      <NextBar onBack={() => {}} onSaveContinue={() => {navigate('/address-details')}} />
     </>
   );
 };

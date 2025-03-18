@@ -3,8 +3,10 @@ import NavBar from "../components/Navbar";
 import Breadcrumb from "react-bootstrap/Breadcrumb";
 import NextBar from "../components/Next-bar";
 import { CloudUploadFill } from "react-bootstrap-icons";
+import { useNavigate } from "react-router-dom";
 
 const ProofIdentity = () => {
+  const navigate = useNavigate()
   const { getRootProps, getInputProps } = useDropzone({
     onDrop: (acceptedFiles) => {
       console.log(acceptedFiles);
@@ -40,7 +42,7 @@ const ProofIdentity = () => {
                 </label>
                 <select name="occupation" className="form-select">
                   <option value="">Choose...</option>
-                  <option value="example">example</option>
+                  <option value="example">Pan Card</option>
                 </select>
               </div>
             </div>
@@ -65,7 +67,7 @@ const ProofIdentity = () => {
           </form>
         </div>
       </div>
-      <NextBar onBack={() => {}} onSaveContinue={() => {}} />
+      <NextBar onBack={() => {}} onSaveContinue={() => {navigate("/proof-identity2")}} />
     </>
   );
 };

@@ -1,8 +1,10 @@
+import { useNavigate } from "react-router-dom";
 import NavBar from "../components/Navbar";
 import NextBar from "../components/Next-bar";
 import Breadcrumb from "react-bootstrap/Breadcrumb";
 
 const BankDetails = () => {
+  const navigate = useNavigate()
   return (
     <>
       <NavBar />
@@ -18,21 +20,21 @@ const BankDetails = () => {
           </Breadcrumb>
         </div>
       </div>
-      <div className="container pt-5">
-        <div className="personal_form_container pt-4">
-          <h3 className="mb-4 text-dark fw-bolder">Bank Details</h3>
+      <div className="container">
+        <div className="personal_form_container">
+          <h5 className="mb-3 mt-1">Bank Details</h5>
           <form className="bg-white px-5 py-4 rounded form_shadow">
             {/* First Name & Last Name */}
 
             <div className="row mb-3">
               <div className="col-md-6">
-                <label className="form-label fw-light text-secondary">
+                <label className="form-label fs12px">
                   ACCOUNT NUMBER
                 </label>
                 <input type="text" name="fullname" className="form-control" />
               </div>
               <div className="col-md-6">
-                <label className="form-label fw-light text-secondary">
+                <label className="form-label fs12px">
                   RE-ENTER ACCOUNT NUMBER
                 </label>
                 <input type="email" name="email" className="form-control" />
@@ -42,40 +44,21 @@ const BankDetails = () => {
             {/* Email & Phone */}
             <div className="row mb-3">
               <div className="col-md-6">
-                <span className="mt-2 fw-light text-secondary">
+                <span className="mt-2 fs12px">
                   RESIDENT STATUS
                 </span>
                 <br />
-                <input
-                  type="radio"
-                  className="btn-check"
-                  name="a2"
-                  id="option11"
-                  autoComplete="off"
-                />
-                <label
-                  className="btn btn-outline-primary declaration-button"
-                  htmlFor="option11"
-                >
-                  Saving Account
-                </label>
-
-                <input
-                  type="radio"
-                  className="btn-check"
-                  name="a2"
-                  id="option11"
-                  autoComplete="off"
-                />
-                <label
-                  className="btn btn-outline-primary declaration-button"
-                  htmlFor="option11"
-                >
-                  Current Account
-                </label>
+                <div className="row">
+            <div className=" col">
+              <div className="">
+                <button type="button" className="btn riskProfileBtn">Saving Account</button>
+                <button type="button" className="btn riskProfileBtn mx-1">Current Account</button>
+              </div>
+            </div>
+          </div>
               </div>
               <div className="col-md-6">
-                <label className="form-label fw-light text-secondary">
+                <label className="form-label fs12px">
                   IFSC CODE
                 </label>
                 <input type="text" name="pob" className="form-control" />
@@ -85,13 +68,13 @@ const BankDetails = () => {
             {/* Country & State */}
             <div className="row mb-3">
               <div className="col-md-6">
-                <label className="form-label fw-light text-secondary">
+                <label className="form-label fs12px">
                   BANK
                 </label>
                 <input type="text" name="pob" className="form-control" />
               </div>
               <div className="col-md-6">
-                <label className="form-label fw-light text-secondary">
+                <label className="form-label fs12px">
                   BRANCH
                 </label>
                 <input type="text" name="pob" className="form-control" />
@@ -100,7 +83,7 @@ const BankDetails = () => {
           </form>
         </div>
       </div>
-      <NextBar onBack={() => {}} onSaveContinue={() => {}} />
+      <NextBar onBack={() => {}} onSaveContinue={() => {navigate('/bank-details-varification')}} />
     </>
   );
 };

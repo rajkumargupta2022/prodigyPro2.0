@@ -3,8 +3,10 @@ import NavBar from "../components/Navbar";
 import Breadcrumb from "react-bootstrap/Breadcrumb";
 import NextBar from "../components/Next-bar";
 import { CloudUploadFill } from "react-bootstrap-icons";
+import { useNavigate } from "react-router-dom";
 
 const ProofIdentity2 = () => {
+  const navigate = useNavigate()
   const { getRootProps, getInputProps } = useDropzone({
     onDrop: (acceptedFiles) => {
       console.log(acceptedFiles);
@@ -64,7 +66,7 @@ const ProofIdentity2 = () => {
           </form>
         </div>
       </div>
-      <NextBar onBack={() => {}} onSaveContinue={() => {}} />
+      <NextBar onBack={() => {}} onSaveContinue={() => {navigate("/digital-signature")}} />
     </>
   );
 };

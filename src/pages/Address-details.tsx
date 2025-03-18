@@ -1,8 +1,10 @@
+import { useNavigate } from "react-router-dom";
 import NavBar from "../components/Navbar";
 import NextBar from "../components/Next-bar";
 import Breadcrumb from "react-bootstrap/Breadcrumb";
 
 const AddressDetails = () => {
+  const navigate = useNavigate()
   return (
     <>
       <NavBar />
@@ -18,21 +20,21 @@ const AddressDetails = () => {
           </Breadcrumb>
         </div>
       </div>
-      <div className="container pt-5">
-        <div className="personal_form_container pt-4">
-          <h3 className="mb-4 text-dark fw-bolder">Address Details</h3>
-          <form className="bg-white px-5 py-4 rounded form_shadow">
+      <div className="container">
+        <div className="personal_form_container">
+          <h3 className="mb-3 text-dark fw-bolder">Address Details</h3>
+          <form className="bg-white px-5 py-4 rounded-4 form_shadow">
             {/* First Name & Last Name */}
 
             <div className="row mb-3">
               <div className="col-md-6">
-                <label className="form-label fw-light text-secondary">
+                <label className="form-label fs12px">
                   PINCODE
                 </label>
                 <input type="text" name="fullname" className="form-control" />
               </div>
               <div className="col-md-6">
-                <label className="form-label fw-light text-secondary">
+                <label className="form-label fs12px">
                   ADDRESS
                 </label>
                 <input type="text" name="address" className="form-control" />
@@ -42,13 +44,13 @@ const AddressDetails = () => {
             {/* Email & Phone */}
             <div className="row mb-3">
               <div className="col-md-6">
-                <label className="form-label fw-light text-secondary">
+                <label className="form-label fs12px">
                   LANDMARK
                 </label>
                 <input type="text" name="landmark" className="form-control" />
               </div>
               <div className="col-md-6">
-                <label className="form-label fw-light text-secondary">
+                <label className="form-label fs12px">
                   STATE
                 </label>
                 <select name="mobile_relation" className="form-select">
@@ -61,7 +63,7 @@ const AddressDetails = () => {
             {/* Country & State */}
             <div className="row mb-3">
               <div className="col-md-6">
-                <label className="form-label fw-light text-secondary">
+                <label className="form-label fs12px">
                   CITY
                 </label>
                 <select name="mobile_relation" className="form-select">
@@ -70,7 +72,7 @@ const AddressDetails = () => {
                 </select>
               </div>
               <div className="col-md-6">
-                <label className="form-label fw-light text-secondary">
+                <label className="form-label fs12px">
                   COUNTRY
                 </label>
                 <select name="mobile_relation" className="form-select">
@@ -82,7 +84,7 @@ const AddressDetails = () => {
           </form>
         </div>
       </div>
-      <NextBar onBack={() => {}} onSaveContinue={() => {}} />
+      <NextBar onBack={() => {}} onSaveContinue={() => {navigate('/bank-details')}} />
     </>
   );
 };

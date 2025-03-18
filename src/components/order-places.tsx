@@ -1,5 +1,4 @@
 import Modal from "react-bootstrap/Modal";
-import Card from "react-bootstrap/Card";
 import correct from "../assets/img/correct.png";
 import group from "../assets/img/Group.png";
 
@@ -19,58 +18,56 @@ const OrderPlaces: React.FC<OrderPlaces> = ({ show, setShow }) => {
       >
         <Modal.Body style={{ padding: 0 }}>
           <div className="d-flex justify-content-center align-items-center">
-            <div className="bg-primary text-white text-center p-5 rounded-4 shadow-lg">
+            <div className="logobg_color text-white text-center rounded-4 shadow-lg">
               {/* Image Wrapper */}
               <div className="position-relative d-inline-block">
                 {/* Background Image */}
-                <img src={group} alt="Group" className="img-fluid" />
+                <img src={group} alt="Group" className="img-fluid" height={110} width={250}/>
                 {/* Overlay Image */}
                 <img
                   src={correct}
                   alt="Correct Symbol"
                   className="position-absolute top-50 start-50 translate-middle"
-                  style={{ width: "84px", height: "84px" }} // Adjust size as needed
+                  height={84}
+                  width={84}
                 />
               </div>
 
-              <h2>Order Placed</h2>
-              <p className="text-white fw-bold">
+              <h3>Order Placed</h3>
+              <p className="text-white fs18px">
                 Units will be alloted subject to realization of funds in AMC’s
                 account
               </p>
 
               <div
-                style={{
-                  borderRadius: "24px",
-                  padding: "16px",
-                  backgroundColor: "#5063f7",
-                }}
+               
+                className="m-5"
               >
-                <div className="d-flex text-start">
-                  <p className="order-Placed-modal text-start">
+                <div className="d-flex text-start fs12pxWhite">
+                  <p className="order-Placed-modal  text-start">
                     UNIQUE NUMBER:
                   </p>
                   <h6>32545525</h6>
                 </div>
 
-                <div className="d-flex text-start">
+                <div className="d-flex  text-start fs12pxWhite">
                   <p className="order-Placed-modal ">TRXN NUMBER:</p>
                   <h6>32545525</h6>
                 </div>
 
-                <div className="d-flex text-start">
+                <div className="d-flex text-start fs12pxWhite">
                   <p className="order-Placed-modal ">FUND:</p>
                   <h6>HDFC Flexi Cap Fund-Regular-Growth</h6>
                 </div>
-                <div className="d-flex text-start">
+                <div className="d-flex text-start fs12pxWhite">
                   <p className="order-Placed-modal">FOLIO NUMBER:</p>
                   <h6>214321513</h6>
                 </div>
-                <div className="d-flex text-start">
+                <div className="d-flex text-start fs12pxWhite">
                   <p className="order-Placed-modal ">AMOUNT:</p>
                   <h6>5000</h6>
                 </div>
-                <div className="d-flex text-start">
+                <div className="d-flex text-start fs12pxWhite">
                   <p className="order-Placed-modal ">STATUS:</p>
                   <h6>Successful</h6>
                 </div>

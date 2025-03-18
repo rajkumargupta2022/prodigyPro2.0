@@ -3,24 +3,25 @@ import Logo from "../assets/img/logo/logo.png"
 import LoginLeftImage from "../components/LoginLeftImage"
 const Login = () => {
   const navigate = useNavigate()
-  const getOpt = ()=>{
+  const getOpt = () => {
     navigate("/otp")
-}
+  }
   return (
 
     <div className="container-fluid">
-      <div className="row">
-       <LoginLeftImage/>
+      <div className="row login_hight_fixed">
+        <LoginLeftImage/>
+       
         <div className="col-12 col-md-6 align-self-center">
           <div className="mrgin_With20">
-            <img src={Logo} alt="" className="logoImage"/>
+            <img src={Logo} alt="" className="logoImage" />
             <p className="py-2">From BFC Capital Private Limited</p>
             <form className="pt-3" action="">
               <label className="form-label fw-bold pb-1">Enter your phone number</label>
 
               <div className="input-group mb-3">
-                <button className="btn rounded border" type="button" >+91</button>              
-                <input type="text" className="form-control mx-1 rounded"  placeholder="Phone Number" />
+                <button className="btn rounded border" type="button" >+91</button>
+                <input type="text" className="form-control mx-1 rounded" placeholder="Phone Number" />
               </div>
               <button type="button" onClick={getOpt} className="customButton col-12">Get OTP</button>
             </form>

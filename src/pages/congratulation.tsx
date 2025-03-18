@@ -1,8 +1,10 @@
 import MyNavbar from "../components/Navbar";
 import correct from "../assets/img/correct.png";
 import group from "../assets/img/Group.png";
+import { useNavigate } from "react-router-dom";
 
 const SuccessPage = () => {
+  const navigate = useNavigate()
   return (
     <>
       <MyNavbar />
@@ -39,6 +41,7 @@ const SuccessPage = () => {
           <button
             className="btn btn-light fw-bold mt-3"
             style={{ color: "#011efe" }}
+            onClick={()=>{navigate("/dashboard")}}
           >
             Back to Home
           </button>

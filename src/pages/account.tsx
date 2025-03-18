@@ -6,6 +6,9 @@ import LocateUs from "../components/Locate-us";
 import AboutUs from "../components/About-Us";
 import AddFamilyMember from "../components/Add-family-member";
 import { useEffect, useState } from "react";
+import AllOrders from "../components/All-orders";
+import OrderDetails from "../components/Order-details";
+import SIPOrderDetails from "../components/Sip-order-details";
 
 const Account = () => {
   const [routingStack, setRoutingStack] = useState<string[]>([]);
@@ -28,7 +31,16 @@ const Account = () => {
       case "my-profile/profile-details":
         return <MyProfile backButton={backButton} />;
       case "add-family-member":
-        return <AddFamilyMember />;
+        return <AddFamilyMember backButton={backButton} />;
+      case "all-orders":
+        return (
+          <AllOrders backButton={backButton} activeInactive={activeInactive} />
+        );
+      case "order-timeline":
+        return <OrderDetails backButton={backButton} />;
+
+      case "sip-order":
+        return <SIPOrderDetails backButton={backButton} />;
     }
   };
 

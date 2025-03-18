@@ -1,8 +1,10 @@
+import { useNavigate } from "react-router-dom";
 import NavBar from "../components/Navbar";
 import NextBar from "../components/Next-bar";
 import Breadcrumb from "react-bootstrap/Breadcrumb";
 
 const NominationDetails = () => {
+  const navigate = useNavigate()
   return (
     <>
       <NavBar />
@@ -59,15 +61,15 @@ const NominationDetails = () => {
 
             {/* Country & State */}
 
-            <div className="row  mb-3">
+            <div className="row  mb-3" onClick={()=>{navigate('/nomination-list')}}>
               <div className="col-md-6">
-                <button className="btn btn-primary"> Add Nominee</button>
+                <button type="button" className="btn btn-primary"> Add Nominee</button>
               </div>
             </div>
           </form>
         </div>
       </div>
-      <NextBar onBack={() => {}} onSaveContinue={() => {}} />
+      <NextBar onBack={() => {}} onSaveContinue={() => {navigate('/proof-identity')}} />
     </>
   );
 };

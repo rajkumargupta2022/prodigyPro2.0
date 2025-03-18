@@ -6,6 +6,7 @@ import { ThreeDotsVertical } from "react-bootstrap-icons";
 import NomineeModal from "../components/Nominee-Modal";
 
 const NominationList = () => {
+  // const [openNomination,setOpenNomination] = useState(false)
   return (
     <>
       <NavBar />
@@ -135,7 +136,8 @@ const NominationList = () => {
                 <ThreeDotsVertical size={20} className="text-muted" />
               </div>
             </Card>
-            <div className="mt-4">
+              <div className="logoBlueColor mt-2 crPointer" >+ Add New</div>
+            <div className="mt-4" >
               <span
                 style={{
                   color: "#6778fe",

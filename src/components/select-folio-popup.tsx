@@ -5,6 +5,8 @@ import Card from "react-bootstrap/Card";
 import { CurrencyRupee } from "react-bootstrap-icons";
 import CreateNewFolio from "./CreateNewFolio";
 import InvetmentConfirmation from "./InvestmentConfirmation";
+import BankMandate from "../components/BankMandate";
+
 interface SchemeDetailsProps {
   show: boolean;
   setShow: (show: boolean) => void;
@@ -14,11 +16,10 @@ const SelectFolioPopup: React.FC<SchemeDetailsProps> = ({ show, setShow }) => {
   const [openCreateFolio, setOpenCreateFolio] = useState<boolean>(false);
   const [openInvestmentConfirmation, setOpenInvestmentConfirmation] =
     useState<boolean>(false);
+  const [openBankMandate,setOpenBankMandate] = useState(false)
 
-  const handleConfirmation = () => {
-    setOpenInvestmentConfirmation(true);
-    setShow(false);
-  };
+
+  
 
   return (
     <>
@@ -106,7 +107,7 @@ const SelectFolioPopup: React.FC<SchemeDetailsProps> = ({ show, setShow }) => {
           </h6>
           <div className="text-center">
             <Button
-              variant="primary"
+              variant="primary" onClick={()=>{setOpenBankMandate(true); setShow(false);}}
               style={{ backgroundColor: "#011efe", borderRadius: "12px" }}
             >
               Continue with Selected Folio
@@ -119,6 +120,8 @@ const SelectFolioPopup: React.FC<SchemeDetailsProps> = ({ show, setShow }) => {
         show={openInvestmentConfirmation}
         setShow={setOpenInvestmentConfirmation}
       />
+            <BankMandate show={openBankMandate} setShow={setOpenBankMandate}/>
+
     </>
   );
 };
