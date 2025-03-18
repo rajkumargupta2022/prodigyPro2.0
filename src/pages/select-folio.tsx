@@ -3,9 +3,15 @@ import MyNavbar from "../components/Navbar";
 
 import Popup from "../components/select-folio-popup";
 
-import { Dispatch,SetStateAction } from "react";
- 
-const SelectFolio = ({show,setShow}:{show:boolean,setShow:Dispatch<SetStateAction<boolean>>}) => {
+import { Dispatch, SetStateAction } from "react";
+
+const SelectFolio = ({
+  show,
+  setShow,
+}: {
+  show: boolean;
+  setShow: Dispatch<SetStateAction<boolean>>;
+}) => {
   return (
     <>
       <MyNavbar />

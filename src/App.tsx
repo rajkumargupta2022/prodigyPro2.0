@@ -30,15 +30,14 @@ import KnowYourRiskProfile from "./pages/Know-Your-Risk-Profile";
 import PortfolioImport from "./pages/PortfolioImport";
 import PortfolioUnderReview from "./pages/PortfolioUnderReview";
 import Portfolio from "./pages/Portfolio";
-import PortfolioEmpty from "./pages/PortfolioEmpty";
-import GoalPlanning from "./pages/planning/GoalPlanning"
-import GoalSummary from "./pages/planning/GoalSummary"
-import Goal from "./pages/planning/Goal"
-
-
 import Explore from "./pages/explore";
 import AllMutualFunds from "./pages/All-Mutual-Funds";
 import FundDetails from "./pages/Fund-Details";
+import Account from "./pages/account";
+import PortfolioEmpty from "./pages/PortfolioEmpty";
+import GoalPlanning from "./pages/planning/GoalPlanning";
+import GoalSummary from "./pages/planning/GoalSummary";
+import Goal from "./pages/planning/Goal";
 import GoalResult from "./pages/planning/GoalResult";
 import CalculatorList from "./pages/calculator/CalculatorList";
 import SipCalculator from "./pages/calculator/SipCalculator";
@@ -81,14 +80,17 @@ function App() {
             element={<KnowYourRiskProfile />}
           />
           <Route path="/portfolio-import" element={<PortfolioImport />} />
-          <Route path="/portfolio-under-review" element={<PortfolioUnderReview />} />
+          <Route
+            path="/portfolio-under-review"
+            element={<PortfolioUnderReview />}
+          />
           <Route path="/portfolio" element={<Portfolio />} />
-
-        
 
           <Route path="/explore" element={<Explore />} />
           <Route path="/all-mutual-funds" element={<AllMutualFunds />} />
           <Route path="/fund-details" element={<FundDetails />} />
+          {/* <Route path="/select-folio" element={<SelectFolio />} /> */}
+          <Route path="/account" element={<Account />} />
           <Route path="/portfolio-empty" element={<PortfolioEmpty />} />
           <Route path="/goal-planning" element={<GoalPlanning />} />
           <Route path="/goal-summary" element={<GoalSummary />} />
