@@ -2,13 +2,15 @@ import NavBar from "../../components/Navbar";
 import retirment from "../../assets/img/icons/rocking-chair (1) 1.svg"
 import education from "../../assets/img/icons/education 1.svg"
 import home from "../../assets/img/icons/home 1.svg"
-import car from "../../assets/img/icons/car 1.svg"
-import vacation from "../../assets/img/icons/vacation.svg"
+import swpIcon from "../../assets/img/icons/swp cal.svg"
+import elssIcon from "../../assets/img/icons/ELSS calculator.svg"
 import wealth from "../../assets/img/icons/wealth creation.svg"
 import ring from "../../assets/img/icons/engagement-ring 1.svg"
-import customGoal from "../../assets/img/icons/goal.svg"
+import SipIcon from "../../assets/img/icons/SIP calculator.svg"
+import fdIcon from "../../assets/img/icons/wealth cal 1.svg"
+import emiIcon from "../../assets/img/icons/EMI calculator 1.svg"
 import { CurrencyRupee } from "react-bootstrap-icons";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const CalculatorList = () => {
   const navigate = useNavigate()
@@ -22,129 +24,89 @@ const CalculatorList = () => {
           <div className="col-12 align-items-start mb-3">
             <h4>Financial Calculators</h4>
           </div>
-         
+          <div className="col-lg-3 mb-3">
+            <Link to="/sip-calculator" className="card border-0 shadow rounded-3" >
+              <div className="card-body border-0 card px-3">
+                <img src={SipIcon} className="" alt="..." height={44} width={44} />
+                <p className="fs18pxHeading mb-0 mt-2">SIP Calculator</p>
+                <p className="fs14px mb-0">Know returns from SIP or plan a future goal</p>
+              </div>
+            </Link>
+          </div>
 
-          <div className="col-lg-3   rounded-2  px-2 mb-3" onClick={()=>{navigate("/retirment")}}>
-            <div className="card border-0 shadow">
-              <div className="card-header border-0 bg-transparent pb-0 pt-3 align-items-start">
+          <div className="col-lg-3 mb-3">
+            <Link to="/marriage-calculator" className="card border-0 shadow rounded-3" >
+              <div className="card-body border-0 card px-3">
+                <img src={ring} className="" alt="..." height={44} width={44} />
+                <p className="fs18pxHeading mb-0 mt-2">Marriage Planning</p>
+                <p className="fs14px mb-0">Plan your dream wedding expenses or set a savings goal</p>
               </div>
-                <img src={retirment} className="card-img-top" alt="..." height={44} />
-              <div className="card-body">
-                <p className="fs14px mb-0 ">Retirement</p>
-                <small><CurrencyRupee className="mb-1" />2.25Cr</small>
-              </div>
-            </div>
+            </Link>
           </div>
-          <div className="col-lg-3  rounded-2 alignCenter px-2 mb-3" onClick={()=>{navigate("/child-education")}}>
-            <div className="card border-0 shadow">
-              <div className="card-header border-0 bg-transparent pb-0 pt-3">
-                <img src={education} className="card-img-top" alt="..." height={44} />
+          <div className="col-lg-3 mb-3">
+            <Link to="/education-calculator" className="card border-0 shadow rounded-3" >
+              <div className="card-body border-0 card px-3">
+                <img src={education} className="" alt="..." height={44} width={44} />
+                <p className="fs18pxHeading mb-0 mt-2">Education Planning</p>
+                <p className="fs14px mb-0">Estimate future education costs and start saving wisely</p>
               </div>
-              <div className="card-body">
-                <p className="fs14px mb-0 ">Education</p>
-                <small><CurrencyRupee className="mb-1" />2.25Cr</small>
-              </div>
-            </div>
+            </Link>
           </div>
-          <div className="col-lg-3  rounded-2 alignCenter px-2 mb-3" onClick={()=>{navigate("/child-education")}}>
-            <div className="card border-0 shadow">
-              <div className="card-header border-0 bg-transparent pb-0 pt-3">
-                <img src={home} className="card-img-top" alt="..." height={44} />
+          <div className="col-lg-3 mb-3">
+            <Link to="/future-value-calculator" className="card border-0 shadow rounded-3" >
+              <div className="card-body border-0 card px-3">
+                <img src={wealth} className="" alt="..." height={44} width={44} />
+                <p className="fs18pxHeading mb-0 mt-2">Future Value Calculator</p>
+                <p className="fs14px mb-0">See how your investments can grow over time</p>
               </div>
-              <div className="card-body">
-                <p className="fs14px mb-0 ">House</p>
-                <small><CurrencyRupee className="mb-1" />2.25Cr</small>
-              </div>
-            </div>
+            </Link>
           </div>
-          <div className="col-lg-3  rounded-2 alignCenter px-2 mb-3">
-            <div className="card border-0 shadow">
-              <div className="card-header border-0 bg-transparent pb-0 pt-3">
-                <img src={car} className="card-img-top" alt="..." height={44} />
+          <div className="col-lg-3 mb-3">
+            <Link to="/retirment-calculator" className="card border-0 shadow rounded-3" >
+              <div className="card-body border-0 card px-3">
+                <img src={retirment} className="" alt="..." height={44} width={44} />
+                <p className="fs18pxHeading mb-0 mt-2">Retirement Calculator</p>
+                <p className="fs14px mb-0">Plan your retirement corpus and secure your future</p>
               </div>
-              <div className="card-body">
-                <p className="fs14px mb-0 ">Car</p>
-                <small><CurrencyRupee className="mb-1" />2.25Cr</small>
-              </div>
-            </div>
+            </Link>
           </div>
-          <div className="col-lg-3  rounded-2 alignCenter px-2 mb-3">
-            <div className="card border-0 shadow">
-              <div className="card-header border-0 bg-transparent pb-0 pt-3">
-                <img src={vacation} className="card-img-top" alt="..." height={44} />
+          <div className="col-lg-3 mb-3">
+            <Link to="/smi-calculator" className="card border-0 shadow rounded-3" >
+              <div className="card-body border-0 card px-3">
+                <img src={emiIcon} className="" alt="..." height={44} width={44} />
+                <p className="fs18pxHeading mb-0 mt-2">EMI Calculator</p>
+                <p className="fs14px mb-21px">Calculate your monthly EMI amount</p>
               </div>
-              <div className="card-body">
-                <p className="fs14px mb-0 ">Vacation</p>
-                <small><CurrencyRupee className="mb-1" />2.25Cr</small>
-              </div>
-            </div>
+            </Link>
           </div>
-          <div className="col-lg-3  rounded-2 alignCenter px-2 mb-3">
-            <div className="card border-0 shadow">
-              <div className="card-header border-0 bg-transparent pb-0 pt-3">
-                <img src={ring} className="card-img-top" alt="..." height={44} />
+          <div className="col-lg-3 mb-3">
+            <Link to="/fs-calculator" className="card border-0 shadow rounded-3" >
+              <div className="card-body border-0 card px-3">
+                <img src={fdIcon} className="" alt="..." height={44} width={44} />
+                <p className="fs18pxHeading mb-0 mt-2">FD Calculator</p>
+                <p className="fs14px mb-0">Calculate FD Interest Rates & Return Online</p>
               </div>
-              <div className="card-body">
-                <p className="fs14px mb-0 ">Marriage</p>
-                <small><CurrencyRupee className="mb-1" />2.25Cr</small>
-              </div>
-            </div>
+            </Link>
           </div>
-          <div className="col-lg-3  rounded-2 alignCenter px-2 mb-3">
-            <div className="card border-0 shadow">
-              <div className="card-header border-0 bg-transparent pb-0 pt-3">
-                <img src={wealth} className="card-img-top" alt="..." height={44} />
+          <div className="col-lg-3 mb-3">
+            <Link to="/elss-calculator" className="card border-0 shadow rounded-3" >
+              <div className="card-body border-0 card px-3">
+                <img src={elssIcon} className="" alt="..." height={44} width={44} />
+                <p className="fs18pxHeading mb-0 mt-2">ELSS Calculator</p>
+                <p className="fs14px mb-0">Know your tax savings and potential returns with ELSS</p>
               </div>
-              <div className="card-body">
-                <p className="fs14px mb-0 ">Wealth</p>
-                <small><CurrencyRupee className="mb-1" />2.25Cr</small>
-              </div>
-            </div>
+            </Link>
           </div>
-          <div className="col-lg-3  rounded-2 alignCenter px-2 mb-3">
-            <div className="card border-0 shadow">
-              <div className="card-header border-0 bg-transparent pb-0 pt-3">
-                <img src={customGoal} className="card-img-top" alt="..." height={44} />
+          <div className="col-lg-3 mb-3">
+            <Link to="/swp-calculator" className="card border-0 shadow rounded-3" >
+              <div className="card-body border-0 card px-3">
+                <img src={swpIcon} className="" alt="..." height={44} width={44} />
+                <p className="fs18pxHeading mb-0 mt-2">SWP Calculator</p>
+                <p className="fs14px mb-0">Plan your regular withdrawals for a steady income</p>
               </div>
-              <div className="card-body">
-                <p className="fs14px mb-0 ">Custom Goal 1</p>
-                <small><CurrencyRupee className="mb-1" />2.25Cr</small>
-              </div>
-            </div>
+            </Link>
           </div>
-          <div className="col-lg-3  rounded-2 alignCenter px-2 mb-3">
-            <div className="card border-0 shadow">
-              <div className="card-header border-0 bg-transparent pb-0 pt-3">
-                <img src={customGoal} className="card-img-top" alt="..." height={44} />
-              </div>
-              <div className="card-body">
-                <p className="fs14px mb-0 ">Custom Goal 2</p>
-                <small><CurrencyRupee className="mb-1" />2.25Cr</small>
-              </div>
-            </div>
-          </div>
-          <div className="col-lg-3  rounded-2 alignCenter px-2 mb-3">
-            <div className="card border-0 shadow">
-              <div className="card-header border-0 bg-transparent pb-0 pt-3">
-                <img src={customGoal} className="card-img-top" alt="..." height={44} />
-              </div>
-              <div className="card-body">
-                <p className="fs14px mb-0 ">Custom Goal 3</p>
-                <small><CurrencyRupee className="mb-1" />2.25Cr</small>
-              </div>
-            </div>
-          </div>
-          <div className="col-lg-3  rounded-2 alignCenter px-2 mb-3">
-            <div className="card border-0 shadow">
-              <div className="card-header border-0 bg-transparent pb-0 pt-3">
-                <img src={customGoal} className="card-img-top" alt="..." height={44} />
-              </div>
-              <div className="card-body">
-                <p className="fs14px mb-0 ">Custom Goal 4</p>
-                <small><CurrencyRupee className="mb-1" />2.25Cr</small>
-              </div>
-            </div>
-          </div>
+         
 
         </div>
       </div>

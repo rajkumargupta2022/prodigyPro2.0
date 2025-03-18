@@ -42,6 +42,7 @@ import FundDetails from "./pages/Fund-Details";
 import GoalResult from "./pages/planning/GoalResult";
 import CalculatorList from "./pages/calculator/CalculatorList";
 import SipCalculator from "./pages/calculator/SipCalculator";
+import CustomGoal from "./pages/planning/CustomGoal";
 
 function App() {
   return (
@@ -95,6 +96,7 @@ function App() {
           <Route path="/goal-result" element={<GoalResult />} />
           <Route path="/calculator-list" element={<CalculatorList />} />
           <Route path="/sip-calculator" element={<SipCalculator />} />
+          <Route path="/custom-goal" element={<CustomGoal />} />
 
         </Routes>
       </BrowserRouter>

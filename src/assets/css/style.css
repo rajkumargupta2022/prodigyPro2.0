@@ -183,6 +183,13 @@ margin: 0 auto;
     font-size: 18px;
     color: #000;
   }
+  .fs18pxHeading{
+    font-size: 18px;
+    color: #4D4D4D;
+  }
+  .mb-21px{
+    margin-bottom: 21px;
+  }
   .height6px{
     height: 6px;
   }

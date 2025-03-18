@@ -110,7 +110,7 @@ const addGoal = ()=>{
               </div>
             </div>
           </div>
-          <div className="col-lg-3  rounded-2 alignCenter px-2 mb-3">
+          <div className="col-lg-3  rounded-2 alignCenter px-2 mb-3" onClick={()=>{navigate("/custom-goal")}}>
             <div className="card border-0 shadow">
               <div className="card-header border-0 bg-transparent pb-0 pt-3">
                 <img src={customGoal} className="card-img-top" alt="..." height={44} />
@@ -121,7 +121,7 @@ const addGoal = ()=>{
               </div>
             </div>
           </div>
-          <div className="col-lg-3  rounded-2 alignCenter px-2 mb-3">
+          <div className="col-lg-3  rounded-2 alignCenter px-2 mb-3" onClick={()=>{navigate("/custom-goal")}}>
             <div className="card border-0 shadow">
               <div className="card-header border-0 bg-transparent pb-0 pt-3">
                 <img src={customGoal} className="card-img-top" alt="..." height={44} />
@@ -132,7 +132,7 @@ const addGoal = ()=>{
               </div>
             </div>
           </div>
-          <div className="col-lg-3  rounded-2 alignCenter px-2 mb-3">
+          <div className="col-lg-3  rounded-2 alignCenter px-2 mb-3" onClick={()=>{navigate("/custom-goal")}}>
             <div className="card border-0 shadow">
               <div className="card-header border-0 bg-transparent pb-0 pt-3">
                 <img src={customGoal} className="card-img-top" alt="..." height={44} />
@@ -143,7 +143,7 @@ const addGoal = ()=>{
               </div>
             </div>
           </div>
-          <div className="col-lg-3  rounded-2 alignCenter px-2 mb-3">
+          <div className="col-lg-3  rounded-2 alignCenter px-2 mb-3" onClick={()=>{navigate("/custom-goal")}}>
             <div className="card border-0 shadow">
               <div className="card-header border-0 bg-transparent pb-0 pt-3">
                 <img src={customGoal} className="card-img-top" alt="..." height={44} />
