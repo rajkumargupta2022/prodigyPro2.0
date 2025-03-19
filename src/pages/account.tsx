@@ -9,6 +9,8 @@ import { useEffect, useState } from "react";
 import AllOrders from "../components/All-orders";
 import OrderDetails from "../components/Order-details";
 import SIPOrderDetails from "../components/Sip-order-details";
+import STPOrderDetails from "../components/Stp-order-details";
+import SWPOrderDetails from "../components/SWP-ORDER-DETAILS";
 
 const Account = () => {
   const [routingStack, setRoutingStack] = useState<string[]>([]);
@@ -41,6 +43,10 @@ const Account = () => {
 
       case "sip-order":
         return <SIPOrderDetails backButton={backButton} />;
+      case "stp-order":
+        return <STPOrderDetails backButton={backButton} />;
+      case "swp-order":
+        return <SWPOrderDetails backButton={backButton} />;
     }
   };
 

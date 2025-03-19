@@ -685,7 +685,7 @@ font-weight: 500;
 
 .success-badge {
     border-radius: 70px;
-    padding: 8px 20px;
+    padding: 2px 20px;
     background-color: #E6F6EE;
     color: #06A358;
     align-self: center;
@@ -693,7 +693,7 @@ font-weight: 500;
 
 .failed-badge {
     border-radius: 70px;
-    padding: 8px 20px;
+    padding: 2px 20px;
     background-color: #FAECED;
     color: #CB414E;
     align-self: center;
@@ -701,7 +701,7 @@ font-weight: 500;
 
 .pending-badge {
   border-radius: 70px;
-  padding: 8px 20px;
+  padding: 2px 20px;
   background-color: #FFEAD5;
   color: #DA9101;
   align-self: center;
@@ -766,3 +766,34 @@ font-weight: 500;
   display: none;
 }
 
+
+.switch-btn {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #E6E8FF;
+  color:  #4D62FE;
+  border:none;
+  border-radius: 50px;
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.switch-btn:hover {
+  background-color: #e0e0ff;
+}
+
+.value-font {
+  font-weight: 400;
+  font-size: 14px;
+  color:#1A1C1E;
+}
+
+.value-font2 {
+  font-weight: 500;
+  font-size: 16px;
+  color:#212121;
+}

@@ -2,6 +2,8 @@ import { ArrowLeft } from "react-bootstrap-icons";
 import Orders from "./orders";
 import SIP from "./Sip";
 import { useState } from "react";
+import STP from "./STP";
+import SWP from "./SWP";
 
 function AllOrders({
   backButton,
@@ -18,6 +20,10 @@ function AllOrders({
         return <Orders activeInactive={activeInactive} />;
       case "sip":
         return <SIP activeInactive={activeInactive} />;
+      case "stp":
+        return <STP activeInactive={activeInactive} />;
+      case "swp":
+        return <SWP activeInactive={activeInactive} />;
     }
   };
 
@@ -34,14 +40,14 @@ function AllOrders({
             type="radio"
             className="btn-check"
             name="options"
-            id="option3"
+            id="option1"
             autoComplete="off"
             checked={active === "buy/sell"}
             onChange={() => setActive("buy/sell")}
           />
           <label
             className="btn btn-outline-primary declaration-button w-100 paddingLeftRight"
-            htmlFor="option3"
+            htmlFor="option1"
           >
             Buy/Sell
           </label>
@@ -52,13 +58,13 @@ function AllOrders({
             type="radio"
             className="btn-check"
             name="options"
-            id="option1"
+            id="option2"
             autoComplete="off"
             onChange={() => setActive("sip")}
           />
           <label
             className="btn btn-outline-primary declaration-button w-100 paddingLeftRight"
-            htmlFor="option1"
+            htmlFor="option2"
           >
             SIP
           </label>
@@ -69,12 +75,13 @@ function AllOrders({
             type="radio"
             className="btn-check"
             name="options"
-            id="option1"
+            id="option3"
             autoComplete="off"
+            onChange={() => setActive("stp")}
           />
           <label
             className="btn btn-outline-primary declaration-button w-100 paddingLeftRight"
-            htmlFor="option1"
+            htmlFor="option3"
           >
             STP
           </label>
@@ -84,12 +91,13 @@ function AllOrders({
             type="radio"
             className="btn-check"
             name="options"
-            id="option1"
+            id="option4"
             autoComplete="off"
+            onChange={() => setActive("swp")}
           />
           <label
             className="btn btn-outline-primary declaration-button w-100 paddingLeftRight"
-            htmlFor="option1"
+            htmlFor="option4"
           >
             SWP
           </label>
