@@ -707,6 +707,14 @@ font-weight: 500;
   align-self: center;
 }
 
+.info-badge {
+  border-radius: 70px;
+  background-color: #E6E8FF;
+  padding: 2px 20px;
+  color:#1A35FE;
+  align-self: center;
+}
+
 
 .timeline {
   position: relative;
@@ -797,3 +805,41 @@ font-weight: 500;
   font-size: 16px;
   color:#212121;
 }
+
+.ac-heading {
+  font-weight:600;
+  font-size: 24px;
+  color: #1A1C1E;
+}
+
+.bankbtn {
+  font-weight:500;
+  font-size: 16px;
+  color: #1A35FE;
+  cursor: pointer;
+}
+
+.mandate-button {
+background-color: #011EFE;
+color: #FFFFFF;
+font-weight: 500;
+font-size: 16px;
+border-radius: 12px;
+border:none;
+width:174px;
+height:48px;
+}
+
+.bank-name {
+  color:#4D4D4D;
+  font-weight: 500;
+  font-size: 14px;
+
+}
+
+.heading {
+  font-weight: 600;
+  font-size: 18px;
+  color:#212121;
+  padding:16px;
+} 
