@@ -1,10 +1,14 @@
 import { ArrowLeft } from "react-bootstrap-icons";
 import { useState } from "react";
 import SBI from "../assets/img/icons/sbi.png";
+import CreateMandate from "./create-mandate";
 
 function BankDetails({ backButton }: { backButton: any }) {
+  const [show, setShow] = useState(false);
+
   return (
     <main className="col-md-9 ms-sm-auto col-lg-9 px-md-4 py-4">
+      <CreateMandate setShow={setShow} show={show} />
       <h2>
         <ArrowLeft className="crPointer" size={25} onClick={backButton} />
         Bank Details
@@ -81,7 +85,9 @@ function BankDetails({ backButton }: { backButton: any }) {
         </div>
       </div>
 
-      <button className="mandate-button  mt-2">Create e-Mandate</button>
+      <button className="mandate-button  mt-2" onClick={() => setShow(true)}>
+        Create e-Mandate
+      </button>
     </main>
   );
 }

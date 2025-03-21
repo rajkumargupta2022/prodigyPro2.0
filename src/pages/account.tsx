@@ -14,6 +14,8 @@ import SWPOrderDetails from "../components/SWP-ORDER-DETAILS";
 import LinkedBankAccount from "../components/Linked-BankAccount";
 import BankDetails from "../components/Bank-Details";
 import AddBankAccount from "../components/Add-bank-account";
+import AddBankDetails from "../components/add-bank-details";
+import AddAccountVerification from "../components/bank-account-verification";
 
 const Account = () => {
   const [routingStack, setRoutingStack] = useState<string[]>([]);
@@ -60,7 +62,21 @@ const Account = () => {
       case "bank-details":
         return <BankDetails backButton={backButton} />;
       case "add-bank-account":
-        return <AddBankAccount backButton={backButton} />;
+        return (
+          <AddBankAccount
+            activeInactive={activeInactive}
+            backButton={backButton}
+          />
+        );
+      case "add-bank-details":
+        return (
+          <AddBankDetails
+            backButton={backButton}
+            activeInactive={activeInactive}
+          />
+        );
+      case "add-verification-details":
+        return <AddAccountVerification backButton={backButton} />;
     }
   };
 

@@ -4,7 +4,13 @@ import HDFC from "../assets/img/icons/hdfc.svg";
 import ICI from "../assets/img/icons/ici.svg";
 import Arun from "../assets/img/icons/arun.svg";
 
-function AddBankAccount({ backButton }: { backButton: any }) {
+function AddBankAccount({
+  backButton,
+  activeInactive,
+}: {
+  backButton: any;
+  activeInactive: any;
+}) {
   return (
     <main className="col-md-9 ms-sm-auto col-lg-9 px-md-4 py-4">
       <h2>
@@ -30,7 +36,11 @@ function AddBankAccount({ backButton }: { backButton: any }) {
       <div className="p-4 shadow-sm bg-white border-0 rounded-4 mb-2 mt-2">
         <div className="row">
           <div className="col-md-2 text-center">
-            <img src={SBI} alt="image not found" />
+            <img
+              src={SBI}
+              alt="image not found"
+              onClick={() => activeInactive("add-bank-details")}
+            />
             <div>
               <span className="bank-name">State Bank Of India</span>
             </div>
