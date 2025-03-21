@@ -16,19 +16,12 @@ const TaxSaving = () => {
     <>
       <NavBar />
     
-      <div className="breadcum_area" style={{ backgroundColor: "#F2F4FB" }}>
-        <div className="personal_form_container p-3">
-          <Breadcrumb>
-            <Breadcrumb.Item href="#">Home</Breadcrumb.Item>
-            <Breadcrumb.Item href="https://getbootstrap.com/docs/4.0/components/breadcrumb/">
-              Library
-            </Breadcrumb.Item>
-            <Breadcrumb.Item active>Data</Breadcrumb.Item>
-          </Breadcrumb>
-        </div>
-      </div>
+    
       <div className="container pt-2">
         <div className="personal_form_container">
+        <div className="d-flex my-3">
+            <h6 className="logoBlueColor">Home <small className="greyColor"> <ChevronRight className="fs12px bold" /> Tax Saving</small> </h6>
+          </div>
           <div className="row">
             <div className=" col">
               <h4>Recommended Funds</h4>

@@ -3,14 +3,21 @@ import Modal from 'react-bootstrap/Modal';
 import Card from 'react-bootstrap/Card';
 import { ArrowDown } from 'react-bootstrap-icons';
 import icici from "../assets/img/bank-logo/icici.png"
+import { useState } from 'react';
+import OrderPlaces from './order-places';
 interface investmetProps {
   show: boolean;
   setShow: (show: boolean) => void;
 }
 
+
 const SwitchConfirmation: React.FC<investmetProps> = ({ show, setShow }) => {
+  const [openSuccess,setOpenSuccess] = useState(false)
 
-
+  const handleSwitch = ()=>{
+    setOpenSuccess(true)
+    setShow(false)
+  }
 
   return (
     <>
@@ -23,7 +30,7 @@ const SwitchConfirmation: React.FC<investmetProps> = ({ show, setShow }) => {
 
       >
         <Modal.Header closeButton className='modal-bg'>
-          <Modal.Title>Investment Confirmation</Modal.Title>
+          <Modal.Title>Switch Confirmation</Modal.Title>
         </Modal.Header>
         <Modal.Body className='modal-bg'>
           <div className="borderColor p-3 headerRadius bg-white">
@@ -90,9 +97,10 @@ const SwitchConfirmation: React.FC<investmetProps> = ({ show, setShow }) => {
         </Modal.Body>
         <small className='fs12px modal-bg text-center'>According to SEBI guidelines, redemption payouts are processed only to the bank account registered in the folio statement.</small>
         <Modal.Footer className='modal-bg '>
-          <Button className='customButton buttunCenter' >Switch</Button>
+          <Button className='customButton buttunCenter' onClick={handleSwitch}>Switch</Button>
         </Modal.Footer>
       </Modal>
+      <OrderPlaces show={openSuccess} setShow={setOpenSuccess}/>
     </>
   );
 }

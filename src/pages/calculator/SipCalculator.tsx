@@ -9,6 +9,7 @@ interface ChartState {
 }
 
 const SipCalculator = () => {
+  const [investmentPeriod, setInvestmentPeriod] = useState<Number>(10)
   const [state, setState] = useState<ChartState>({
     series: [
       {
@@ -77,7 +78,7 @@ const SipCalculator = () => {
                       <label htmlFor="exampleInputPassword1" className="fs12px">Expected Rate of Return (% p.a)</label>
                       <input type="text" className="form-control" id="exampleInputPassword1" placeholder="Password" />
                     </div>
-                    <RangeBar />
+                    <RangeBar label={"INVESTMENT PERIOD"} maxLimit={30} value={investmentPeriod} setValue={setInvestmentPeriod}/>
                     <button type="submit" className="customButton px-3 mt-3">Calculate</button>
                   </form>
                 </div>
@@ -87,7 +88,7 @@ const SipCalculator = () => {
               <div className="card border-0 shadow p-2">
                 <div className="card-body">
                   <h5 className=" fw-normal mb-1">Result</h5>
-                  <p className="fs16px">If you invest ₹10,000 per month for a period of 10 years your investment amount will be ₹12,00,000 and maturity amount will be grow to ₹30,17292</p>
+                  <p className="resultColor">If you invest <span className="fw600"> ₹10,000</span>  per month for a period of 10 years your investment amount will be <span className="fw600"> ₹12,00,000 </span> and maturity amount will be grow to  <span className="fw600">₹30,17292 </span></p>
                 </div>
               </div>
               <div className="row mt-2">

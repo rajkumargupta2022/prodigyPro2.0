@@ -187,7 +187,10 @@ const PortfolioReview = () => {
                   </div>
                 </div>
             </div>
+            <div className="d-flex justify-content-center mt-3">
+
             <button type="button"   className="customButton"><Download/> Review Report</button>
+            </div>
           </div>
         </div>
       </div>

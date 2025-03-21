@@ -2,15 +2,14 @@ import NavBar from "../../components/Navbar";
 import ReactApexChart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
 import { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import RangeBar from "./RangeBar";
 interface ChartState {
   options: ApexOptions;
   series: { name: string; data: number[] }[];
 }
 
-const GoalResult = () => {
-  const navigate = useNavigate()
-  const location  = useLocation()
+const FutureValueCalculator = () => {
+  const [investmentPeriod, setInvestmentPeriod] = useState<Number>(10)
   const [state, setState] = useState<ChartState>({
           
     series: [{
@@ -85,43 +84,56 @@ const GoalResult = () => {
   
 })
 
-const handleGoal = () => {
-  navigate("/recommended-scheme-goal", { state: location.state });
-}
+  
+
 
 
 
   return (
     <>
       <NavBar />
-      <div className="container px-4 mt-3" >
+      <div className="container px-4 my-4" >
         <div className="row">
           <div className="col-12 align-items-start mb-3">
-            <h4>{location?.state?.title}</h4>
-            <p className="fs14px">{location?.state?.paragraph}</p>
+            <h4>Future Value Calculator</h4>
+            <p className="fs14px">This calculator will help you to calculate the return value of your one time investment after your decided period.</p>
           </div>
 
-          <div className="row justify-content-md-center ">
-            <div className="col-md-12 co-sm-12 col-lg-8 ">
-              <div className="card border-0 shadow p-3">
+          <div className="row ">
+            <div className="col-lg-6 co-sm-12 col-md12 ">
+              <div className="card border-0 shadow p-2">
                 <div className="card-body">
-                  <p className=" fs14px fw-normal mb-1">Future value of amount needed</p>
-                  <h4 className="">₹33,45,564</h4>
-                  <p className=" fs14px fw-normal mb-1 my-3">Required monthly SIP</p>
-                  <h4 className="">₹42,847</h4>
+                  <form>
+                    <div className="form-group my-2">
+                      <label htmlFor="exampleInputEmail1" className="fs12px">INVEST</label>
+                      <input type="text" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="₹50,000" />
+                    </div>
+                    <RangeBar label={"PERIOD"} maxLimit={30} value={investmentPeriod} setValue={setInvestmentPeriod}/>
+                    <div className="form-group">
+                      <label htmlFor="exampleInputPassword1" className="fs12px">EXPECTED RATE OF RETURNS (%)</label>
+                      <input type="text" className="form-control" id="exampleInputPassword1" placeholder="12" />
+                    </div>
+                    <button type="submit" className="customButton px-3 mt-3">Calculate</button>
+                  </form>
                 </div>
-                <div>
-                  <div className="">
+              </div>
+            </div>
+            <div className="col-lg-6 co-sm-12 col-md-12 ">
+              <div className="card border-0 shadow p-2">
+                <div className="card-body">
+                  <h5 className=" fw-normal mb-1">Result</h5>
+                  <p className="resultColor">If you invest <span className="fw600">₹50,000</span>  for a period of 10 years at a <span className="fw600">12%</span>  annual return, the maturity amount will grow to  <span className="fw600">₹30,17,292.</span></p>
+                </div>
+              </div>
+              <div className="row mt-2">
+              <div className="col-lg-12 co-sm-12 col-md-12 ">
+                <div className="card border-0 shadow p-0">
+                  <div className="card-body">
                   <ReactApexChart options={state.options}  series={state.series} type="bar" height={350} />
                   </div>
                 </div>
               </div>
-            </div>
-            <div className="col-6 my-4">
-              <button className='customCancelButton buttunCenter px-3'>Re-Calculate</button>
-            </div>
-            <div className="col-6 my-4">
-              <button className='customButton buttunCenter px-3' onClick={handleGoal}>Continue</button>
+              </div>
             </div>
           </div>
         </div>
@@ -130,4 +142,4 @@ const handleGoal = () => {
   );
 };
 
-export default GoalResult;
+export default FutureValueCalculator;

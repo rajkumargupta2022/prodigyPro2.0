@@ -1,14 +1,14 @@
 import NavBar from "../components/Navbar";
 import sbi from "../assets/img/bank-logo/sbi.png"
-import { Calendar4, CurrencyRupee } from "react-bootstrap-icons";
+import { Calendar4, ChevronRight, CurrencyRupee } from "react-bootstrap-icons";
 import { useState } from "react";
 import { Card } from "react-bootstrap";
 import BankMandate from "../components/BankMandate";
 
 const NFOApply = () => {
-  const [openBankMandate,setOpenBankMandate] = useState<boolean>(false)
+  const [openBankMandate, setOpenBankMandate] = useState<boolean>(false)
 
-  const handleBankMandate = ()=>{
+  const handleBankMandate = () => {
     setOpenBankMandate(true)
   }
 
@@ -17,10 +17,13 @@ const NFOApply = () => {
       <NavBar />
       <div className="container px-4 mt-3" >
         <div className="row">
+          <div className="d-flex my-3">
+            <h6 className="logoBlueColor">Home  <ChevronRight className="fs12px" /> NFO Live <ChevronRight className="fs12px" /><small className="greyColor"> Kotak Nifty Small Cap 250 Index Fund - Regular (G) </small> </h6>
+          </div>
           <div className="col-12 d-flex align-items-start">
             <img src={sbi} alt="" />
             <div className="d-flex flex-column ps-3">
-              <small className="mb-0">Kotak Nifty Small Cap 250 Index Fund - Regular (G)</small>
+              <h4 className="mb-0">Kotak Nifty Small Cap 250 Index Fund - Regular (G)</h4>
               <small className="fs12px">Equity: Small Cap</small>
             </div>
           </div>
@@ -79,7 +82,7 @@ const NFOApply = () => {
               <div className="col-6">
                 <button className="activeBtn"> Monthly SIP</button>
               </div>
-              <div className="col-6" onClick={handleBankMandate}>
+              <div className="col-6">
                 <button className="deActiveBtn"> One-Time</button>
               </div>
               <div className="col-11 mt-4">
@@ -89,26 +92,28 @@ const NFOApply = () => {
               <div className="col-1 mt-5 px-2">
                 <small className="crPointer dateIcon"><Calendar4 className='' /></small>
               </div>
-             
+
               <hr />
               <div className="col-12 form-group">
-              <label htmlFor="exampleInputEmail1" className="fs12px">INVESTMENT AMOUNT</label>
+                <label htmlFor="exampleInputEmail1" className="fs12px">INVESTMENT AMOUNT</label>
                 <input type="email" className="form-control" placeholder="1000" />
               </div>
               <div className=" mt-2">
-                  <button type="button" className="btn shortcutValue">Min.</button>
-                  <button type="button" className="btn shortcutValue mx-1"><CurrencyRupee className='mb-1' />1,000</button>
-                  <button type="button" className="btn shortcutValue mx-1"><CurrencyRupee className='mb-1' />2,000</button>
-                  <button type="button" className="btn shortcutValue mx-1"><CurrencyRupee className='mb-1' />5,000</button>
-                </div>
+                <button type="button" className="btn shortcutValue">Min.</button>
+                <button type="button" className="btn shortcutValue mx-1"><CurrencyRupee className='mb-1' />1,000</button>
+                <button type="button" className="btn shortcutValue mx-1"><CurrencyRupee className='mb-1' />2,000</button>
+                <button type="button" className="btn shortcutValue mx-1"><CurrencyRupee className='mb-1' />5,000</button>
+              </div>
+
             </div>
             <Card.Header className='scheme-bg footerRadius px-3 py-2 fs12px'>NAV applicable once amount credited to AMC’s bank account</Card.Header>
+              <button className="customButton buttunCenter my-2 px-3"  onClick={handleBankMandate}>Continue</button>
           </div>
         </div>
       </div>
 
 
-      <BankMandate show={openBankMandate} setShow={setOpenBankMandate}/>
+      <BankMandate show={openBankMandate} setShow={setOpenBankMandate} />
     </>
   );
 };

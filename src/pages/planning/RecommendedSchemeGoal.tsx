@@ -1,12 +1,13 @@
-import NavBar from "../components/Navbar";
+import NavBar from "../../components/Navbar";
 import Breadcrumb from "react-bootstrap/Breadcrumb";
-import icici from "../assets/img/bank-logo/icici.png"
+import icici from "../../assets/img/bank-logo/icici.png"
 import { ChevronRight } from "react-bootstrap-icons";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
-import SchemeDetails from "../components/SchemeDetails";
+import SchemeDetails from "../../components/SchemeDetails";
 
-const EmergencyFund = () => {
+const RecommendedSchemeGoal = () => {
+  const location = useLocation()
   const [openSchemeDetail,setOpenSchemeDetail] = useState<boolean>(false)
   const handleSchemeDetail = ()=>{
     setOpenSchemeDetail(true)
@@ -30,8 +31,8 @@ const EmergencyFund = () => {
         <div className="personal_form_container">
           <div className="row">
             <div className=" col">
-              <h4>Emergency Fund</h4>
-              <p className="small">Park your surplus money in liquid funds for flexibility, safety, and better returns than traditional savings accounts. Ideal for short-term goals and emergency funds!</p>
+              <h4>{location?.state?.title}</h4>
+              <p className="small">{location?.state?.paragraph}</p>
             </div>
           </div>
         </div>
@@ -78,7 +79,7 @@ const EmergencyFund = () => {
               </div>
             </div>
           </div>
-          <div className="logoBlueColor ">+ Add New Fund</div><br/>
+          <div className="logoBlueColor text-decoration-none crPointer" >+ Add New Fund</div><br/>
           <button type="button"  className="customButton px-2" onClick={handleSchemeDetail}>Continue</button>
         </div>
       </div>
@@ -87,4 +88,4 @@ const EmergencyFund = () => {
   );
 };
 
-export default EmergencyFund;
+export default RecommendedSchemeGoal;

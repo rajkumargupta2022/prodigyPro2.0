@@ -18,6 +18,9 @@ const NFOLive = () => {
 
       <div className="container pt-2">
         <div className="personal_form_container">
+          <div className="d-flex my-3">
+            <h6 className="logoBlueColor">Home <small className="greyColor"> <ChevronRight className="fs12px bold" /> NFO Live</small> </h6>
+          </div>
           <div className="row">
             <div className=" col">
               <h4>NFO Live</h4>
@@ -56,7 +59,7 @@ const NFOLive = () => {
               </div>
               <div className="col-md-4 py-2 py-md-0">
                 <small className="fs14px">Min. Invest</small><br />
-                <small><CurrencyRupee className="mb-1"/>100</small>
+                <small><CurrencyRupee className="mb-1" />100</small>
               </div>
             </div>
           </div>
@@ -99,7 +102,7 @@ const NFOLive = () => {
               </div>
               <div className="col-md-4 py-2 py-md-0">
                 <small className="fs14px">Min. Invest</small><br />
-                <small><CurrencyRupee className="mb-1"/>100</small>
+                <small><CurrencyRupee className="mb-1" />100</small>
               </div>
             </div>
           </div>
@@ -142,7 +145,7 @@ const NFOLive = () => {
               </div>
               <div className="col-md-4 py-2 py-md-0">
                 <small className="fs14px">Min. Invest</small><br />
-                <small><CurrencyRupee className="mb-1"/>100</small>
+                <small><CurrencyRupee className="mb-1" />100</small>
               </div>
             </div>
           </div>

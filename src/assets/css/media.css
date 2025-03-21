@@ -10,23 +10,23 @@
   .logincontent{
     padding-bottom: 35px;
   }
-}
-@media only screen and (max-width: 800px) {
   .hideImage{
     display: none;
   }
-}
-@media only screen and (max-width: 800px) {
   .mrgin_With20{
     /* text-align: center; */
     margin-top: 15%;
   }
-}
-@media only screen and (max-width: 800px) {
   .logoImage{
     height: 60px;
   }
+  .modelSize{
+    margin: 0 15px 0 19px;
+  }
+ 
 }
+
+  
 @media (min-width: 1400px) and (max-width: 2560px) {
   .back_absolute_btn{
     top: -35%;
@@ -40,6 +40,14 @@
 @media only screen and (max-width: 1000px) {
   .back_absolute_btn{
     top: 5%;
+  }
+  .mTopForMobile{
+    margin-top: 10px;
+  }
+}
+@media only screen and (min-width: 1000px) {
+  .modelSize{
+    margin: 0 285px 0 26px;
   }
 }
 

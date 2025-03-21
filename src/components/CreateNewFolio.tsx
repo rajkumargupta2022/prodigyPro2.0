@@ -16,6 +16,7 @@ const CreateNewFolio: React.FC<CreateNewFolioProp> = ({ show, setShow }) => {
         onHide={() => setShow(false)}
         backdrop="static"
         keyboard={false}
+        contentClassName="modelSize"
         size="sm"
         centered
       >
@@ -78,6 +79,12 @@ const CreateNewFolio: React.FC<CreateNewFolioProp> = ({ show, setShow }) => {
                 <CurrencyRupee />
                 60.2K
               </p>
+            </div>
+            <hr/>
+            <div className="col col-md-8 round">
+              <input type="checkbox" id="newFolio" />
+              <label htmlFor="newFolio" className="mt-0"></label>
+              <h6 className="">Create New Folio</h6>
             </div>
           </div>
         </Modal.Body>

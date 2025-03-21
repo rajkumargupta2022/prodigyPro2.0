@@ -71,7 +71,7 @@ const CalculatorList = () => {
             </Link>
           </div>
           <div className="col-lg-3 mb-3">
-            <Link to="/smi-calculator" className="card border-0 shadow rounded-3" >
+            <Link to="/emi-calculator" className="card border-0 shadow rounded-3" >
               <div className="card-body border-0 card px-3">
                 <img src={emiIcon} className="" alt="..." height={44} width={44} />
                 <p className="fs18pxHeading mb-0 mt-2">EMI Calculator</p>
@@ -80,7 +80,7 @@ const CalculatorList = () => {
             </Link>
           </div>
           <div className="col-lg-3 mb-3">
-            <Link to="/fs-calculator" className="card border-0 shadow rounded-3" >
+            <Link to="/fd-calculator" className="card border-0 shadow rounded-3" >
               <div className="card-body border-0 card px-3">
                 <img src={fdIcon} className="" alt="..." height={44} width={44} />
                 <p className="fs18pxHeading mb-0 mt-2">FD Calculator</p>

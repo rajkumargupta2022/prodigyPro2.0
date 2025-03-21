@@ -16,19 +16,13 @@ const RecommendedFunds = () => {
     <>
       <NavBar />
 
-      <div className="breadcum_area" style={{ backgroundColor: "#F2F4FB" }}>
-        <div className="personal_form_container p-3">
-          <Breadcrumb>
-            <Breadcrumb.Item href="#">Home</Breadcrumb.Item>
-            <Breadcrumb.Item href="https://getbootstrap.com/docs/4.0/components/breadcrumb/">
-              Library
-            </Breadcrumb.Item>
-            <Breadcrumb.Item active>Data</Breadcrumb.Item>
-          </Breadcrumb>
-        </div>
-      </div>
+
       <div className="container pt-2">
+
         <div className="personal_form_container">
+          <div className="d-flex my-3">
+            <h6 className="logoBlueColor">Home <small className="greyColor"> <ChevronRight className="fs14px" /> Recommended Funds </small> </h6>
+          </div>
           <div className="row">
             <div className=" col">
               <h4>Recommended Funds</h4>
@@ -45,7 +39,7 @@ const RecommendedFunds = () => {
               </div>
             </div>
           </div>
-          <hr/>
+          <hr />
           <div className="row">
             <div className=" col">
               <small className="fs14px lightBlack">Investment horizon</small>
@@ -58,7 +52,7 @@ const RecommendedFunds = () => {
               </div>
             </div>
           </div>
-         
+
         </div>
       </div>
       <div className="container pt-2">
@@ -168,8 +162,8 @@ const RecommendedFunds = () => {
               </div>
             </div>
           </div>
-          <Link className="logoBlueColor text-decoration-none mt-4" to="#">+ Add New Fund</Link><br />
-          <button type="button" className="customButton mt-2 px-2" onClick={handleSchemeDetail}>Continue</button>
+          <div className="logoBlueColor  crPointer">+ Add New Fund</div><br />
+          <button type="button" className="customButton px-2" onClick={handleSchemeDetail}>Continue</button>
         </div>
       </div>
       <SchemeDetails show={openSchemeDetail} setShow={setOpenSchemeDetail} />

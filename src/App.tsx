@@ -42,6 +42,15 @@ import GoalResult from "./pages/planning/GoalResult";
 import CalculatorList from "./pages/calculator/CalculatorList";
 import SipCalculator from "./pages/calculator/SipCalculator";
 import CustomGoal from "./pages/planning/CustomGoal";
+import MarriageCalculator from "./pages/calculator/MarriageCalculator";
+import EducationCalculator from "./pages/calculator/EducationCalculator";
+import FutureValueCalculator from "./pages/calculator/FutureValueCalculator";
+import RetirementCalculator from "./pages/calculator/RetirementCalculator";
+import EmiCalculator from "./pages/calculator/EmiCalculator";
+import FDCalculator from "./pages/calculator/FDCalculator";
+import ElssCalculator from "./pages/calculator/ElssCalculator";
+import SWPCalculator from "./pages/calculator/SWPCAlculator";
+import RecommendedSchemeGoal from "./pages/planning/RecommendedSchemeGoal";
 
 function App() {
   return (
@@ -98,6 +107,15 @@ function App() {
           <Route path="/goal-result" element={<GoalResult />} />
           <Route path="/calculator-list" element={<CalculatorList />} />
           <Route path="/sip-calculator" element={<SipCalculator />} />
+          <Route path="/marriage-calculator" element={<MarriageCalculator />} />
+          <Route path="/education-calculator" element={<EducationCalculator />} />
+          <Route path="/future-value-calculator" element={<FutureValueCalculator />} />
+          <Route path="/retirment-calculator" element={<RetirementCalculator />} />
+          <Route path="/emi-calculator" element={<EmiCalculator />} />
+          <Route path="/fd-calculator" element={<FDCalculator />} />
+          <Route path="/elss-calculator" element={<ElssCalculator />} />
+          <Route path="/swp-calculator" element={<SWPCalculator />} />
+          <Route path="/recommended-scheme-goal" element={<RecommendedSchemeGoal />} />
           <Route path="/custom-goal" element={<CustomGoal />} />
 
         </Routes>
