@@ -14,7 +14,7 @@ function SIP({ activeInactive }: { activeInactive: any }) {
               Canara Recobo Multi Cap Fund - Regular (G)
             </h6>
             <span className="text-secondary">
-              Folio : <span className="fw-bold text-dark">3232553235</span>
+              Folio : <span className="value-font">3232553235</span>
             </span>
           </div>
           <span className="failed-badge">Failed</span>
@@ -24,21 +24,19 @@ function SIP({ activeInactive }: { activeInactive: any }) {
           <div>
             <span className="text-secondary">Next SIP Date</span>
             <br />
-            <span className="text-secondary fw-bold text-dark">
-              14 Feb 2025
-            </span>
+            <span className="value-font2">14 Feb 2025</span>
           </div>
 
           <div className="text-center">
             <span className="text-secondary">Instalment No</span>
             <br />
-            <span className="text-secondary fw-bold text-dark">4</span>
+            <span className="value-font2">4</span>
           </div>
 
           <div>
             <span className="text-secondary">Amount</span>
             <br />
-            <span className="text-secondary fw-bold text-dark">₹4.5K</span>
+            <span className="value-font2">₹4.5K</span>
           </div>
         </div>
       </div>
@@ -51,7 +49,7 @@ function SIP({ activeInactive }: { activeInactive: any }) {
               Canara Recobo Multi Cap Fund - Regular (G)
             </h6>
             <span className="text-secondary">
-              Folio : <span className="fw-bold text-dark">3232553235</span>
+              Folio : <span className="value-font">3232553235</span>
             </span>
           </div>
           <span className="success-badge">Active</span>
@@ -61,21 +59,19 @@ function SIP({ activeInactive }: { activeInactive: any }) {
           <div>
             <span className="text-secondary">Next SIP Date</span>
             <br />
-            <span className="text-secondary fw-bold text-dark">
-              14 Feb 2025
-            </span>
+            <span className="value-font2">14 Feb 2025</span>
           </div>
 
           <div className="text-center">
             <span className="text-secondary">Instalment No</span>
             <br />
-            <span className="text-secondary fw-bold text-dark">-</span>
+            <span className="value-font2">-</span>
           </div>
 
           <div>
             <span className="text-secondary">Amount</span>
             <br />
-            <span className="text-secondary fw-bold text-dark">₹4.5K</span>
+            <span className="value-font2">₹4.5K</span>
           </div>
         </div>
       </div>
@@ -88,7 +84,7 @@ function SIP({ activeInactive }: { activeInactive: any }) {
               Canara Recobo Multi Cap Fund - Regular (G)
             </h6>
             <span className="text-secondary">
-              Folio : <span className="fw-bold text-dark">3232553235</span>
+              Folio : <span className="value-font">3232553235</span>
             </span>
           </div>
           <span className="pending-badge">Pending</span>
@@ -98,21 +94,19 @@ function SIP({ activeInactive }: { activeInactive: any }) {
           <div>
             <span className="text-secondary">Next SIP Date</span>
             <br />
-            <span className="text-secondary fw-bold text-dark">
-              14 Feb 2025
-            </span>
+            <span className="value-font2">14 Feb 2025</span>
           </div>
 
           <div className="text-center">
             <span className="text-secondary">Instalment No</span>
             <br />
-            <span className="text-secondary fw-bold text-dark">-</span>
+            <span className="value-font2">-</span>
           </div>
 
           <div>
             <span className="text-secondary">Amount</span>
             <br />
-            <span className="text-secondary fw-bold text-dark">₹4.5K</span>
+            <span className="value-font2">₹4.5K</span>
           </div>
         </div>
       </div>

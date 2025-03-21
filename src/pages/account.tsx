@@ -9,6 +9,13 @@ import { useEffect, useState } from "react";
 import AllOrders from "../components/All-orders";
 import OrderDetails from "../components/Order-details";
 import SIPOrderDetails from "../components/Sip-order-details";
+import STPOrderDetails from "../components/Stp-order-details";
+import SWPOrderDetails from "../components/SWP-ORDER-DETAILS";
+import LinkedBankAccount from "../components/Linked-BankAccount";
+import BankDetails from "../components/Bank-Details";
+import AddBankAccount from "../components/Add-bank-account";
+import AddBankDetails from "../components/add-bank-details";
+import AddAccountVerification from "../components/bank-account-verification";
 
 const Account = () => {
   const [routingStack, setRoutingStack] = useState<string[]>([]);
@@ -41,6 +48,35 @@ const Account = () => {
 
       case "sip-order":
         return <SIPOrderDetails backButton={backButton} />;
+      case "stp-order":
+        return <STPOrderDetails backButton={backButton} />;
+      case "swp-order":
+        return <SWPOrderDetails backButton={backButton} />;
+      case "linked-bank-account":
+        return (
+          <LinkedBankAccount
+            backButton={backButton}
+            activeInactive={activeInactive}
+          />
+        );
+      case "bank-details":
+        return <BankDetails backButton={backButton} />;
+      case "add-bank-account":
+        return (
+          <AddBankAccount
+            activeInactive={activeInactive}
+            backButton={backButton}
+          />
+        );
+      case "add-bank-details":
+        return (
+          <AddBankDetails
+            backButton={backButton}
+            activeInactive={activeInactive}
+          />
+        );
+      case "add-verification-details":
+        return <AddAccountVerification backButton={backButton} />;
     }
   };
 
@@ -104,7 +140,6 @@ const Account = () => {
 
   return (
     <>
-      {console.log(routingStack)}
       <MyNavbar />
       <div className="container-fluid">
         <div className="row add_family_layout">
@@ -134,8 +169,8 @@ const Account = () => {
                     <ChevronRight size={15} className="text-secondary" />
                   </li>
                   <li
-                    onClick={() => activeInactive("linked-bank")}
-                    id="linked-bank"
+                    onClick={() => activeInactive("linked-bank-account")}
+                    id="linked-bank-account"
                     className="nav-item  border-bottom  d-flex justify-content-between align-items-center"
                   >
                     <a className="nav-link" href="#">

@@ -717,7 +717,7 @@ font-weight: 500;
 
 .success-badge {
     border-radius: 70px;
-    padding: 8px 20px;
+    padding: 2px 20px;
     background-color: #E6F6EE;
     color: #06A358;
     align-self: center;
@@ -725,7 +725,7 @@ font-weight: 500;
 
 .failed-badge {
     border-radius: 70px;
-    padding: 8px 20px;
+    padding: 2px 20px;
     background-color: #FAECED;
     color: #CB414E;
     align-self: center;
@@ -733,9 +733,17 @@ font-weight: 500;
 
 .pending-badge {
   border-radius: 70px;
-  padding: 8px 20px;
+  padding: 2px 20px;
   background-color: #FFEAD5;
   color: #DA9101;
+  align-self: center;
+}
+
+.info-badge {
+  border-radius: 70px;
+  background-color: #E6E8FF;
+  padding: 2px 20px;
+  color:#1A35FE;
   align-self: center;
 }
 
@@ -818,3 +826,134 @@ font-weight: 500;
   margin-bottom: 4px;
 }
 
+
+.switch-btn {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #E6E8FF;
+  color:  #4D62FE;
+  border:none;
+  border-radius: 50px;
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.switch-btn:hover {
+  background-color: #e0e0ff;
+}
+
+.value-font {
+  font-weight: 400;
+  font-size: 14px;
+  color:#1A1C1E;
+}
+
+.value-font2 {
+  font-weight: 500;
+  font-size: 16px;
+  color:#212121;
+}
+
+.ac-heading {
+  font-weight:600;
+  font-size: 24px;
+  color: #1A1C1E;
+}
+
+.bankbtn {
+  font-weight:500;
+  font-size: 16px;
+  color: #1A35FE;
+  cursor: pointer;
+}
+
+.mandate-button {
+background-color: #011EFE;
+color: #FFFFFF;
+font-weight: 500;
+font-size: 16px;
+border-radius: 12px;
+border:none;
+/* width:174px; */
+padding-left: 2%;
+padding-right: 2%;
+height:48px;
+}
+
+.bank-name {
+  color:#4D4D4D;
+  font-weight: 500;
+  font-size: 14px;
+
+}
+
+.heading {
+  font-weight: 600;
+  font-size: 18px;
+  color:#212121;
+  padding:16px;
+} 
+
+.sub-heading {
+  font-weight:600;
+  font-size: 20px;
+  color:#212121
+}
+
+.form-label {
+  color:#646464;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.note {
+  font-weight: 400;
+  font-size: 14px;
+  color:#7A7A7A;
+}
+
+.mini-heading {
+  font-weight: 600;
+  font-size: 14px;
+  color:#212121;
+}
+
+.upload-button {
+  background-color: #6778FE;
+  padding: 16px;
+  border:none;
+  border-radius: 16px;
+  color:#FFFFFF;
+  width:100%;
+}
+
+.xs-heading {
+  font-size: 12px;
+  font-weight: 500;
+  color:#646464;
+}
+li {
+  margin-top:10px;
+  margin-bottom:10px;
+}
+
+.modal-heading {
+  color:#1A1C1E;
+  font-size: 16px;
+}
+
+.input-text {
+  color:#212121;
+  font-weight: 600;
+  font-size: 24px;
+}
+
+.D4D4D4D {
+font-weight: 400;
+color: #4D4D4D;
+font-size: 16px;
+}

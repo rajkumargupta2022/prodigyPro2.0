@@ -54,44 +54,44 @@ function OrderDetails({ backButton }: { backButton: any }) {
         <span className="fw-bold">Order Summary</span>
         <div className="d-flex justify-content-between mb-2 mt-3">
           <span className="text-secondary">STATUS</span>
-          <span className="fw-bold">Unit Allocated</span>
+          <span className="value-font2">Unit Allocated</span>
         </div>
         <div className="d-flex justify-content-between mb-2">
           <span className="text-secondary">INVESTMENT VALUE</span>
-          <span className="fw-bold">₹5,999.9</span>
+          <span className="value-font2">₹5,999.9</span>
         </div>
         <div className="d-flex justify-content-between mb-2">
           <span className="text-secondary">INVESTMENT TYPE</span>
-          <span className="fw-bold">SIP</span>
+          <span className="value-font2">SIP</span>
         </div>
         <div className="d-flex justify-content-between mb-2">
           <span className="text-secondary">TRANSACTION ID</span>
-          <span className="fw-bold">32432532535</span>
+          <span className="value-font2">32432532535</span>
         </div>
         <div className="d-flex justify-content-between mb-2">
           <span className="text-secondary">BANK NAME</span>
-          <span className="fw-bold">HDFC Bank ****1267</span>
+          <span className="value-font2">HDFC Bank ****1267</span>
         </div>
         <div className="d-flex justify-content-between mb-2">
           <span className="text-secondary">PAYMENT MODE</span>
-          <span className="fw-bold">Bank Mandate</span>
+          <span className="value-font2">Bank Mandate</span>
         </div>
         <div className="d-flex justify-content-between mb-2">
           <span className="text-secondary">ORDER DATE</span>
-          <span className="fw-bold">14 Jan 2025, 11:32:12 AM</span>
+          <span className="value-font2">14 Jan 2025, 11:32:12 AM</span>
         </div>
         <div className="d-flex justify-content-between mb-2">
           <span className="text-secondary">NAV PRICE</span>
-          <span className="fw-bold">₹84.04</span>
+          <span className="value-font2">₹84.04</span>
         </div>
         <div className="d-flex justify-content-between mb-2">
           <span className="text-secondary">NAV DATE</span>
-          <span className="fw-bold">14 Jan 2025, 11:32:12 AM</span>
+          <span className="value-font2">14 Jan 2025, 11:32:12 AM</span>
         </div>
 
         <div className="d-flex justify-content-between mb-2">
           <span className="text-secondary">FOLIO NUMBER</span>
-          <span className="fw-bold">23532957394</span>
+          <span className="value-font2">23532957394</span>
         </div>
       </div>
     </main>
