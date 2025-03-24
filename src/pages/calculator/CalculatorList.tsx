@@ -1,7 +1,6 @@
 import NavBar from "../../components/Navbar";
 import retirment from "../../assets/img/icons/rocking-chair (1) 1.svg"
 import education from "../../assets/img/icons/education 1.svg"
-import home from "../../assets/img/icons/home 1.svg"
 import swpIcon from "../../assets/img/icons/swp cal.svg"
 import elssIcon from "../../assets/img/icons/ELSS calculator.svg"
 import wealth from "../../assets/img/icons/wealth creation.svg"
@@ -9,11 +8,9 @@ import ring from "../../assets/img/icons/engagement-ring 1.svg"
 import SipIcon from "../../assets/img/icons/SIP calculator.svg"
 import fdIcon from "../../assets/img/icons/wealth cal 1.svg"
 import emiIcon from "../../assets/img/icons/EMI calculator 1.svg"
-import { CurrencyRupee } from "react-bootstrap-icons";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const CalculatorList = () => {
-  const navigate = useNavigate()
 
 
   return (

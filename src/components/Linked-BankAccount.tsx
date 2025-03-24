@@ -1,6 +1,5 @@
 import { ArrowLeft } from "react-bootstrap-icons";
 import BankList from "./bank-list";
-import { useState } from "react";
 
 function LinkedBankAccount({
   backButton,
@@ -9,7 +8,8 @@ function LinkedBankAccount({
   backButton: any;
   activeInactive: any;
 }) {
-  const [active, setActive] = useState("bank-list");
+  // const [active, setActive] = useState("bank-list");
+  const active = "bank-list"
 
   const renderCompo = () => {
     switch (active) {

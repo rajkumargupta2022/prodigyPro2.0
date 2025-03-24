@@ -1,7 +1,6 @@
 import NavBar from "../../components/Navbar";
 import ReactApexChart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
-import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 interface ChartState {
   options: ApexOptions;
@@ -11,79 +10,152 @@ interface ChartState {
 const GoalResult = () => {
   const navigate = useNavigate()
   const location  = useLocation()
-  const [state, setState] = useState<ChartState>({
+//   const [state, setState] = useState<ChartState>({
           
-    series: [{
-      name: 'Marine Sprite',
-      data: [5,8,15,24,35,40,45,50,55,50]
-    }, {
-      name: 'Striking Calf',
-      data: [1,4,7,12,18,25,30,32,38,50]
-    }],
-    options: {
-      chart: {
-        type: 'bar',
-        height: 1000,
-        stacked: true,
-      },
-      colors: ["#CCD2FF","#1A35FE"],
-      plotOptions: {
-        bar: {
-          borderRadius: 3, // ✅ Adds rounded corners to the top of bars
-        borderRadiusApplication: "end",
-          horizontal: false,
-          dataLabels: {
-            total: {
-              enabled: false,
-              offsetX: 0,
-              style: {
-                fontSize: '13px',
-                fontWeight: 900,
-              }
-            }
-          }
-        },
+//     series: [{
+//       name: 'Marine Sprite',
+//       data: [5,8,15,24,35,40,45,50,55,50]
+//     }, {
+//       name: 'Striking Calf',
+//       data: [1,4,7,12,18,25,30,32,38,50]
+//     }],
+//     options: {
+//       chart: {
+//         type: 'bar',
+//         height: 1000,
+//         stacked: true,
+//       },
+//       colors: ["#CCD2FF","#1A35FE"],
+//       plotOptions: {
+//         bar: {
+//           borderRadius: 3, // ✅ Adds rounded corners to the top of bars
+//         borderRadiusApplication: "end",
+//           horizontal: false,
+//           dataLabels: {
+//             total: {
+//               enabled: false,
+//               offsetX: 0,
+//               style: {
+//                 fontSize: '13px',
+//                 fontWeight: 900,
+//               }
+//             }
+//           }
+//         },
         
-      },
-      stroke: {
-        width: 0,
-        colors: ['#1A35FE'],
-      },
-      title: {
-        text: 'Investment Performance'
-      },
-      dataLabels: {
-        enabled: false, // ✅ Hides the numbers above bars
-      },
-      grid: {
-        show: false, // ✅ Removes the background grey lines
-      },
-      xaxis: {
-        categories: [1, 2, 3, 4, 5, 6, 7,8,9,10],
-        labels: {
-          formatter: function (val:any) {
-            return val + "Y"
-          }
-        }
-        ,axisTicks: {
-          show: false, // ✅ Removes ticks (small lines under labels)
-        },
-      },
-      yaxis: {
-        labels: {
-          show: false, // ✅ Removes vertical numbers (Y-axis labels)
-        },
-      },
+//       },
+//       stroke: {
+//         width: 0,
+//         colors: ['#1A35FE'],
+//       },
+//       title: {
+//         text: 'Investment Performance'
+//       },
+//       dataLabels: {
+//         enabled: false, // ✅ Hides the numbers above bars
+//       },
+//       grid: {
+//         show: false, // ✅ Removes the background grey lines
+//       },
+//       xaxis: {
+//         categories: [1, 2, 3, 4, 5, 6, 7,8,9,10],
+//         labels: {
+//           formatter: function (val:any) {
+//             return val + "Y"
+//           }
+//         }
+//         ,axisTicks: {
+//           show: false, // ✅ Removes ticks (small lines under labels)
+//         },
+//       },
+//       yaxis: {
+//         labels: {
+//           show: false, // ✅ Removes vertical numbers (Y-axis labels)
+//         },
+//       },
      
       
-      fill: {
-        opacity: 1
-      }
+//       fill: {
+//         opacity: 1
+//       }
+      
+//     },
+  
+  
+// })
+const state : ChartState = {
+          
+  series: [{
+    name: 'Marine Sprite',
+    data: [5,8,15,24,35,40,45,50,55,50]
+  }, {
+    name: 'Striking Calf',
+    data: [1,4,7,12,18,25,30,32,38,50]
+  }],
+  options: {
+    chart: {
+      type: 'bar',
+      height: 1000,
+      stacked: true,
+    },
+    colors: ["#CCD2FF","#1A35FE"],
+    plotOptions: {
+      bar: {
+        borderRadius: 3, // ✅ Adds rounded corners to the top of bars
+      borderRadiusApplication: "end",
+        horizontal: false,
+        dataLabels: {
+          total: {
+            enabled: false,
+            offsetX: 0,
+            style: {
+              fontSize: '13px',
+              fontWeight: 900,
+            }
+          }
+        }
+      },
       
     },
-  
-  
-})
+    stroke: {
+      width: 0,
+      colors: ['#1A35FE'],
+    },
+    title: {
+      text: 'Investment Performance'
+    },
+    dataLabels: {
+      enabled: false, // ✅ Hides the numbers above bars
+    },
+    grid: {
+      show: false, // ✅ Removes the background grey lines
+    },
+    xaxis: {
+      categories: [1, 2, 3, 4, 5, 6, 7,8,9,10],
+      labels: {
+        formatter: function (val:any) {
+          return val + "Y"
+        }
+      }
+      ,axisTicks: {
+        show: false, // ✅ Removes ticks (small lines under labels)
+      },
+    },
+    yaxis: {
+      labels: {
+        show: false, // ✅ Removes vertical numbers (Y-axis labels)
+      },
+    },
+   
+    
+    fill: {
+      opacity: 1
+    }
+    
+  },
+
+
+}
 
 const handleGoal = () => {
   navigate("/recommended-scheme-goal", { state: location.state });

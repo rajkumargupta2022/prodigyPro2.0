@@ -59,7 +59,7 @@ const MyNavbar = () => {
                 <div className="">Portfolio</div>
               </div>
             </Nav.Link>
-            <Nav.Link className="prodgy_menu  m-2" href={"/add-family-member"}>
+            <Nav.Link className="prodgy_menu  m-2" href={"/account"}>
               <div className="d-flex gap-2">
                 <div className="">
                   {" "}

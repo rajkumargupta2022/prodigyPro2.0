@@ -2,7 +2,6 @@ import Modal from "react-bootstrap/Modal";
 import correct from "../assets/img/correct.png";
 import group from "../assets/img/Group.png";
 import successImg from "../assets/img/bg-image/successImg.png"
-import { CgEnter } from "react-icons/cg";
 import { Link } from "react-router-dom";
 
 interface OrderPlaces {

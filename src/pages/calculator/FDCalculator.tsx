@@ -11,15 +11,21 @@ interface ChartState {
 
 const FDCalculator = () => {
   const [period, setPeriod] = useState<Number>(5)
-  const [state, setState] = useState<ChartState>({
-    options: {
-      colors: ["#CCD2FF", "#1A35FE"],
-    },
-    series: [44, 95],
-    colors: ["#fff", "#FF4560"],
-  });
-
-
+  // const [state, setState] = useState<ChartState>({
+  //   options: {
+  //     colors: ["#CCD2FF", "#1A35FE"],
+  //   },
+  //   series: [44, 95],
+  //   colors: ["#fff", "#FF4560"],
+  // });
+const state: ChartState = {
+  options: {
+    colors: ["#CCD2FF", "#1A35FE"],
+  },
+  series: [44, 95],
+  colors: ["#fff", "#FF4560"],
+}
+ 
 
 
 

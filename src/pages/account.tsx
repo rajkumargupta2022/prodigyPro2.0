@@ -18,7 +18,8 @@ import AddBankDetails from "../components/add-bank-details";
 import AddAccountVerification from "../components/bank-account-verification";
 
 const Account = () => {
-  const [routingStack, setRoutingStack] = useState<string[]>([]);
+  // const [routingStack, setRoutingStack] = useState<string[]>([]);
+  const routingStack  : string[] = [];
   const [currentActive, setCurrentActive] = useState("my-profile");
 
   useEffect(() => {

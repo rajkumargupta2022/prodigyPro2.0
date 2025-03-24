@@ -1,13 +1,7 @@
 import NavBar from "../../components/Navbar";
-import Chart from 'react-apexcharts'
 import { useState } from "react";
 import RangeBar from "./RangeBar";
-interface ChartState {
-  options: object;
-  series: number[];
-  // labels: string[];
-  colors:string[]
-}
+
 
 const SWPCalculator = () => {
   const [investmentPeriod, setInvestmentPeriod] = useState<Number>(5)

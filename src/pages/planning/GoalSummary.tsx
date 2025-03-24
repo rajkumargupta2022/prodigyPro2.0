@@ -1,12 +1,4 @@
 import NavBar from "../../components/Navbar";
-import retirment from "../../assets/img/icons/rocking-chair (1) 1.svg"
-import education from "../../assets/img/icons/education 1.svg"
-import home from "../../assets/img/icons/home 1.svg"
-import car from "../../assets/img/icons/car 1.svg"
-import vacation from "../../assets/img/icons/vacation.svg"
-import wealth from "../../assets/img/icons/wealth creation.svg"
-import ring from "../../assets/img/icons/engagement-ring 1.svg"
-import customGoal from "../../assets/img/icons/goal.svg"
 import { CurrencyRupee } from "react-bootstrap-icons";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { FaRegEdit } from "react-icons/fa";

@@ -1,10 +1,12 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import NavBar from "../../components/Navbar";
 import RangeBar from "../calculator/RangeBar";
+import { useState } from "react";
 
 const CustomGoal = () => {
   const navigate = useNavigate()
   const location = useLocation()
+  const [investmentPeriod, setInvestmentPeriod] = useState<Number>(10)
     
   
 
@@ -31,7 +33,7 @@ const calculateResult = ()=>{
                   <input type="text" className="form-control" placeholder="iPhone 16 Pro"  aria-describedby="emailHelp" />
                   <label htmlFor="exampleInputEmail1" className="form-label fs12px">Amount (In today’s term)</label>
                   <input type="text" className="form-control" placeholder="₹ 25,00,000"  aria-describedby="emailHelp" />
-                  <RangeBar/>
+                  <RangeBar label={"INVESTMENT PERIOD"} maxLimit={30} value={investmentPeriod} setValue={setInvestmentPeriod} />
                 </div>
               </div>
             </div>

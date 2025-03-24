@@ -2,7 +2,6 @@ import NavBar from "../components/Navbar";
 import Breadcrumb from "react-bootstrap/Breadcrumb";
 import icici from "../assets/img/bank-logo/icici.png"
 import { ChevronRight } from "react-bootstrap-icons";
-import { Link } from "react-router-dom";
 import { useState } from "react";
 import SchemeDetails from "../components/SchemeDetails";
 

@@ -1,4 +1,4 @@
-import { ArrowLeft, Search, ChevronRight } from "react-bootstrap-icons";
+import { ArrowLeft } from "react-bootstrap-icons";
 
 function AddBankDetails({
   backButton,

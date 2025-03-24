@@ -1,26 +1,7 @@
 import NavBar from "../../components/Navbar";
-import Chart from 'react-apexcharts'
-import { useState } from "react";
-import RangeBar from "./RangeBar";
-interface ChartState {
-  options: object;
-  series: number[];
-  // labels: string[];
-  colors:string[]
-}
+
 
 const ElssCalculator = () => {
-  const [investmentPeriod, setInvestmentPeriod] = useState<Number>(10)
-  const [state, setState] = useState<ChartState>({
-    options: {
-      colors: ["#CCD2FF", "#1A35FE"],
-    },
-    series: [44, 95],
-    colors: ["#fff", "#FF4560"],
-  });
-
-
-
 
 
   return (

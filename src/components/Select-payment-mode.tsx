@@ -1,6 +1,5 @@
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-import { CurrencyRupee } from "react-bootstrap-icons";
 import icici from "../assets/img/bank-logo/icici.png";
 interface bankMandate {
   show: boolean;

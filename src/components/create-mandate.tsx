@@ -1,23 +1,20 @@
 import { useState } from "react";
-import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-import Card from "react-bootstrap/Card";
-import { Calendar4, CurrencyRupee } from "react-bootstrap-icons";
-import icici from "../assets/img/bank-logo/icici.png";
-import BankMandate from "./BankMandate";
+import { CurrencyRupee } from "react-bootstrap-icons";
+
 interface investmetProps {
   show: boolean;
   setShow: (show: boolean) => void;
 }
 
 const CreateMandate: React.FC<investmetProps> = ({ show, setShow }) => {
-  const [openBankMandate, setOpenBankMandate] = useState<boolean>(false);
+  // const [openBankMandate, setOpenBankMandate] = useState<boolean>(false);
   const [checked, setChecked] = useState(false);
 
-  const handleBankMandate = () => {
-    setOpenBankMandate(true);
-    setShow(false);
-  };
+  // const handleBankMandate = () => {
+  //   setOpenBankMandate(true);
+  //   setShow(false);
+  // };
 
   return (
     <>

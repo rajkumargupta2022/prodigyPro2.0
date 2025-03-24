@@ -10,7 +10,47 @@ interface ChartState {
 
 const SipCalculator = () => {
   const [investmentPeriod, setInvestmentPeriod] = useState<Number>(10)
-  const [state, setState] = useState<ChartState>({
+  // const [state, setState] = useState<ChartState>({
+  //   series: [
+  //     {
+  //       name: "Series 1",
+  //       data: [10, 20, 30, 40, 50, 60, 80,100,120],
+  //     },
+  //     {
+  //       name: "Series 2",
+  //       data: [5, 20-10, 30-10, 40-10, 50-10, 60-10, 80-10,80,90],
+  //     },
+  //   ],
+  //   options: {
+  //     chart: {
+  //       height: 350,
+  //       type: "area",
+  //       background: "transparent", // ✅ Removes background color
+  //     },
+  //     dataLabels: {
+  //       enabled: false,
+  //     },
+  //     stroke: {
+  //       curve: "monotoneCubic",
+  //       width: [2, 2], // ✅ Custom width (3px for first line, 2px for second line)
+  //       colors: ["#357AF6", "#57BE65"],
+  //     },
+  //     xaxis: {
+  //       categories: ["1M", "3M", "6M", "1Y", "3Y", "5Y","8M","10M", "Max"], // ✅ Custom X-axis labels
+  //     },
+  //     tooltip: {
+  //       x: {
+  //         formatter: function (val:any, ) {
+  //           return val; // ✅ Tooltip will also show 1M, 3M, etc.
+  //         },
+  //       },
+  //     },
+  //     grid: {
+  //       show: false, // ✅ Removes background grey lines
+  //     },
+  //   },
+  // });
+  const state:ChartState={
     series: [
       {
         name: "Series 1",
@@ -49,7 +89,7 @@ const SipCalculator = () => {
         show: false, // ✅ Removes background grey lines
       },
     },
-  });
+  }
   
 
 

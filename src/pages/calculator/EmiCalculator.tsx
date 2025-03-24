@@ -11,14 +11,21 @@ interface ChartState {
 
 const EmiCalculator = () => {
   const [investmentPeriod, setInvestmentPeriod] = useState<Number>(10)
-  const [state, setState] = useState<ChartState>({
+  // const [state, setState] = useState<ChartState>({
+  //   options: {
+  //     colors: ["#CCD2FF", "#1A35FE"],
+  //   },
+  //   series: [44, 95],
+  //   colors: ["#fff", "#FF4560"],
+  // });
+
+  const state:ChartState = {
     options: {
       colors: ["#CCD2FF", "#1A35FE"],
     },
     series: [44, 95],
     colors: ["#fff", "#FF4560"],
-  });
-
+  }
 
 
 
