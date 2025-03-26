@@ -16,10 +16,13 @@ import BankDetails from "../components/Bank-Details";
 import AddBankAccount from "../components/Add-bank-account";
 import AddBankDetails from "../components/add-bank-details";
 import AddAccountVerification from "../components/bank-account-verification";
+import ChangePassword from "../components/Change-Password";
+import HelpSupport from "../components/help&support";
+import Statements from "../components/Statements";
 
 const Account = () => {
   // const [routingStack, setRoutingStack] = useState<string[]>([]);
-  const routingStack  : string[] = [];
+  const routingStack: string[] = [];
   const [currentActive, setCurrentActive] = useState("my-profile");
 
   useEffect(() => {
@@ -78,6 +81,26 @@ const Account = () => {
         );
       case "add-verification-details":
         return <AddAccountVerification backButton={backButton} />;
+
+      case "change-password":
+        return (
+          <ChangePassword
+            backButton={backButton}
+            activeInactive={activeInactive}
+          />
+        );
+
+      case "help&support":
+        return (
+          <HelpSupport
+            activeInactive={activeInactive}
+            backButton={backButton}
+          />
+        );
+      case "statements":
+        return (
+          <Statements activeInactive={activeInactive} backButton={backButton} />
+        );
     }
   };
 
