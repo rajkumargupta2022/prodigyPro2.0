@@ -1,10 +1,24 @@
 import { useNavigate } from "react-router-dom"
 import Logo from "../assets/img/logo/logo.png"
 import LoginLeftImage from "../components/LoginLeftImage"
+import { postRequest } from "../services/callApi"
+import { endPoints } from "../services/urls"
+import { successToat } from "../services/toast"
 const Login = () => {
   const navigate = useNavigate()
-  const getOpt = () => {
-    navigate("/otp")
+  // const getOpt = () => {
+  //   navigate("/otp")
+  // }
+
+  const sendOtp =async ()=>{
+    successToat()
+    // const res:any =await postRequest(endPoints.registerUser,{mobile:9889397150})
+    // if(res.data){
+    // }else{
+
+    // }
+    
+    
   }
   return (
 
@@ -23,7 +37,7 @@ const Login = () => {
                 <button className="btn rounded border" type="button" >+91</button>
                 <input type="text" className="form-control mx-1 rounded" placeholder="Phone Number" />
               </div>
-              <button type="button" onClick={getOpt} className="customButton col-12">Get OTP</button>
+              <button type="button" onClick={sendOtp} className="customButton col-12">Get OTP</button>
             </form>
             <p className="mt-3">By logging in, you agree to our Terms & Conditions</p>
           </div>

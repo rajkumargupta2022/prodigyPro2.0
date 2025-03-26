@@ -51,11 +51,17 @@ import FDCalculator from "./pages/calculator/FDCalculator";
 import ElssCalculator from "./pages/calculator/ElssCalculator";
 import SWPCalculator from "./pages/calculator/SWPCAlculator";
 import RecommendedSchemeGoal from "./pages/planning/RecommendedSchemeGoal";
+import RiskProfile from "./components/RiskProfile";
+import { ToastContainer } from 'react-toastify';
 
 function App() {
   return (
     <>
       <BrowserRouter>
+
+        <ToastContainer
+         
+        />
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/personal-details" element={<PersonalDetails />} />
@@ -116,6 +122,7 @@ function App() {
           <Route path="/elss-calculator" element={<ElssCalculator />} />
           <Route path="/swp-calculator" element={<SWPCalculator />} />
           <Route path="/recommended-scheme-goal" element={<RecommendedSchemeGoal />} />
+          <Route path="/risk-profile" element={<RiskProfile />} />
           <Route path="/custom-goal" element={<CustomGoal />} />
 
         </Routes>
