@@ -1,8 +1,11 @@
 import {  toast } from 'react-toastify';
 
-export const successToat = ()=>{
-  toast.success("wow so easy",{position: "bottom-right",theme: "dark",hideProgressBar: true,closeOnClick: true,autoClose: 4000, customProgressBar: true})
-  // toast.error("error msg",{position: "bottom-right",theme: "dark",hideProgressBar: true,closeOnClick: true,autoClose: 4000,})
+export const successToast = (res:any)=>{
+  toast.success(res.data.msg,{position: "bottom-right",theme: "dark",hideProgressBar: true,closeOnClick: true, customProgressBar: true})
+}
+
+export const errorToast = (msg:any)=>{
+  toast.error(msg.response.data.msg,{position: "bottom-right",theme: "dark",hideProgressBar: true,closeOnClick: true, customProgressBar: true})
 }
 // const bounce = cssTransition({
 //   enter: "animate__animated animate__bounceIn",

@@ -26,7 +26,6 @@ import NFOApply from "./pages/NFOApply";
 import PortfolioReview from "./pages/PortfolioReview";
 import BankDetailsVarification from "./pages/bank-details-varification";
 import NominationList from "./pages/Nomination-List";
-import KnowYourRiskProfile from "./pages/Know-Your-Risk-Profile";
 import PortfolioImport from "./pages/PortfolioImport";
 import PortfolioUnderReview from "./pages/PortfolioUnderReview";
 import Portfolio from "./pages/Portfolio";
@@ -53,6 +52,7 @@ import SWPCalculator from "./pages/calculator/SWPCAlculator";
 import RecommendedSchemeGoal from "./pages/planning/RecommendedSchemeGoal";
 import RiskProfile from "./components/RiskProfile";
 import { ToastContainer } from 'react-toastify';
+import RiskResult from "./components/Risk-result";
 
 function App() {
   return (
@@ -90,10 +90,7 @@ function App() {
             element={<BankDetailsVarification />}
           />
           <Route path="/nomination-list" element={<NominationList />} />
-          <Route
-            path="/know-your-risk-profile"
-            element={<KnowYourRiskProfile />}
-          />
+        
           <Route path="/portfolio-import" element={<PortfolioImport />} />
           <Route
             path="/portfolio-under-review"
@@ -123,6 +120,7 @@ function App() {
           <Route path="/swp-calculator" element={<SWPCalculator />} />
           <Route path="/recommended-scheme-goal" element={<RecommendedSchemeGoal />} />
           <Route path="/risk-profile" element={<RiskProfile />} />
+          <Route path="/risk-result" element={<RiskResult />} />
           <Route path="/custom-goal" element={<CustomGoal />} />
 
         </Routes>
