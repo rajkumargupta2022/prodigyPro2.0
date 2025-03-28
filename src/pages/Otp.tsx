@@ -5,15 +5,29 @@ import MobileIcon from "../assets/img/login/mobile_icon.png"
 import OtpInput from 'react-otp-input';
 import { useState } from "react";
 import { ArrowLeft } from "react-bootstrap-icons";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { postRequest } from "../services/callApi";
+import { endPoints } from "../services/urls";
+import { errorToast, successToast } from "../services/toast";
 
 
 
 const Otp = () => {
   const navigate = useNavigate()
+  const location = useLocation()
   const [otp, setOtp] = useState<string>();
-  const getOpt = ()=>{
-           navigate("/pan-varification")
+  const varifyOtp = ()=>{
+    const reqBody:object = {mobile:Number(location.state.mobile),otp:Number(otp)}
+       const res:any =   postRequest(endPoints.varifyOtp,reqBody)
+          if(res.data){
+            if(res.data?.success){
+              localStorage.setItem("token",res.data.token)
+              navigate("/dashboard")
+            }
+            successToast(res)
+          }else{
+            errorToast(res)
+          }
   }
   return (
 
@@ -26,7 +40,7 @@ const Otp = () => {
           <Link className="back_absolute_btn text-decoration-none" to="/"><ArrowLeft/> Back</Link>
             <img src={MobileIcon}  alt="" className="mobileIcon img-fluid" />
             <p className="text-dark font-weight-bold">Varify OTP</p>
-            <form className="" action="">
+            <form className="" action="#" onSubmit={varifyOtp}>
               <p className="pb-1 fs12px">OTP sent to +91 9956419878</p>
 
               <div className="mb-3 row">
@@ -39,7 +53,7 @@ const Otp = () => {
                   renderInput={(props) => <input {...props} />}
                 />
               </div>
-              <button type="button" onClick={getOpt} className="customButton col-12">Varify OTP</button>
+              <button type="submit"  className="customButton col-12">Varify OTP</button>
             </form>
             <p className="mt-3 fs12px text-center">Don’t receive the OTP? Resend</p>
           </div>

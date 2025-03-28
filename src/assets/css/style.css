@@ -957,3 +957,27 @@ font-weight: 400;
 color: #4D4D4D;
 font-size: 16px;
 }
+.bgOption{
+  background-color: #4D62FE;
+  color: #fff;
+  border-radius: 40px;
+}
+.progressBg{
+  background-color: #6598EE;
+}
+.bgOption:hover{
+  background-color: #fff;
+  color: #000;
+}
+.selectedOption{
+  background-color: #fff;
+  color: #000;
+}
+.showTick{
+  display: block;
+}
+.arrowRadius{
+  border-radius: 50%;
+  background-color: #4D62FE;
+  color: #fff;
+}
