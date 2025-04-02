@@ -1,11 +1,14 @@
+import { useNavigate } from "react-router-dom";
 import HDFC from "../assets/img/icons/hdfc.svg";
 
-function Orders({ activeInactive }: { activeInactive: any }) {
+function Orders() {
+  const navigate = useNavigate();
+
   return (
     <>
       <div
         className="p-4 shadow-sm bg-white border-0 rounded-4 mb-2"
-        onClick={() => activeInactive("order-timeline")}
+        onClick={() => navigate("/order-timeline")}
       >
         <div className="d-flex justify-content-around">
           <img src={HDFC} alt="Image not found" />
@@ -20,6 +23,7 @@ function Orders({ activeInactive }: { activeInactive: any }) {
           <span className="failed-badge">Buy Failed</span>
         </div>
         <hr className="fw-light text-secondary" />
+
         <div className="d-flex justify-content-between">
           <div>
             <span className="text-secondary">Order Date</span>
@@ -43,7 +47,10 @@ function Orders({ activeInactive }: { activeInactive: any }) {
         </div>
       </div>
 
-      <div className="p-4 shadow-sm bg-white border-0 rounded-4 mb-2">
+      <div
+        className="p-4 shadow-sm bg-white border-0 rounded-4 mb-2"
+        onClick={() => navigate("/order-timeline")}
+      >
         <div className="d-flex justify-content-around">
           <img src={HDFC} alt="Image not found" />
           <div className="ms-2" style={{ flex: 4 }}>
@@ -80,7 +87,10 @@ function Orders({ activeInactive }: { activeInactive: any }) {
         </div>
       </div>
 
-      <div className="p-4 shadow-sm bg-white border-0 rounded-4 mb-2">
+      <div
+        className="p-4 shadow-sm bg-white border-0 rounded-4 mb-2"
+        onClick={() => navigate("/order-timeline")}
+      >
         <div className="d-flex justify-content-around">
           <img src={HDFC} alt="Image not found" />
           <div className="ms-2" style={{ flex: 4 }}>

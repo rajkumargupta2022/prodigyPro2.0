@@ -981,3 +981,50 @@ font-size: 16px;
   background-color: #4D62FE;
   color: #fff;
 }
+.otpBox2 {
+  width: 40px;
+  height: 60px;
+  font-size: 15px;
+  text-align: center;
+  border: 1px solid #D0DBEA;
+  border-radius: 8px;
+  margin-right:  8px; /* Adds spacing between OTP boxes */
+  outline: none;
+}
+
+.link {
+  color:#1A35FE;
+  font-weight: 400;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.outline-button {
+  background-color: #FFFFFF;
+  color: #1A35FE;
+  font-weight: 500;
+  font-size: 16px;
+  border-radius: 12px;
+  border:none;
+  /* width:174px; */
+  padding-left: 2%;
+  padding-right: 2%;
+  height:48px;
+  border:1px solid #D0DBEA;
+  }
+
+  .rate {
+  font-weight: 500;
+  font-size: 16px;
+  color:#1A1C1E;
+}
+
+.fs16px {
+  font-size: 16px;
+}
+
+.fordate {
+  background-color: #E6E8FF;
+  color:#373737;
+  font-weight: 500;
+}

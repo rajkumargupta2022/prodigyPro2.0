@@ -1,12 +1,15 @@
 import SBI from "../assets/img/icons/sbi.png";
 import ICICI from "../assets/img/bank-logo/icici.png";
+import { useNavigate } from "react-router-dom";
 
-function SWP({ activeInactive }: { activeInactive: any }) {
+function SWP() {
+  const navigate = useNavigate();
+
   return (
     <>
       <div
         className="p-4 shadow-sm bg-white border-0 rounded-4 mb-2"
-        onClick={() => activeInactive("swp-order")}
+        onClick={() => navigate("/swp-order")}
       >
         <div className="d-flex justify-content-around">
           <img src={SBI} alt="Image not found" />
@@ -42,7 +45,10 @@ function SWP({ activeInactive }: { activeInactive: any }) {
         </div>
       </div>
 
-      <div className="p-4 shadow-sm bg-white border-0 rounded-4 mb-2">
+      <div
+        className="p-4 shadow-sm bg-white border-0 rounded-4 mb-2"
+        onClick={() => navigate("/swp-order")}
+      >
         <div className="d-flex justify-content-around">
           <img src={ICICI} alt="Image not found" />
           <div className="ms-2" style={{ flex: 4 }}>
@@ -77,7 +83,10 @@ function SWP({ activeInactive }: { activeInactive: any }) {
         </div>
       </div>
 
-      <div className="p-4 shadow-sm bg-white border-0 rounded-4 mb-2">
+      <div
+        className="p-4 shadow-sm bg-white border-0 rounded-4 mb-2"
+        onClick={() => navigate("/swp-order")}
+      >
         <div className="d-flex justify-content-around">
           <img src={SBI} alt="Image not found" />
           <div className="ms-2" style={{ flex: 4 }}>

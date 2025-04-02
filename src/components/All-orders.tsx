@@ -5,33 +5,26 @@ import { useState } from "react";
 import STP from "./STP";
 import SWP from "./SWP";
 
-function AllOrders({
-  backButton,
-  activeInactive,
-}: {
-  backButton: any;
-  activeInactive: any;
-}) {
+function AllOrders() {
   const [active, setActive] = useState("buy/sell");
 
   const renderCompo = () => {
     switch (active) {
       case "buy/sell":
-        return <Orders activeInactive={activeInactive} />;
+        return <Orders />;
       case "sip":
-        return <SIP activeInactive={activeInactive} />;
+        return <SIP />;
       case "stp":
-        return <STP activeInactive={activeInactive} />;
+        return <STP />;
       case "swp":
-        return <SWP activeInactive={activeInactive} />;
+        return <SWP />;
     }
   };
 
   return (
     <main className="col-md-9 ms-sm-auto col-lg-9 px-md-4 py-4">
       <h2>
-        <ArrowLeft className="crPointer" size={25} onClick={backButton} /> My
-        All Orders
+        <ArrowLeft className="crPointer" size={25} /> My All Orders
       </h2>
       <hr className="fw-light text-secondary" />
       <div className="d-flex justify-content-around mb-4">

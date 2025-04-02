@@ -1,18 +1,14 @@
+import { Link } from "react-router-dom";
 import GIRLDP from "../assets/img/girl-dp.png";
 import { ArrowLeft } from "react-bootstrap-icons";
 
-function Profile({
-  backButton,
-  activeInactive,
-}: {
-  backButton: any;
-  activeInactive: any;
-}) {
+function Profile() {
   return (
     <main className="col-md-9 ms-sm-auto col-lg-9 px-md-4 py-4">
       <h2>
-        <ArrowLeft size={25} onClick={backButton} /> My Profile
+        <ArrowLeft size={25} /> My Profile
       </h2>
+
       <hr className="fw-light text-secondary" />
       <form className="d-flex p-4 shadow-sm bg-white border-0 rounded-4">
         <div>
@@ -23,12 +19,9 @@ function Profile({
           <p>Member since 2023</p>
         </div>
         <div className="crPointer">
-          <p
-            style={{ color: "#2841fe" }}
-            onClick={() => activeInactive("my-profile/profile-details")}
-          >
+          <Link to="/profile-details" style={{ color: "#2841fe" }}>
             Profile Details
-          </p>
+          </Link>
         </div>
       </form>
       <div className="p-4 shadow-sm bg-white border-0 rounded-4 mt-4">
