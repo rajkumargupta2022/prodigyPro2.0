@@ -51,6 +51,24 @@ import FDCalculator from "./pages/calculator/FDCalculator";
 import ElssCalculator from "./pages/calculator/ElssCalculator";
 import SWPCalculator from "./pages/calculator/SWPCAlculator";
 import RecommendedSchemeGoal from "./pages/planning/RecommendedSchemeGoal";
+import Profile from "./components/Profile";
+import LocateUs from "./components/Locate-us";
+import AboutUs from "./components/About-Us";
+import AddFamilyMemberC from "./components/Add-family-member";
+import AllOrders from "./components/All-orders";
+import OrderDetails from "./components/Order-details";
+import SIPOrderDetails from "./components/Sip-order-details";
+import STPOrderDetails from "./components/Stp-order-details";
+import SWPOrderDetails from "./components/SWP-ORDER-DETAILS";
+import LinkedBankAccount from "./components/Linked-BankAccount";
+import BankDetailsC from "./components/Bank-Details";
+import AddBankAccount from "./components/Add-bank-account";
+import AddBankDetails from "./components/add-bank-details";
+import AddAccountVerification from "./components/bank-account-verification";
+import ChangePassword from "./components/Change-Password";
+import HelpSupport from "./components/help&support";
+import Statements from "./components/Statements";
+import MyProfile from "./components/My-Profile";
 
 function App() {
   return (
@@ -76,7 +94,7 @@ function App() {
           <Route path="/tax-saving" element={<TaxSaving />} />
           <Route path="/nfo-live" element={<NFOLive />} />
           <Route path="/nfo-apply" element={<NFOApply />} />
-          <Route path="/add-family-member" element={<AddFamilyMember />} />
+          {/* <Route path="/add-family-member" element={<AddFamilyMember />} /> */}
           <Route path="/portfolio-review" element={<PortfolioReview />} />
           <Route path="/kyc-status-check" element={<KycStatusCheck />} />
           <Route
@@ -99,7 +117,87 @@ function App() {
           <Route path="/all-mutual-funds" element={<AllMutualFunds />} />
           <Route path="/fund-details" element={<FundDetails />} />
           {/* <Route path="/select-folio" element={<SelectFolio />} /> */}
-          <Route path="/account" element={<Account />} />
+
+          {/* account related pages */}
+          <Route path="/my-profile" element={<Account Component={Profile} />} />
+          <Route
+            path="/profile-details"
+            element={<Account Component={MyProfile} />}
+          />
+          <Route path="/locate-us" element={<Account Component={LocateUs} />} />
+          <Route path="/about-us" element={<Account Component={AboutUs} />} />
+          <Route
+            path="/add-family-member"
+            element={<Account Component={AddFamilyMemberC} />}
+          />
+
+          <Route
+            path="/all-orders"
+            element={<Account Component={AllOrders} />}
+          />
+
+          <Route
+            path="/order-timeline"
+            element={<Account Component={OrderDetails} />}
+          />
+
+          <Route
+            path="/sip-order"
+            element={<Account Component={SIPOrderDetails} />}
+          />
+
+          <Route
+            path="/stp-order"
+            element={<Account Component={STPOrderDetails} />}
+          />
+
+          <Route
+            path="/swp-order"
+            element={<Account Component={SWPOrderDetails} />}
+          />
+
+          <Route
+            path="/linked-bank-account"
+            element={<Account Component={LinkedBankAccount} />}
+          />
+
+          <Route
+            path="/bank-details"
+            element={<Account Component={BankDetailsC} />}
+          />
+
+          <Route
+            path="/add-bank-account"
+            element={<Account Component={AddBankAccount} />}
+          />
+
+          <Route
+            path="/add-bank-details"
+            element={<Account Component={AddBankDetails} />}
+          />
+
+          <Route
+            path="/add-verification-details"
+            element={<Account Component={AddAccountVerification} />}
+          />
+
+          <Route
+            path="/change-password"
+            element={<Account Component={ChangePassword} />}
+          />
+
+          <Route
+            path="/help&support"
+            element={<Account Component={HelpSupport} />}
+          />
+
+          <Route
+            path="/statements"
+            element={<Account Component={Statements} />}
+          />
+
+          {/* account related pages end */}
+
           <Route path="/portfolio-empty" element={<PortfolioEmpty />} />
           <Route path="/goal-planning" element={<GoalPlanning />} />
           <Route path="/goal-summary" element={<GoalSummary />} />
@@ -108,16 +206,27 @@ function App() {
           <Route path="/calculator-list" element={<CalculatorList />} />
           <Route path="/sip-calculator" element={<SipCalculator />} />
           <Route path="/marriage-calculator" element={<MarriageCalculator />} />
-          <Route path="/education-calculator" element={<EducationCalculator />} />
-          <Route path="/future-value-calculator" element={<FutureValueCalculator />} />
-          <Route path="/retirment-calculator" element={<RetirementCalculator />} />
+          <Route
+            path="/education-calculator"
+            element={<EducationCalculator />}
+          />
+          <Route
+            path="/future-value-calculator"
+            element={<FutureValueCalculator />}
+          />
+          <Route
+            path="/retirment-calculator"
+            element={<RetirementCalculator />}
+          />
           <Route path="/emi-calculator" element={<EmiCalculator />} />
           <Route path="/fd-calculator" element={<FDCalculator />} />
           <Route path="/elss-calculator" element={<ElssCalculator />} />
           <Route path="/swp-calculator" element={<SWPCalculator />} />
-          <Route path="/recommended-scheme-goal" element={<RecommendedSchemeGoal />} />
+          <Route
+            path="/recommended-scheme-goal"
+            element={<RecommendedSchemeGoal />}
+          />
           <Route path="/custom-goal" element={<CustomGoal />} />
-
         </Routes>
       </BrowserRouter>
     </>
