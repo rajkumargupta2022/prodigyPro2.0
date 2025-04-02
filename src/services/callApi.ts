@@ -1,22 +1,25 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import { baseUrl } from "./urls";
 
-export const postRequest = async (endPoint: string, body: object) => {
+export const postRequest = async <t>(endPoint: string, body: object) => {
   try {
-   return  await axios.post(baseUrl+endPoint, body);
+    const response: AxiosResponse<t> = await axios.post(
+      baseUrl + endPoint,
+      body
+    );
+    return response.data;
   } catch (err) {
-    console.log("err", err);
-    return err
+    console.log(`Error happen in ${endPoint} and error ${err}`);
+    throw err;
   }
 };
 
-export const getRequest = async (endPoint: string) => {
+export const getRequest = async <t>(endPoint: string) => {
   try {
-   return  await axios.get(baseUrl+endPoint);
+    const response: AxiosResponse<t> = await axios.get(baseUrl + endPoint);
+    return response.data;
   } catch (err) {
-    console.log("err", err);
-    return err
+    console.log(`Error happen in ${endPoint} and error ${err}`);
+    throw err;
   }
 };
-
-
