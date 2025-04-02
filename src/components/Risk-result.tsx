@@ -1,6 +1,9 @@
 import MyNavbar from "./Navbar"
 import rislBg from "../assets/img/bg-image/risk-profile.png"
-import {  ChevronRight } from "react-bootstrap-icons"
+import group from "../assets/img/Group.png"
+import correct from "../assets/img/correct.png"
+import riskMeter from "../assets/img/risk-meter.svg"
+import { Link } from "react-router-dom"
 
 
 
@@ -18,34 +21,35 @@ const RiskResult = () => {
           <div className="col-lg-8 col-sm-12">
             <h5>Know Your Risk Profile</h5>
           </div>
-          <div className="col-lg-8 col-sm-12 bg-light rounded-3 mt-3" style={{ backgroundImage: `url(${rislBg})`, backgroundSize: "cover", backgroundPosition: "center" }}>
-            <div className="row justify-content-md-center my-4">
-              <div className="col-lg-8 col-sm-12">
-                <div className="row mb-4">
-                  <div className="progress col px-0 mx-1 my-2 progressBg" role="progressbar" style={{ height: "4px" }} aria-valuemin={0} aria-valuemax={100}>
-                    <div className="progress-bar bg-white" style={{ width: "100%" }}></div>
-                  </div> <div className="progress col px-0 mx-1 my-2 progressBg" role="progressbar" style={{ height: "4px" }} aria-valuemin={0} aria-valuemax={100}>
-                    <div className="progress-bar bg-white" style={{ width: "100%" }}></div>
-                  </div> <div className="progress col px-0 mx-1 my-2 progressBg" role="progressbar" style={{ height: "4px" }} aria-valuemin={0} aria-valuemax={100}>
-                    <div className="progress-bar bg-white" style={{ width: "100%" }}></div>
-                  </div> <div className="progress col px-0 mx-1 my-2 progressBg" role="progressbar" style={{ height: "4px" }} aria-valuemin={0} aria-valuemax={100}>
-                    <div className="progress-bar bg-white" style={{ width: "0%" }}></div>
-                  </div>
-                </div>
-                <h4 className="text-white mt-5">Congratulations</h4>
-                <div className=" py-5 d-grid gap-2 ">
-                  <button className="btn btn-light border-0 bgOption 100vh ">Agree ✅</button>
-                  <button className="btn btn-light border-0 bgOption 100vh ">Somewhat Agree 🤔</button>
-                  <button className="btn btn-light border-0 bgOption 100vh ">Disagree ❌</button>
-                </div>
-           
-     
-  
-                <div className="text-center mb-4">
-                <button className="btn btn-light border-0 arrowRadius" > <ChevronRight/>Go to home</button>
-                </div>
-              </div>
+          <div className="col-lg-8 col-sm-12 text-center bg-light rounded-3 mt-3" style={{ backgroundImage: `url(${rislBg})`, backgroundSize: "cover", backgroundPosition: "center" }}>
+            <div className="position-relative d-inline-block mt-3">
+              {/* Background Image */}
+              <img src={group} alt="Group" className="img-fluid" height={110} width={250} />
+              {/* Overlay Image */}
+              <img
+                src={correct}
+                alt="Correct Symbol"
+                className="position-absolute top-50 start-50 translate-middle"
+                height={84}
+                width={84}
+              />
             </div>
+            <h3 className="text-white mt-2">Congratulations!</h3>
+            <small className="text-white">Your Risk Profile is</small>
+            <h6 className="text-white">Moderate</h6>
+            <img src={riskMeter} alt="" className="my-3" width={160} height={80}/>
+            <div className="mx-lg-4">
+
+            <small className="text-white">
+            You prefer a balanced approach, aiming for steady growth while managing risks. Your portfolio combines stability and growth potential, ideal for medium to long-term goals.
+            </small>
+            </div>
+            <Link
+                className="btn btn-light my-4 logoBlueColor"
+                to="/dashboard"
+              >
+                Go to Home
+              </Link>
           </div>
         </div>
       </div>

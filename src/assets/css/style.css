@@ -233,7 +233,7 @@ margin: 0 auto;
 .errorColor{
   color: #CB414E;
   /* font-size: small; */
-  font-size: 12px;
+  font-size: 14px;
 }
 .textColor{
   color: #6c757d;
@@ -1027,4 +1027,13 @@ font-size: 16px;
   background-color: #E6E8FF;
   color:#373737;
   font-weight: 500;
+}
+.custom-toast{
+  width: 400px; /* Adjust the width as needed */
+  min-height: 50px; 
+  color: rgba(255, 255, 255, 1);
+  background-color: rgba(33, 33, 33, 0.8);
+  font-size: 18px;
+  /* font-family: "Outfit", serif; */
+  
 }
