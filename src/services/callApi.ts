@@ -9,3 +9,14 @@ export const postRequest = async (endPoint: string, body: object) => {
     return err
   }
 };
+
+export const getRequest = async (endPoint: string) => {
+  try {
+   return  await axios.get(baseUrl+endPoint);
+  } catch (err) {
+    console.log("err", err);
+    return err
+  }
+};
+
+

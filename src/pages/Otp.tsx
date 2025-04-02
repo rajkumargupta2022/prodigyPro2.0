@@ -12,22 +12,33 @@ import { errorToast, successToast } from "../services/toast";
 
 
 
-const Otp = () => {
+const Otp = (e: any) => {
   const navigate = useNavigate()
   const location = useLocation()
   const [otp, setOtp] = useState<string>();
-  const varifyOtp = ()=>{
-    const reqBody:object = {mobile:Number(location.state.mobile),otp:Number(otp)}
-       const res:any =   postRequest(endPoints.varifyOtp,reqBody)
-          if(res.data){
-            if(res.data?.success){
-              localStorage.setItem("token",res.data.token)
-              navigate("/dashboard")
-            }
-            successToast(res)
-          }else{
-            errorToast(res)
-          }
+
+
+  const varifyOtp =async (e: any) => {
+    e.preventDefault()
+    console.log("asdasd");
+
+    const reqBody: object = { mobile: Number(location.state.mobile), otp: Number(otp) }
+    const res: any =await postRequest(endPoints.varifyOtp, reqBody)
+    console.log("====",res);
+    
+    if (res.data) {
+      if (res.data?.success && res.data.portfolioUser) {
+        localStorage.setItem("token", res.data.token)
+        localStorage.setItem("pan", res.data.PAN)
+        navigate("/dashboard")
+      }
+      if (res.data?.success && !res?.data?.portfolioUser) {
+        localStorage.setItem("token", res.data.token)
+      }
+      successToast(res)
+    } else {
+      errorToast(res)
+    }
   }
   return (
 
@@ -35,10 +46,10 @@ const Otp = () => {
       <div className="row login_hight_fixed">
         <LoginLeftImage LeftImage={leftImage} />
         <div className="col-12 col-md-6 align-self-center position-relative">
-         
+
           <div className="mrgin_With20">
-          <Link className="back_absolute_btn text-decoration-none" to="/"><ArrowLeft/> Back</Link>
-            <img src={MobileIcon}  alt="" className="mobileIcon img-fluid" />
+            <Link className="back_absolute_btn text-decoration-none" to="/"><ArrowLeft /> Back</Link>
+            <img src={MobileIcon} alt="" className="mobileIcon img-fluid" />
             <p className="text-dark font-weight-bold">Varify OTP</p>
             <form className="" action="#" onSubmit={varifyOtp}>
               <p className="pb-1 fs12px">OTP sent to +91 9956419878</p>
@@ -53,7 +64,7 @@ const Otp = () => {
                   renderInput={(props) => <input {...props} />}
                 />
               </div>
-              <button type="submit"  className="customButton col-12">Varify OTP</button>
+              <button type="submit" className="customButton col-12">Varify OTP</button>
             </form>
             <p className="mt-3 fs12px text-center">Don’t receive the OTP? Resend</p>
           </div>

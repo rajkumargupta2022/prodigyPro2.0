@@ -25,6 +25,7 @@ import Popover from 'react-bootstrap/Popover';
 import { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {goalContent,GoalContentInterface} from "./data/goal"
+import AreYouSure from "../components/Are-You-sure";
 
 
 const Dashboard = () => {
@@ -243,6 +244,7 @@ const Dashboard = () => {
           </Popover>
         </Overlay>
       </div>
+      <AreYouSure/>
     </>
   )
 }
