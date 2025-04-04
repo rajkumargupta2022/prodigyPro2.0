@@ -1,12 +1,13 @@
 
 interface BarNameValueProp{
-   label:String,
+   label:string,
    maxLimit:any,
    value:any,
-   setValue: (value: Number) => void;
+   setValue: (value: number) => void;
 }
 
-const RangeBar: React.FC<BarNameValueProp> = ({label,maxLimit,value,setValue}) => {
+const RangeBar: React.FC<BarNameValueProp> = ({label,maxLimit=30,value,setValue}) => {
+
   const handleChange = (e: any) => {
     setValue(e.target.value);
   };

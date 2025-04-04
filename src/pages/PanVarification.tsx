@@ -23,6 +23,10 @@ const PanVarification = () => {
 
   const completeKyc = async (e: React.FormEvent) => {
     e.preventDefault();
+    if(!userPan){
+        setPanMessage("Pan is mandorty!")
+        return
+    }
     const panRegex = /^[A-Z]{5}[0-9]{4}[A-Z]$/;
 
     if (panRegex.test(userPan)) {
@@ -42,9 +46,8 @@ const PanVarification = () => {
 
   const panHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     let pan = e.target.value.toUpperCase();
-
     if (pan.length < 11) {
-      setUserPan(pan);
+      setUserPan(pan.trim());
     }
   };
 
