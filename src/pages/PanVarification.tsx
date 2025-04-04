@@ -1,11 +1,9 @@
 import LoginLeftImage from "../components/LoginLeftImage";
 import leftImage from "../assets/img/rich.svg";
 import { ArrowLeft } from "react-bootstrap-icons";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useState } from "react";
-import { getRequest } from "../services/callApi";
-import { endPoints } from "../services/urls";
-import { toast } from "react-toastify";
+import { http, Http } from "../services/Api";
 import { errorToast } from "../services/toast";
 
 interface responseType {
@@ -18,7 +16,6 @@ interface responseType {
 }
 
 const PanVarification = () => {
-  const navigate = useNavigate();
   const [userPan, setUserPan] = useState<string>("");
   const [panMessage, setPanMessage] = useState<string>(
     "Your are not KYC Compliant"
@@ -30,11 +27,9 @@ const PanVarification = () => {
 
     if (panRegex.test(userPan)) {
       try {
-        const response = await getRequest<responseType>(
-          endPoints.requestKycLink
-        );
-        localStorage.setItem("requestId", response.data.requestId);
-        window.open(response.data.url);
+        const response = await http.get<responseType>(Http.apis.requestKycLink);
+        localStorage.setItem("requestId", response.data.data.requestId);
+        window.open(response.data.data.url);
       } catch (err) {
         errorToast(err);
       }

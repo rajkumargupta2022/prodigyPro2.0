@@ -1,8 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import Logo from "../assets/img/logo/logo.png";
 import LoginLeftImage from "../components/LoginLeftImage";
-import { postRequest } from "../services/callApi";
-import { endPoints } from "../services/urls";
+import { http, Http } from "../services/Api/Http";
 import { errorToast, successToast } from "../services/toast";
 import { useState } from "react";
 import { handleNumbers } from "../services/states";
@@ -31,7 +30,7 @@ const Login = () => {
       setMobileError("Please enter a valid number");
       return;
     }
-    const res = await postRequest<responseType>(endPoints.registerUser, {
+    const res = await http.post<responseType>(Http.apis.registerUser, {
       mobile: Number(mobile),
     });
 
@@ -46,6 +45,7 @@ const Login = () => {
   const handleNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
     handleNumbers(10, e.target.value, setMobile);
   };
+
   return (
     <div className="container-fluid">
       <div className="row login_hight_fixed">

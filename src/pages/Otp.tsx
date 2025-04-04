@@ -1,54 +1,56 @@
-
-import LoginLeftImage from "../components/LoginLeftImage"
-import leftImage from "../assets/img/rich.svg"
-import MobileIcon from "../assets/img/login/mobile_icon.png"
-import OtpInput from 'react-otp-input';
+import LoginLeftImage from "../components/LoginLeftImage";
+import leftImage from "../assets/img/rich.svg";
+import MobileIcon from "../assets/img/login/mobile_icon.png";
+import OtpInput from "react-otp-input";
 import { useState } from "react";
 import { ArrowLeft } from "react-bootstrap-icons";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { postRequest } from "../services/callApi";
-import { endPoints } from "../services/urls";
+import { Http, http } from "../services/Api";
 import { errorToast, successToast } from "../services/toast";
 
-
-
 const Otp = (e: any) => {
-  const navigate = useNavigate()
-  const location = useLocation()
+  const navigate = useNavigate();
+  const location = useLocation();
   const [otp, setOtp] = useState<string>();
 
-
-  const varifyOtp =async (e: any) => {
-    e.preventDefault()
+  const varifyOtp = async (e: any) => {
+    e.preventDefault();
     console.log("asdasd");
 
-    const reqBody: object = { mobile: Number(location.state.mobile), otp: Number(otp) }
-    const res: any =await postRequest(endPoints.varifyOtp, reqBody)
-    console.log("====",res);
-    
-    if (res.data) {
-      if (res.data?.success && res.data.portfolioUser) {
-        localStorage.setItem("token", res.data.token)
-        localStorage.setItem("pan", res.data.PAN)
-        navigate("/dashboard")
-      }
-      if (res.data?.success && !res?.data?.portfolioUser) {
-        localStorage.setItem("token", res.data.token)
-      }
-      successToast(res)
-    } else {
-      errorToast(res)
-    }
-  }
-  return (
+    const reqBody: object = {
+      mobile: Number(location.state.mobile),
+      otp: Number(otp),
+    };
 
+    try {
+      const res: any = await http.post(Http.apis.varifyOtp, reqBody);
+
+      if (res.data) {
+        if (res.data?.success && res.data.portfolioUser) {
+          localStorage.setItem("token", res.data.token);
+          localStorage.setItem("pan", res.data.PAN);
+          navigate("/dashboard");
+        }
+        if (res.data?.success && !res?.data?.portfolioUser) {
+          localStorage.setItem("token", res.data.token);
+        }
+        successToast(res);
+      } else {
+        errorToast(res);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  return (
     <div className="container-fluid">
       <div className="row login_hight_fixed">
         <LoginLeftImage LeftImage={leftImage} />
         <div className="col-12 col-md-6 align-self-center position-relative">
-
           <div className="mrgin_With20">
-            <Link className="back_absolute_btn text-decoration-none" to="/"><ArrowLeft /> Back</Link>
+            <Link className="back_absolute_btn text-decoration-none" to="/">
+              <ArrowLeft /> Back
+            </Link>
             <img src={MobileIcon} alt="" className="mobileIcon img-fluid" />
             <p className="text-dark font-weight-bold">Varify OTP</p>
             <form className="" action="#" onSubmit={varifyOtp}>
@@ -64,15 +66,17 @@ const Otp = (e: any) => {
                   renderInput={(props) => <input {...props} />}
                 />
               </div>
-              <button type="submit" className="customButton col-12">Varify OTP</button>
+              <button type="submit" className="customButton col-12">
+                Varify OTP
+              </button>
             </form>
-            <p className="mt-3 fs12px text-center">Don’t receive the OTP? Resend</p>
+            <p className="mt-3 fs12px text-center">
+              Don’t receive the OTP? Resend
+            </p>
           </div>
         </div>
       </div>
-
     </div>
-
-  )
-}
-export default Otp
+  );
+};
+export default Otp;
