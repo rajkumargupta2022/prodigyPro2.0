@@ -48,7 +48,7 @@ import RetirementCalculator from "./pages/calculator/RetirementCalculator";
 import EmiCalculator from "./pages/calculator/EmiCalculator";
 import FDCalculator from "./pages/calculator/FDCalculator";
 import ElssCalculator from "./pages/calculator/ElssCalculator";
-import SWPCalculator from "./pages/calculator/SWPCAlculator";
+import SWPCalculator from "./pages/calculator/SWPCalculator";
 import RecommendedSchemeGoal from "./pages/planning/RecommendedSchemeGoal";
 import RiskProfile from "./components/RiskProfile";
 import { ToastContainer } from "react-toastify";
