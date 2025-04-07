@@ -217,9 +217,6 @@ const FutureValueCalculator = () => {
                     <RangeBar
                       label={"PERIOD"}
                       maxLimit={30}
-                      value={investAmount}
-                      onChange={(e) => setInvestAmount(e.target.value)}
-                      validate={isNotEmpty}
                       value={investmentPeriod}
                       setValue={setInvestmentPeriod}
                     />
