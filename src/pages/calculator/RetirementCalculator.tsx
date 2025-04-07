@@ -10,10 +10,14 @@ const RetirementCalculator = () => {
   const [expectedInflationRate, setExpectedInflationRate] = useState<
     string | number
   >();
-  const [] = useState<string | number>();
-  const [] = useState<string | number>();
-  const [] = useState<string | number>();
-  const [] = useState<string | number>();
+  const [currentSaving, setCurrentSaving] = useState<string | number>();
+  const [preRetirementReturns, setPreRetirementReturns] = useState<
+    string | number
+  >();
+  const [postRetirementReturns, setPostRetirementReturns] = useState<
+    string | number
+  >();
+  const [lifeExpectancy, setLifeExpectancy] = useState<string | number>();
 
   return (
     <>
