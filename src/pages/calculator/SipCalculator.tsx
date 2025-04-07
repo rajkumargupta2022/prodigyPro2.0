@@ -13,15 +13,15 @@ interface ChartState {
 }
 
 const SipCalculator = () => {
-  const [investmentPeriod, setInvestmentPeriod] = useState<number>(10);
-  const [monthlySaving, setMonthlySaving] = useState<number>(10000);
-  const [expectedRateOfReturn, setExpectedRateOfReturn] =
-    useState<number>(16.5);
-  const [gains, setGains] = useState<number>(3017292);
-  const [totalYear, setTotalYear] = useState<number>(10);
-  const [totalGains, setTotalGains] = useState<number>(3017292);
-  const [totalMonthlySaving, setTotalMonthlySaving] = useState<number>(1200000);
-  const [oneMonthSaving, setOneMonthSaving] = useState<number>(10000);
+  const [investmentPeriod, setInvestmentPeriod] = useState<number>(10)
+  const [monthlySaving, setMonthlySaving] = useState<number>(10000)
+  const [expectedRateOfReturn, setExpectedRateOfReturn] = useState<number>(16.5)
+  const [gains, setGains] = useState<number>(3017292)
+  const [totalYear, setTotalYear] = useState<number>(10)
+  const [totalGains, setTotalGains] = useState<number>(3017292)
+  const [totalMonthlySaving, setTotalMonthlySaving] = useState<number>(1200000)
+  const [oneMonthSaving, setOneMonthSaving] = useState<number>(10000)
+
 
   const nameRef = useRef<{
     validate: (value: string | number) => boolean;
@@ -31,22 +31,44 @@ const SipCalculator = () => {
     validate: (value: string | number) => boolean;
   }>(null);
 
+  const yearInString  = ():string[]=>{
+    let xAxisArray:string[]= []
+  for(let i = 1 ; i <=totalYear;i++){
+     xAxisArray.push(i+"Y")
+  }
+  return xAxisArray
+}
+const valueForGraph  = (data:number):number[]=>{
+  let graphValue:number[]= []
+for(let i = totalYear ; i >0;i--){
+   graphValue.push(Math.round(data/i))
+}
+console.log("graphValue",graphValue);
+
+return graphValue
+}
   const state: ChartState = {
     series: [
       {
-        name: "Series 1",
-        data: [10, 20, 30, 40, 50, 60, 80, 100, 120],
+        name: "Market Value",
+        data: valueForGraph(gains),
       },
       {
-        name: "Series 2",
-        data: [5, 20 - 10, 30 - 10, 40 - 10, 50 - 10, 60 - 10, 80 - 10, 80, 90],
+        name: "Invested Amount",
+        data: valueForGraph(totalMonthlySaving),
       },
     ],
     options: {
       chart: {
         height: 350,
         type: "area",
-        background: "transparent", // ✅ Removes background color
+        background: "transparent",
+        toolbar: {
+          show: false,
+        },
+        zoom: {
+          enabled: false,
+        },
       },
       dataLabels: {
         enabled: false,
@@ -57,12 +79,13 @@ const SipCalculator = () => {
         colors: ["#357AF6", "#57BE65"],
       },
       xaxis: {
-        categories: ["1M", "3M", "6M", "1Y", "3Y", "5Y", "8M", "10M", "Max"], // ✅ Custom X-axis labels
+        categories:yearInString() // ✅ Custom X-axis labels
       },
       tooltip: {
         x: {
-          formatter: function (val: any) {
+          formatter: function (val: any,) {
             return val; // ✅ Tooltip will also show 1M, 3M, etc.
+            
           },
         },
       },
@@ -70,35 +93,31 @@ const SipCalculator = () => {
         show: false, // ✅ Removes background grey lines
       },
     },
-  };
+  }
+
+
 
   const calculateSip = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (
-      nameRef.current?.validate(monthlySaving) &&
-      returnRef.current?.validate(expectedRateOfReturn)
-    ) {
-    }
-    return;
-
+    e.preventDefault()
     let monthlyRate: number = expectedRateOfReturn / 12 / 100;
     let months: number = investmentPeriod * 12;
     let futureValue: number = 0;
     // let futureValue = (monthlySavings  (1 + monthlyRate)  ((Math.pow((1 + monthlyRate), months)) - 1) / monthlyRate);
-    futureValue =
-      (monthlySaving * (Math.pow(1 + monthlyRate, months) - 1)) / monthlyRate;
+    futureValue = monthlySaving * (Math.pow(1 + monthlyRate, months) - 1) / monthlyRate;
 
-    let mainresults: number = Math.round(futureValue);
-    let totalSaving: number = monthlySaving * months;
-    setGains(Math.round(mainresults - monthlySaving * months));
-    setTotalYear(investmentPeriod);
-    setTotalMonthlySaving(totalSaving);
-    setOneMonthSaving(monthlySaving);
+    let mainresults: number = Math.round(futureValue)
+    let totalSaving: number = monthlySaving * months
+    let gain: number = (mainresults - monthlySaving * months)
+    setGains(Math.round(gain))
+    setTotalYear(investmentPeriod)
+    setTotalMonthlySaving(totalSaving)
+    setOneMonthSaving(monthlySaving)
     // let a = parseInt(totalSaving)
     // let g = parseInt(gains)
     // let gainss = a + g
-    setTotalGains(totalSaving + gains);
-  };
+    setTotalGains(totalSaving + gain)
+
+  }
 
   return (
     <>
@@ -173,12 +192,12 @@ const SipCalculator = () => {
                   <h5 className=" fw-normal mb-1">Result</h5>
                   <p className="resultColor">
                     If you invest{" "}
-                    <span className="fw600"> ₹{oneMonthSaving}</span> per month
+                    <span className="fw600"> ₹{oneMonthSaving.toLocaleString('en-IN')}</span> per month
                     for a period of {totalYear} years your investment amount
                     will be{" "}
-                    <span className="fw600"> ₹{totalMonthlySaving} </span> and
+                    <span className="fw600"> ₹{totalMonthlySaving.toLocaleString('en-IN')} </span> and
                     maturity amount will be grow to{" "}
-                    <span className="fw600">₹{totalGains} </span>
+                    <span className="fw600">₹{totalGains.toLocaleString('en-IN')} </span>
                   </p>
                 </div>
               </div>
