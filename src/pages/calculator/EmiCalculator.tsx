@@ -13,12 +13,16 @@ interface ChartState {
 }
 
 const EmiCalculator = () => {
-  const [investmentPeriod, setInvestmentPeriod] = useState<Number>(10);
-  const [loanAmount, setLoanAmount] = useState<number>(0);
-  const [interest, setInterest] = useState<number>(0);
+  const [investmentPeriod, setInvestmentPeriod] = useState<number>(10);
+  const [loanAmount, setLoanAmount] = useState<number>(1000000);
+  const [interest, setInterest] = useState<number>(10);
+  const [monthyEmi, setMonthyEmi] = useState<number>(13214.85);
+  const [principal, setPrincipal] = useState<number>(1000000);
+  const [totalinterest, setTotalInterest] = useState<number>(585782);
+  const [totalAmount, setTotalAmount] = useState<number>(1585800);
 
   const loanAmountRef = useRef<{
-    validate: (value: number) => boolean;
+    validate: (value: number) => boolean; 
   }>(null);
 
   const interestRef = useRef<{
@@ -42,7 +46,19 @@ const EmiCalculator = () => {
     ].every((value) => value === true);
 
     if (isValidated) {
-      alert("form submitted");
+      let totalMonths:number = investmentPeriod * 12;
+      let monthlyRate = (interest / 12) / 100;
+  
+      let monthlyEmiAmount:number =
+          (loanAmount * monthlyRate * Math.pow(1 + monthlyRate, totalMonths)) /
+              (Math.pow(1 + monthlyRate, totalMonths) - 1);
+  
+      let totalAmount:number = monthlyEmiAmount * totalMonths;
+      let totalInterest:number = totalAmount - loanAmount;
+      setMonthyEmi(Math.floor(monthlyEmiAmount))
+      setPrincipal(loanAmount)
+      setTotalInterest(Math.floor(totalInterest))
+      setTotalAmount(Math.floor(totalAmount))
     }
   };
 
@@ -117,19 +133,19 @@ const EmiCalculator = () => {
                   <div className="row">
                     <div className="col-6">
                       <p className="fs12px mb-0 mt-3">YOUR MONTHLY EMI</p>
-                      <h6 className="mt-1">₹1434.71</h6>
+                      <h6 className="mt-1">₹{monthyEmi.toLocaleString('en-IN')}</h6>
                     </div>
                     <div className="col-6">
                       <p className="fs12px mb-0 mt-3">principle</p>
-                      <h6 className="mt-1">₹1,00,000</h6>
+                      <h6 className="mt-1">₹{principal.toLocaleString('en-IN')}</h6>
                     </div>
                     <div className="col-6">
                       <p className="fs12px mb-0 mt-3">TOTAL INTEREST</p>
-                      <h6 className="mt-1">₹72,165.2</h6>
+                      <h6 className="mt-1">₹{totalinterest.toLocaleString('en-IN')}</h6>
                     </div>
                     <div className="col-6">
                       <p className="fs12px mb-0 mt-3">TOTAL AMOUNT</p>
-                      <h6 className="mt-1">₹1,72,165.2</h6>
+                      <h6 className="mt-1">₹{totalAmount.toLocaleString('en-IN')}</h6>
                     </div>
                   </div>
                 </div>

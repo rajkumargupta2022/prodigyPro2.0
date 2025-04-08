@@ -7,7 +7,7 @@ import {
   maxValue,
   minAmount,
 } from "../../services/Validated-inputs/validations";
-import { amountHandler } from "../../services/calculatorsFs";
+import { amountHandler, pmtvalue, presentValue } from "../../services/calculatorsFs";
 
 const MarriageCalculator = () => {
   const [childAge, setChildAge] = useState<number>(8);
@@ -16,6 +16,11 @@ const MarriageCalculator = () => {
   const [annualSaving, setAnnualSaving] = useState<number>(0);
   const [rateOfReturn, setRateOfReturn] = useState<number>(0);
   const [expectedInflation, setExpectedInflation] = useState<number>(0);
+  const [inflationAdjustCost, setInflationAdjustCost] = useState<number>(2540352);
+  const [futureValueOfSaving, setFutureValueOfSaving] = useState<number>(1282598);
+  const [addtionalFundRequiredToMeetExpences, setAddtionalFundRequiredToMeetExpences] = useState<number>(1257753);
+  const [oneTimeInvestmentRequired, setOneTimeInvestmentRequired] = useState<number>(205167);
+  const [monthlyInvestmentRequired, setMonthlyInvestmentRequired] = useState<number>(2185);
 
   //input refs
 
@@ -35,7 +40,7 @@ const MarriageCalculator = () => {
     validate: (value: number) => boolean;
   }>(null);
 
-  const submit = (e: React.FormEvent) => {
+  const submit =async (e: React.FormEvent) => {
     e.preventDefault();
 
     const isValidate = [
@@ -46,7 +51,34 @@ const MarriageCalculator = () => {
     ].every((value) => value == true);
 
     if (isValidate) {
-      alert("form submmited");
+      let years:number = marriedAge - childAge;
+  
+      // Adjust the amount required for inflation
+      let adjustedAmountRequired:number =
+      requiredAmount * Math.pow(1 + expectedInflation / 100, years);
+
+      // Calculate the future value of annual savings
+      let futureValue:number =
+        (annualSaving * (Math.pow(1 + rateOfReturn / 100, years) - 1)) /
+        (rateOfReturn / 100);
+
+      // Calculate the value of annual savings required
+      let additionalFund = adjustedAmountRequired - futureValue
+
+
+      let nperiod = (years * 12)
+      let rate = (rateOfReturn / 12) / 100
+
+      let monthlyInvestRequired =await pmtvalue(rate, nperiod, 0, -additionalFund, 0)
+
+      let lumpsumRate = rateOfReturn / 100;
+      let lumpsumRequired =await presentValue(lumpsumRate, years, 0, additionalFund);
+
+      setAddtionalFundRequiredToMeetExpences(Math.round(additionalFund));
+      setFutureValueOfSaving(Math.round(futureValue));
+      setInflationAdjustCost(Math.round(adjustedAmountRequired));
+      setMonthlyInvestmentRequired(monthlyInvestRequired)
+      setOneTimeInvestmentRequired(lumpsumRequired);
     }
   };
 
@@ -88,7 +120,7 @@ const MarriageCalculator = () => {
 
                         <ValidatedInput
                           ref={requiredAmountRef}
-                          type="number"
+                          type="text"
                           className="form-control"
                           id="exampleInputEmail1"
                           aria-describedby="emailHelp"
@@ -172,21 +204,21 @@ const MarriageCalculator = () => {
                   <div className="card-body">
                     <h5 className=" fw-semi-bold mb-1">Result</h5>
                     <p className="fs12px mb-0 mt-3">INFLATION ADJUSTED COST</p>
-                    <h6 className="mt-1">₹25,40,352</h6>
+                    <h6 className="mt-1">₹{inflationAdjustCost.toLocaleString('en-IN')}</h6>
                     <p className="fs12px mb-0 mt-3">FUTURE VALUE OF SAVINGS</p>
-                    <h6 className="mt-1">₹12,82,598</h6>
+                    <h6 className="mt-1">₹{futureValueOfSaving.toLocaleString('en-IN')}</h6>
                     <p className="fs12px mb-0 mt-3">
                       ADDITIONAL FUNDS REQUIRED TO MEET EXPENSES
                     </p>
-                    <h6 className="mt-1">₹12,57,753</h6>
+                    <h6 className="mt-1">₹{addtionalFundRequiredToMeetExpences.toLocaleString('en-IN')}</h6>
                     <p className="fs12px mb-0 mt-3">
                       ONE TIME INVESTMENT REQUIRED
                     </p>
-                    <h6 className="mt-1">₹2,05,167</h6>
+                    <h6 className="mt-1">₹{oneTimeInvestmentRequired.toLocaleString('en-IN')}</h6>
                     <p className="fs12px mb-0 mt-3">
                       MONTHLY INVESTMENT REQUIRED
                     </p>
-                    <h6 className="mt-1">₹2,185</h6>
+                    <h6 className="mt-1">₹{monthlyInvestmentRequired.toLocaleString('en-IN')}</h6>
                   </div>
                 </div>
                 <button type="button" className="btn investBtn mt-2">

@@ -3,16 +3,18 @@ import NavBar from "../../components/Navbar";
 import RangeBar from "./RangeBar";
 import ValidatedInput from "../../services/Validated-inputs/inputs";
 import { isNotEmpty } from "../../services/Validated-inputs/validations";
-import { amountHandler } from "../../services/calculatorsFs";
+import { amountHandler, pmtvalue } from "../../services/calculatorsFs";
 
 const EducationCalculator = () => {
   const [childAge, setChildAge] = useState<number>(10);
   const [startCollegeAge, setStartCollegeAge] = useState<number>(18);
   const [durationOfEducation, setDurationOfEducation] = useState<number>(3);
-
-  const [costPerYear, setCostPerYear] = useState<number>(0);
-  const [expectedRateofReturn, setExpectedRateofReturn] = useState<number>(0);
-  const [expectedInflation, setExpectedInflation] = useState<number>(0);
+  const [costPerYear, setCostPerYear] = useState<number>(500000);
+  const [expectedRateofReturn, setExpectedRateofReturn] = useState<number>(12);
+  const [expectedInflation, setExpectedInflation] = useState<number>(6);
+  const [corpusRequired, setCorpusRequired] = useState<number>(2143352);
+  const [oneTimeInvestmentRequired, setOneTimeInvestmentRequired] = useState<number>(904167);
+  const [monthlyInvestmentRequired, setMonthlyInvestmentRequired] = useState<number>(13185);
 
   const costPerYearRef = useRef<{
     validate: (value: number) => boolean;
@@ -26,7 +28,7 @@ const EducationCalculator = () => {
     validate: (value: number) => boolean;
   }>(null);
 
-  const onSubmit = (e: React.FormEvent) => {
+  const onSubmit =async (e: React.FormEvent) => {
     e.preventDefault();
     const isValidated = [
       costPerYearRef.current?.validate(costPerYear),
@@ -35,7 +37,33 @@ const EducationCalculator = () => {
     ].every((value) => value === true);
 
     if (isValidated) {
-      alert("good");
+      var yearleft:number = startCollegeAge - childAge;
+
+      var rate:number = expectedRateofReturn * 0.01;
+  
+      var i:number = 0.01 * expectedInflation;
+  
+      var FV:number = costPerYear * (Math.pow((1 + i), yearleft));
+  
+      var er:number = expectedRateofReturn * 0.01;
+      var ei:number = expectedInflation * 0.01;
+      var Tot:number = (1 + er) / (1 + ei) - 1;
+      var firstot:number = (1 + er) / (1 + er)
+      var nomialRate:number = 12.0 * (Math.pow((1 + rate), (1 / 12.0)) - 1);
+  
+  
+      var postinfaltion:number = Tot * 100;
+  
+  
+      var totalAmtRequired = (FV * ((1 - (Math.pow((1 + Tot), (-durationOfEducation)))) / Tot));
+  
+      var lumpsum:number = (totalAmtRequired * (1 / (Math.pow((1 + nomialRate), yearleft))));
+      var nominalRateMonthly:number = parseFloat((nomialRate / 12).toFixed(6))
+      var monthleft:number = yearleft * 12
+      let newsipamt:number = await pmtvalue(nominalRateMonthly, monthleft, 0, -Math.round(totalAmtRequired), 0)
+      setCorpusRequired(Math.round(totalAmtRequired))
+      setOneTimeInvestmentRequired(Math.round(lumpsum))
+      setMonthlyInvestmentRequired(Math.round(newsipamt))
     }
   };
 
@@ -148,18 +176,18 @@ const EducationCalculator = () => {
                     <p className="fs12px mb-0 mt-3">
                       CORPUS REQUIRED AT START OF COLLEGE
                     </p>
-                    <h6 className="mt-1">₹21,43,352</h6>
+                    <h6 className="mt-1">₹{corpusRequired.toLocaleString('en-IN')}</h6>
                     <hr />
                     <h6>To meet this goal your must invest:</h6>
                     <p className="fs12px mb-0 mt-3">
                       ONE TIME INVESTMENT REQUIRED
                     </p>
-                    <h6 className="mt-1">₹9,04,167</h6>
+                    <h6 className="mt-1">₹{oneTimeInvestmentRequired.toLocaleString('en-IN')}</h6>
                     <p className="fs12px">OR</p>
                     <p className="fs12px mb-0 mt-3">
                       MONTHLY INVESTMENT REQUIRED
                     </p>
-                    <h6 className="mt-1">₹13,185</h6>
+                    <h6 className="mt-1">₹{monthlyInvestmentRequired.toLocaleString('en-IN')}</h6>
                   </div>
                 </div>
                 <button type="button" className="btn investBtn mt-2">
