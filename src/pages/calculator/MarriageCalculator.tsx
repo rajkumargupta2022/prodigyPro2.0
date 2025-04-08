@@ -7,33 +7,32 @@ import {
   maxValue,
   minAmount,
 } from "../../services/Validated-inputs/validations";
+import { amountHandler } from "../../services/calculatorsFs";
 
 const MarriageCalculator = () => {
-  const [childAge, setChildAge] = useState<Number>(8);
-  const [marriedAge, setMarriedAge] = useState<Number>(24);
-  const [requiredAmount, setRequiredAmount] = useState<string | number>(0);
-  const [annualSaving, setAnnualSaving] = useState<string | number>(0);
-  const [rateOfReturn, setRateOfReturn] = useState<string | number>(0);
-  const [expectedInflation, setExpectedInflation] = useState<string | number>(
-    0
-  );
+  const [childAge, setChildAge] = useState<number>(8);
+  const [marriedAge, setMarriedAge] = useState<number>(24);
+  const [requiredAmount, setRequiredAmount] = useState<number>(0);
+  const [annualSaving, setAnnualSaving] = useState<number>(0);
+  const [rateOfReturn, setRateOfReturn] = useState<number>(0);
+  const [expectedInflation, setExpectedInflation] = useState<number>(0);
 
   //input refs
 
   const requiredAmountRef = useRef<{
-    validate: (value: string | number) => boolean;
+    validate: (value: number) => boolean;
   }>(null);
 
   const annualSavingRef = useRef<{
-    validate: (value: string | number) => boolean;
+    validate: (value: number) => boolean;
   }>(null);
 
   const rateOfReturnRef = useRef<{
-    validate: (value: string | number) => boolean;
+    validate: (value: number) => boolean;
   }>(null);
 
   const expectedInflationRef = useRef<{
-    validate: (value: string | number) => boolean;
+    validate: (value: number) => boolean;
   }>(null);
 
   const submit = (e: React.FormEvent) => {
@@ -86,14 +85,17 @@ const MarriageCalculator = () => {
                         <label htmlFor="exampleInputEmail1" className="fs12px">
                           AMOUNT REQUIRED FOR WEDDING AS ON TODAY
                         </label>
+
                         <ValidatedInput
                           ref={requiredAmountRef}
-                          type="text"
+                          type="number"
                           className="form-control"
                           id="exampleInputEmail1"
                           aria-describedby="emailHelp"
                           placeholder="₹ 10,00,000"
-                          onChange={(e) => setRequiredAmount(e.target.value)}
+                          onChange={(e) =>
+                            amountHandler(e, 1000000, setRequiredAmount)
+                          }
                           value={requiredAmount}
                           validate={[isNotEmpty, maxValue, minAmount]}
                         />
@@ -111,7 +113,9 @@ const MarriageCalculator = () => {
                           className="form-control"
                           id="exampleInputPassword1"
                           placeholder="₹ 5,00,000"
-                          onChange={(e) => setAnnualSaving(e.target.value)}
+                          onChange={(e) =>
+                            amountHandler(e, 500000, setAnnualSaving)
+                          }
                           value={annualSaving}
                           validate={isNotEmpty}
                         />
@@ -129,7 +133,9 @@ const MarriageCalculator = () => {
                           className="form-control"
                           id="exampleInputPassword1"
                           placeholder="12"
-                          onChange={(e) => setRateOfReturn(e.target.value)}
+                          onChange={(e) =>
+                            amountHandler(e, 100, setRateOfReturn)
+                          }
                           value={rateOfReturn}
                           validate={isNotEmpty}
                         />
@@ -148,7 +154,9 @@ const MarriageCalculator = () => {
                           id="exampleInputPassword1"
                           placeholder="6"
                           value={expectedInflation}
-                          onChange={(e) => setExpectedInflation(e.target.value)}
+                          onChange={(e) =>
+                            amountHandler(e, 100000, setExpectedInflation)
+                          }
                           validate={isNotEmpty}
                         />
                       </div>

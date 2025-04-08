@@ -1,25 +1,25 @@
 import React, { useState, useImperativeHandle, forwardRef } from "react";
 
 type ValidationResult = string | null;
-type ValidationFunction = (value: string | number) => ValidationResult;
+type ValidationFunction = (value: number) => ValidationResult;
 
 interface ValidatedInputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
   validate?: ValidationFunction | ValidationFunction[];
   onValidation?: (isValid: boolean) => void;
-  value: number | string;
+  value: number;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 interface InputRef {
-  validate: (currentValue: string | number) => boolean;
+  validate: (currentValue: number) => boolean;
 }
 
 const ValidatedInput = forwardRef<InputRef, ValidatedInputProps>(
   ({ validate, onValidation, value, onChange, onBlur, ...props }, ref) => {
     const [error, setError] = useState<ValidationResult>(null);
 
-    const validateInput = (currentValue: string | number): boolean => {
+    const validateInput = (currentValue: number): boolean => {
       if (!validate) return true;
 
       const validators = Array.isArray(validate) ? validate : [validate];

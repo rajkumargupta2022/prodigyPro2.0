@@ -3,30 +3,27 @@ import NavBar from "../../components/Navbar";
 import RangeBar from "./RangeBar";
 import ValidatedInput from "../../services/Validated-inputs/inputs";
 import { isNotEmpty } from "../../services/Validated-inputs/validations";
+import { amountHandler } from "../../services/calculatorsFs";
 
 const EducationCalculator = () => {
-  const [childAge, setChildAge] = useState<Number>(10);
-  const [startCollegeAge, setStartCollegeAge] = useState<Number>(18);
-  const [durationOfEducation, setDurationOfEducation] = useState<Number>(3);
+  const [childAge, setChildAge] = useState<number>(10);
+  const [startCollegeAge, setStartCollegeAge] = useState<number>(18);
+  const [durationOfEducation, setDurationOfEducation] = useState<number>(3);
 
-  const [costPerYear, setCostPerYear] = useState<string | number>(0);
-  const [expectedRateofReturn, setExpectedRateofReturn] = useState<
-    string | number
-  >(0);
-  const [expectedInflation, setExpectedInflation] = useState<string | number>(
-    0
-  );
+  const [costPerYear, setCostPerYear] = useState<number>(0);
+  const [expectedRateofReturn, setExpectedRateofReturn] = useState<number>(0);
+  const [expectedInflation, setExpectedInflation] = useState<number>(0);
 
   const costPerYearRef = useRef<{
-    validate: (value: string | number) => boolean;
+    validate: (value: number) => boolean;
   }>(null);
 
   const expectedRateofReturnRef = useRef<{
-    validate: (value: string | number) => boolean;
+    validate: (value: number) => boolean;
   }>(null);
 
   const expectedInflationRef = useRef<{
-    validate: (value: string | number) => boolean;
+    validate: (value: number) => boolean;
   }>(null);
 
   const onSubmit = (e: React.FormEvent) => {
@@ -91,9 +88,9 @@ const EducationCalculator = () => {
                           aria-describedby="emailHelp"
                           placeholder="₹5,00,000"
                           value={costPerYear}
-                          onChange={(e) => {
-                            setCostPerYear(e.target.value);
-                          }}
+                          onChange={(e) =>
+                            amountHandler(e, 500000, setCostPerYear)
+                          }
                           validate={isNotEmpty}
                         />
                       </div>
@@ -112,7 +109,7 @@ const EducationCalculator = () => {
                           placeholder="12"
                           value={expectedRateofReturn}
                           onChange={(e) =>
-                            setExpectedRateofReturn(e.target.value)
+                            amountHandler(e, 100, setExpectedRateofReturn)
                           }
                           validate={isNotEmpty}
                         />
@@ -131,7 +128,9 @@ const EducationCalculator = () => {
                           id="exampleInputPassword1"
                           placeholder="6"
                           value={expectedInflation}
-                          onChange={(e) => setExpectedInflation(e.target.value)}
+                          onChange={(e) =>
+                            amountHandler(e, 100000, setExpectedInflation)
+                          }
                           validate={isNotEmpty}
                         />
                       </div>

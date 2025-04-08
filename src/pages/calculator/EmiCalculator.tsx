@@ -1,60 +1,111 @@
 import NavBar from "../../components/Navbar";
-import Chart from 'react-apexcharts'
-import { useState } from "react";
+import Chart from "react-apexcharts";
+import { useRef, useState } from "react";
 import RangeBar from "./RangeBar";
+import ValidatedInput from "../../services/Validated-inputs/inputs";
+import { isNotEmpty } from "../../services/Validated-inputs/validations";
+import { amountHandler } from "../../services/calculatorsFs";
 interface ChartState {
   options: object;
   series: number[];
   // labels: string[];
-  colors:string[]
+  colors: string[];
 }
 
 const EmiCalculator = () => {
-  const [investmentPeriod, setInvestmentPeriod] = useState<Number>(10)
-  // const [state, setState] = useState<ChartState>({
-  //   options: {
-  //     colors: ["#CCD2FF", "#1A35FE"],
-  //   },
-  //   series: [44, 95],
-  //   colors: ["#fff", "#FF4560"],
-  // });
+  const [investmentPeriod, setInvestmentPeriod] = useState<Number>(10);
+  const [loanAmount, setLoanAmount] = useState<number>(0);
+  const [interest, setInterest] = useState<number>(0);
 
-  const state:ChartState = {
+  const loanAmountRef = useRef<{
+    validate: (value: number) => boolean;
+  }>(null);
+
+  const interestRef = useRef<{
+    validate: (value: number) => boolean;
+  }>(null);
+
+  const state: ChartState = {
     options: {
       colors: ["#CCD2FF", "#1A35FE"],
     },
     series: [44, 95],
     colors: ["#fff", "#FF4560"],
-  }
+  };
 
+  const submit = (e: React.FormEvent) => {
+    e.preventDefault();
 
+    const isValidated = [
+      loanAmountRef.current?.validate(loanAmount),
+      interestRef.current?.validate(interest),
+    ].every((value) => value === true);
 
+    if (isValidated) {
+      alert("form submitted");
+    }
+  };
 
   return (
     <>
       <NavBar />
-      <div className="container px-4 my-4" >
+      <div className="container px-4 my-4">
         <div className="row">
           <div className="col-12 align-items-start mb-3">
             <h4>EMI Calculator</h4>
-            <p className="fs14px">This calculator will help you to calculate the return value of your one time investment after your decided period.</p>
+            <p className="fs14px">
+              This calculator will help you to calculate the return value of
+              your one time investment after your decided period.
+            </p>
           </div>
 
           <div className="row ">
             <div className="col-lg-6 co-sm-12 col-md12 ">
               <div className="card border-0 shadow p-2">
                 <div className="card-body">
-                  <form>
+                  <form onSubmit={submit}>
                     <div className="form-group my-2">
-                      <label htmlFor="exampleInputEmail1" className="fs12px">LOAN AMOUNT</label>
-                      <input type="text" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="₹ 100,000" />
+                      <label htmlFor="exampleInputEmail1" className="fs12px">
+                        LOAN AMOUNT
+                      </label>
+                      <ValidatedInput
+                        ref={loanAmountRef}
+                        type="text"
+                        className="form-control"
+                        id="exampleInputEmail1"
+                        aria-describedby="emailHelp"
+                        placeholder="₹ 100,000"
+                        value={loanAmount}
+                        onChange={(e) =>
+                          amountHandler(e, 100000, setLoanAmount)
+                        }
+                        validate={isNotEmpty}
+                      />
                     </div>
                     <div className="form-group">
-                      <label htmlFor="exampleInputPassword1" className="fs12px">INTEREST RATE (%)</label>
-                      <input type="text" className="form-control" id="exampleInputPassword1" placeholder="12" />
+                      <label htmlFor="exampleInputPassword1" className="fs12px">
+                        INTEREST RATE (%)
+                      </label>
+                      <ValidatedInput
+                        ref={interestRef}
+                        type="text"
+                        className="form-control"
+                        id="exampleInputPassword1"
+                        placeholder="12"
+                        value={interest}
+                        onChange={(e) => amountHandler(e, 100, setInterest)}
+                        validate={isNotEmpty}
+                      />
                     </div>
-                    <RangeBar label={"PERIOD"} maxLimit={30} value={investmentPeriod} setValue={setInvestmentPeriod} />
-                    <button type="submit" className="customButton px-3 mt-3">Calculate</button>
+                    <RangeBar
+                      label={"PERIOD"}
+                      maxLimit={30}
+                      value={investmentPeriod}
+                      setValue={setInvestmentPeriod}
+                    />
+                    <button type="submit" className="customButton px-3 mt-3">
+                      Calculate
+                    </button>
                   </form>
                 </div>
               </div>
@@ -81,7 +132,6 @@ const EmiCalculator = () => {
                       <h6 className="mt-1">₹1,72,165.2</h6>
                     </div>
                   </div>
-
                 </div>
               </div>
               <div className="row mt-2">
@@ -89,7 +139,12 @@ const EmiCalculator = () => {
                   <div className="card border-0 shadow p-0">
                     <div className="card-body">
                       <div className="donut">
-                        <Chart options={state.options} series={state.series} type="donut" width="280" />
+                        <Chart
+                          options={state.options}
+                          series={state.series}
+                          type="donut"
+                          width="280"
+                        />
                       </div>
                     </div>
                   </div>
