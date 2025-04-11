@@ -4,18 +4,17 @@ import RangeBar from "./RangeBar";
 import ValidatedInput from "../../services/Validated-inputs/inputs";
 import {
   isNotEmpty,
-  maxValue,
   minAmount,
 } from "../../services/Validated-inputs/validations";
-import { amountHandler, pmtvalue, presentValue } from "../../services/calculatorsFs";
+import { amountHandler,percentageHandler, pmtvalue, presentValue } from "../../services/calculatorsFs";
 
 const MarriageCalculator = () => {
   const [childAge, setChildAge] = useState<number>(8);
-  const [marriedAge, setMarriedAge] = useState<number>(24);
-  const [requiredAmount, setRequiredAmount] = useState<number>(0);
-  const [annualSaving, setAnnualSaving] = useState<number>(0);
-  const [rateOfReturn, setRateOfReturn] = useState<number>(0);
-  const [expectedInflation, setExpectedInflation] = useState<number>(0);
+  const [marriedAge, setMarriedAge] = useState<number>(18);
+  const [requiredAmount, setRequiredAmount] = useState<number>(1000000);
+  const [annualSaving, setAnnualSaving] = useState<number>(30000);
+  const [rateOfReturn, setRateOfReturn] = useState<number>(12);
+  const [expectedInflation, setExpectedInflation] = useState<number>(6);
   const [inflationAdjustCost, setInflationAdjustCost] = useState<number>(2540352);
   const [futureValueOfSaving, setFutureValueOfSaving] = useState<number>(1282598);
   const [addtionalFundRequiredToMeetExpences, setAddtionalFundRequiredToMeetExpences] = useState<number>(1257753);
@@ -74,11 +73,11 @@ const MarriageCalculator = () => {
       let lumpsumRate = rateOfReturn / 100;
       let lumpsumRequired =await presentValue(lumpsumRate, years, 0, additionalFund);
 
-      setAddtionalFundRequiredToMeetExpences(Math.round(additionalFund));
-      setFutureValueOfSaving(Math.round(futureValue));
-      setInflationAdjustCost(Math.round(adjustedAmountRequired));
-      setMonthlyInvestmentRequired(monthlyInvestRequired)
-      setOneTimeInvestmentRequired(lumpsumRequired);
+      setAddtionalFundRequiredToMeetExpences(Math.trunc(additionalFund));
+      setFutureValueOfSaving(Math.trunc(futureValue));
+      setInflationAdjustCost(Math.trunc(adjustedAmountRequired));
+      setMonthlyInvestmentRequired(Math.trunc(monthlyInvestRequired))
+      setOneTimeInvestmentRequired(Math.trunc(lumpsumRequired));
     }
   };
 
@@ -126,10 +125,10 @@ const MarriageCalculator = () => {
                           aria-describedby="emailHelp"
                           placeholder="₹ 10,00,000"
                           onChange={(e) =>
-                            amountHandler(e, 1000000, setRequiredAmount)
+                            amountHandler(e, 100000000, setRequiredAmount)
                           }
                           value={requiredAmount}
-                          validate={[isNotEmpty, maxValue, minAmount]}
+                          validate={[isNotEmpty, minAmount(100)]}
                         />
                       </div>
                       <div className="form-group my-2">
@@ -146,10 +145,10 @@ const MarriageCalculator = () => {
                           id="exampleInputPassword1"
                           placeholder="₹ 5,00,000"
                           onChange={(e) =>
-                            amountHandler(e, 500000, setAnnualSaving)
+                            amountHandler(e, 2500000, setAnnualSaving)
                           }
                           value={annualSaving}
-                          validate={isNotEmpty}
+                          validate={[isNotEmpty, minAmount(1)]}
                         />
                       </div>
                       <div className="form-group my-2">
@@ -161,15 +160,15 @@ const MarriageCalculator = () => {
                         </label>
                         <ValidatedInput
                           ref={rateOfReturnRef}
-                          type="text"
+                          type="number"
                           className="form-control"
                           id="exampleInputPassword1"
                           placeholder="12"
                           onChange={(e) =>
-                            amountHandler(e, 100, setRateOfReturn)
+                            percentageHandler(e, 50, setRateOfReturn)
                           }
                           value={rateOfReturn}
-                          validate={isNotEmpty}
+                          validate={[isNotEmpty, minAmount(1)]}
                         />
                       </div>
                       <div className="form-group my-2">
@@ -181,15 +180,15 @@ const MarriageCalculator = () => {
                         </label>
                         <ValidatedInput
                           ref={expectedInflationRef}
-                          type="text"
+                          type="number"
                           className="form-control"
                           id="exampleInputPassword1"
                           placeholder="6"
                           value={expectedInflation}
                           onChange={(e) =>
-                            amountHandler(e, 100000, setExpectedInflation)
+                            percentageHandler(e, 50, setExpectedInflation)
                           }
-                          validate={isNotEmpty}
+                          validate={[isNotEmpty, minAmount(1)]}
                         />
                       </div>
                       <button type="submit" className="customButton px-3 mt-3">

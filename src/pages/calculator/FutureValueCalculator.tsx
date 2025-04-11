@@ -8,20 +8,27 @@ interface ChartState {
   options: ApexOptions;
   series: { name: string; data: number[] }[];
 }
-import { isNotEmpty } from "../../services/Validated-inputs/validations";
+import {
+  isNotEmpty,
+  minAmount,
+} from "../../services/Validated-inputs/validations";
+import { amountHandler, percentageHandler } from "../../services/calculatorsFs";
 
 const FutureValueCalculator = () => {
-  const [investmentPeriod, setInvestmentPeriod] = useState<Number>(10);
+  const [investmentPeriod, setInvestmentPeriod] = useState<number>(10);
 
-  const [investAmount, setInvestAmount] = useState<string | number>(0);
-  const [rateOfReturn, setRateOfReturn] = useState<string | number>(0);
+  const [investAmount, setInvestAmount] = useState<number>(50000);
+  const [rateOfReturn, setRateOfReturn] = useState<number>(12);
+  const [resultInvestment, setResultInvestment] = useState<number>(50000);
+  const [resultPeriod, setResultPeriod] = useState<number>(10);
+  const [gains, setGains] = useState<number>(155292);
 
   const investAmountRef = useRef<{
-    validate: (value: string | number) => boolean;
+    validate: (value: number) => boolean;
   }>(null);
 
   const rateOfReturnRef = useRef<{
-    validate: (value: string | number) => boolean;
+    validate: (value: number) => boolean;
   }>(null);
 
   const submit = (e: React.FormEvent) => {
@@ -33,91 +40,50 @@ const FutureValueCalculator = () => {
     ].every((value) => value === true);
 
     if (isValidated) {
-      alert("form submitted");
+      
+    // let i:number = (rateOfReturn / 100) / 12;
+
+    let lumpsums:number = investAmount * Math.pow((1 + rateOfReturn / 100), investmentPeriod);
+    let lumpsum:number = Math.round(lumpsums)
+    // let gains:number = lumpsum - investAmount
+    setResultInvestment(investAmount);
+    setGains(lumpsum);
+    setResultPeriod(investmentPeriod)
+    // setSgains(getMachine(gains));
+    // window.scrollTo(500, 500);
+    // setCalculateCheck(1)
+    // setLoader("none");
+    // setChartPresentValue(investment);
+    // setChartGain(gains);
     }
   };
+  const valueForGraph = (data: number): number[] => {
+    let graphValue: number[] = [];
+    for (let i = resultPeriod; i > 0; i--) {
+      graphValue.push(Math.round(data / i));
+    }
+    console.log("graphValue", graphValue);
 
-  //   const [state, setState] = useState<ChartState>({
+    return graphValue;
+  };
 
-  //     series: [{
-  //       name: 'Marine Sprite',
-  //       data: [5,8,15,24,35,40,45,50,55,50]
-  //     }, {
-  //       name: 'Striking Calf',
-  //       data: [1,4,7,12,18,25,30,32,38,50]
-  //     }],
-  //     options: {
-  //       chart: {
-  //         type: 'bar',
-  //         height: 1000,
-  //         stacked: true,
-  //       },
-  //       colors: ["#CCD2FF","#1A35FE"],
-  //       plotOptions: {
-  //         bar: {
-  //           borderRadius: 3, // ✅ Adds rounded corners to the top of bars
-  //         borderRadiusApplication: "end",
-  //           horizontal: false,
-  //           dataLabels: {
-  //             total: {
-  //               enabled: false,
-  //               offsetX: 0,
-  //               style: {
-  //                 fontSize: '13px',
-  //                 fontWeight: 900,
-  //               }
-  //             }
-  //           }
-  //         },
-
-  //       },
-  //       stroke: {
-  //         width: 0,
-  //         colors: ['#1A35FE'],
-  //       },
-  //       title: {
-  //         text: 'Investment Performance'
-  //       },
-  //       dataLabels: {
-  //         enabled: false, // ✅ Hides the numbers above bars
-  //       },
-  //       grid: {
-  //         show: false, // ✅ Removes the background grey lines
-  //       },
-  //       xaxis: {
-  //         categories: [1, 2, 3, 4, 5, 6, 7,8,9,10],
-  //         labels: {
-  //           formatter: function (val:any) {
-  //             return val + "Y"
-  //           }
-  //         }
-  //         ,axisTicks: {
-  //           show: false, // ✅ Removes ticks (small lines under labels)
-  //         },
-  //       },
-  //       yaxis: {
-  //         labels: {
-  //           show: false, // ✅ Removes vertical numbers (Y-axis labels)
-  //         },
-  //       },
-
-  //       fill: {
-  //         opacity: 1
-  //       }
-
-  //     },
-
-  // })
+  const yearInString = (year:number): number[] => {
+    let xAxisArray: number[] = [];
+    for (let i = 1; i <= year; i++) {
+      xAxisArray.push(i);
+    }
+    return xAxisArray;
+  };
 
   const state: ChartState = {
     series: [
       {
-        name: "Marine Sprite",
-        data: [5, 8, 15, 24, 35, 40, 45, 50, 55, 50],
+        name: "Market Value",
+        data: valueForGraph(gains),
       },
       {
-        name: "Striking Calf",
-        data: [1, 4, 7, 12, 18, 25, 30, 32, 38, 50],
+        name: "Investment Amount",
+        data: valueForGraph(resultInvestment),
       },
     ],
     options: {
@@ -158,10 +124,10 @@ const FutureValueCalculator = () => {
         show: false, // ✅ Removes the background grey lines
       },
       xaxis: {
-        categories: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+        categories: yearInString(resultPeriod),
         labels: {
           formatter: function (val: any) {
-            return val + "Y";
+            return val;
           },
         },
         axisTicks: {
@@ -208,10 +174,12 @@ const FutureValueCalculator = () => {
                         className="form-control"
                         id="exampleInputEmail1"
                         aria-describedby="emailHelp"
-                        placeholder="₹50,000"
+                        placeholder="0"
                         value={investAmount}
-                        onChange={(e) => setInvestAmount(e.target.value)}
-                        validate={isNotEmpty}
+                        onChange={(e) => {
+                          amountHandler(e, 10000000, setInvestAmount);
+                        }}
+                        validate={[isNotEmpty, minAmount(500)]}
                       />
                     </div>
                     <RangeBar
@@ -226,13 +194,15 @@ const FutureValueCalculator = () => {
                       </label>
                       <ValidatedInput
                         ref={rateOfReturnRef}
-                        type="text"
+                        type="number"
                         className="form-control"
                         id="exampleInputPassword1"
                         placeholder="12"
                         value={rateOfReturn}
-                        onChange={(e) => setRateOfReturn(e.target.value)}
-                        validate={isNotEmpty}
+                        onChange={(e) => {
+                          percentageHandler(e, 50, setRateOfReturn);
+                        }}
+                        validate={[isNotEmpty, minAmount(1)]}
                       />
                     </div>
                     <button type="submit" className="customButton px-3 mt-3">
@@ -247,10 +217,10 @@ const FutureValueCalculator = () => {
                 <div className="card-body">
                   <h5 className=" fw-normal mb-1">Result</h5>
                   <p className="resultColor">
-                    If you invest <span className="fw600">₹50,000</span> for a
-                    period of 10 years at a <span className="fw600">12%</span>{" "}
+                    If you invest <span className="fw600">₹{resultInvestment}</span> for a
+                    period of 10 years at a <span className="fw600">{resultPeriod}%</span>{" "}
                     annual return, the maturity amount will grow to{" "}
-                    <span className="fw600">₹30,17,292.</span>
+                    <span className="fw600">₹{gains.toLocaleString("en-IN")}</span>
                   </p>
                 </div>
               </div>

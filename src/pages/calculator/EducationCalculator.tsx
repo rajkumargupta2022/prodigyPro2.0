@@ -2,8 +2,13 @@ import { useState, useRef } from "react";
 import NavBar from "../../components/Navbar";
 import RangeBar from "./RangeBar";
 import ValidatedInput from "../../services/Validated-inputs/inputs";
-import { isNotEmpty } from "../../services/Validated-inputs/validations";
-import { amountHandler, pmtvalue } from "../../services/calculatorsFs";
+import {
+  isNotEmpty,
+  minAmount,
+  minEduAge,
+} from "../../services/Validated-inputs/validations";
+import { amountHandler, percentageHandler,pmtvalue } from "../../services/calculatorsFs";
+import { errorToast } from "../../services/toast";
 
 const EducationCalculator = () => {
   const [childAge, setChildAge] = useState<number>(10);
@@ -30,11 +35,19 @@ const EducationCalculator = () => {
 
   const onSubmit =async (e: React.FormEvent) => {
     e.preventDefault();
+
     const isValidated = [
       costPerYearRef.current?.validate(costPerYear),
       expectedRateofReturnRef.current?.validate(expectedRateofReturn),
       expectedInflationRef.current?.validate(expectedInflation),
     ].every((value) => value === true);
+
+    const ageValidation = minEduAge(childAge, startCollegeAge);
+
+    if (ageValidation) {
+      errorToast(ageValidation);
+      return;
+    }
 
     if (isValidated) {
       var yearleft:number = startCollegeAge - childAge;
@@ -117,9 +130,9 @@ const EducationCalculator = () => {
                           placeholder="₹5,00,000"
                           value={costPerYear}
                           onChange={(e) =>
-                            amountHandler(e, 500000, setCostPerYear)
+                            amountHandler(e, 100000000, setCostPerYear)
                           }
-                          validate={isNotEmpty}
+                          validate={[isNotEmpty, minAmount(100)]}
                         />
                       </div>
                       <div className="form-group my-2">
@@ -131,15 +144,15 @@ const EducationCalculator = () => {
                         </label>
                         <ValidatedInput
                           ref={expectedRateofReturnRef}
-                          type="text"
+                          type="number"
                           className="form-control"
                           id="exampleInputPassword1"
                           placeholder="12"
                           value={expectedRateofReturn}
                           onChange={(e) =>
-                            amountHandler(e, 100, setExpectedRateofReturn)
+                            percentageHandler(e, 50, setExpectedRateofReturn)
                           }
-                          validate={isNotEmpty}
+                          validate={[isNotEmpty, minAmount(1)]}
                         />
                       </div>
                       <div className="form-group my-2">
@@ -151,15 +164,15 @@ const EducationCalculator = () => {
                         </label>
                         <ValidatedInput
                           ref={expectedInflationRef}
-                          type="text"
+                          type="number"
                           className="form-control"
                           id="exampleInputPassword1"
                           placeholder="6"
                           value={expectedInflation}
                           onChange={(e) =>
-                            amountHandler(e, 100000, setExpectedInflation)
+                            percentageHandler(e, 50, setExpectedInflation)
                           }
-                          validate={isNotEmpty}
+                          validate={[isNotEmpty, minAmount(1)]}
                         />
                       </div>
                       <button type="submit" className="customButton px-3 mt-3">

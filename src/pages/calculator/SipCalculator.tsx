@@ -5,7 +5,10 @@ import { useRef, useState } from "react";
 import RangeBar from "./RangeBar";
 import { amountHandler, percentageHandler } from "../../services/calculatorsFs";
 import ValidatedInput from "../../services/Validated-inputs/inputs";
-import { isNotEmpty } from "../../services/Validated-inputs/validations";
+import {
+  isNotEmpty,
+  minAmount,
+} from "../../services/Validated-inputs/validations";
 
 interface ChartState {
   options: ApexOptions;
@@ -13,40 +16,51 @@ interface ChartState {
 }
 
 const SipCalculator = () => {
-  const [investmentPeriod, setInvestmentPeriod] = useState<number>(10)
-  const [monthlySaving, setMonthlySaving] = useState<number>(10000)
-  const [expectedRateOfReturn, setExpectedRateOfReturn] = useState<number>(16.5)
-  const [gains, setGains] = useState<number>(3017292)
-  const [totalYear, setTotalYear] = useState<number>(10)
-  const [totalGains, setTotalGains] = useState<number>(3017292)
-  const [totalMonthlySaving, setTotalMonthlySaving] = useState<number>(1200000)
-  const [oneMonthSaving, setOneMonthSaving] = useState<number>(10000)
+  const [investmentPeriod, setInvestmentPeriod] = useState<number>(10);
+  const [monthlySaving, setMonthlySaving] = useState<number>(10000);
+  const [expectedRateOfReturn, setExpectedRateOfReturn] =
+    useState<number>(16.5);
+  const [gains, setGains] = useState<number>(3017292);
+  const [totalYear, setTotalYear] = useState<number>(10);
+  const [totalGains, setTotalGains] = useState<number>(3017292);
+  const [totalMonthlySaving, setTotalMonthlySaving] = useState<number>(1200000);
+  const [oneMonthSaving, setOneMonthSaving] = useState<number>(10000);
 
-
-  const nameRef = useRef<{
-    validate: (value: string | number) => boolean;
+  const monthlySavingRef = useRef<{
+    validate: (value: number) => boolean;
   }>(null);
 
   const returnRef = useRef<{
-    validate: (value: string | number) => boolean;
+    validate: (value: number) => boolean;
   }>(null);
 
-  const yearInString  = ():string[]=>{
-    let xAxisArray:string[]= []
-  for(let i = 1 ; i <=totalYear;i++){
-     xAxisArray.push(i+"Y")
-  }
-  return xAxisArray
-}
-const valueForGraph  = (data:number):number[]=>{
-  let graphValue:number[]= []
-for(let i = totalYear ; i >0;i--){
-   graphValue.push(Math.round(data/i))
-}
-console.log("graphValue",graphValue);
-
-return graphValue
-}
+  const yearInString = (): string[] => {
+    let xAxisArray: string[] = [];
+    if(totalYear>15){
+      for (let i = 1; i <= totalYear; i=i+2) {
+        xAxisArray.push(i + "Y");
+      }
+    }else{
+      for (let i = 1; i <= totalYear; i++) {
+        xAxisArray.push(i + "Y");
+      }
+    }
+    
+    return xAxisArray;
+  };
+  const valueForGraph = (data: number): number[] => {
+    let graphValue: number[] = [];
+    if(totalYear>15){
+      for (let i = totalYear; i > 0; i=i-2) {
+        graphValue.push(Math.round(data / i));
+      }
+    }else {
+      for (let i = totalYear; i > 0; i--) {
+        graphValue.push(Math.round(data / i));
+      }
+    }   
+    return graphValue;
+  };
   const state: ChartState = {
     series: [
       {
@@ -79,13 +93,12 @@ return graphValue
         colors: ["#357AF6", "#57BE65"],
       },
       xaxis: {
-        categories:yearInString() // ✅ Custom X-axis labels
+        categories: yearInString(), // ✅ Custom X-axis labels
       },
       tooltip: {
         x: {
-          formatter: function (val: any,) {
+          formatter: function (val: any) {
             return val; // ✅ Tooltip will also show 1M, 3M, etc.
-            
           },
         },
       },
@@ -93,31 +106,39 @@ return graphValue
         show: false, // ✅ Removes background grey lines
       },
     },
-  }
-
-
+  };
 
   const calculateSip = (e: React.FormEvent) => {
-    e.preventDefault()
-    let monthlyRate: number = expectedRateOfReturn / 12 / 100;
+    e.preventDefault();
+
+    const isValidated = [
+      monthlySavingRef.current?.validate(monthlySaving),
+      returnRef.current?.validate(expectedRateOfReturn),
+    ].every((value) => value === true);
+
+    if (isValidated) {
+      let monthlyRate: number = expectedRateOfReturn / 12 / 100;
     let months: number = investmentPeriod * 12;
     let futureValue: number = 0;
     // let futureValue = (monthlySavings  (1 + monthlyRate)  ((Math.pow((1 + monthlyRate), months)) - 1) / monthlyRate);
-    futureValue = monthlySaving * (Math.pow(1 + monthlyRate, months) - 1) / monthlyRate;
+    futureValue =
+      (monthlySaving * (Math.pow(1 + monthlyRate, months) - 1)) / monthlyRate;
 
-    let mainresults: number = Math.round(futureValue)
-    let totalSaving: number = monthlySaving * months
-    let gain: number = (mainresults - monthlySaving * months)
-    setGains(Math.round(gain))
-    setTotalYear(investmentPeriod)
-    setTotalMonthlySaving(totalSaving)
-    setOneMonthSaving(monthlySaving)
+    let mainresults: number = Math.round(futureValue);
+    let totalSaving: number = monthlySaving * months;
+    let gain: number = mainresults - monthlySaving * months;
+    setGains(Math.round(gain));
+    setTotalYear(investmentPeriod);
+    setTotalMonthlySaving(totalSaving);
+    setOneMonthSaving(monthlySaving);
     // let a = parseInt(totalSaving)
     // let g = parseInt(gains)
     // let gainss = a + g
-    setTotalGains(totalSaving + gain)
+    setTotalGains(totalSaving + gain);
+    }
 
-  }
+   
+  };
 
   return (
     <>
@@ -142,7 +163,7 @@ return graphValue
                         MONTHLY SAVING (₹)
                       </label>
                       <ValidatedInput
-                        ref={nameRef}
+                        ref={monthlySavingRef}
                         type="text"
                         className="form-control"
                         value={monthlySaving}
@@ -152,7 +173,7 @@ return graphValue
                         id="monthlysip"
                         aria-describedby="emailHelp"
                         placeholder=""
-                        validate={isNotEmpty}
+                        validate={[isNotEmpty, minAmount(500)]}
                       />
                     </div>
                     <div className="form-group">
@@ -163,14 +184,13 @@ return graphValue
                         ref={returnRef}
                         type="number"
                         className="form-control"
-                        onWheel={(e) => e.currentTarget.blur()}
                         value={expectedRateOfReturn}
                         onChange={(e) =>
                           percentageHandler(e, 50, setExpectedRateOfReturn)
                         }
                         id="expectedrateofreturn"
                         placeholder=""
-                        validate={isNotEmpty}
+                        validate={[isNotEmpty, minAmount(1)]}
                       />
                     </div>
                     <RangeBar
@@ -192,12 +212,20 @@ return graphValue
                   <h5 className=" fw-normal mb-1">Result</h5>
                   <p className="resultColor">
                     If you invest{" "}
-                    <span className="fw600"> ₹{oneMonthSaving.toLocaleString('en-IN')}</span> per month
-                    for a period of {totalYear} years your investment amount
-                    will be{" "}
-                    <span className="fw600"> ₹{totalMonthlySaving.toLocaleString('en-IN')} </span> and
-                    maturity amount will be grow to{" "}
-                    <span className="fw600">₹{totalGains.toLocaleString('en-IN')} </span>
+                    <span className="fw600">
+                      {" "}
+                      ₹{oneMonthSaving.toLocaleString("en-IN")}
+                    </span>{" "}
+                    per month for a period of {totalYear} years your investment
+                    amount will be{" "}
+                    <span className="fw600">
+                      {" "}
+                      ₹{totalMonthlySaving.toLocaleString("en-IN")}{" "}
+                    </span>{" "}
+                    and maturity amount will be grow to{" "}
+                    <span className="fw600">
+                      ₹{totalGains.toLocaleString("en-IN")}{" "}
+                    </span>
                   </p>
                 </div>
               </div>

@@ -66,6 +66,7 @@ export class ApiClient {
         error.response?.data,
         error
       );
+    
     }
     return new ApiError(
       "An unknown error occurred",

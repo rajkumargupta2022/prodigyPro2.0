@@ -20,6 +20,7 @@ const EmiCalculator = () => {
   const [principal, setPrincipal] = useState<number>(1000000);
   const [totalinterest, setTotalInterest] = useState<number>(585782);
   const [totalAmount, setTotalAmount] = useState<number>(1585800);
+  const [resultLoanAmount, setResultLoanAmount] = useState<number>(1000000);
 
   const loanAmountRef = useRef<{
     validate: (value: number) => boolean; 
@@ -32,8 +33,9 @@ const EmiCalculator = () => {
   const state: ChartState = {
     options: {
       colors: ["#CCD2FF", "#1A35FE"],
+      labels: [ "Total Interest","Principal Amount"], 
     },
-    series: [44, 95],
+    series: [totalinterest, resultLoanAmount],  
     colors: ["#fff", "#FF4560"],
   };
 
@@ -59,6 +61,7 @@ const EmiCalculator = () => {
       setPrincipal(loanAmount)
       setTotalInterest(Math.floor(totalInterest))
       setTotalAmount(Math.floor(totalAmount))
+    setResultLoanAmount(loanAmount)
     }
   };
 

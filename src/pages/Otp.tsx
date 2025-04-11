@@ -5,18 +5,26 @@ import OtpInput from "react-otp-input";
 import { useState } from "react";
 import { ArrowLeft } from "react-bootstrap-icons";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Http, http } from "../services/Api";
+import { ApiError, Http, http } from "../services/Api";
 import { errorToast, successToast } from "../services/toast";
+interface responseType {
+  msg: string;
+  success: boolean;
+}
 
 const Otp = (e: any) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [otp, setOtp] = useState<string>();
+  const [otpErrorMsg, setOtpErrorMsg] = useState<string>("");
 
   const varifyOtp = async (e: any) => {
     e.preventDefault();
-    console.log("asdasd");
-
+    if(!otp || otp.length<4){
+      setOtpErrorMsg("Invalid OTP")
+      return
+    }
+  
     const reqBody: object = {
       mobile: Number(location.state.mobile),
       otp: Number(otp),
@@ -24,7 +32,8 @@ const Otp = (e: any) => {
 
     try {
       const res: any = await http.post(Http.apis.varifyOtp, reqBody);
-
+        console.log("resss",res);
+        
       if (res.data) {
         if (res.data?.success && res.data.portfolioUser) {
           localStorage.setItem("token", res.data.token);
@@ -36,12 +45,30 @@ const Otp = (e: any) => {
         }
         successToast(res);
       } else {
+        console.log("ers",res);
+        
         errorToast(res);
       }
     } catch (err) {
-      console.log(err);
+      if (err instanceof ApiError) {
+        setOtpErrorMsg(err?.data?.msg) 
+      }
+     
+    
     }
   };
+
+   const resendOtp = async () => {
+      const res = await http.post<responseType>(Http.apis.registerUser, {
+        mobile: Number(location.state.mobile),
+      });
+  
+      if (res) {
+        successToast(res);
+      } else {
+        errorToast(res);
+      }
+    };
   return (
     <div className="container-fluid">
       <div className="row login_hight_fixed">
@@ -52,7 +79,7 @@ const Otp = (e: any) => {
               <ArrowLeft /> Back
             </Link>
             <img src={MobileIcon} alt="" className="mobileIcon img-fluid" />
-            <p className="text-dark font-weight-bold">Varify OTP</p>
+            <p className="text-dark font-weight-bold">Verify OTP</p>
             <form className="" action="#" onSubmit={varifyOtp}>
               <p className="pb-1 fs12px">OTP sent to +91 9956419878</p>
 
@@ -65,13 +92,14 @@ const Otp = (e: any) => {
                   renderSeparator={<span></span>}
                   renderInput={(props) => <input {...props} />}
                 />
+              <small className="text-danger mx-2 mt-1">{otpErrorMsg}</small>
               </div>
               <button type="submit" className="customButton col-12">
-                Varify OTP
+                Verify OTP
               </button>
             </form>
             <p className="mt-3 fs12px text-center">
-              Don’t receive the OTP? Resend
+              Don’t receive the OTP? <small className="logoBlueColor crPointer fs12px" onClick={resendOtp}>Resend</small> 
             </p>
           </div>
         </div>

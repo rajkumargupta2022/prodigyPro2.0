@@ -59,6 +59,7 @@ const ValidatedInput = forwardRef<InputRef, ValidatedInputProps>(
           onChange={onChange}
           onBlur={onBlur}
           data-invalid={!!error}
+          onWheel={(e) => e.currentTarget.blur()}
         />
         {error && (
           <div className="error-message" style={{ color: "#cc0000" }}>
