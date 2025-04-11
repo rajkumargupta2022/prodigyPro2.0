@@ -15,7 +15,7 @@ export const maxValue = (value: number): string | null => {
 };
 
 export const minAmount = (value: number): string | null => {
-  if (value < 1000) {
+  if (value < 500) {
     return "Amount should be greater then 1000";
   }
   return null;
