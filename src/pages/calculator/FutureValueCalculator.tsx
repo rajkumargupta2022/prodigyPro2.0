@@ -8,20 +8,24 @@ interface ChartState {
   options: ApexOptions;
   series: { name: string; data: number[] }[];
 }
-import { isNotEmpty } from "../../services/Validated-inputs/validations";
+import {
+  isNotEmpty,
+  minAmount,
+} from "../../services/Validated-inputs/validations";
+import { amountHandler, percentageHandler } from "../../services/calculatorsFs";
 
 const FutureValueCalculator = () => {
   const [investmentPeriod, setInvestmentPeriod] = useState<Number>(10);
 
-  const [investAmount, setInvestAmount] = useState<string | number>(0);
-  const [rateOfReturn, setRateOfReturn] = useState<string | number>(0);
+  const [investAmount, setInvestAmount] = useState<number>(0);
+  const [rateOfReturn, setRateOfReturn] = useState<number>(0);
 
   const investAmountRef = useRef<{
-    validate: (value: string | number) => boolean;
+    validate: (value: number) => boolean;
   }>(null);
 
   const rateOfReturnRef = useRef<{
-    validate: (value: string | number) => boolean;
+    validate: (value: number) => boolean;
   }>(null);
 
   const submit = (e: React.FormEvent) => {
@@ -208,10 +212,12 @@ const FutureValueCalculator = () => {
                         className="form-control"
                         id="exampleInputEmail1"
                         aria-describedby="emailHelp"
-                        placeholder="₹50,000"
+                        placeholder="0"
                         value={investAmount}
-                        onChange={(e) => setInvestAmount(e.target.value)}
-                        validate={isNotEmpty}
+                        onChange={(e) => {
+                          amountHandler(e, 10000000, setInvestAmount);
+                        }}
+                        validate={[isNotEmpty, minAmount(500)]}
                       />
                     </div>
                     <RangeBar
@@ -226,13 +232,15 @@ const FutureValueCalculator = () => {
                       </label>
                       <ValidatedInput
                         ref={rateOfReturnRef}
-                        type="text"
+                        type="number"
                         className="form-control"
                         id="exampleInputPassword1"
                         placeholder="12"
                         value={rateOfReturn}
-                        onChange={(e) => setRateOfReturn(e.target.value)}
-                        validate={isNotEmpty}
+                        onChange={(e) => {
+                          percentageHandler(e, 50, setRateOfReturn);
+                        }}
+                        validate={[isNotEmpty, minAmount(1)]}
                       />
                     </div>
                     <button type="submit" className="customButton px-3 mt-3">

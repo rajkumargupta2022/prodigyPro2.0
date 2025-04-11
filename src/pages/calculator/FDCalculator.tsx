@@ -3,8 +3,11 @@ import Chart from "react-apexcharts";
 import { useState, useRef } from "react";
 import RangeBar from "./RangeBar";
 import ValidatedInput from "../../services/Validated-inputs/inputs";
-import { isNotEmpty } from "../../services/Validated-inputs/validations";
-import { amountHandler } from "../../services/calculatorsFs";
+import {
+  isNotEmpty,
+  minAmount,
+} from "../../services/Validated-inputs/validations";
+import { amountHandler, percentageHandler } from "../../services/calculatorsFs";
 
 interface ChartState {
   options: object;
@@ -14,10 +17,10 @@ interface ChartState {
 }
 
 const FDCalculator = () => {
-  const [period, setPeriod] = useState<Number>(5);
+  const [period, setPeriod] = useState<number>(5);
   const [investmentAmount, setInvestmentAmount] = useState<number>(0);
   const [interestRate, setInterestRate] = useState<number>(0);
-  const [compound, setCompound] = useState<number>(0);
+  const [compound, setCompound] = useState<string>("1");
 
   const state: ChartState = {
     options: {
@@ -35,17 +38,12 @@ const FDCalculator = () => {
     validate: (value: number) => boolean;
   }>(null);
 
-  const compoundRef = useRef<{
-    validate: (value: number) => boolean;
-  }>(null);
-
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
 
     const isValidated = [
       investmentAmountRef.current?.validate(investmentAmount),
       interestRateRef.current?.validate(interestRate),
-      compoundRef.current?.validate(compound),
     ].every((value) => value === true);
 
     if (isValidated) {
@@ -84,9 +82,9 @@ const FDCalculator = () => {
                         placeholder="₹ 1,00,000"
                         value={investmentAmount}
                         onChange={(e) =>
-                          amountHandler(e, 50000, setInvestmentAmount)
+                          amountHandler(e, 10000000, setInvestmentAmount)
                         }
-                        validate={isNotEmpty}
+                        validate={[isNotEmpty, minAmount(500)]}
                       />
                     </div>
                     <RangeBar
@@ -101,31 +99,31 @@ const FDCalculator = () => {
                       </label>
                       <ValidatedInput
                         ref={interestRateRef}
-                        type="text"
+                        type="number"
                         className="form-control"
                         id="exampleInputPassword1"
-                        placeholder="12"
+                        placeholder=""
                         value={interestRate}
                         onChange={(e) =>
-                          amountHandler(e, 50000, setInterestRate)
+                          percentageHandler(e, 50, setInterestRate)
                         }
-                        validate={isNotEmpty}
+                        validate={[isNotEmpty, minAmount(1)]}
                       />
                     </div>
                     <div className="form-group mt-3">
                       <label htmlFor="exampleInputPassword1" className="fs12px">
                         COMPOUNDING PERIOD
                       </label>
-                      <ValidatedInput
-                        ref={compoundRef}
-                        type="text"
+                      <select
                         className="form-control"
-                        id="exampleInputPassword1"
-                        placeholder="Monthly"
                         value={compound}
-                        onChange={(e) => amountHandler(e, 50000, setCompound)}
-                        validate={isNotEmpty}
-                      />
+                        onChange={(e) => setCompound(e.target.value)}
+                      >
+                        <option value="1">Monthly</option>
+                        <option value="2">Quaterly</option>
+                        <option value="3">Half Yearly</option>
+                        <option value="4">Yearly</option>
+                      </select>
                     </div>
                     <button type="submit" className="customButton px-3 mt-3">
                       Calculate

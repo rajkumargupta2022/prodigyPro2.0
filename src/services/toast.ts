@@ -14,6 +14,17 @@ export const successToast = (res: any) => {
 
 export const errorToast = (msg: any) => {
   toast.dismiss();
+
+  if (typeof msg == "string") {
+    return toast.error(msg, {
+      position: "bottom-right",
+      theme: "dark",
+      autoClose: 5000,
+      hideProgressBar: true,
+      closeOnClick: true,
+    });
+  }
+
   toast.error(msg.response?.data?.msg, {
     position: "bottom-right",
     theme: "dark",

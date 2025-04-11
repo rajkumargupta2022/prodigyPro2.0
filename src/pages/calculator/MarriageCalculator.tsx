@@ -4,10 +4,10 @@ import RangeBar from "./RangeBar";
 import ValidatedInput from "../../services/Validated-inputs/inputs";
 import {
   isNotEmpty,
-  maxValue,
+  maxAmount,
   minAmount,
 } from "../../services/Validated-inputs/validations";
-import { amountHandler } from "../../services/calculatorsFs";
+import { amountHandler, percentageHandler } from "../../services/calculatorsFs";
 
 const MarriageCalculator = () => {
   const [childAge, setChildAge] = useState<number>(8);
@@ -88,16 +88,16 @@ const MarriageCalculator = () => {
 
                         <ValidatedInput
                           ref={requiredAmountRef}
-                          type="number"
+                          type="text"
                           className="form-control"
                           id="exampleInputEmail1"
                           aria-describedby="emailHelp"
                           placeholder="₹ 10,00,000"
                           onChange={(e) =>
-                            amountHandler(e, 1000000, setRequiredAmount)
+                            amountHandler(e, 100000000, setRequiredAmount)
                           }
                           value={requiredAmount}
-                          validate={[isNotEmpty, maxValue, minAmount]}
+                          validate={[isNotEmpty, minAmount(100)]}
                         />
                       </div>
                       <div className="form-group my-2">
@@ -114,10 +114,10 @@ const MarriageCalculator = () => {
                           id="exampleInputPassword1"
                           placeholder="₹ 5,00,000"
                           onChange={(e) =>
-                            amountHandler(e, 500000, setAnnualSaving)
+                            amountHandler(e, 2500000, setAnnualSaving)
                           }
                           value={annualSaving}
-                          validate={isNotEmpty}
+                          validate={[isNotEmpty, minAmount(1)]}
                         />
                       </div>
                       <div className="form-group my-2">
@@ -129,15 +129,15 @@ const MarriageCalculator = () => {
                         </label>
                         <ValidatedInput
                           ref={rateOfReturnRef}
-                          type="text"
+                          type="number"
                           className="form-control"
                           id="exampleInputPassword1"
                           placeholder="12"
                           onChange={(e) =>
-                            amountHandler(e, 100, setRateOfReturn)
+                            percentageHandler(e, 50, setRateOfReturn)
                           }
                           value={rateOfReturn}
-                          validate={isNotEmpty}
+                          validate={[isNotEmpty, minAmount(1)]}
                         />
                       </div>
                       <div className="form-group my-2">
@@ -149,15 +149,15 @@ const MarriageCalculator = () => {
                         </label>
                         <ValidatedInput
                           ref={expectedInflationRef}
-                          type="text"
+                          type="number"
                           className="form-control"
                           id="exampleInputPassword1"
                           placeholder="6"
                           value={expectedInflation}
                           onChange={(e) =>
-                            amountHandler(e, 100000, setExpectedInflation)
+                            percentageHandler(e, 50, setExpectedInflation)
                           }
-                          validate={isNotEmpty}
+                          validate={[isNotEmpty, minAmount(1)]}
                         />
                       </div>
                       <button type="submit" className="customButton px-3 mt-3">

@@ -2,8 +2,11 @@ import NavBar from "../../components/Navbar";
 import { useRef, useState } from "react";
 import RangeBar from "./RangeBar";
 import ValidatedInput from "../../services/Validated-inputs/inputs";
-import { isNotEmpty } from "../../services/Validated-inputs/validations";
-import { amountHandler } from "../../services/calculatorsFs";
+import {
+  isNotEmpty,
+  minAmount,
+} from "../../services/Validated-inputs/validations";
+import { amountHandler, percentageHandler } from "../../services/calculatorsFs";
 
 const SWPCalculator = () => {
   const [investmentPeriod, setInvestmentPeriod] = useState<Number>(5);
@@ -68,9 +71,9 @@ const SWPCalculator = () => {
                         placeholder="₹ 1,00,000"
                         value={lumpsumAmount}
                         onChange={(e) =>
-                          amountHandler(e, 50000, setLumpsumAmount)
+                          amountHandler(e, 100000000, setLumpsumAmount)
                         }
-                        validate={isNotEmpty}
+                        validate={[isNotEmpty, minAmount(500)]}
                       />
                     </div>
                     <RangeBar
@@ -85,15 +88,14 @@ const SWPCalculator = () => {
                       </label>
                       <ValidatedInput
                         ref={expectedReturnRef}
-                        type="text"
+                        type="number"
                         className="form-control"
                         id="exampleInputPassword1"
-                        placeholder="8%"
                         value={expectedReturn}
                         onChange={(e) =>
-                          amountHandler(e, 50000, setExpectedReturn)
+                          percentageHandler(e, 50, setExpectedReturn)
                         }
-                        validate={isNotEmpty}
+                        validate={[isNotEmpty, minAmount(1)]}
                       />
                     </div>
                     <div className="form-group">
@@ -129,9 +131,9 @@ const SWPCalculator = () => {
                         placeholder="₹ 15,000"
                         value={widthdrawalAmount}
                         onChange={(e) =>
-                          amountHandler(e, 50000, setWidthdrawalAmount)
+                          amountHandler(e, 100, setWidthdrawalAmount)
                         }
-                        validate={isNotEmpty}
+                        validate={[isNotEmpty, minAmount(1)]}
                       />
                       <small className="fs12px"> Percentage: 23.08%</small>
                     </div>

@@ -5,7 +5,10 @@ import { useRef, useState } from "react";
 import RangeBar from "./RangeBar";
 import { amountHandler, percentageHandler } from "../../services/calculatorsFs";
 import ValidatedInput from "../../services/Validated-inputs/inputs";
-import { isNotEmpty } from "../../services/Validated-inputs/validations";
+import {
+  isNotEmpty,
+  minAmount,
+} from "../../services/Validated-inputs/validations";
 
 interface ChartState {
   options: ApexOptions;
@@ -161,7 +164,7 @@ const SipCalculator = () => {
                         id="monthlysip"
                         aria-describedby="emailHelp"
                         placeholder=""
-                        validate={isNotEmpty}
+                        validate={[isNotEmpty, minAmount(500)]}
                       />
                     </div>
                     <div className="form-group">
@@ -172,14 +175,13 @@ const SipCalculator = () => {
                         ref={returnRef}
                         type="number"
                         className="form-control"
-                        onWheel={(e) => e.currentTarget.blur()}
                         value={expectedRateOfReturn}
                         onChange={(e) =>
                           percentageHandler(e, 50, setExpectedRateOfReturn)
                         }
                         id="expectedrateofreturn"
                         placeholder=""
-                        validate={isNotEmpty}
+                        validate={[isNotEmpty, minAmount(1)]}
                       />
                     </div>
                     <RangeBar

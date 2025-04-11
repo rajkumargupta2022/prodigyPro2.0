@@ -2,17 +2,16 @@ import { useRef, useState } from "react";
 import NavBar from "../../components/Navbar";
 import ValidatedInput from "../../services/Validated-inputs/inputs";
 import { amountHandler } from "../../services/calculatorsFs";
-import { isNotEmpty } from "../../services/Validated-inputs/validations";
+import {
+  isNotEmpty,
+  minAmount,
+} from "../../services/Validated-inputs/validations";
 
 const ElssCalculator = () => {
   const [investmentAmount, setInvestmentAmount] = useState<number>(0);
-  const [taxSlab, setTaxSlab] = useState<number>(0);
+  const [taxSlab, setTaxSlab] = useState<string>("5");
 
   const investmentAmountRef = useRef<{
-    validate: (value: number) => boolean;
-  }>(null);
-
-  const taxSlabRef = useRef<{
     validate: (value: number) => boolean;
   }>(null);
 
@@ -21,7 +20,6 @@ const ElssCalculator = () => {
 
     const isValidated = [
       investmentAmountRef.current?.validate(investmentAmount),
-      taxSlabRef.current?.validate(taxSlab),
     ].every((value) => value === true);
 
     if (isValidated) {
@@ -60,9 +58,9 @@ const ElssCalculator = () => {
                         placeholder="₹ 50,000"
                         value={investmentAmount}
                         onChange={(e) =>
-                          amountHandler(e, 50000, setInvestmentAmount)
+                          amountHandler(e, 150000, setInvestmentAmount)
                         }
-                        validate={isNotEmpty}
+                        validate={[isNotEmpty, minAmount(500)]}
                       />
                       <small className="fs12px">
                         Maximum eligible amount for tax deduction u/s 80C is 1.5
@@ -73,16 +71,15 @@ const ElssCalculator = () => {
                       <label htmlFor="exampleInputPassword1" className="fs12px">
                         YOUR TAX SLAB
                       </label>
-                      <ValidatedInput
-                        ref={taxSlabRef}
-                        type="text"
+                      <select
                         className="form-control"
-                        id="exampleInputPassword1"
-                        placeholder="20%"
                         value={taxSlab}
-                        onChange={(e) => amountHandler(e, 50000, setTaxSlab)}
-                        validate={isNotEmpty}
-                      />
+                        onChange={(e) => setTaxSlab(e.target.value)}
+                      >
+                        <option value="5">5%</option>
+                        <option value="20">20%</option>
+                        <option value="30">30%</option>
+                      </select>
                     </div>
                     <button type="submit" className="customButton px-3 mt-3">
                       Calculate

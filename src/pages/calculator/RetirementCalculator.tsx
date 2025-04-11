@@ -2,49 +2,47 @@ import { useRef, useState } from "react";
 import NavBar from "../../components/Navbar";
 import RangeBar from "./RangeBar";
 import ValidatedInput from "../../services/Validated-inputs/inputs";
-import { isNotEmpty } from "../../services/Validated-inputs/validations";
+import {
+  isNotEmpty,
+  minAmount,
+} from "../../services/Validated-inputs/validations";
+import { amountHandler, percentageHandler } from "../../services/calculatorsFs";
 
 const RetirementCalculator = () => {
-  const [currentAge, setCurrentAge] = useState<Number>(30);
-  const [retirementAge, setRetirementAge] = useState<Number>(60);
+  const [currentAge, setCurrentAge] = useState<number>(30);
+  const [retirementAge, setRetirementAge] = useState<number>(60);
 
-  const [monthlyExpenses, setMonthlyExpenses] = useState<string | number>(0);
-  const [expectedInflationRate, setExpectedInflationRate] = useState<
-    string | number
-  >(0);
-  const [currentSaving, setCurrentSaving] = useState<string | number>(0);
-  const [preRetirementReturns, setPreRetirementReturns] = useState<
-    string | number
-  >(0);
-  const [postRetirementReturns, setPostRetirementReturns] = useState<
-    string | number
-  >(0);
-  const [lifeExpectancy, setLifeExpectancy] = useState<string | number>(0);
+  const [monthlyExpenses, setMonthlyExpenses] = useState<number>(0);
+  const [expectedInflationRate, setExpectedInflationRate] = useState<number>(0);
+  const [currentSaving, setCurrentSaving] = useState<number>(0);
+  const [preRetirementReturns, setPreRetirementReturns] = useState<number>(0);
+  const [postRetirementReturns, setPostRetirementReturns] = useState<number>(0);
+  const [lifeExpectancy, setLifeExpectancy] = useState<number>(0);
 
   //refs of the input
 
   const monthlyExpensesRef = useRef<{
-    validate: (value: string | number) => boolean;
+    validate: (value: number) => boolean;
   }>(null);
 
   const expectedInflationRateRef = useRef<{
-    validate: (value: string | number) => boolean;
+    validate: (value: number) => boolean;
   }>(null);
 
   const currentSavingRef = useRef<{
-    validate: (value: string | number) => boolean;
+    validate: (value: number) => boolean;
   }>(null);
 
   const preRetirementReturnsRef = useRef<{
-    validate: (value: string | number) => boolean;
+    validate: (value: number) => boolean;
   }>(null);
 
   const postRetirementReturnsRef = useRef<{
-    validate: (value: string | number) => boolean;
+    validate: (value: number) => boolean;
   }>(null);
 
   const lifeExpectancyRef = useRef<{
-    validate: (value: string | number) => boolean;
+    validate: (value: number) => boolean;
   }>(null);
 
   const submit = (e: React.FormEvent) => {
@@ -108,8 +106,10 @@ const RetirementCalculator = () => {
                           aria-describedby="emailHelp"
                           placeholder="₹ 30,000"
                           value={monthlyExpenses}
-                          onChange={(e) => setMonthlyExpenses(e.target.value)}
-                          validate={isNotEmpty}
+                          onChange={(e) => {
+                            amountHandler(e, 1000000, setMonthlyExpenses);
+                          }}
+                          validate={[isNotEmpty, minAmount(1)]}
                         />
                       </div>
                       <div className="form-group my-2">
@@ -121,15 +121,15 @@ const RetirementCalculator = () => {
                         </label>
                         <ValidatedInput
                           ref={expectedInflationRateRef}
-                          type="text"
+                          type="number"
                           className="form-control"
                           id="exampleInputPassword1"
                           placeholder="6%"
                           value={expectedInflationRate}
-                          onChange={(e) =>
-                            setExpectedInflationRate(e.target.value)
-                          }
-                          validate={isNotEmpty}
+                          onChange={(e) => {
+                            percentageHandler(e, 50, setExpectedInflationRate);
+                          }}
+                          validate={[isNotEmpty, minAmount(1)]}
                         />
                       </div>
                       <div className="form-group my-2">
@@ -145,9 +145,11 @@ const RetirementCalculator = () => {
                           className="form-control"
                           id="exampleInputPassword1"
                           placeholder="₹ 5,000"
-                          onChange={(e) => setCurrentSaving(e.target.value)}
+                          onChange={(e) => {
+                            amountHandler(e, 1000000, setCurrentSaving);
+                          }}
                           value={currentSaving}
-                          validate={isNotEmpty}
+                          validate={[isNotEmpty, minAmount(1)]}
                         />
                       </div>
                       <div className="form-group my-2">
@@ -159,15 +161,15 @@ const RetirementCalculator = () => {
                         </label>
                         <ValidatedInput
                           ref={preRetirementReturnsRef}
-                          type="text"
+                          type="number"
                           className="form-control"
                           id="exampleInputPassword1"
                           placeholder="12%"
                           value={preRetirementReturns}
-                          onChange={(e) =>
-                            setPreRetirementReturns(e.target.value)
-                          }
-                          validate={isNotEmpty}
+                          onChange={(e) => {
+                            percentageHandler(e, 50, setPreRetirementReturns);
+                          }}
+                          validate={[isNotEmpty, minAmount(1)]}
                         />
                       </div>
                       <div className="form-group my-2">
@@ -179,15 +181,14 @@ const RetirementCalculator = () => {
                         </label>
                         <ValidatedInput
                           ref={postRetirementReturnsRef}
-                          type="text"
+                          type="number"
                           className="form-control"
                           id="exampleInputPassword1"
-                          placeholder="7%"
                           value={postRetirementReturns}
-                          onChange={(e) =>
-                            setPostRetirementReturns(e.target.value)
-                          }
-                          validate={isNotEmpty}
+                          onChange={(e) => {
+                            percentageHandler(e, 50, setPostRetirementReturns);
+                          }}
+                          validate={[isNotEmpty, minAmount(1)]}
                         />
                       </div>
                       <div className="form-group my-2">
@@ -198,16 +199,16 @@ const RetirementCalculator = () => {
                           LIFE EXPECTANCY POST-RETIREMENT (YRS)
                         </label>
                         <ValidatedInput
-                          ref={postRetirementReturnsRef}
+                          ref={lifeExpectancyRef}
                           type="text"
                           className="form-control"
                           id="exampleInputPassword1"
                           placeholder="20"
-                          value={postRetirementReturns}
-                          onChange={(e) =>
-                            setPostRetirementReturns(e.target.value)
-                          }
-                          validate={isNotEmpty}
+                          value={lifeExpectancy}
+                          onChange={(e) => {
+                            amountHandler(e, 100, setLifeExpectancy);
+                          }}
+                          validate={[isNotEmpty, minAmount(1)]}
                         />
                       </div>
                       <button type="submit" className="customButton px-3 mt-3">
