@@ -8,8 +8,9 @@ import {
 } from "../../services/Validated-inputs/validations";
 
 const ElssCalculator = () => {
-  const [investmentAmount, setInvestmentAmount] = useState<number>(0);
-  const [taxSlab, setTaxSlab] = useState<string>("5");
+  const [investmentAmount, setInvestmentAmount] = useState<number>(12500);
+  const [taxSlab, setTaxSlab] = useState<number>(5);
+  const [totalTaxSaved, setTotalTaxSaved] = useState<number>(650);
 
   const investmentAmountRef = useRef<{
     validate: (value: number) => boolean;
@@ -23,7 +24,21 @@ const ElssCalculator = () => {
     ].every((value) => value === true);
 
     if (isValidated) {
-      alert("Form Submitted.");
+      let taxInvestment: number;
+      if (investmentAmount > 150000) {
+        taxInvestment = 150000;
+      } else {
+        taxInvestment = investmentAmount;
+      }
+
+      const taxValue: number = (taxInvestment * taxSlab) / 100;
+      const taxValuePercent: number = (taxValue * 4) / 100;
+
+      let finalValue: number = taxValue + taxValuePercent;
+      finalValue = Math.round(finalValue);
+
+      setTotalTaxSaved(finalValue);
+
     }
   };
 
@@ -74,7 +89,7 @@ const ElssCalculator = () => {
                       <select
                         className="form-control"
                         value={taxSlab}
-                        onChange={(e) => setTaxSlab(e.target.value)}
+                        onChange={(e) => setTaxSlab(Number(e.target.value))}
                       >
                         <option value="5">5%</option>
                         <option value="20">20%</option>
@@ -93,7 +108,7 @@ const ElssCalculator = () => {
                 <div className="card-body">
                   <h5 className=" fw-normal mb-1">Result</h5>
                   <p className="fs12px mb-0 mt-3">TOTAL TAX SAVED U/S 80(C)</p>
-                  <h6 className="mt-1">₹10,400</h6>
+                  <h6 className="mt-1">₹{totalTaxSaved.toLocaleString("en-IN")}</h6>
                 </div>
               </div>
             </div>

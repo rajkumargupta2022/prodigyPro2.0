@@ -32,10 +32,42 @@ const EmiCalculator = () => {
 
   const state: ChartState = {
     options: {
+      dataLabels: {
+        enabled: false, // Disable percentage or value labels
+      },
       colors: ["#CCD2FF", "#1A35FE"],
-      labels: [ "Total Interest","Principal Amount"], 
+      tooltip: {
+        enabled: false, // Disable hover tooltip
+      },
+      labels: [ `Total Interest (${totalinterest.toLocaleString("en-IN")})`,`Principal Amount (${principal.toLocaleString("en-IN")})`,], 
+      legend: {
+        show: true,
+        position: 'bottom', // ✅ Legend at bottom
+        horizontalAlign: 'center',
+        fontSize: '14px',
+        markers: {
+          width: 12,
+          height: 12,
+        },
+        onItemHover: {
+          highlightDataSeries: false, // ❌ disables slice highlight on legend hover
+        },
+      },
+      states: {
+        hover: {
+          filter: {
+            type: 'none', // Disable hover visual effect
+          },
+        },
+        active: {
+          filter: {
+            type: 'none', // Disable active (on-click) effect
+          },
+        },
+      },
+      
     },
-    series: [totalinterest, resultLoanAmount],  
+    series: [ resultLoanAmount,totalinterest,],
     colors: ["#fff", "#FF4560"],
   };
 
@@ -57,10 +89,10 @@ const EmiCalculator = () => {
   
       let totalAmount:number = monthlyEmiAmount * totalMonths;
       let totalInterest:number = totalAmount - loanAmount;
-      setMonthyEmi(Math.floor(monthlyEmiAmount))
+      setMonthyEmi(Math.trunc(monthlyEmiAmount))
       setPrincipal(loanAmount)
-      setTotalInterest(Math.floor(totalInterest))
-      setTotalAmount(Math.floor(totalAmount))
+      setTotalInterest(Math.trunc(totalInterest))
+      setTotalAmount(Math.trunc(totalAmount))
     setResultLoanAmount(loanAmount)
     }
   };
@@ -155,7 +187,7 @@ const EmiCalculator = () => {
               </div>
               <div className="row mt-2">
                 <div className="col-lg-12 co-sm-12 col-md-12 ">
-                  <div className="card border-0 shadow p-0">
+                  <div className="card border-0 shadow p-0 d-flex justify-content-center align-items-center">
                     <div className="card-body">
                       <div className="donut">
                         <Chart

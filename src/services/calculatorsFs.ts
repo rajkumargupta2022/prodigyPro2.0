@@ -6,11 +6,13 @@ export const amountHandler = (
   let value = Number(e.target.value.trim());
   console.log(value);
   
-  if (value <= maxAmount) {
+  // setter(value);
+  if (value <= 1000000000) {
     setter(value);
-  } else if (value >= maxAmount) {
-    setter(maxAmount);
   }
+  //  else if (value >= maxAmount) {
+  //   setter(maxAmount);
+  // }
 };
 
 export const percentageHandler = (
@@ -18,14 +20,18 @@ export const percentageHandler = (
   maxAmount: number,
   setter: (value: number) => void
 ): void => {
-  let value = parseFloat(e.target.value);
+  console.log("===",e.target.value);
+  // return
 
-  if (isNaN(value)) value = 0;
-  if (value <= maxAmount) {
-    setter(value);
-  } else {
-    setter(maxAmount);
-  }
+      let value = parseFloat(e.target.value);
+
+      // if (isNaN(value)) value = 0;
+      setter(value);
+      if (value >= maxAmount) {
+        setter(maxAmount);
+      } 
+  
+ 
 };
 export const pmtvalue = async (
   ir: number,

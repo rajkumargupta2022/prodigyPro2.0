@@ -326,6 +326,15 @@ color: #4D4D4D;
   font-size: 12px;
   border:1px solid #D0DBEA;
 }
+.activeButton{
+  background-color: #011EFE;
+  color: #fff !important;
+  height: 25px ;
+  padding: 0 8px ;
+  border-radius: 20px;
+  font-size: 12px;
+  border:1px solid #D0DBEA;
+}
 .riskProfileBtn{
   background-color: #fff;
   color: #011EFE !important;
