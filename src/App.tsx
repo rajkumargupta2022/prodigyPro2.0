@@ -18,7 +18,6 @@ import Otp from "./pages/Otp";
 import PanVarification from "./pages/PanVarification";
 import Dashboard from "./pages/Dashboard";
 import EmergencyFunds from "./pages/EmergencyFund";
-import AddFamilyMember from "./pages/Add-family-member";
 import RecommendedFunds from "./pages/RecommendedFunds";
 import TaxSaving from "./pages/TaxSaving";
 import NFOLive from "./pages/NFOLive";
