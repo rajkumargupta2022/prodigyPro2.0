@@ -14,6 +14,7 @@ export const successToast = (res: any) => {
 
 export const errorToast = (msg: any) => {
   toast.dismiss();
+console.log("===",msg);
 
   if (typeof msg == "string") {
     return toast.error(msg, {
