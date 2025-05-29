@@ -3,8 +3,9 @@ import leftImage from "../assets/img/rich.svg";
 import { ArrowLeft } from "react-bootstrap-icons";
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import { http, Http } from "../services/Api";
 import { errorToast } from "../services/toast";
+import { getRequest, postRequest } from "../services/Api/HandleApi";
+import { endPoints } from "../services/urls";
 
 interface responseType {
   success: boolean;
@@ -31,9 +32,9 @@ const PanVarification = () => {
 
     if (panRegex.test(userPan)) {
       try {
-        const response = await http.get<responseType>(Http.apis.requestKycLink);
-        localStorage.setItem("requestId", response.data.data.requestId);
-        window.open(response.data.data.url);
+        const response = await getRequest<responseType>(endPoints.requestKycLink);
+        localStorage.setItem("requestId", response.data.requestId);
+        window.open(response.data.url);
       } catch (err) {
         errorToast(err);
       }

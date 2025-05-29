@@ -1060,3 +1060,36 @@ input[type="number"] {
 .error-message {
   color:"red"
 }
+.circleIMg{
+  height: 55px;
+  width: 78px;
+}
+.circleImg-2{
+    height: 40px;
+  width: 60px;
+}
+.logOutBg{
+  background-color: #E6E8FF;
+    padding-left: 17px;
+    padding-top: 6px;
+    border-radius: 50%;
+}
+
+.my-portfolio-area25{
+    display: flex;
+    justify-content: space-between;
+    width: 185px;
+}
+
+.amount-area25 p{
+  font-size: 14px;
+  font-weight: 600;
+  color: #373737;
+  margin-bottom: 0px;
+  padding-bottom: 7px;
+}
+.my-port-paragraph p{
+  font-size: 12px;
+  font-weight: 500;
+  color: #212121;
+}

@@ -5,8 +5,10 @@ import OtpInput from "react-otp-input";
 import { useState, useEffect } from "react";
 import { ArrowLeft } from "react-bootstrap-icons";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { ApiError, Http, http } from "../services/Api";
 import { errorToast, successToast } from "../services/toast";
+import { userStatusResponse } from "./data-interfaces/users";
+import { endPoints } from "../services/urls";
+import { getRequest, postRequest } from "../services/Api/HandleApi";
 interface responseType {
   msg: string;
   success: boolean;
@@ -43,44 +45,48 @@ const Otp = (e: any) => {
     };
 
     try {
-      const res: any = await http.post(Http.apis.varifyOtp, reqBody);
-      console.log("resss", res);
-
-      if (res.data) {
-        if (res.data?.success && res.data.portfolioUser) {
-          localStorage.setItem("token", res.data.token);
-          localStorage.setItem("pan", res.data.PAN);
-          navigate("/dashboard");
+      const res: any = await postRequest(endPoints.varifyOtp, reqBody);
+      if (res) {
+        if (res?.success && res.portfolioUser) {
+          localStorage.setItem("token", res.token);
+          localStorage.setItem("pan", res.PAN);
+          const userRes = await getRequest<userStatusResponse>(endPoints.userStatus);
+          if (userRes) {
+            localStorage.setItem("user", JSON.stringify(userRes.data));
+            navigate("/dashboard");
+          }
         }
-        if (res.data?.success && !res?.data?.portfolioUser) {
-          localStorage.setItem("token", res.data.token);
+        if (res.success && !res?.portfolioUser) {
+          localStorage.setItem("token", res.token);
         }
         successToast(res);
       } else {
-        console.log("ers", res);
+        console.log("elseError", res);
 
         errorToast(res);
       }
     } catch (err) {
-      if (err instanceof ApiError) {
-        setOtpErrorMsg("something went wrong..")
-      }
-
+      console.log("catch erooor ", err);
+      errorToast(err)
     }
+
   };
 
   const resendOtp = async () => {
-    const res = await http.post<responseType>(Http.apis.registerUser, {
-      mobile: Number(location.state.mobile),
-    });
-console.log("res==",res);
-
-    if (res) {
-      successToast(res);
-      setCounter(15)
-    } else {
-      errorToast(res);
+    try {
+      const res = await postRequest<responseType>(endPoints.registerUser, {
+        mobile: Number(location.state.mobile),
+      });
+      if (res) {
+        successToast(res);
+        setCounter(15)
+      } else {
+        errorToast(res);
+      }
+    } catch (err) {
+      errorToast(err);
     }
+
   };
   return (
     <div className="container-fluid">
@@ -94,7 +100,7 @@ console.log("res==",res);
             <img src={MobileIcon} alt="" className="mobileIcon img-fluid" />
             <p className="text-dark font-weight-bold">Verify OTP</p>
             <form className="" action="#" onSubmit={varifyOtp}>
-              <p className="pb-1 fs12px">OTP sent to +91 9956419878</p>
+              <p className="pb-1 fs12px">OTP sent to +91 {location.state.mobile}</p>
 
               <div className="mb-3 row">
                 <OtpInput

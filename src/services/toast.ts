@@ -2,7 +2,7 @@ import { toast } from "react-toastify";
 
 export const successToast = (res: any) => {
   toast.dismiss();
-  toast.success(res.data?.msg || res.data?.message, {
+  toast.success(res.msg || res.message, {
     position: "bottom-right",
     theme: "dark",
     autoClose: 5000,

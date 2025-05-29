@@ -1,11 +1,46 @@
 import NavBar from "../components/Navbar";
 import icici from "../assets/img/bank-logo/icici.png"
 import { ArrowDownCircleFill, ArrowDownUp, ArrowUpCircleFill, CurrencyRupee } from "react-bootstrap-icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SchemeDetails from "../components/SchemeDetails";
+import { familyDataType, familySnapshotResponseType } from "./data-interfaces/dashboard";
+import { postRequest } from "../services/Api/HandleApi";
+import { endPoints } from "../services/urls";
+import { currentDateInStringNumber } from "../services/dates/dateFormater";
+import { getPercentageValue } from "../services/calculation/percentageCalculate";
 
 const Portfolio = () => {
   const [openSchemeDetail, setOpenSchemeDetail] = useState<boolean>(false)
+    const [familySnapShotData, setFamilySnapShotData] = useState<familyDataType>({
+    Totalpurchase: '',
+    Totalmarketvalue: 0,
+    Finaldays: 0,
+    Finalcagr: '',
+    Totaldayschange: 0,
+    Gainloss: 0,
+    Dividend: 0,
+    debtPercentFinal: '',
+    goldPercentFinal: '',
+    equityPercentFinal: ''
+  })
+
+
+  useEffect(() => {
+    familyPortfolio()
+  }, [])
+
+  const familyPortfolio = async () => {
+    const pan = localStorage.getItem("pan")
+    if (pan) {
+      const res = await postRequest<familySnapshotResponseType>(endPoints.getFamilySnapshot, {
+        pan
+      });
+      if (res) {
+        setFamilySnapShotData(res.finalArray)
+      }
+    }
+  }
+  
 
   return (
     <>
@@ -17,20 +52,25 @@ const Portfolio = () => {
           <div className="borderColor p-3 rounded-4 bg-white">
             <div className="row text-center">
               <div className="col">
-                <small className="fw-semibold">OVERALL PROFIT</small> <span className="fs12px ms-1" > As on 14 Jan 2024</span>
+                <small className="fw-semibold">OVERALL PROFIT</small> <span className="fs12px ms-1" > As on {currentDateInStringNumber()}</span>
               </div>
-              <h3 className="fw-bold congratesColor"><CurrencyRupee className="mb-1" />10,91,550 <small className="fs-6 congratesColor" >(10.44%)</small></h3>
-              <div className="textColor">1 Day change <span className="congratesColor"><ArrowUpCircleFill /><CurrencyRupee className="mb-1" />1,246 (02.5%)</span> <span className="errorColor2"><ArrowDownCircleFill /><CurrencyRupee className="mb-1" />1,246 (02.5%)</span></div>
+              <h3 className="fw-bold congratesColor"><CurrencyRupee className="mb-1" />{familySnapShotData.Totalmarketvalue.toLocaleString("en-In")}<small className="fs-6 congratesColor" >({getPercentageValue(Number(familySnapShotData.Totalpurchase),familySnapShotData.Gainloss)}%)</small></h3>
+              <div className="textColor">1 Day change  
+                {familySnapShotData.Totaldayschange> 0 ? 
+                 <span className="congratesColor"> <ArrowUpCircleFill /><CurrencyRupee className="mb-1" />{familySnapShotData.Totaldayschange.toLocaleString("en-In")} ({getPercentageValue(Number(familySnapShotData.Totalpurchase),familySnapShotData.Totaldayschange)}%)</span>:
+                 <span className="errorColor2"><ArrowDownCircleFill /><CurrencyRupee className="mb-1" />{familySnapShotData.Totaldayschange.toLocaleString("en-In")} ({getPercentageValue(Number(familySnapShotData.Totalpurchase),familySnapShotData.Totaldayschange)}%)</span>
+                }
+              </div>
             </div>
             <hr />
             <div className="row  mt-1">
               <div className="col-6 text-end ">
                 <small className="fs14px">Investment</small><br />
-                <small className="fs16px"><CurrencyRupee className="mb-1" />1,24656.55 </small>
+                <small className="fs16px"><CurrencyRupee className="mb-1" />{Number(familySnapShotData.Totalpurchase).toLocaleString("en-In")} </small>
               </div>
               <div className="col-5 text-start ">
                 <small className="fs14px">Current Value</small><br />
-                <small className="fs16px"><CurrencyRupee className="mb-1" />1,2465.586 </small>
+                <small className="fs16px"><CurrencyRupee className="mb-1" />{familySnapShotData.Totalmarketvalue.toLocaleString("en-In")} </small>
               </div>
             </div>
           </div>

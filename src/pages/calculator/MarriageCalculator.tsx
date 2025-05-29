@@ -51,17 +51,11 @@ const MarriageCalculator = () => {
 
     if (isValidate) {
       let years:number = marriedAge - childAge;
-  
-      // Adjust the amount required for inflation
       let adjustedAmountRequired:number =
       requiredAmount * Math.pow(1 + expectedInflation / 100, years);
-
-      // Calculate the future value of annual savings
       let futureValue:number =
         (annualSaving * (Math.pow(1 + rateOfReturn / 100, years) - 1)) /
         (rateOfReturn / 100);
-
-      // Calculate the value of annual savings required
       let additionalFund = adjustedAmountRequired - futureValue
 
 

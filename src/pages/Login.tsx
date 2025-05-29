@@ -1,11 +1,13 @@
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import Logo from "../assets/img/logo/logo.png";
 import LoginLeftImage from "../components/LoginLeftImage";
-import { http, Http } from "../services/Api/Http";
+// import { http, Http } from "../services/Api/Http";
 import { errorToast, successToast } from "../services/toast";
 import { useState } from "react";
 import { handleNumbers } from "../services/states";
-import React from "react";
+import { postRequest } from "../services/Api/HandleApi";
+import { endPoints } from "../services/urls"
 
 interface responseType {
   msg: string;
@@ -30,16 +32,23 @@ const Login = () => {
       setMobileError("Please enter a valid number");
       return;
     }
-    const res = await http.post<responseType>(Http.apis.registerUser, {
-      mobile: Number(mobile),
-    });
 
-    if (res) {
-      successToast(res);
-      navigate("/otp", { state: { mobile } });
-    } else {
-      errorToast(res);
+    try {
+      const res = await postRequest<responseType>(endPoints.registerUser, {
+        mobile: Number(mobile)
+      });
+      if (res) {
+        successToast(res);
+        navigate("/otp", { state: { mobile } });
+      } else {
+        errorToast(res);
+      }
+    } catch (err) {
+      errorToast(err);
     }
+
+
+
   };
 
   const handleNumber = (e: React.ChangeEvent<HTMLInputElement>) => {

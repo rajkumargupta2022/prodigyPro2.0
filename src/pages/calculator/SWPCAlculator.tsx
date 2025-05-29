@@ -8,15 +8,21 @@ import {
   minAmount,
 } from "../../services/Validated-inputs/validations";
 import { percentageHandler } from "../../services/calculatorsFs";
+import { postRequest } from "../../services/Api/HandleApi";
+import { endPoints } from "../../services/urls";
 
 const SWPCalculator = () => {
   const [investmentPeriod, setInvestmentPeriod] = useState<number>(5);
 
-  const [lumpsumAmount, setLumpsumAmount] = useState<number>(0);
-  const [expectedReturn, setExpectedReturn] = useState<number>(0);
-  const [widthdrawalAmount, setWidthdrawalAmount] = useState<number>(0);
+  const [lumpsumAmount, setLumpsumAmount] = useState<number>(65000);
+  const [expectedReturn, setExpectedReturn] = useState<number>(8);
+  const [widthdrawalAmount, setWidthdrawalAmount] = useState<number>(15000);
+  const [widthdrawalAmountInPercentage, setWidthdrawalAmountInPercentage] = useState<number>(23.08);
   const [byAmount, setByAmount] = useState<string>("activeButton")
   const [byPercentage, setByPercentage] = useState<string>("")
+  const [totalBalanceAmount, setTotalBalanceAmount] = useState<number>(964107)
+  const [totalWithdrawalAmount, setTotalWithdrawalAmount] = useState<number>(900000)
+  const [totalProfit, setTotalProfit] = useState<number>(129107)
 
   const lumpsumAmountRef = useRef<{
     validate: (value: number) => boolean;
@@ -29,7 +35,16 @@ const SWPCalculator = () => {
   const widthdrawalAmountRef = useRef<{
     validate: (value: number) => boolean;
   }>(null);
-
+  type responseKeys = {
+    total_balance_amount: number,
+    total_withdrawal_amount: number,
+    total_profit: number
+  }
+  interface swpResponse {
+    msg: string;
+    success: boolean;
+    data: responseKeys;
+  }
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -48,35 +63,88 @@ const SWPCalculator = () => {
     if (key === 1) {
       setByAmount("activeButton")
       setByPercentage("")
+      setWidthdrawalAmountInPercentage(0)
+      setWidthdrawalAmount(0)
     } else {
       setByAmount("")
       setByPercentage("activeButton")
+      setWidthdrawalAmountInPercentage(0)
+      setWidthdrawalAmount(0)
     }
   }
 
-  const lumpsumAmountHandler = ( e: React.ChangeEvent<HTMLInputElement> ) =>  {
+  const lumpsumAmountHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = Number(e.target.value.trim());
+    if (value < 100000001) {
       setLumpsumAmount(value)
+      calculateByLumpsum(value)
       setWidthdrawalAmount(0)
+      setWidthdrawalAmountInPercentage(0)
+    }
   };
-  const withdrawalPercentageHandler = ( e: React.ChangeEvent<HTMLInputElement> ) =>  {
+  const withdrawalPercentageHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = Number(e.target.value.trim());
-    console.log("====",value);
-    setWidthdrawalAmount(value)
+    if (value < 101 && lumpsumAmount > 0) {
+      setWidthdrawalAmountInPercentage(value)
+      calculateAmount(value)
+    } else if (lumpsumAmount < 1) {
+      setWidthdrawalAmountInPercentage(0)
+    } else {
+      setWidthdrawalAmountInPercentage(100)
+      calculateAmount(100)
+    }
+
   };
-  const withdrawalAmountHandler = ( e: React.ChangeEvent<HTMLInputElement> ) =>  {
+  const withdrawalAmountHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = Number(e.target.value.trim());
-    console.log("====",value);
-    
-   setWidthdrawalAmount(value)
+    if (value <= lumpsumAmount) {
+      setWidthdrawalAmount(value)
+      calculatePercentage(value)
+    } else {
+      setWidthdrawalAmount(lumpsumAmount)
+      calculatePercentage(lumpsumAmount)
+    }
+
   };
 
-  // const calculateValues = ()=>{
-  //   if(key==1){
-  //     let ress = (percentage / 100) * lumpsumAmounts
-  //     setMonthlyWithdrawl(ress.toFixed(2))
-  //   }
-  // }
+
+  const calculatePercentage = (enteredAmount: number) => {
+    if (lumpsumAmount > 1) {
+      let ress = (enteredAmount * 100) / lumpsumAmount
+      console.log("enteredAmount", ress);
+      setWidthdrawalAmountInPercentage(ress)
+    }
+  }
+  const calculateAmount = (enteredPercentage: number) => {
+    if (lumpsumAmount > 1) {
+      let ress = (enteredPercentage / 100) * lumpsumAmount
+      setWidthdrawalAmount(ress)
+    }
+  }
+  const calculateByLumpsum = (lumpsum: number) => {
+    if (byAmount === "activeButton" && widthdrawalAmount > 0) {
+      let ress = (widthdrawalAmount * 100) / lumpsum
+      setWidthdrawalAmountInPercentage(ress)
+    } else if (byPercentage === "activeButton" && widthdrawalAmountInPercentage > 0) {
+      let ress = (widthdrawalAmountInPercentage / 100) * lumpsumAmount
+      setWidthdrawalAmount(ress)
+    }
+  }
+
+  const calculateREsult = async (e: React.FormEvent) => {
+    e.preventDefault()
+    const res = await postRequest<swpResponse>(endPoints.swpCalculator, {
+      monthlyWithdrawl: Math.round(widthdrawalAmount),
+      period: investmentPeriod,
+      interestRate: expectedReturn,
+      lumpsum: Math.round(lumpsumAmount)
+    });
+   
+    setTotalBalanceAmount(res.data?.total_balance_amount)
+    setTotalWithdrawalAmount(res.data?.total_withdrawal_amount)
+    setTotalProfit(res.data?.total_profit)
+  }
+
   return (
     <>
       <NavBar />
@@ -109,7 +177,7 @@ const SWPCalculator = () => {
                         onChange={(e) =>
                           lumpsumAmountHandler(e)
                         }
-                        validate={[isNotEmpty, minAmount(500),maxAmount(100000000)]}
+                        validate={[isNotEmpty, minAmount(500), maxAmount(100000000)]}
                       />
                     </div>
                     <RangeBar
@@ -175,7 +243,7 @@ const SWPCalculator = () => {
                           }
                           validate={[isNotEmpty, minAmount(1)]}
                         />
-                        <small className="fs12px"> Percentage: 23.08%</small>
+                        <small className="fs12px"> Percentage: {widthdrawalAmountInPercentage.toFixed(2)}%</small>
                       </div> : <div className="form-group mt-3">
                         <label htmlFor="monthlyWITHDRAWAL" className="fs12px">
                           MONTHLY WITHDRAWAL (% p.m)
@@ -186,18 +254,21 @@ const SWPCalculator = () => {
                           className="form-control"
                           id="monthlyWITHDRAWAL"
                           placeholder=""
-                          value={widthdrawalAmount}
+                          value={widthdrawalAmountInPercentage}
                           onChange={(e) =>
                             withdrawalPercentageHandler(e)
                           }
                           validate={[isNotEmpty, minAmount(1)]}
                         />
-                        <small className="fs12px"> Amount: 20</small>
+                        <small className="fs12px"> Amount: {widthdrawalAmount.toLocaleString("en-In", {
+                          minimumFractionDigits: 0,
+                          maximumFractionDigits: 2,
+                        })}</small>
                       </div>
                     }
 
 
-                    <button type="submit" className="customButton px-3 mt-3">
+                    <button type="submit" className="customButton px-3 mt-3" onClick={calculateREsult}>
                       Calculate
                     </button>
                   </form>
@@ -209,11 +280,11 @@ const SWPCalculator = () => {
                 <div className="card-body">
                   <h5 className=" fw-normal mb-1">Result</h5>
                   <p className="fs12px mb-0 mt-3">TOTAL BALANCE AMOUNT </p>
-                  <h6 className="mt-1">₹- ₹9,64,107</h6>
+                  <h6 className="mt-1">₹{totalBalanceAmount.toLocaleString("en-In")}</h6>
                   <p className="fs12px mb-0 mt-3">TOTAL WITHDRAWAL AMOUNT</p>
-                  <h6 className="mt-1">₹9,00,000</h6>
+                  <h6 className="mt-1">₹{totalWithdrawalAmount.toLocaleString("en-In")}</h6>
                   <p className="fs12px mb-0 mt-3">TOTAL PROFIT</p>
-                  <h6 className="mt-1">- ₹1,29,107</h6>
+                  <h6 className="mt-1"> ₹{totalProfit.toLocaleString("en-In")}</h6>
                 </div>
               </div>
             </div>

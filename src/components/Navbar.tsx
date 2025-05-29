@@ -11,8 +11,15 @@ import {
   GraphUpArrow,
   Person,
 } from "react-bootstrap-icons";
+import ProfileModel from "./ProfileModel";
+import { useState } from "react";
 
 const MyNavbar = () => {
+  const [openProfileModel,setOpenProfileModel] = useState<boolean>(false)
+
+  const handleProfileModel = ()=>{
+    setOpenProfileModel(true)
+  }
   return (
     <Navbar expand="lg" className="bg-white">
       <Container>
@@ -59,7 +66,7 @@ const MyNavbar = () => {
                 <div className="">Portfolio</div>
               </div>
             </Nav.Link>
-            <Nav.Link className="prodgy_menu  m-2" href={"/account"}>
+            <Nav.Link className="prodgy_menu  m-2" href={"/my-profile"}>
               <div className="d-flex gap-2">
                 <div className="">
                   {" "}
@@ -80,7 +87,7 @@ const MyNavbar = () => {
               <Person size={24} />
             </Nav.Link> */}
             <Nav.Link href="#" className="profileNameSize">
-              <div className="d-flex gap-2">
+              <div className="d-flex gap-2" onClick={handleProfileModel}>
                 <div className="">
                   <img
                     className="rounded-pill"
@@ -97,6 +104,7 @@ const MyNavbar = () => {
           </div>
         </Navbar.Collapse>
       </Container>
+      <ProfileModel show={openProfileModel} setShow={setOpenProfileModel}/>
     </Navbar>
   );
 };
