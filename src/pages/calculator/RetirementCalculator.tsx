@@ -6,7 +6,7 @@ import {
   isNotEmpty,
   minAmount,
 } from "../../services/Validated-inputs/validations";
-import { amountHandler, percentageHandler, pmtvalue, RetirementPresentValue } from "../../services/calculatorsFs";
+import { amountHandler, percentageHandler, pmtvalue, RetirementPresentValue } from "../../services/utils/calculatorsFs";
 
 const RetirementCalculator = () => {
   const [currentAge, setCurrentAge] = useState<number>(30);

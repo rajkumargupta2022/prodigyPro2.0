@@ -6,8 +6,8 @@ import { CurrencyRupee } from "react-bootstrap-icons";
 import { useState } from 'react';
 import { familyDataType, familyResponseType, familyWiseType } from '../data-interfaces/dashboard';
 import { postRequest } from '../../services/Api/HandleApi';
-import { endPoints } from '../../services/urls';
-import { errorToast } from '../../services/toast';
+import { endPoints } from '../../services/utils/urls';
+import { errorToast } from '../../services/utils/toast';
 
 interface investmetProps {
   show: boolean;

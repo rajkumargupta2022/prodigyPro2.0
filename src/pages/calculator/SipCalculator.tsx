@@ -3,7 +3,7 @@ import ReactApexChart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
 import { useRef, useState } from "react";
 import RangeBar from "./RangeBar";
-import { amountHandler, percentageHandler } from "../../services/calculatorsFs";
+import { amountHandler, percentageHandler } from "../../services/utils/calculatorsFs";
 import ValidatedInput from "../../services/Validated-inputs/inputs";
 import {
   isNotEmpty,

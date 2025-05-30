@@ -3,11 +3,11 @@ import { useNavigate } from "react-router-dom";
 import Logo from "../assets/img/logo/logo.png";
 import LoginLeftImage from "../components/LoginLeftImage";
 // import { http, Http } from "../services/Api/Http";
-import { errorToast, successToast } from "../services/toast";
+import { errorToast, successToast } from "../services/utils/toast";
 import { useState } from "react";
-import { handleNumbers } from "../services/states";
+import { handleNumbers } from "../services/utils/states";
 import { postRequest } from "../services/Api/HandleApi";
-import { endPoints } from "../services/urls"
+import { endPoints } from "../services/utils/urls"
 
 interface responseType {
   msg: string;

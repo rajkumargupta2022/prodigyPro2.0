@@ -6,7 +6,7 @@ import {
   isNotEmpty,
   minAmount,
 } from "../../services/Validated-inputs/validations";
-import { amountHandler,percentageHandler, pmtvalue, presentValue } from "../../services/calculatorsFs";
+import { amountHandler,percentageHandler, pmtvalue, presentValue } from "../../services/utils/calculatorsFs";
 
 const MarriageCalculator = () => {
   const [childAge, setChildAge] = useState<number>(8);

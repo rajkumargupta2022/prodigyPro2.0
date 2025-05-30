@@ -7,7 +7,7 @@ import { SinglePortfolioProvider } from './context/SinglePortfolioContext.tsx'
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <SinglePortfolioProvider>
-    <App />
-     </SinglePortfolioProvider>
+      <App />
+    </SinglePortfolioProvider>
   </StrictMode>,
 )

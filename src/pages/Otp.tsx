@@ -5,9 +5,9 @@ import OtpInput from "react-otp-input";
 import { useState, useEffect } from "react";
 import { ArrowLeft } from "react-bootstrap-icons";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { errorToast, successToast } from "../services/toast";
+import { errorToast, successToast } from "../services/utils/toast";
 import { userStatusResponse } from "./data-interfaces/users";
-import { endPoints } from "../services/urls";
+import { endPoints } from "../services/utils/urls";
 import { getRequest, postRequest } from "../services/Api/HandleApi";
 interface responseType {
   msg: string;

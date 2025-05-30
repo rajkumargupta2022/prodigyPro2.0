@@ -12,7 +12,7 @@ import DiscoverFUnds from "./dashboard/Discover-Funds";
 import SwitchPortfolio from "./dashboard/Switch-portfolio";
 import { familyDataType, familySnapshotResponseType } from "./data-interfaces/dashboard";
 import { postRequest } from "../services/Api/HandleApi";
-import { endPoints } from "../services/urls";
+import { endPoints } from "../services/utils/urls";
 import { currentDateInStringNumber } from "../services/dates/dateFormater";
 import { getPercentageValue } from "../services/calculation/percentageCalculate";
 
@@ -80,13 +80,13 @@ const Dashboard = () => {
                       <span className="congratesColor">
                         <ArrowUpCircleFill />
                         <CurrencyRupee className="mb-1" />
-                        {familySnapShotData.Totaldayschange.toLocaleString("en-In")} {familySnapShotData.Totaldayschange.toLocaleString("en-In")} ({getPercentageValue(Number(familySnapShotData.Totalpurchase),familySnapShotData.Totaldayschange)}%)
+                        {familySnapShotData.Totaldayschange.toLocaleString("en-In")}  ({getPercentageValue(Number(familySnapShotData.Totalpurchase), familySnapShotData.Totaldayschange)}%)
                       </span>
                     ) : familySnapShotData.Totaldayschange < 0 && (
                       <span className="errorColor2">
                         <ArrowDownCircleFill />
                         <CurrencyRupee className="mb-1" />
-                        {familySnapShotData.Totaldayschange.toLocaleString("en-In")} {familySnapShotData.Totaldayschange.toLocaleString("en-In")} ({getPercentageValue(Number(familySnapShotData.Totalpurchase),familySnapShotData.Totaldayschange)}%)
+                        {familySnapShotData.Totaldayschange.toLocaleString("en-In")} ({getPercentageValue(Number(familySnapShotData.Totalpurchase), familySnapShotData.Totaldayschange)}%)
                       </span>
                     )}
                   </div>

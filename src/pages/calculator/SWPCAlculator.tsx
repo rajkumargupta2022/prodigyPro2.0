@@ -7,9 +7,9 @@ import {
   maxAmount,
   minAmount,
 } from "../../services/Validated-inputs/validations";
-import { percentageHandler } from "../../services/calculatorsFs";
+import { percentageHandler } from "../../services/utils/calculatorsFs";
 import { postRequest } from "../../services/Api/HandleApi";
-import { endPoints } from "../../services/urls";
+import { endPoints } from "../../services/utils/urls";
 
 const SWPCalculator = () => {
   const [investmentPeriod, setInvestmentPeriod] = useState<number>(5);

@@ -5,13 +5,13 @@ import { useEffect, useState } from "react";
 import SchemeDetails from "../components/SchemeDetails";
 import { familyDataType, familySnapshotResponseType } from "./data-interfaces/dashboard";
 import { postRequest } from "../services/Api/HandleApi";
-import { endPoints } from "../services/urls";
+import { endPoints } from "../services/utils/urls";
 import { currentDateInStringNumber } from "../services/dates/dateFormater";
 import { getPercentageValue } from "../services/calculation/percentageCalculate";
 
 const Portfolio = () => {
   const [openSchemeDetail, setOpenSchemeDetail] = useState<boolean>(false)
-    const [familySnapShotData, setFamilySnapShotData] = useState<familyDataType>({
+  const [familySnapShotData, setFamilySnapShotData] = useState<familyDataType>({
     Totalpurchase: '',
     Totalmarketvalue: 0,
     Finaldays: 0,
@@ -40,7 +40,7 @@ const Portfolio = () => {
       }
     }
   }
-  
+
 
   return (
     <>
@@ -54,11 +54,11 @@ const Portfolio = () => {
               <div className="col">
                 <small className="fw-semibold">OVERALL PROFIT</small> <span className="fs12px ms-1" > As on {currentDateInStringNumber()}</span>
               </div>
-              <h3 className="fw-bold congratesColor"><CurrencyRupee className="mb-1" />{familySnapShotData.Totalmarketvalue.toLocaleString("en-In")}<small className="fs-6 congratesColor" >({getPercentageValue(Number(familySnapShotData.Totalpurchase),familySnapShotData.Gainloss)}%)</small></h3>
-              <div className="textColor">1 Day change  
-                {familySnapShotData.Totaldayschange> 0 ? 
-                 <span className="congratesColor"> <ArrowUpCircleFill /><CurrencyRupee className="mb-1" />{familySnapShotData.Totaldayschange.toLocaleString("en-In")} ({getPercentageValue(Number(familySnapShotData.Totalpurchase),familySnapShotData.Totaldayschange)}%)</span>:
-                 <span className="errorColor2"><ArrowDownCircleFill /><CurrencyRupee className="mb-1" />{familySnapShotData.Totaldayschange.toLocaleString("en-In")} ({getPercentageValue(Number(familySnapShotData.Totalpurchase),familySnapShotData.Totaldayschange)}%)</span>
+              <h3 className="fw-bold congratesColor"><CurrencyRupee className="mb-1" />{familySnapShotData.Totalmarketvalue.toLocaleString("en-In")}<small className="fs-6 congratesColor" >({getPercentageValue(Number(familySnapShotData.Totalpurchase), familySnapShotData.Gainloss)}%)</small></h3>
+              <div className="textColor">1 Day change
+                {familySnapShotData.Totaldayschange > 0 ?
+                  <span className="congratesColor"> <ArrowUpCircleFill /><CurrencyRupee className="mb-1" />{familySnapShotData.Totaldayschange.toLocaleString("en-In")} ({getPercentageValue(Number(familySnapShotData.Totalpurchase), familySnapShotData.Totaldayschange)}%)</span> :
+                  <span className="errorColor2"><ArrowDownCircleFill /><CurrencyRupee className="mb-1" />{familySnapShotData.Totaldayschange.toLocaleString("en-In")} ({getPercentageValue(Number(familySnapShotData.Totalpurchase), familySnapShotData.Totaldayschange)}%)</span>
                 }
               </div>
             </div>
@@ -79,11 +79,11 @@ const Portfolio = () => {
       <div className="container py-2 personal_form_container">
         <div className="row ">
           <div className="col-6 text-start"><h6 >OVERALL PROFIT</h6> </div>
-          <div className="col-6 text-end">              <button type="button" className="btn gainLossBtn ">Gain/Loss <ArrowDownUp/>
-          {/* &#x25B2;
+          <div className="col-6 text-end">              <button type="button" className="btn gainLossBtn ">Gain/Loss <ArrowDownUp />
+            {/* &#x25B2;
 <br/>
 <small>&#x25BC;</small> */}
-</button></div>
+          </button></div>
         </div>
       </div>
       <div className="container py-2">
@@ -99,7 +99,7 @@ const Portfolio = () => {
                   <p>Folio:32352612</p>
                 </div>
               </div>
-           
+
             </div>
             <hr />
             <div className="row text-start mt-2">
@@ -133,7 +133,7 @@ const Portfolio = () => {
                   <p>Folio:32352612</p>
                 </div>
               </div>
-           
+
             </div>
             <hr />
             <div className="row text-start mt-2">

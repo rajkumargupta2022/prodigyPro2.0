@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import NavBar from "../../components/Navbar";
 import ValidatedInput from "../../services/Validated-inputs/inputs";
-import { amountHandler } from "../../services/calculatorsFs";
+import { amountHandler } from "../../services/utils/calculatorsFs";
 import {
   isNotEmpty,
   minAmount,

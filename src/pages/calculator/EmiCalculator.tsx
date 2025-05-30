@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import RangeBar from "./RangeBar";
 import ValidatedInput from "../../services/Validated-inputs/inputs";
 import { isNotEmpty } from "../../services/Validated-inputs/validations";
-import { amountHandler } from "../../services/calculatorsFs";
+import { amountHandler } from "../../services/utils/calculatorsFs";
 interface ChartState {
   options: object;
   series: number[];

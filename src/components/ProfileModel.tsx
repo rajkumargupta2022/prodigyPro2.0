@@ -6,7 +6,7 @@ import { SlLogout } from "react-icons/sl";
 import { familyResponseType, familyWiseType, ProfileModelProps } from '../pages/data-interfaces/dashboard';
 import { useSinglePortfolioContext } from '../context/SinglePortfolioContext';
 import { postRequest } from '../services/Api/HandleApi';
-import { endPoints } from '../services/urls';
+import { endPoints } from '../services/utils/urls';
 
 
 

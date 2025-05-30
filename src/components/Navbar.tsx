@@ -7,48 +7,53 @@ import {
   Bell,
   CurrencyRupee,
   ChevronDown,
-  HouseDoor,
+  HouseDoorFill,
   GraphUpArrow,
   Person,
 } from "react-bootstrap-icons";
 import ProfileModel from "./ProfileModel";
 import { useState } from "react";
+import { Link,useLocation } from "react-router-dom";
 
 const MyNavbar = () => {
-  const [openProfileModel,setOpenProfileModel] = useState<boolean>(false)
-
-  const handleProfileModel = ()=>{
+  const location = useLocation();
+  const [openProfileModel, setOpenProfileModel] = useState<boolean>(false)
+// console.log('Current path:', location.pathname);
+  const handleProfileModel = () => {
     setOpenProfileModel(true)
   }
+
+
+
   return (
     <Navbar expand="lg" className="bg-white">
       <Container>
         <Navbar.Brand href="#">
-          <Navbar.Brand href="/dashboard">
+          <Link to="/dashboard">
             <img
               src={logo} // Replace with your logo URL
               alt="Logo"
               height="40"
             />
-          </Navbar.Brand>
+          </Link>
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="navbarScroll" />
         <Navbar.Collapse className="justify-content-end" id="navbarScroll">
           <Nav
-            className="my-2 my-lg-0 menu_list"
+            className=" my-lg-0 menu_list"
             style={{ maxHeight: "100px" }}
             navbarScroll
           >
-            <Nav.Link className="prodgy_menu m-2" href={"/dashboard"}>
+            <Link className={`prodgy_menu m-2 ${location.pathname==="/dashboard" && "active_menu"}`} to={"/dashboard"}>
               <div className="d-flex gap-2">
                 <div className="">
                   {" "}
-                  <HouseDoor size={24} />
+                  <HouseDoorFill size={24} />
                 </div>
                 <div className="">Home</div>
               </div>
-            </Nav.Link>
-            <Nav.Link className="prodgy_menu  m-2" href={"/explore"}>
+            </Link>
+            <Link className={`prodgy_menu m-2 ${location.pathname==="/explore" && "active_menu"}`} to={"/explore"}>
               <div className="d-flex gap-2">
                 <div className="">
                   {" "}
@@ -56,8 +61,8 @@ const MyNavbar = () => {
                 </div>
                 <div className="">Explore</div>
               </div>
-            </Nav.Link>
-            <Nav.Link className="prodgy_menu  m-2" href={"/portfolio"}>
+            </Link>
+            <Link className={`prodgy_menu m-2 ${location.pathname==="/portfolio" && "active_menu"}`} to={"/portfolio"}>
               <div className="d-flex gap-2">
                 <div className="">
                   {" "}
@@ -65,8 +70,8 @@ const MyNavbar = () => {
                 </div>
                 <div className="">Portfolio</div>
               </div>
-            </Nav.Link>
-            <Nav.Link className="prodgy_menu  m-2" href={"/my-profile"}>
+            </Link>
+            <Link className={`prodgy_menu  m-2 ${location.pathname==="/my-profile" && "active_menu"}`} to={"/my-profile"}>
               <div className="d-flex gap-2">
                 <div className="">
                   {" "}
@@ -74,19 +79,19 @@ const MyNavbar = () => {
                 </div>
                 <div className="">Account</div>
               </div>
-            </Nav.Link>
+            </Link>
           </Nav>
-          <div className="d-flex user_profile_icon">
-            <Nav.Link href="#">
+          <div className="d-flex user_profile_icon prodgy_menu">
+            <Link to="#" className="prodgy_menu">
               <QuestionCircle size={24} />
-            </Nav.Link>
-            <Nav.Link href="#">
+            </Link>
+            <Link to="#" className="prodgy_menu">
               <Bell size={24} />
-            </Nav.Link>
+            </Link>
             {/* <Nav.Link href="#">
               <Person size={24} />
             </Nav.Link> */}
-            <Nav.Link href="#" className="profileNameSize">
+            <Link to="#" className="profileNameSize prodgy_menu">
               <div className="d-flex gap-2" onClick={handleProfileModel}>
                 <div className="">
                   <img
@@ -100,11 +105,11 @@ const MyNavbar = () => {
                   Rajkumar <ChevronDown />{" "}
                 </div>
               </div>
-            </Nav.Link>
+            </Link>
           </div>
         </Navbar.Collapse>
       </Container>
-      <ProfileModel show={openProfileModel} setShow={setOpenProfileModel}/>
+      <ProfileModel show={openProfileModel} setShow={setOpenProfileModel} />
     </Navbar>
   );
 };

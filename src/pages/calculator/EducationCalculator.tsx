@@ -7,8 +7,8 @@ import {
   minAmount,
   minEduAge,
 } from "../../services/Validated-inputs/validations";
-import { amountHandler, percentageHandler, pmtvalue } from "../../services/calculatorsFs";
-import { errorToast } from "../../services/toast";
+import { amountHandler, percentageHandler, pmtvalue } from "../../services/utils/calculatorsFs";
+import { errorToast } from "../../services/utils/toast";
 
 const EducationCalculator = () => {
   const [childAge, setChildAge] = useState<number>(10);

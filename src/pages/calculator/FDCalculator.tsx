@@ -7,7 +7,7 @@ import {
   isNotEmpty,
   minAmount,
 } from "../../services/Validated-inputs/validations";
-import { amountHandler, percentageHandler } from "../../services/calculatorsFs";
+import { amountHandler, percentageHandler } from "../../services/utils/calculatorsFs";
 
 interface ChartState {
   options: object;
