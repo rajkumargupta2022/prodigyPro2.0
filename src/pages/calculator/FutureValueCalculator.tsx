@@ -12,7 +12,7 @@ import {
   isNotEmpty,
   minAmount,
 } from "../../services/Validated-inputs/validations";
-import { amountHandler, percentageHandler } from "../../services/calculatorsFs";
+import { amountHandler, percentageHandler } from "../../services/utils/calculatorsFs";
 
 const FutureValueCalculator = () => {
   const [investmentPeriod, setInvestmentPeriod] = useState<number>(10);
@@ -40,21 +40,11 @@ const FutureValueCalculator = () => {
     ].every((value) => value === true);
 
     if (isValidated) {
-      
-    // let i:number = (rateOfReturn / 100) / 12;
-
     let lumpsums:number = investAmount * Math.pow((1 + rateOfReturn / 100), investmentPeriod);
     let lumpsum:number = Math.round(lumpsums)
-    // let gains:number = lumpsum - investAmount
     setResultInvestment(investAmount);
     setGains(lumpsum);
     setResultPeriod(investmentPeriod)
-    // setSgains(getMachine(gains));
-    // window.scrollTo(500, 500);
-    // setCalculateCheck(1)
-    // setLoader("none");
-    // setChartPresentValue(investment);
-    // setChartGain(gains);
     }
   };
   const valueForGraph = (data: number): number[] => {

@@ -2,7 +2,7 @@ import { toast } from "react-toastify";
 
 export const successToast = (res: any) => {
   toast.dismiss();
-  toast.success(res.data?.msg || res.data?.message, {
+  toast.success(res.msg || res.message, {
     position: "bottom-right",
     theme: "dark",
     autoClose: 5000,
@@ -14,6 +14,7 @@ export const successToast = (res: any) => {
 
 export const errorToast = (msg: any) => {
   toast.dismiss();
+console.log("===",msg);
 
   if (typeof msg == "string") {
     return toast.error(msg, {

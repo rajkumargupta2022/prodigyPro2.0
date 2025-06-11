@@ -7,8 +7,8 @@ import {
   minAmount,
   minEduAge,
 } from "../../services/Validated-inputs/validations";
-import { amountHandler, percentageHandler,pmtvalue } from "../../services/calculatorsFs";
-import { errorToast } from "../../services/toast";
+import { amountHandler, percentageHandler, pmtvalue } from "../../services/utils/calculatorsFs";
+import { errorToast } from "../../services/utils/toast";
 
 const EducationCalculator = () => {
   const [childAge, setChildAge] = useState<number>(10);
@@ -33,7 +33,7 @@ const EducationCalculator = () => {
     validate: (value: number) => boolean;
   }>(null);
 
-  const onSubmit =async (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const isValidated = [
@@ -50,30 +50,22 @@ const EducationCalculator = () => {
     }
 
     if (isValidated) {
-      var yearleft:number = startCollegeAge - childAge;
+      var yearleft: number = startCollegeAge - childAge;
+      var rate: number = expectedRateofReturn * 0.01;
+      var i: number = 0.01 * expectedInflation;
+      var FV: number = costPerYear * (Math.pow((1 + i), yearleft));
+      var er: number = expectedRateofReturn * 0.01;
+      var ei: number = expectedInflation * 0.01;
+      var Tot: number = (1 + er) / (1 + ei) - 1;
+      var firstot: number = (1 + er) / (1 + er)
+      var nomialRate: number = 12.0 * (Math.pow((1 + rate), (1 / 12.0)) - 1);
 
-      var rate:number = expectedRateofReturn * 0.01;
-  
-      var i:number = 0.01 * expectedInflation;
-  
-      var FV:number = costPerYear * (Math.pow((1 + i), yearleft));
-  
-      var er:number = expectedRateofReturn * 0.01;
-      var ei:number = expectedInflation * 0.01;
-      var Tot:number = (1 + er) / (1 + ei) - 1;
-      var firstot:number = (1 + er) / (1 + er)
-      var nomialRate:number = 12.0 * (Math.pow((1 + rate), (1 / 12.0)) - 1);
-  
-  
-      var postinfaltion:number = Tot * 100;
-  
-  
       var totalAmtRequired = (FV * ((1 - (Math.pow((1 + Tot), (-durationOfEducation)))) / Tot));
-  
-      var lumpsum:number = (totalAmtRequired * (1 / (Math.pow((1 + nomialRate), yearleft))));
-      var nominalRateMonthly:number = parseFloat((nomialRate / 12).toFixed(6))
-      var monthleft:number = yearleft * 12
-      let newsipamt:number = await pmtvalue(nominalRateMonthly, monthleft, 0, -Math.round(totalAmtRequired), 0)
+
+      var lumpsum: number = (totalAmtRequired * (1 / (Math.pow((1 + nomialRate), yearleft))));
+      var nominalRateMonthly: number = parseFloat((nomialRate / 12).toFixed(6))
+      var monthleft: number = yearleft * 12
+      let newsipamt: number = await pmtvalue(nominalRateMonthly, monthleft, 0, -Math.round(totalAmtRequired), 0)
       setCorpusRequired(Math.round(totalAmtRequired))
       setOneTimeInvestmentRequired(Math.round(lumpsum))
       setMonthlyInvestmentRequired(Math.round(newsipamt))

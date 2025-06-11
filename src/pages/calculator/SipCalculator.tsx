@@ -3,10 +3,11 @@ import ReactApexChart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
 import { useRef, useState } from "react";
 import RangeBar from "./RangeBar";
-import { amountHandler, percentageHandler } from "../../services/calculatorsFs";
+import { amountHandler, percentageHandler } from "../../services/utils/calculatorsFs";
 import ValidatedInput from "../../services/Validated-inputs/inputs";
 import {
   isNotEmpty,
+  maxAmount,
   minAmount,
 } from "../../services/Validated-inputs/validations";
 
@@ -36,10 +37,15 @@ const SipCalculator = () => {
 
   const yearInString = (): string[] => {
     let xAxisArray: string[] = [];
-    if(totalYear>15){
+    if(totalYear>16){
       for (let i = 1; i <= totalYear; i=i+2) {
         xAxisArray.push(i + "Y");
       }
+      if(totalYear%2 ===0){
+        xAxisArray.push(totalYear+"Y")
+      }
+      console.log("===",xAxisArray);
+      
     }else{
       for (let i = 1; i <= totalYear; i++) {
         xAxisArray.push(i + "Y");
@@ -50,10 +56,14 @@ const SipCalculator = () => {
   };
   const valueForGraph = (data: number): number[] => {
     let graphValue: number[] = [];
-    if(totalYear>15){
+    if(totalYear>16){
       for (let i = totalYear; i > 0; i=i-2) {
         graphValue.push(Math.round(data / i));
       }
+      if(totalYear%2 ===0){
+        graphValue.push(Math.round(data))
+      }
+      console.log("===",graphValue);
     }else {
       for (let i = totalYear; i > 0; i--) {
         graphValue.push(Math.round(data / i));
@@ -65,7 +75,7 @@ const SipCalculator = () => {
     series: [
       {
         name: "Market Value",
-        data: valueForGraph(gains),
+        data: valueForGraph(gains+totalMonthlySaving),
       },
       {
         name: "Invested Amount",
@@ -96,11 +106,11 @@ const SipCalculator = () => {
         categories: yearInString(), // ✅ Custom X-axis labels
       },
       tooltip: {
-        x: {
-          formatter: function (val: any) {
-            return val; // ✅ Tooltip will also show 1M, 3M, etc.
-          },
-        },
+        // x: {
+        //   formatter: function (val: any) {
+        //     return val; // ✅ Tooltip will also show 1M, 3M, etc.
+        //   },
+        // },
       },
       grid: {
         show: false, // ✅ Removes background grey lines
@@ -120,9 +130,7 @@ const SipCalculator = () => {
       let monthlyRate: number = expectedRateOfReturn / 12 / 100;
     let months: number = investmentPeriod * 12;
     let futureValue: number = 0;
-    // let futureValue = (monthlySavings  (1 + monthlyRate)  ((Math.pow((1 + monthlyRate), months)) - 1) / monthlyRate);
-    futureValue =
-      (monthlySaving * (Math.pow(1 + monthlyRate, months) - 1)) / monthlyRate;
+    futureValue = (monthlySaving * (Math.pow(1 + monthlyRate, months) - 1)) / monthlyRate;
 
     let mainresults: number = Math.round(futureValue);
     let totalSaving: number = monthlySaving * months;
@@ -173,7 +181,7 @@ const SipCalculator = () => {
                         id="monthlysip"
                         aria-describedby="emailHelp"
                         placeholder=""
-                        validate={[isNotEmpty, minAmount(500)]}
+                        validate={[isNotEmpty, minAmount(500),maxAmount(1000000)]}
                       />
                     </div>
                     <div className="form-group">
@@ -190,7 +198,7 @@ const SipCalculator = () => {
                         }
                         id="expectedrateofreturn"
                         placeholder=""
-                        validate={[isNotEmpty, minAmount(1)]}
+                        validate={[isNotEmpty, minAmount(1),maxAmount(50)]}
                       />
                     </div>
                     <RangeBar

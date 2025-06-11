@@ -18,7 +18,6 @@ import Otp from "./pages/Otp";
 import PanVarification from "./pages/PanVarification";
 import Dashboard from "./pages/Dashboard";
 import EmergencyFunds from "./pages/EmergencyFund";
-import AddFamilyMember from "./pages/Add-family-member";
 import RecommendedFunds from "./pages/RecommendedFunds";
 import TaxSaving from "./pages/TaxSaving";
 import NFOLive from "./pages/NFOLive";
@@ -48,7 +47,7 @@ import RetirementCalculator from "./pages/calculator/RetirementCalculator";
 import EmiCalculator from "./pages/calculator/EmiCalculator";
 import FDCalculator from "./pages/calculator/FDCalculator";
 import ElssCalculator from "./pages/calculator/ElssCalculator";
-import SWPCalculator from "./pages/calculator/SWPCAlculator";
+import SWPCalculator from "./pages/calculator/SWPCalculator";
 import RecommendedSchemeGoal from "./pages/planning/RecommendedSchemeGoal";
 import RiskProfile from "./components/RiskProfile";
 import { ToastContainer } from "react-toastify";
@@ -71,13 +70,35 @@ import ChangePassword from "./components/Change-Password";
 import HelpSupport from "./components/help&support";
 import Statements from "./components/Statements";
 import MyProfile from "./components/My-Profile";
+import Loader from "./services/Loader/Loader";
+import { LoaderProvider, useLoader } from "./context/LoaderContext";
+import { registerLoaderCallbacks } from "./services/Loader/LoaderController";
+import React from "react";
+
+
+const LoaderHandler = () => {
+  const { showLoader, hideLoader } = useLoader();
+
+  React.useEffect(() => {
+    registerLoaderCallbacks(showLoader, hideLoader);
+  }, [showLoader, hideLoader]);
+
+  return null;
+};
 
 function App() {
+
   return (
     <>
       <BrowserRouter>
         <ToastContainer />
+        <LoaderProvider>
+          <LoaderHandler />
+          <Loader />
+          {/* rest of your app */}
+        </LoaderProvider>
         <Routes>
+
           <Route path="/" element={<Login />} />
           <Route path="/personal-details" element={<PersonalDetails />} />
           <Route path="/pan-varification" element={<PanVarification />} />

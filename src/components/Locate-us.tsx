@@ -1,16 +1,15 @@
-import { ArrowLeft, BookFill } from "react-bootstrap-icons";
+import {  BookFill } from "react-bootstrap-icons";
 import Map from "../assets/img/map.svg";
 
-function LocateUs({ backButton }: { backButton: any }) {
+function LocateUs() {
   return (
     <main className="col-md-9 ms-sm-auto col-lg-9 px-md-4 py-4">
       <h2>
-        <ArrowLeft className="crPointer" size={25} onClick={backButton} />{" "}
         Locate Us
       </h2>
       <hr className="fw-light text-secondary" />
 
-      <img src={Map} alt="image not found" className="mb-2 w-100" />
+      <img src={Map} alt="image not found" className="mb-2 w-100" height={211}/>
 
       <div className="p-4 shadow-sm bg-white border-0 rounded-4 mt-4">
         <h6>BFC Capital Pvt Ltd.</h6>
@@ -29,16 +28,16 @@ function LocateUs({ backButton }: { backButton: any }) {
         </div>
 
         <div className="d-flex border-bottom mt-2">
-          <h6 className="me-1">Address:</h6>
-          <p className="m-0">
+          <p className="me-1 fs16px">Address:</p>
+          <p className="m-0 fs14px">
             C.P.-61, Viraj Khand-4, Viraj Khand, Gomti Nagar, Lucknow, Uttar
             Pradesh 226010
           </p>
         </div>
 
         <div className="d-flex border-bottom mt-2">
-          <h6 className="me-1"> Hours: </h6>
-          <p className="m-0"> Mon - Sat 9:30am-5:30pm</p>
+          <h6 className="me-1 fs16px"> Hours: </h6>
+          <p className="m-0 fs14px"> Mon - Sat 9:30am-5:30pm</p>
         </div>
 
         <div className="d-flex mt-2">

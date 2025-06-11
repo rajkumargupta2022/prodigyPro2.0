@@ -1,3 +1,10 @@
+:root {
+  --white-color: #fff;
+  --light-black-color: #303030;
+  --dark-black-color: #212121;
+  --light-white-color: #F6F8FA;
+}
+
 body{
   margin: 0px;
   padding: 0px;
@@ -5,6 +12,7 @@ body{
   font-optical-sizing: auto;
   font-style: normal;
   background-color: #F6F8FA;
+  /* background-color: #0b0b0b; */
 }
 
 
@@ -326,6 +334,15 @@ color: #4D4D4D;
   font-size: 12px;
   border:1px solid #D0DBEA;
 }
+.activeButton{
+  background-color: #011EFE;
+  color: #fff !important;
+  height: 25px ;
+  padding: 0 8px ;
+  border-radius: 20px;
+  font-size: 12px;
+  border:1px solid #D0DBEA;
+}
 .riskProfileBtn{
   background-color: #fff;
   color: #011EFE !important;
@@ -340,6 +357,34 @@ color: #4D4D4D;
   color: #fff !important;
   height: 28px ;
   padding: 0 8px ;
+  border-radius: 10px;
+  font-size: 12px;
+  border:1px solid #D0DBEA;
+}
+
+.statementBtn{
+  background-color: #fff;
+  color: #011EFE !important;
+  height: 28px ;
+  padding: 0 26px ;
+  border-radius: 10px;
+  font-size: 12px;
+  border: 1px solid #D0DBEA;
+}
+.statementBtn:hover{
+  background-color: #011EFE;
+  color: #fff !important;
+  height: 28px ;
+  padding: 0 26px;
+  border-radius: 10px;
+  font-size: 12px;
+  border:1px solid #D0DBEA;
+}
+.statementBtnActive{
+  background-color: #011EFE;
+  color: #fff !important;
+  height: 28px ;
+  padding: 0 26px;
   border-radius: 10px;
   font-size: 12px;
   border:1px solid #D0DBEA;
@@ -512,13 +557,19 @@ font-weight: 500;
   }
 
   .add_family_layout {
-    margin-left: 12%;
-    margin-right: 12%;
+    margin-left: 9%;
+    margin-right: 9%;
     margin-top: 2%;
+  }
+  .heightBtn{
+    height: 30px !important;
   }
 
   .sideBarAddFamily {
     border-radius: 2%;
+  }
+  .bgNavbar{
+    background-color: #fff;
   }
 
   .active-nav {
@@ -529,9 +580,9 @@ font-weight: 500;
 
 
   .active > a {
-    color:#0b5ed7;
+    color:#1A35FE;
     border-left: 2px solid #808eff;
-    font-weight: 800;
+    font-weight: 500;
   }
 
 
@@ -667,6 +718,13 @@ font-weight: 500;
 
 .prodgy_menu{
   font-size: 16px;
+  color: #4D4D4D;
+}
+.prodgy_menu:hover{
+  color: #1A35FE;
+}
+.active_menu{
+   color: #1A35FE;
 }
 
 .menu_list{
@@ -937,8 +995,8 @@ height:48px;
   color:#646464;
 }
 li {
-  margin-top:10px;
-  margin-bottom:10px;
+  margin-top:3px;
+  margin-bottom:3px;
 }
 
 .modal-heading {
@@ -1051,3 +1109,64 @@ input[type="number"] {
 .error-message {
   color:"red"
 }
+.circleIMg{
+  height: 55px;
+  width: 78px;
+}
+.circleImg-2{
+    height: 40px;
+  width: 60px;
+}
+.logOutBg{
+  background-color: #E6E8FF;
+    padding-left: 17px;
+    padding-top: 6px;
+    border-radius: 50%;
+}
+
+.my-portfolio-area25{
+    display: flex;
+    justify-content: space-between;
+    width: 185px;
+}
+
+.amount-area25 p{
+  font-size: 14px;
+  font-weight: 600;
+  color: #373737;
+  margin-bottom: 0px;
+  padding-bottom: 7px;
+}
+.my-port-paragraph p{
+  font-size: 12px;
+  font-weight: 500;
+  color: #212121;
+}
+
+.loader-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(255, 255, 255, 0.6); /* Light white and transparent */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+.profileCard{
+   border: 2px solid #D0DBEA80;
+   padding: 10px;
+    border-radius: 12px;
+    cursor: pointer;
+    padding-bottom: 0;
+}
+.smallModel{
+  width: 50%;
+  margin-left: 25%;
+}
+
+
+
+

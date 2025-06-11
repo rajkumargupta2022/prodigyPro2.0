@@ -1,3 +1,4 @@
+import { Navbar } from "react-bootstrap";
 import MyNavbar from "../components/Navbar";
 import { ChevronRight } from "react-bootstrap-icons";
 import { Link } from "react-router-dom";
@@ -29,20 +30,20 @@ const Account = ({ Component }: { Component: any }) => {
         <div className="row add_family_layout">
           {/* Sidebar */}
           <div className="col-md-3 col-lg-3 d-md-block sidebar sideBarAddFamily">
-            <nav className="shadow-sm rounded-4">
+            <nav className="shadow-sm rounded-4 bgNavbar">
               <div className="position-sticky">
                 <ul className="nav flex-column">
-                  {navBar.map((el) => {
+                  {navBar.map((el,i) => {
                     return (
                       <li
-                        className={`nav-item  d-flex justify-content-between align-items-center border-bottom ${
+                        className={`nav-item  d-flex justify-content-between align-items-center ${i!==5&&"border-bottom"} ${
                           pathname === el.url ? "active" : ""
                         }`}
                       >
                         <Link className="nav-link" to={el.url}>
                           {el.name}
                         </Link>
-                        <ChevronRight size={15} className="text-secondary" />
+                        <ChevronRight size={15} className="text-secondary me-3" />
                       </li>
                     );
                   })}
@@ -50,20 +51,20 @@ const Account = ({ Component }: { Component: any }) => {
               </div>
             </nav>
 
-            <nav className="shadow-sm mt-4  rounded-4">
+            <nav className="shadow-sm mt-4  rounded-4 bgNavbar">
               <div className="position-sticky">
-                <ul className="nav flex-column ">
-                  {navBar2.map((el) => {
+                <ul className="nav flex-column">
+                  {navBar2.map((el,i) => {
                     return (
                       <li
-                        className={`nav-item  d-flex justify-content-between align-items-center border-bottom ${
+                        className={`nav-item  d-flex justify-content-between  align-items-center ${i!==3&&"border-bottom"} ${
                           pathname === el.url ? "active" : ""
                         }`}
                       >
                         <Link className="nav-link" to={el.url}>
                           {el.name}
                         </Link>
-                        <ChevronRight size={15} className="text-secondary" />
+                        <ChevronRight size={15} className="text-secondary me-3" />
                       </li>
                     );
                   })}

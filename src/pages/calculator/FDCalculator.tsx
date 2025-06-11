@@ -7,7 +7,7 @@ import {
   isNotEmpty,
   minAmount,
 } from "../../services/Validated-inputs/validations";
-import { amountHandler, percentageHandler } from "../../services/calculatorsFs";
+import { amountHandler, percentageHandler } from "../../services/utils/calculatorsFs";
 
 interface ChartState {
   options: object;
@@ -18,15 +18,51 @@ interface ChartState {
 
 const FDCalculator = () => {
   const [period, setPeriod] = useState<number>(5);
-  const [investmentAmount, setInvestmentAmount] = useState<number>(0);
-  const [interestRate, setInterestRate] = useState<number>(0);
-  const [compound, setCompound] = useState<string>("1");
+  const [investmentAmount, setInvestmentAmount] = useState<number>(100000);
+  const [interestRate, setInterestRate] = useState<number>(6);
+  const [compound, setCompound] = useState<number>(12);
+  const [totalAmountInvested, setTotalAmountInvested] = useState<number>(100000);
+  const [totalInterest, setTotalInterest] = useState<number>(34885);
+  const [maturityAmount, setMaturityAmount] = useState<number>(134885);
 
   const state: ChartState = {
     options: {
+      dataLabels: {
+        enabled: false, // Disable percentage or value labels
+      },
       colors: ["#CCD2FF", "#1A35FE"],
+      tooltip: {
+        enabled: false, // Disable hover tooltip
+      },
+      labels: [`Total Interest(${totalInterest.toLocaleString("en-IN")})`,`Total amount invested(${totalAmountInvested.toLocaleString("en-IN")})`],
+      legend: {
+        show: true,
+        position: 'bottom', // ✅ Legend at bottom
+        horizontalAlign: 'center',
+        fontSize: '14px',
+        markers: {
+          width: 12,
+          height: 12,
+        },
+        onItemHover: {
+          highlightDataSeries: false, // ❌ disables slice highlight on legend hover
+        },
+      },
+      states: {
+        hover: {
+          filter: {
+            type: 'none', // Disable hover visual effect
+          },
+        },
+        active: {
+          filter: {
+            type: 'none', // Disable active (on-click) effect
+          },
+        },
+      },
+      
     },
-    series: [44, 95],
+    series: [ totalInterest,totalAmountInvested],
     colors: ["#fff", "#FF4560"],
   };
 
@@ -47,7 +83,26 @@ const FDCalculator = () => {
     ].every((value) => value === true);
 
     if (isValidated) {
-      alert("Form Submitted.");
+      let p: number = investmentAmount;
+      let t: number = period;
+      let r: number = interestRate;
+      let n: number = compound;
+      
+      let pric: number = p;
+      let amt: number = 0;
+      let inest: number = 0;
+      
+      for (let i = 1; i <= t; i++) {
+        const val1: number = 1 + r / (100 * n);
+        const val2: number = n;
+        amt = pric * Math.pow(val1, val2);
+        inest = amt - pric;
+        pric = parseFloat(amt.toFixed(0)); // Round to whole number
+      }
+      
+        setTotalAmountInvested(investmentAmount)
+      setTotalInterest(Math.round(amt - investmentAmount))
+      setMaturityAmount(Math.round(amt))
     }
   };
 
@@ -105,7 +160,7 @@ const FDCalculator = () => {
                         placeholder=""
                         value={interestRate}
                         onChange={(e) =>
-                          percentageHandler(e, 50, setInterestRate)
+                          percentageHandler(e, 20, setInterestRate)
                         }
                         validate={[isNotEmpty, minAmount(1)]}
                       />
@@ -117,12 +172,12 @@ const FDCalculator = () => {
                       <select
                         className="form-control"
                         value={compound}
-                        onChange={(e) => setCompound(e.target.value)}
+                        onChange={(e) => setCompound(Number(e.target.value))}
                       >
-                        <option value="1">Monthly</option>
-                        <option value="2">Quaterly</option>
-                        <option value="3">Half Yearly</option>
-                        <option value="4">Yearly</option>
+                        <option value={12}>Monthly</option>
+                        <option value={4}>Quaterly</option>
+                        <option value={2}>Half Yearly</option>
+                        <option value={1}>Yearly</option>
                       </select>
                     </div>
                     <button type="submit" className="customButton px-3 mt-3">
@@ -137,16 +192,16 @@ const FDCalculator = () => {
                 <div className="card-body">
                   <h5 className=" fw-normal mb-1">Result</h5>
                   <p className="fs12px mb-0 mt-3">TOTAL AMOUNT INVESTED</p>
-                  <h6 className="mt-1">₹1,00,000</h6>
+                  <h6 className="mt-1">₹{totalAmountInvested.toLocaleString("en-IN")}</h6>
                   <p className="fs12px mb-0 mt-3">TOTAL INTEREST</p>
-                  <h6 className="mt-1">₹48,985</h6>
+                  <h6 className="mt-1">₹{totalInterest.toLocaleString("en-IN")}</h6>
                   <p className="fs12px mb-0 mt-3">MATURITY AMOUNT</p>
-                  <h6 className="mt-1">₹1,48,985</h6>
+                  <h6 className="mt-1">₹{maturityAmount.toLocaleString("en-IN")}</h6>
                 </div>
               </div>
               <div className="row mt-2">
                 <div className="col-lg-12 co-sm-12 col-md-12 ">
-                  <div className="card border-0 shadow p-0">
+                  <div className="card border-0 shadow p-0 d-flex justify-content-center align-items-center">
                     <div className="card-body">
                       <div className="donut">
                         <Chart
