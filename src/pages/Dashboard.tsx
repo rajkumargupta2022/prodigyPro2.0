@@ -20,17 +20,19 @@ import { getPercentageValue } from "../services/calculation/percentageCalculate"
 const Dashboard = () => {
 
   const [openPortfolioSwitch, setOpenPortfolioSwitch] = useState<boolean>(false);
-  const [familySnapShotData, setFamilySnapShotData] = useState<familyDataType>({
-    Totalpurchase: '',
+  const [familySnapShotData, setFamilySnapShotData] = useState<familyDataType[]>([])
+  const [snapshotData, setSnapshotData] = useState<familyDataType>({
+    Totalpurchase: 0,
     Totalmarketvalue: 0,
     Finaldays: 0,
-    Finalcagr: '',
+    Finalcagr: "",
     Totaldayschange: 0,
     Gainloss: 0,
     Dividend: 0,
-    debtPercentFinal: '',
-    goldPercentFinal: '',
-    equityPercentFinal: ''
+    debtPercentFinal: "",
+    goldPercentFinal: "",
+    equityPercentFinal: "",
+    myPortfolio: false,
   })
 
   const [target, setTarget] = useState(null);
@@ -41,6 +43,8 @@ const Dashboard = () => {
   const handleClick = (event: any) => {
     setOpenPortfolioSwitch(!openPortfolioSwitch);
     setTarget(event.target);
+    console.log("=======", event.target);
+
   };
   useEffect(() => {
     familyPortfolio()
@@ -54,6 +58,19 @@ const Dashboard = () => {
       });
       if (res) {
         setFamilySnapShotData(res.finalArray)
+        let portfolioType = localStorage.getItem("portfolioType")
+        if (portfolioType === "my") {
+          let family = res.finalArray.filter((item) => item?.myPortfolio === true)
+          setSnapshotData(family[0])
+        } else if (portfolioType === "family") {
+          let family = res.finalArray.filter((item) => item?.myPortfolio !== true)
+          setSnapshotData(family[0])
+        } else {
+          let family = res.finalArray.filter((item) => item?.myPortfolio === true)
+          setSnapshotData(family[0])
+        }
+        // console.log("asdsad",family[0]);
+
       }
     }
   }
@@ -72,21 +89,21 @@ const Dashboard = () => {
                     <div className="col d-flex">
                       <h6 className="fw-semibold">PORTFOLIO SUMMARY </h6> <span className="fs12px ms-2" > As on {currentDateInStringNumber()}</span>
                     </div>
-                    <h3 className="fw-bold"><CurrencyRupee className="mb-1" />{familySnapShotData.Totalmarketvalue.toLocaleString("en-In")}<small className="fs-6 crPointer" onClick={handleClick}><ChevronDown /></small></h3>
+                    <h3 className="fw-bold"><CurrencyRupee className="mb-1" />{snapshotData.Totalmarketvalue.toLocaleString("en-In")}<small className="fs-6 crPointer" onClick={handleClick}><ChevronDown /></small></h3>
                   </div>
                   <div className="mt-2 textColor">
                     1 Day change{" "}
-                    {familySnapShotData.Totaldayschange >= 0 ? (
+                    {snapshotData.Totaldayschange >= 0 ? (
                       <span className="congratesColor">
                         <ArrowUpCircleFill />
                         <CurrencyRupee className="mb-1" />
-                        {familySnapShotData.Totaldayschange.toLocaleString("en-In")}  ({getPercentageValue(Number(familySnapShotData.Totalpurchase), familySnapShotData.Totaldayschange)}%)
+                        {snapshotData.Totaldayschange.toLocaleString("en-In")}  ({getPercentageValue(Number(snapshotData.Totalpurchase), snapshotData.Totaldayschange)}%)
                       </span>
-                    ) : familySnapShotData.Totaldayschange < 0 && (
+                    ) : snapshotData.Totaldayschange < 0 && (
                       <span className="errorColor2">
                         <ArrowDownCircleFill />
                         <CurrencyRupee className="mb-1" />
-                        {familySnapShotData.Totaldayschange.toLocaleString("en-In")} ({getPercentageValue(Number(familySnapShotData.Totalpurchase), familySnapShotData.Totaldayschange)}%)
+                        {snapshotData.Totaldayschange.toLocaleString("en-In")} ({getPercentageValue(Number(snapshotData.Totalpurchase), snapshotData.Totaldayschange)}%)
                       </span>
                     )}
                   </div>
@@ -107,6 +124,8 @@ const Dashboard = () => {
         target={target}
         refData={ref}
         familySnapShotData={familySnapShotData}
+        snapshotData={snapshotData}
+        setSnapshotData={setSnapshotData}
       />
 
       <AreYouSure />

@@ -3,47 +3,48 @@ import Overlay from 'react-bootstrap/Overlay';
 import Popover from 'react-bootstrap/Popover';
 
 import { CurrencyRupee } from "react-bootstrap-icons";
-import { useState } from 'react';
-import { familyDataType, familyResponseType, familyWiseType } from '../data-interfaces/dashboard';
-import { postRequest } from '../../services/Api/HandleApi';
-import { endPoints } from '../../services/utils/urls';
-import { errorToast } from '../../services/utils/toast';
+import { useEffect, useState } from 'react';
+import { familyDataType } from '../data-interfaces/dashboard';
+
+
 
 interface investmetProps {
   show: boolean;
   setShow: (show: boolean) => void;
   target: any;
   refData: any;
-  familySnapShotData: familyDataType
+  familySnapShotData: familyDataType[],
+  snapshotData: familyDataType,
+  setSnapshotData: (snapshotData: familyDataType) => void
 }
-const SwitchPortfolio: React.FC<investmetProps> = ({ show, setShow, target, refData, familySnapShotData }) => {
-  const [selected, setSelected] = useState<"my" | "family">("family");
-  const [familyPortfolioData, setFamilyPortfolioData] = useState<familyWiseType[]>([])
+const SwitchPortfolio: React.FC<investmetProps> = ({ show, setShow, target, refData, familySnapShotData, snapshotData, setSnapshotData }) => {
+  const [selected, setSelected] = useState<"my" | "family">("my");
+  // const [familyPortfolioData, setFamilyPortfolioData] = useState<familyWiseType[]>([])
+
+  useEffect(()=>{
+   const portfolioType = localStorage.getItem("portfolioType")
+   if(portfolioType==="family"){
+     setSelected(portfolioType)
+   }else{
+     setSelected("my")
+   }
+  },[])
 
   const handleCheckboxChange = (type: "my" | "family") => {
+    if (type === "my") {
+      localStorage.setItem("portfolioType",type)
+      let family = familySnapShotData.filter((item) => item?.myPortfolio === true)
+      setSnapshotData(family[0])
+    } else {
+      localStorage.setItem("portfolioType",type)
+      let family = familySnapShotData.filter((item) => item?.myPortfolio !== true)
+      setSnapshotData(family[0])
+    }
     setSelected(type);
     setShow(false)
-    fetchFamilyPortfoloData()
   };
 
-  const fetchFamilyPortfoloData = async () => {
-    const pan = localStorage.getItem("pan")
-    try {
-      if (pan) {
-        const res = await postRequest<familyResponseType>(endPoints.getFamilywisePortfolio, {
-          pan: "DKMPS2157D"
-        });
-        if (res) {
-          console.log("res.data.finalArray", res.finalArray);
 
-          setFamilyPortfolioData(res.finalArray)
-        }
-      }
-    } catch (err) {
-      errorToast(err)
-    }
-
-  }
 
   return (
     <div ref={refData}>
@@ -75,7 +76,7 @@ const SwitchPortfolio: React.FC<investmetProps> = ({ show, setShow, target, refD
               <div className="amount-area25">
                 <p>
                   <CurrencyRupee className="mb-1" />
-                  {familySnapShotData.Totalmarketvalue}
+                  {snapshotData.Totalmarketvalue}
                 </p>
               </div>
             </div>
@@ -100,7 +101,7 @@ const SwitchPortfolio: React.FC<investmetProps> = ({ show, setShow, target, refD
               <div className="amount-area25">
                 <p>
                   <CurrencyRupee className="mb-1" />
-                  {familySnapShotData.Totalmarketvalue.toLocaleString("en-IN")}
+                  {snapshotData.Totalmarketvalue.toLocaleString("en-IN")}
                 </p>
               </div>
             </div>

@@ -86,14 +86,14 @@ const AddFamilyMember = () => {
 
           {/* Form Section */}
           <main className="col-md-9 ms-sm-auto col-lg-9 px-md-4 py-4">
-            <h2>
-              <ArrowLeft size={25} /> Add Family Member
-            </h2>
+            <p>
+              <ArrowLeft size={25} /> Add Family Memberdsd
+            </p>
             <hr className="fw-light text-secondary" />
             <form className="card p-4 shadow-sm bg-white border-0 rounded-4">
               <div className="mb-3">
                 <button type="button" className="btn btn-outline-primary me-3">
-                  Link Account
+                  Link Accountasa
                 </button>
                 <button type="submit" className="btn btn-primary me-3">
                   Create Account

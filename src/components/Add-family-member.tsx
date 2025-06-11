@@ -10,52 +10,23 @@ function AddFamilyMember({ backButton }: { backButton: any }) {
     <>
       <OTPField show={show} setShow={setShow} />
       <main className="col-md-9 ms-sm-auto col-lg-9 px-md-4 py-4">
-        <h2>
+        <h4>
           <ArrowLeft className="crPointer" size={25} onClick={backButton} /> Add
           Family Member
-        </h2>
+        </h4>
         <hr className="fw-light text-secondary" />
         <div className="p-4 shadow-sm bg-white border-0 rounded-4">
           <div className="d-flex">
-            <div className="me-2">
-              <input
-                type="radio"
-                className="btn-check"
-                name="options"
-                id="option3"
-                autoComplete="off"
-                onChange={() => setAccountState("link")}
-              />
-              <label
-                className="btn btn-outline-primary declaration-button w-100 paddingLeftRight"
-                htmlFor="option3"
-              >
-                Link Account
-              </label>
-            </div>
+            <button type="button" className={`btn statementBtn ${accountState=="link"&&"statementBtnActive"} mx-1`} onClick={() => setAccountState("link")}>Link Account</button>
+           
 
-            <div>
-              <input
-                type="radio"
-                className="btn-check"
-                name="options"
-                id="option1"
-                autoComplete="off"
-                onChange={() => setAccountState("")}
-              />
-              <label
-                className="btn btn-outline-primary declaration-button w-100 paddingLeftRight"
-                htmlFor="option1"
-              >
-                Create Account
-              </label>
-            </div>
+             <button type="button" className={`btn statementBtn ${accountState==""&&"statementBtnActive"} mx-1`} onClick={() => setAccountState("")}>Create Account</button>
           </div>
 
           {accountState == "link" ? (
             <div className="mt-4">
               <div className="form-group">
-                <label className="text-secondary" htmlFor="relationship">
+                <label className="fs12px" htmlFor="relationship">
                   RELATIONSHIP
                 </label>
                 <select className="form-control" id="relationship">
@@ -69,7 +40,7 @@ function AddFamilyMember({ backButton }: { backButton: any }) {
               </div>
 
               <div className="mt-2">
-                <label className="text-secondary" htmlFor="pan-number">
+                <label className="fs12px" htmlFor="pan-number">
                   PAN NUMBER
                 </label>
                 <input
@@ -82,10 +53,10 @@ function AddFamilyMember({ backButton }: { backButton: any }) {
 
               <button
                 type="button"
-                className="customButton align-items-end px-2 mb-3 mt-3"
+                className="customButton align-items-end px-3 mb-3 mt-3"
                 onClick={() => setShow(true)}
               >
-                + Verify Account
+                Verify Account
               </button>
             </div>
           ) : (
@@ -129,17 +100,16 @@ function AddFamilyMember({ backButton }: { backButton: any }) {
         {!accountState && (
           <div className="mt-2">
             <h6>Note:</h6>
-            <p>
-              Note: Please be ready with these documents before creation of
+            <p className="fs14px">Please be ready with these documents before creation of
               Minor's profile to mention the bank account details and upload the
               bank and birth proof-
             </p>
-            <p>
+            <p className="fs14px">
               1. Bank Account should be in the name of Minor it can either be
               Jointly or under the guardianship of the same person as you have
               selected in profile.
             </p>
-            <p>2. Guardian name must be there in the birthproof.</p>
+            <p className="fs14px">2. Guardian name must be there in the birthproof.</p>
           </div>
         )}
       </main>

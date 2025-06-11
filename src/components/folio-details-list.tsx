@@ -11,23 +11,23 @@ function FolioDetails({ activeInactive }: { activeInactive: any }) {
 
         <div className="d-flex justify-content-between">
           <div>
-            <span className="text-secondary">INVESTED</span>
+            <span className="text-secondary fs14px">INVESTED</span>
             <br />
-            <span className="value-font2">₹5.31K</span>
+            <span className="value-font2 fs16px">₹5.31K</span>
           </div>
 
           <div>
-            <span className="text-secondary">CURRENT VALUE</span>
+            <span className="text-secondary fs14px">CURRENT VALUE</span>
             <br />
             <span className="value-font2">
-              <span className="value-font2">₹5.31K</span>
+              <span className="value-font2 fs16px">₹5.31K</span>
             </span>
           </div>
 
           <div>
-            <span className="text-secondary">FUNDS #</span>
+            <span className="text-secondary fs14px">FUNDS #</span>
             <br />
-            <span className="value-font2">2</span>
+            <span className="value-font2 fs16px">2</span>
           </div>
         </div>
       </div>

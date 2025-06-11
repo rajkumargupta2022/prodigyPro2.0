@@ -1,7 +1,7 @@
 import HDFC from "../assets/img/bank-logo/icici.png";
 import { ChevronDown } from "react-bootstrap-icons";
 
-function ElssInvestments() {
+function MyTransactions() {
   return (
     <>
       <div className="d-flex justify-content-between mb-3 align-items-center">
@@ -19,6 +19,7 @@ function ElssInvestments() {
         className="p-4 shadow-sm bg-white border-0 rounded-4 mb-2"
         // onClick={() => navigate("/order-timeline")}
       >
+        
         <div className="d-flex justify-content-around">
           <img src={HDFC} alt="Image not found" />
           <div className="ms-2" style={{ flex: 4 }}>
@@ -140,4 +141,4 @@ function ElssInvestments() {
   );
 }
 
-export default ElssInvestments;
+export default MyTransactions;
