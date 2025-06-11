@@ -41,9 +41,11 @@ const Dashboard = () => {
 
 
   const handleClick = (event: any) => {
+    if(familySnapShotData.length>1){
     setOpenPortfolioSwitch(!openPortfolioSwitch);
     setTarget(event.target);
-    console.log("=======", event.target);
+    }
+
 
   };
   useEffect(() => {
@@ -89,21 +91,21 @@ const Dashboard = () => {
                     <div className="col d-flex">
                       <h6 className="fw-semibold">PORTFOLIO SUMMARY </h6> <span className="fs12px ms-2" > As on {currentDateInStringNumber()}</span>
                     </div>
-                    <h3 className="fw-bold"><CurrencyRupee className="mb-1" />{snapshotData.Totalmarketvalue.toLocaleString("en-In")}<small className="fs-6 crPointer" onClick={handleClick}><ChevronDown /></small></h3>
+                    <h3 className="fw-bold"><CurrencyRupee className="mb-1" />{snapshotData?.Totalmarketvalue.toLocaleString("en-In")}{familySnapShotData.length>1&&<small className="fs-6 crPointer" onClick={handleClick}><ChevronDown /></small>}</h3>
                   </div>
                   <div className="mt-2 textColor">
                     1 Day change{" "}
-                    {snapshotData.Totaldayschange >= 0 ? (
+                    {snapshotData?.Totaldayschange >= 0 ? (
                       <span className="congratesColor">
                         <ArrowUpCircleFill />
                         <CurrencyRupee className="mb-1" />
-                        {snapshotData.Totaldayschange.toLocaleString("en-In")}  ({getPercentageValue(Number(snapshotData.Totalpurchase), snapshotData.Totaldayschange)}%)
+                        {snapshotData?.Totaldayschange.toLocaleString("en-In")}  ({getPercentageValue(Number(snapshotData?.Totalpurchase), snapshotData?.Totaldayschange)}%)
                       </span>
-                    ) : snapshotData.Totaldayschange < 0 && (
+                    ) : snapshotData?.Totaldayschange < 0 && (
                       <span className="errorColor2">
                         <ArrowDownCircleFill />
                         <CurrencyRupee className="mb-1" />
-                        {snapshotData.Totaldayschange.toLocaleString("en-In")} ({getPercentageValue(Number(snapshotData.Totalpurchase), snapshotData.Totaldayschange)}%)
+                        {snapshotData?.Totaldayschange.toLocaleString("en-In")} ({getPercentageValue(Number(snapshotData?.Totalpurchase), snapshotData?.Totaldayschange)}%)
                       </span>
                     )}
                   </div>

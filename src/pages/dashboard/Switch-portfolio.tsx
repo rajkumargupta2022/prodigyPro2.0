@@ -33,11 +33,16 @@ const SwitchPortfolio: React.FC<investmetProps> = ({ show, setShow, target, refD
   const handleCheckboxChange = (type: "my" | "family") => {
     if (type === "my") {
       localStorage.setItem("portfolioType",type)
-      let family = familySnapShotData.filter((item) => item?.myPortfolio === true)
+      console.log("mytype",type);
+      
+      let family = familySnapShotData?.filter((item) => item?.myPortfolio === true)
+      console.log("myyyy",family);
       setSnapshotData(family[0])
     } else {
       localStorage.setItem("portfolioType",type)
-      let family = familySnapShotData.filter((item) => item?.myPortfolio !== true)
+      console.log("familytype",type);
+      let family = familySnapShotData?.filter((item) => item?.myPortfolio !== true)
+      console.log("family",family);
       setSnapshotData(family[0])
     }
     setSelected(type);
@@ -76,7 +81,7 @@ const SwitchPortfolio: React.FC<investmetProps> = ({ show, setShow, target, refD
               <div className="amount-area25">
                 <p>
                   <CurrencyRupee className="mb-1" />
-                  {snapshotData.Totalmarketvalue}
+                  {snapshotData?.Totalmarketvalue}
                 </p>
               </div>
             </div>
@@ -101,7 +106,7 @@ const SwitchPortfolio: React.FC<investmetProps> = ({ show, setShow, target, refD
               <div className="amount-area25">
                 <p>
                   <CurrencyRupee className="mb-1" />
-                  {snapshotData.Totalmarketvalue.toLocaleString("en-IN")}
+                  {snapshotData?.Totalmarketvalue.toLocaleString("en-IN")}
                 </p>
               </div>
             </div>
