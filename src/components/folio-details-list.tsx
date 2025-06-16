@@ -1,9 +1,14 @@
-function FolioDetails({ activeInactive }: { activeInactive: any }) {
+import { Link } from "react-router-dom";
+
+function FolioDetailsList({ activeInactive }: { activeInactive: any }) {
+    
+
   return (
     <>
+      <Link to={"/folio-details"}>
       <div
         className="p-4 shadow-sm bg-white border-0 rounded-4 mb-2"
-        onClick={() => activeInactive("order-timeline")}
+        
       >
         <h6 style={{ margin: 0 }} className="sub-heading fs16px">
           Kamini Gupta - 24324321
@@ -31,6 +36,7 @@ function FolioDetails({ activeInactive }: { activeInactive: any }) {
           </div>
         </div>
       </div>
+      </Link>
 
       <div
         className="p-4 shadow-sm bg-white border-0 rounded-4 mb-2"
@@ -97,4 +103,4 @@ function FolioDetails({ activeInactive }: { activeInactive: any }) {
   );
 }
 
-export default FolioDetails;
+export default FolioDetailsList;

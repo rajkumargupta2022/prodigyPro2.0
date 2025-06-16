@@ -24,26 +24,27 @@ function BankDetails({ backButton }: { backButton: any }) {
           </div>
         </div>
 
-        <div className="d-flex justify-content-between mt-2">
-          <div>
+        <div className="row justify-content-between mt-2">
+
+          <div className="col-lg-3 col-md-4 col-12 py-lg-0 py-1">
             <span className="text-secondary">ACCOUNT NUMBER</span>
             <br />
             <span className="value-font2">24566522141267</span>
           </div>
 
-          <div>
+          <div className="col-lg-3 col-md-4 col-12 py-lg-0 py-1">
             <span className="text-secondary">IFSC CODE</span>
             <br />
             <span className="value-font2">SBIN000121</span>
           </div>
 
-          <div>
+          <div className="col-lg-3 col-md-4 col-12 py-lg-0 py-1">
             <span className="text-secondary">BRANCH NAME</span>
             <br />
             <span className="value-font2">Bhukum pune </span>
           </div>
 
-          <div>
+          <div className="col-lg-3 col-md-4 col-12 py-lg-0 py-1">
             <span className="text-secondary">ACCOUNT TYPE</span>
             <br />
             <span className="value-font2">Saving</span>
@@ -56,26 +57,26 @@ function BankDetails({ backButton }: { backButton: any }) {
       <div className="p-4 shadow-sm bg-white border-0 rounded-4 mb-2">
         <h6 style={{ margin: 0 }}>Existing Mandate</h6>
 
-        <div className="d-flex justify-content-between mt-2">
-          <div>
+        <div className="row justify-content-between mt-2">
+          <div className="col-lg-3 col-md-4 col-12 py-lg-0 py-1">
             <span className="text-secondary">URMN NO</span>
             <br />
             <span className="value-font2">24566522141267</span>
           </div>
 
-          <div>
+          <div className="col-lg-3 col-md-4 col-12 py-lg-0 py-1">
             <span className="text-secondary">AMOUNT</span>
             <br />
             <span className="value-font2">25,000</span>
           </div>
 
-          <div>
+          <div className="col-lg-3 col-md-4 col-12 py-lg-0 py-1">
             <span className="text-secondary">FROM</span>
             <br />
             <span className="value-font2">10 Jan 2023</span>
           </div>
 
-          <div>
+          <div className="col-lg-3 col-md-4 col-12 py-lg-0 py-1">
             <span className="text-secondary">To</span>
             <br />
             <span className="value-font2">31 Dec 2099</span>

@@ -1,8 +1,15 @@
 import { ArrowLeft, Upload } from "react-bootstrap-icons";
+import CreateMandate from "./create-mandate";
+import { useState } from "react";
+
 
 function AddAccountVerification({ backButton }: { backButton: any }) {
+   const [show, setShow] = useState(false);
+
+
   return (
     <main className="col-md-9 ms-sm-auto col-lg-9 px-md-4 py-4">
+       <CreateMandate setShow={setShow} show={show} />
       <h2>
         <ArrowLeft className="crPointer" size={25} onClick={backButton} />
         Add Bank Account
@@ -60,7 +67,7 @@ function AddAccountVerification({ backButton }: { backButton: any }) {
         </ul>
       </div>
 
-      <button className="mandate-button mt-4">Submit</button>
+      <button className="mandate-button mt-4" onClick={()=>setShow(true)}>Submit</button>
     </main>
   );
 }

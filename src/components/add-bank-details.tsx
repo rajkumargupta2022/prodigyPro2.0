@@ -1,4 +1,6 @@
 import { ArrowLeft } from "react-bootstrap-icons";
+import { useNavigate } from "react-router-dom";
+
 
 function AddBankDetails({
   backButton,
@@ -7,7 +9,11 @@ function AddBankDetails({
   backButton: any;
   activeInactive: any;
 }) {
-  return (
+
+  const navigate = useNavigate();
+
+  
+    return (
     <main className="col-md-9 ms-sm-auto col-lg-9 px-md-4 py-4">
       <h2>
         <ArrowLeft className="crPointer" size={25} onClick={backButton} />
@@ -36,6 +42,7 @@ function AddBankDetails({
         <div>
           <label className="form-label">ACCOUNT TYPE</label>
           <div className="d-flex mb-4">
+
             <div className="me-2">
               <input
                 type="radio"
@@ -46,7 +53,7 @@ function AddBankDetails({
                 checked
               />
               <label
-                className="btn btn-outline-primary declaration-button w-100 paddingLeftRight"
+                className="btn btn_colorfull btn-outline-primary declaration-button w-100 paddingLeftRight py-1 px-lg-5 px-md-2 px-2"
                 htmlFor="option1"
               >
                 Saving Account
@@ -62,7 +69,7 @@ function AddBankDetails({
                 autoComplete="off"
               />
               <label
-                className="btn btn-outline-primary declaration-button w-100 paddingLeftRight"
+                className="btn btn-outline-primary declaration-button w-100 paddingLeftRight py-1 px-lg-5 px-md-2 px-2"
                 htmlFor="option2"
               >
                 Current Account
@@ -99,7 +106,7 @@ function AddBankDetails({
 
       <button
         className="mandate-button mt-2"
-        onClick={() => activeInactive("add-verification-details")}
+        onClick={() => navigate("/add-verification-details")}
       >
         Create e-Mandate
       </button>

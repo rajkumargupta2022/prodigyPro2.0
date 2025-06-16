@@ -41,7 +41,7 @@ const MyNavbar = () => {
         <Navbar.Collapse className="justify-content-end" id="navbarScroll">
           <Nav
             className=" my-lg-0 menu_list"
-            style={{ maxHeight: "100px" }}
+            style={{ maxHeight: "100vh" }}
             navbarScroll
           >
             <Link className={`prodgy_menu m-2 ${location.pathname==="/dashboard" && "active_menu"}`} to={"/dashboard"}>

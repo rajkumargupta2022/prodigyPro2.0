@@ -9,7 +9,8 @@ function LocateUs() {
       </h2>
       <hr className="fw-light text-secondary" />
 
-      <img src={Map} alt="image not found" className="mb-2 w-100" height={211}/>
+      <img src={Map} alt="image not found" className="mb-2 img-fluid" height={211}/>
+      
 
       <div className="p-4 shadow-sm bg-white border-0 rounded-4 mt-4">
         <h6>BFC Capital Pvt Ltd.</h6>
@@ -27,8 +28,8 @@ function LocateUs() {
           <span className="fs14px">44 Google Reviews</span>
         </div>
 
-        <div className="d-flex border-bottom mt-2">
-          <p className="me-1 fs16px">Address:</p>
+        <div className="d-md-flex border-bottom mt-2">
+          <p className="me-1 fs16px mb-0">Address:</p>
           <p className="m-0 fs14px">
             C.P.-61, Viraj Khand-4, Viraj Khand, Gomti Nagar, Lucknow, Uttar
             Pradesh 226010

@@ -8,7 +8,7 @@ const AddFamilyMember = () => {
     <>
       <MyNavbar />
       <div className="container-fluid">
-        <div className="row add_family_layout">
+        <div className="row add_family_layout mx-lg-5 mx-md-3 mx-0">
           {/* Sidebar */}
           <div className="col-md-3 col-lg-3 d-md-block sidebar sideBarAddFamily">
             <nav className="shadow-sm rounded-4">

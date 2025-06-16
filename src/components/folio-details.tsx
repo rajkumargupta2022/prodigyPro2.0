@@ -1,11 +1,11 @@
 import { ArrowLeft } from "react-bootstrap-icons";
 import HDFC from "../assets/img/icons/hdfc.svg";
 
-function FolioDetails({ backButton }: { backButton: any }) {
+function FolioDetails() {
   return (
     <main className="col-md-9 ms-sm-auto col-lg-9 px-md-4 py-4">
       <h2>
-        <ArrowLeft className="crPointer" size={25} onClick={backButton} />
+        <ArrowLeft className="crPointer" size={25}/>
         Folio details
       </h2>
       <hr className="fw-light text-secondary " />

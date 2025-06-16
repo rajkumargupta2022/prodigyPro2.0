@@ -1,5 +1,5 @@
 import { ArrowLeft } from "react-bootstrap-icons";
-import FolioDetails from "./folio-details-list";
+import FolioDetailsList from "./folio-details-list";
 import MySipStpSwp from "./Sip-Stp-Swp";
 import Dividends from "./Dividends";
 
@@ -17,7 +17,7 @@ function Statements({
   const renderCompo = () => {
     switch (active) {
       case "folio-details":
-        return <FolioDetails activeInactive={activeInactive} />;
+        return <FolioDetailsList activeInactive={activeInactive} />;
       case "sip-stp-swp":
         return <MySipStpSwp />;
            case "my-transactions":
@@ -36,11 +36,11 @@ function Statements({
       <hr className="fw-light text-secondary" />
       <div className="d-flex justify-content-around mb-4 row">
         <div className="col-lg-12 col-sm-md-6 my-1">
-          <button type="button" className={`btn statementBtn ${active=="folio-details"&&"statementBtnActive"} mx-1`} onClick={() => setActive("folio-details")}>Folio Details</button>
-          <button type="button" className={`btn statementBtn ${active=="sip-stp-swp"&&"statementBtnActive"} mx-1`} onClick={() => setActive("sip-stp-swp")}>My SIP STP SWP</button>
-          <button type="button" className={`btn statementBtn ${active=="my-transactions"&&"statementBtnActive"} mx-1`} onClick={() => setActive("my-transactions")}>My Transactions</button>
-          <button type="button" className={`btn statementBtn ${active=="folio-details"&&"statementBtnActive"} mx-1`} onClick={() => setActive("swp")}> Capital Gains</button>
-          <button type="button" className={`btn statementBtn ${active=="folio-details"&&"statementBtnActive"} mx-1`} onClick={() => setActive("dividends")}> Portfolio (via Email)</button>
+          <button type="button" className={`btn statementBtn ${active=="folio-details"&&"statementBtnActive"} mx-1 my-md-0 my-1`} onClick={() => setActive("folio-details")}>Folio Details</button>
+          <button type="button" className={`btn statementBtn ${active=="sip-stp-swp"&&"statementBtnActive"} mx-1 my-md-0 my-1`} onClick={() => setActive("sip-stp-swp")}>My SIP STP SWP</button>
+          <button type="button" className={`btn statementBtn ${active=="my-transactions"&&"statementBtnActive"} mx-1 my-md-0 my-1`} onClick={() => setActive("my-transactions")}>My Transactions</button>
+          <button type="button" className={`btn statementBtn ${active=="folio-details"&&"statementBtnActive"} mx-1 my-md-0 my-1`} onClick={() => setActive("swp")}> Capital Gains</button>
+          <button type="button" className={`btn statementBtn ${active=="folio-details"&&"statementBtnActive"} mx-1 my-md-0 my-1`} onClick={() => setActive("dividends")}> Portfolio (via Email)</button>
         </div>
 
 

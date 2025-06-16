@@ -27,7 +27,7 @@ function SWPOrderDetails({ backButton }: { backButton: any }) {
         </div>
         <div className="d-flex justify-content-between mb-2">
           <span className="text-secondary">LINKED BANK ACCOUNT</span>
-          <span className="value-font2">HDFC Bank ****1267</span>
+          <span className="value-font2 text-end">HDFC Bank ****1267</span>
         </div>
         <div className="d-flex justify-content-between mb-2">
           <span className="text-secondary">SWP REGISTERED ON</span>

@@ -3,6 +3,7 @@ import SBI from "../assets/img/icons/sbi.png";
 import HDFC from "../assets/img/icons/hdfc.svg";
 import ICI from "../assets/img/icons/ici.svg";
 import Arun from "../assets/img/icons/arun.svg";
+import { Link } from "react-router-dom"
 
 function AddBankAccount({
   backButton,
@@ -35,72 +36,69 @@ function AddBankAccount({
 
       <div className="p-4 shadow-sm bg-white border-0 rounded-4 mb-2 mt-2">
         <div className="row">
-          <div className="col-md-2 text-center">
-            <img
-              src={SBI}
-              alt="image not found"
-              onClick={() => activeInactive("add-bank-details")}
-            />
+
+          <div className="col-lg-2 col-md-3 col-6 text-center py-lg-2 py-1">
+            <Link to={"/add-bank-details"}>
+              <img
+                src={SBI}
+                alt="image not found"
+
+              />
+            </Link>
             <div>
               <span className="bank-name">State Bank Of India</span>
             </div>
           </div>
-
-          <div className="col-md-2 text-center">
+          <div className="col-lg-2 col-md-3 col-6 text-center  py-lg-2 py-1">
             <img src={HDFC} alt="image not found" />
             <div>
               <span className="bank-name">HDFC</span>
             </div>
           </div>
-
-          <div className="col-md-2 text-center">
+          <div className="col-lg-2 col-md-3 col-6 text-center  py-lg-2 py-1">
             <img src={ICI} alt="image not found" />
             <div>
               <span className="bank-name">ICICI</span>
             </div>
           </div>
-
-          <div className="col-md-2 text-center">
+          <div className="col-lg-2 col-md-3 col-6 text-center  py-lg-2 py-1">
             <img src={HDFC} alt="image not found" />
             <div>
               <span className="bank-name">HDFC</span>
             </div>
           </div>
-          <div className="col-md-2 text-center">
+          <div className="col-lg-2 col-md-3 col-6 text-center  py-lg-2 py-1">
             <img src={ICI} alt="image not found" />
             <div>
               <span className="bank-name">ICICI</span>
             </div>
           </div>
-          <div className="col-md-2 text-center">
+          <div className="col-lg-2 col-md-3 col-6 text-center  py-lg-2 py-1">
             <img src={HDFC} alt="image not found" />
             <div>
               <span className="bank-name">HDFC</span>
             </div>
           </div>
-        </div>
-        <div className="row mt-4">
-          <div className="col-md-2 text-center">
+          <div className="col-lg-2 col-md-3 col-6 text-center  py-lg-2 py-1">
             <img src={SBI} alt="image not found" />
             <div>
               <span className="bank-name">State Bank Of India</span>
             </div>
           </div>
-
-          <div className="col-md-2 text-center">
+          <div className="col-lg-2 col-md-3 col-6 text-center  py-lg-2 py-1">
             <img src={HDFC} alt="image not found" />
             <div>
               <span className="bank-name">HDFC</span>
             </div>
           </div>
-
-          <div className="col-md-2 text-center">
+          <div className="col-lg-2 col-md-3 col-6 text-center  py-lg-2 py-1">
             <img src={ICI} alt="image not found" />
             <div>
               <span className="bank-name">ICICI</span>
             </div>
           </div>
         </div>
+
       </div>
 
       <div className="shadow-sm bg-white border-0 rounded-4 mb-2">

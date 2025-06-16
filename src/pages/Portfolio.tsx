@@ -9,8 +9,10 @@ import { endPoints, imageUrl } from "../services/utils/urls";
 import { currentDateInStringNumber } from "../services/dates/dateFormater";
 import { getPercentageValue, getValueInThousand } from "../services/calculation/percentageCalculate";
 import { detailPortfolioSchemeType, detailPortfolioType } from "./data-interfaces/portfolio";
+import { useNavigate } from "react-router-dom";
 
 const Portfolio = () => {
+  const navigate = useNavigate()
   const [openSchemeDetail, setOpenSchemeDetail] = useState<boolean>(false)
   const [portfolioDetailData, setPortfolioDetailData] = useState<detailPortfolioSchemeType[]>([])
   const [snapshotData, setSnapshotData] = useState<familyDataType>({
@@ -49,7 +51,7 @@ const Portfolio = () => {
   }
   const fetchDetailedPortfolio = async (pan: string) => {
     let reqBody = {
-      name: "SUNIL KUMAR GUPTA",
+      name: "RAJKUMAR GUPTA",
       pan,
       gpan: ""
     }
@@ -110,7 +112,7 @@ const Portfolio = () => {
 
       {portfolioDetailData.length && portfolioDetailData.map((item) => {
         return (
-          <div className="container py-2">
+          <div className="container py-2" onClick={()=>navigate("/fund-details")}>
             <div className="personal_form_container">
               <div className="borderColor p-3 rounded-4 bg-white">
                 <div className="d-flex justify-content-between">

@@ -74,6 +74,8 @@ import Loader from "./services/Loader/Loader";
 import { LoaderProvider, useLoader } from "./context/LoaderContext";
 import { registerLoaderCallbacks } from "./services/Loader/LoaderController";
 import React from "react";
+import StateFolioDetails from "./components/statement-folio-details";
+import NoFolioFounds from "./components/no-folio-found";
 
 
 const LoaderHandler = () => {
@@ -100,6 +102,8 @@ function App() {
         <Routes>
 
           <Route path="/" element={<Login />} />
+          <Route path="/folio-details" element={<Account Component={StateFolioDetails} />}/>
+          <Route path="/no-folio-founs" element={<Account Component={NoFolioFounds} />}/>
           <Route path="/personal-details" element={<PersonalDetails />} />
           <Route path="/pan-varification" element={<PanVarification />} />
           <Route path="/dashboard" element={<Dashboard />} />
@@ -183,12 +187,12 @@ function App() {
           />
 
           <Route
-            path="/bank-details"
+            path="/bank-details-show"
             element={<Account Component={BankDetailsC} />}
           />
 
           <Route
-            path="/add-bank-account"
+            path="/add-bank-account-list"
             element={<Account Component={AddBankAccount} />}
           />
 

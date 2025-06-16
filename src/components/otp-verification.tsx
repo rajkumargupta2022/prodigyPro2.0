@@ -7,7 +7,7 @@ function OTPVerification({ setActive }) {
     <div className="p-4 mb-2">
       <span className="sub-heading ">Verify OTP</span>
       <p className="note mt-4">OTP sent to example.gupta@example.com</p>
-      <div className="mb-3 row w-50 mt-4">
+      <div className="mb-3 row w-50 mt-4 otp-input-field">
         <OtpInput
           value={otp}
           inputStyle="col otpBox2 "

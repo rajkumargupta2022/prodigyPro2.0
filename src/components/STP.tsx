@@ -12,17 +12,24 @@ function STP() {
         onClick={() => navigate("/stp-order")}
         className="p-4 shadow-sm bg-white border-0 rounded-4 mb-2"
       >
-        <div className="d-flex justify-content-around">
-          <img src={SBI} alt="Image not found" />
-          <div className="ms-2" style={{ flex: 4 }}>
-            <h6 style={{ margin: 0 }}>
-              Canara Recobo Multi Cap Fund - Regular (G)
-            </h6>
-            <span className="text-secondary">
-              Folio : <span className="value-font">3232553235</span>
-            </span>
+
+        <div className="row justify-content-between">
+          <div className="col-lg-8 col-md-8 col-12 py-2">
+            <div className="d-flex">
+              <img src={SBI} alt="Image not found" />
+              <div className="ms-2" style={{ flex: 4 }}>
+                <h6 style={{ margin: 0 }}>
+                  Canara Recobo Multi Cap Fund - Regular (G)
+                </h6>
+                <span className="text-secondary">
+                  Folio : <span className="value-font">3232553235</span>
+                </span>
+              </div>
+            </div>
           </div>
-          <span className="success-badge">Active</span>
+          <div className="col-lg-4 col-md-4 col-12 py-2 text-md-end text-start">
+            <span className="success-badge">Active</span>
+          </div>
         </div>
 
         <div className="position-relative text-center my-4">
@@ -32,15 +39,22 @@ function STP() {
           </button>
         </div>
 
-        <div className="d-flex justify-content-around">
-          <img src={SBI} alt="Image not found" />
-          <div className="ms-2" style={{ flex: 4 }}>
-            <h6 style={{ margin: 0 }}>
-              Canara Recobo Multi Cap Fund - Regular (G)
-            </h6>
-            <span className="text-secondary">
-              Folio : <span className="value-font">3232553235</span>
-            </span>
+        <div className="row justify-content-between">
+          <div className="col-lg-8 col-md-8 col-12 py-2">
+            <div className="d-flex">
+              <img src={SBI} alt="Image not found" />
+              <div className="ms-2" style={{ flex: 4 }}>
+                <h6 style={{ margin: 0 }}>
+                  Canara Recobo Multi Cap Fund - Regular (G)
+                </h6>
+                <span className="text-secondary">
+                  Folio : <span className="value-font">3232553235</span>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div className="col-lg-4 col-md-4 col-12 py-2 text-md-end text-start">
+           
           </div>
         </div>
 
@@ -66,21 +80,29 @@ function STP() {
           </div>
         </div>
       </div>
+
       <div
         className="p-4 shadow-sm bg-white border-0 rounded-4 mb-2"
         onClick={() => navigate("/stp-order")}
       >
-        <div className="d-flex justify-content-around">
-          <img src={DSP} alt="Image not found" />
-          <div className="ms-2" style={{ flex: 4 }}>
-            <h6 style={{ margin: 0 }}>
-              Canara Recobo Multi Cap Fund - Regular (G)
-            </h6>
-            <span className="text-secondary">
-              Folio : <span className="value-font">3232553235</span>
-            </span>
+ 
+         <div className="row justify-content-between">
+          <div className="col-lg-8 col-md-8 col-12 py-2">
+            <div className="d-flex">
+              <img src={DSP} alt="Image not found" />
+              <div className="ms-2" style={{ flex: 4 }}>
+                <h6 style={{ margin: 0 }}>
+                  Canara Recobo Multi Cap Fund - Regular (G)
+                </h6>
+                <span className="text-secondary">
+                  Folio : <span className="value-font">3232553235</span>
+                </span>
+              </div>
+            </div>
           </div>
-          <span className="success-badge">Active</span>
+          <div className="col-lg-4 col-md-4 col-12 py-2 text-md-end text-start">
+            <span className="success-badge">Active</span>
+          </div>
         </div>
 
         <div className="position-relative text-center my-4">
@@ -90,15 +112,22 @@ function STP() {
           </button>
         </div>
 
-        <div className="d-flex justify-content-around">
-          <img src={DSP} alt="Image not found" />
-          <div className="ms-2" style={{ flex: 4 }}>
-            <h6 style={{ margin: 0 }}>
-              Canara Recobo Multi Cap Fund - Regular (G)
-            </h6>
-            <span className="text-secondary">
-              Folio : <span className="value-font">3232553235</span>
-            </span>
+         <div className="row justify-content-between">
+          <div className="col-lg-8 col-md-8 col-12 py-2">
+            <div className="d-flex">
+              <img src={DSP} alt="Image not found" />
+              <div className="ms-2" style={{ flex: 4 }}>
+                <h6 style={{ margin: 0 }}>
+                  Canara Recobo Multi Cap Fund - Regular (G)
+                </h6>
+                <span className="text-secondary">
+                  Folio : <span className="value-font">3232553235</span>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div className="col-lg-4 col-md-4 col-12 py-2 text-md-end text-start">
+            
           </div>
         </div>
 

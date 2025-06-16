@@ -32,7 +32,7 @@ function Profile() {
         </div>
 
         <div className="row">
-          <div className="col-lg-4 col-md-6 col-sm-12">
+          <div className="col-lg-4 col-md-6 col-sm-12 py-2">
             <div
               className="profileCard"
             >
@@ -42,7 +42,7 @@ function Profile() {
               <p className="logoBlueColor">Switch Profile</p>
             </div>
           </div>
-           <div className="col-lg-4 col-md-6 col-sm-12">
+           <div className="col-lg-4 col-md-6 col-sm-12 py-2">
             <div
               className="profileCard"
             >
@@ -52,7 +52,7 @@ function Profile() {
               <p className="logoBlueColor">Switch Profile</p>
             </div>
           </div>
-           <div className="col-lg-4 col-md-6 col-sm-12">
+           <div className="col-lg-4 col-md-6 col-sm-12 py-2">
             <div
               className="profileCard"
             >
