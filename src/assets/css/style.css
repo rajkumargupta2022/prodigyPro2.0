@@ -1272,6 +1272,10 @@ input[type="number"] {
     width: 40px !important;
     height: 40px;
   }
+
+  .mobile-fontset{
+    font-size: 13px;
+  }
 }
 
 .btn_colorfull{
@@ -1282,4 +1286,28 @@ input[type="number"] {
 .btn-check:checked+.btn{
   background-color: #011EFE !important;
   color: #f1f1f1 !important;
+}
+
+
+.dotted_sip_prodyg svg{
+  font-size: 16px;
+}
+.port_holding_etails h1{
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.prod_sip_22{
+ background-color: #E6E8FF;
+ border-radius: 25px;
+ padding: 2px 10px;
+}
+.prod_sip_22 span{
+  font-size: 13px;
+  font-weight: 500;
+  color: #1A35FE;
+}
+
+span.text-secondary.text-uppercase.fs-7 {
+    font-size: 13px;
 }
