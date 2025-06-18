@@ -34,35 +34,37 @@ const Explore = () => {
           style={{ border: "none", borderRadius: "16px" }}
         >
           <h4 className="mb-4 fw-bold fs16px">Discover Funds</h4>
-          <div className="d-flex justify-content-between">
-            <div className="text-center">
+          <div className="grid-exploreprodgy justify-content-between">
+
+            <div className="py-2 text-center">
               <img src={Rupee} alt="" width={28} height={28} />
               <h6 className="fs14pxBlack">Start with ₹100</h6>
             </div>
-            <div className="text-center">
+            <div className="py-2 text-center">
               <img src={Star} alt="" width={28} height={28} />
               <h6 className="fs14pxBlack">Best Return Funds</h6>
             </div>
-            <div className="text-center">
+            <div className="py-2 text-center">
               <img src={Award} alt="" width={28} height={28} />
               <h6 className="fs14pxBlack">Top Rated Funds</h6>
             </div>
-            <div className="text-center">
+            <div className="py-2 text-center">
               <img src={Tax} alt="" width={28} height={28} />
               <h6 className="fs14pxBlack">Tax Saver</h6>
             </div>
-            <div className="text-center">
+            <div className="py-2 text-center">
               <img src={EquityFund} alt="" width={28} height={28} />
               <h6 className="fs14pxBlack">Equity Funds</h6>
             </div>
-            <div className="text-center">
+            <div className="py-2 text-center">
               <img src={DebtFund} alt="" width={28} height={28} />
               <h6 className="fs14pxBlack">Debt Funds</h6>
             </div>
-            <div className="text-center" onClick={()=>{navigate("/all-mutual-funds")}}>
+            <div className="py-2 text-center" onClick={()=>{navigate("/all-mutual-funds")}}>
               <img src={DebtFund} alt="" width={28} height={28} />
               <h6 className="fs14pxBlack">Explore All</h6>
             </div>
+
           </div>
         </div>
 
@@ -75,7 +77,7 @@ const Explore = () => {
               <div className="fw-semibold">Popular Funds</div>
             </div>
             <div className="col-12 mt-2">
-              <button type="button" className="btn btn-light popularButton">
+              <button type="button" className="btn btn-light popularButton text-primary rounded-3 align-self-start">
                 Large Cap
               </button>
               <button type="button" className="btn btn-light popularButton">
@@ -89,11 +91,11 @@ const Explore = () => {
               </button>
             </div>
             <div className="col-12 mt-2">
-              <div className="row border-bottom borderColor py-2">
-                <div className="col-1 pb-1">
+              <div className="d-flex gap-3 border-bottom borderColor py-2">
+                <div className="pb-1">
                   <img src={Ici} height={50} width={50} alt="" />
                 </div>
-                <div className="col-10">
+                <div className="">
                   <small className="">
                     ICICI Prudential bluechip Funds <br />{" "}
                     <small className="congratesColor">25.08%</small> 3Y Returns{" "}
@@ -105,11 +107,11 @@ const Explore = () => {
                   </small>
                 </div>
               </div>
-              <div className="row border-bottom borderColor py-2">
-                <div className="col-1">
+              <div className="d-flex gap-3 border-bottom borderColor py-2">
+                <div className="">
                   <img src={SBI} height={50} width={50} alt="" />
                 </div>
-                <div className="col-10">
+                <div className="">
                   <small className="">
                     SBI Large Cap funds <br />{" "}
                     <small className="congratesColor">25.08%</small> 3Y Returns{" "}
@@ -121,11 +123,11 @@ const Explore = () => {
                   </small>
                 </div>
               </div>
-              <div className="row border-bottom borderColor py-2">
-                <div className="col-1">
+              <div className="d-flex gap-3 border-bottom borderColor py-2">
+                <div className="">
                   <img src={Ici} height={50} width={50} alt="" />
                 </div>
-                <div className="col-10">
+                <div className="">
                   <small className="">
                     ICICI Prudential bluechip Funds <br />{" "}
                     <small className="congratesColor">25.08%</small> 3Y Returns{" "}
@@ -137,11 +139,11 @@ const Explore = () => {
                   </small>
                 </div>
               </div>
-              <div className="row border-bottom borderColor py-2">
-                <div className="col-1">
+              <div className="d-flex gap-3 border-bottom borderColor py-2">
+                <div className="">
                   <img src={SBI} height={50} width={50} alt="" />
                 </div>
-                <div className="col-10">
+                <div className="">
                   <small className="">
                     SBI Large Cap funds <br />{" "}
                     <small className="congratesColor">25.08%</small> 3Y Returns{" "}
@@ -154,11 +156,11 @@ const Explore = () => {
                 </div>
               </div>
 
-              <div className="row border-bottom borderColor py-2">
-                <div className="col-1">
+              <div className="d-flex gap-3 border-bottom borderColor py-2">
+                <div className="">
                   <img src={Ici} height={50} width={50} alt="" />
                 </div>
-                <div className="col-10">
+                <div className="">
                   <small className="">
                     ICICI Prudential bluechip Funds <br />{" "}
                     <small className="congratesColor">25.08%</small> 3Y Returns{" "}
@@ -170,11 +172,11 @@ const Explore = () => {
                   </small>
                 </div>
               </div>
-              <div className="row border-bottom borderColor py-2">
-                <div className="col-1">
+              <div className="d-flex gap-3 border-bottom borderColor py-2">
+                <div className="">
                   <img src={SBI} height={50} width={50} alt="" />
                 </div>
-                <div className="col-10">
+                <div className="">
                   <small className="">
                     SBI Large Cap funds <br />{" "}
                     <small className="congratesColor">25.08%</small> 3Y Returns{" "}
@@ -186,11 +188,11 @@ const Explore = () => {
                   </small>
                 </div>
               </div>
-              <div className="row border-bottom borderColor py-2">
-                <div className="col-1">
+              <div className="d-flex gap-3 border-bottom borderColor py-2">
+                <div className="">
                   <img src={Ici} height={50} width={50} alt="" />
                 </div>
-                <div className="col-10">
+                <div className="">
                   <small className="">
                     ICICI Prudential bluechip Funds <br />{" "}
                     <small className="congratesColor">25.08%</small> 3Y Returns{" "}
