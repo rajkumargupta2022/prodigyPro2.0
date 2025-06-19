@@ -6,10 +6,8 @@ import Dividends from "./Dividends";
 import { useState } from "react";
 import MyTransactions from "./My-transactions";
 function Statements({
-  backButton,
   activeInactive,
 }: {
-  backButton: any;
   activeInactive: any;
 }) {
   const [active, setActive] = useState("folio-details");

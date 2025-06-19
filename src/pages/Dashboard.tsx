@@ -8,74 +8,38 @@ import OurServices from "./dashboard/Our-services";
 import GoalPlanning from "./dashboard/Goal-planning";
 import PopularFunds from "./dashboard/Popular-funds";
 import DiscoverFUnds from "./dashboard/Discover-Funds";
-// import KycMsg from "./dashboard/Kyc-msg";
-import SwitchPortfolio from "./dashboard/Switch-portfolio";
-import { familyDataType, familySnapshotResponseType } from "./data-interfaces/dashboard";
-import { postRequest } from "../services/Api/HandleApi";
-import { endPoints } from "../services/utils/urls";
 import { currentDateInStringNumber } from "../services/dates/dateFormater";
 import { getPercentageValue } from "../services/calculation/percentageCalculate";
+import { fetchAdminUser } from "../services/user/adminUser";
+import { useAdminUser } from "../context/AdminContext";
+import SwitchPortfolio from "./dashboard/Switch-portfolio";
 
 
 const Dashboard = () => {
+  const {familySnapShotData,familyPortfolio,snapshotData,setSnapshotData} = useAdminUser()
 
   const [openPortfolioSwitch, setOpenPortfolioSwitch] = useState<boolean>(false);
-  const [familySnapShotData, setFamilySnapShotData] = useState<familyDataType[]>([])
-  const [snapshotData, setSnapshotData] = useState<familyDataType>({
-    Totalpurchase: 0,
-    Totalmarketvalue: 0,
-    Finaldays: 0,
-    Finalcagr: "",
-    Totaldayschange: 0,
-    Gainloss: 0,
-    Dividend: 0,
-    debtPercentFinal: "",
-    goldPercentFinal: "",
-    equityPercentFinal: "",
-    myPortfolio: false,
-  })
+
 
   const [target, setTarget] = useState(null);
   const ref = useRef(null);
+  const adminUser = fetchAdminUser()
 
 
 
   const handleClick = (event: any) => {
-    if(familySnapShotData.length>1){
-    setOpenPortfolioSwitch(!openPortfolioSwitch);
-    setTarget(event.target);
+    if (familySnapShotData.length > 1) {
+      setOpenPortfolioSwitch(!openPortfolioSwitch);
+      setTarget(event.target);
     }
-
-
   };
   useEffect(() => {
-    familyPortfolio()
+    if (adminUser?.ucc) {
+      familyPortfolio(adminUser)
+    }
   }, [])
 
-  const familyPortfolio = async () => {
-    const pan = localStorage.getItem("pan")
-    if (pan) {
-      const res = await postRequest<familySnapshotResponseType>(endPoints.getFamilySnapshot, {
-        pan
-      });
-      if (res) {
-        setFamilySnapShotData(res.finalArray)
-        let portfolioType = localStorage.getItem("portfolioType")
-        if (portfolioType === "my") {
-          let family = res.finalArray.filter((item) => item?.myPortfolio === true)
-          setSnapshotData(family[0])
-        } else if (portfolioType === "family") {
-          let family = res.finalArray.filter((item) => item?.myPortfolio !== true)
-          setSnapshotData(family[0])
-        } else {
-          let family = res.finalArray.filter((item) => item?.myPortfolio === true)
-          setSnapshotData(family[0])
-        }
-        // console.log("asdsad",family[0]);
-
-      }
-    }
-  }
+ 
 
   return (
     <>
@@ -91,7 +55,7 @@ const Dashboard = () => {
                     <div className="col d-flex">
                       <h6 className="fw-semibold">PORTFOLIO SUMMARY </h6> <span className="fs12px ms-2" > As on {currentDateInStringNumber()}</span>
                     </div>
-                    <h3 className="fw-bold"><CurrencyRupee className="mb-1" />{snapshotData?.Totalmarketvalue.toLocaleString("en-In")}{familySnapShotData.length>1&&<small className="fs-6 crPointer" onClick={handleClick}><ChevronDown /></small>}</h3>
+                    <h3 className="fw-bold"><CurrencyRupee className="mb-1" />{snapshotData?.Totalmarketvalue.toLocaleString("en-In")}{familySnapShotData.length > 1 && <small className="fs-6 crPointer" onClick={handleClick}><ChevronDown /></small>}</h3>
                   </div>
                   <div className="mt-2 textColor">
                     1 Day change{" "}
@@ -125,9 +89,7 @@ const Dashboard = () => {
         setShow={setOpenPortfolioSwitch}
         target={target}
         refData={ref}
-        familySnapShotData={familySnapShotData}
-        snapshotData={snapshotData}
-        setSnapshotData={setSnapshotData}
+      
       />
 
       <AreYouSure />

@@ -14,9 +14,11 @@ import {
 import ProfileModel from "./ProfileModel";
 import { useState } from "react";
 import { Link,useLocation } from "react-router-dom";
+import { useAdminUser } from "../context/AdminContext";
 
 const MyNavbar = () => {
   const location = useLocation();
+  const {adminUser} = useAdminUser()
   const [openProfileModel, setOpenProfileModel] = useState<boolean>(false)
 // console.log('Current path:', location.pathname);
   const handleProfileModel = () => {
@@ -93,16 +95,21 @@ const MyNavbar = () => {
             </Nav.Link> */}
             <Link to="#" className="profileNameSize prodgy_menu">
               <div className="d-flex gap-2" onClick={handleProfileModel}>
-                <div className="">
-                  <img
-                    className="rounded-pill"
-                    src="http://localhost:5173/src/assets/img/icons/hdfc.svg?t=1740982475524"
+                {adminUser?.profilePic?
+                 <div className="circle">
+ <img
+                    className=""
+                    src={adminUser.profilePic}
                     alt="Logo"
                     height="35"
                   />
-                </div>
+                 </div> : <div className="nameTitle">
+                   {adminUser?.name?.split(" ")?.slice(0, 2).map(word => word[0]).join("").toUpperCase()}
+                </div>}
+               
+                 
                 <div className="align-self-center">
-                  Rajkumar <ChevronDown />{" "}
+                  {adminUser?.name} <ChevronDown />{" "}
                 </div>
               </div>
             </Link>

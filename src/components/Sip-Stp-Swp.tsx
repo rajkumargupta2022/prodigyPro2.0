@@ -1,14 +1,23 @@
+import { useState } from "react";
 import HDFC from "../assets/img/bank-logo/icici.png";
-import { ChevronDown } from "react-bootstrap-icons";
 
 function MySipStpSwp() {
+  const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().slice(0, 7))
+  const dateHandler = (e: any) => {
+    setSelectedDate(e.target.value)
+  }
+
+  const fetchSipStpSwpReport = ()=>{
+    
+  }
+
   return (
     <>
       <div className="d-flex justify-content-between mb-3 align-items-center">
         <div>
-          <span className="fordate p-2 rounded-2">
-            FY 2024-2025 <ChevronDown size={15} className="ms-2" />
-          </span>
+          <div className="mb-2">
+            <input type="month" className="form-control" value={selectedDate} id="exampleFormControlInput1" onChange={dateHandler} />
+          </div>
         </div>
         <div>
           <h6>Total: ₹34.6K</h6>
@@ -17,7 +26,6 @@ function MySipStpSwp() {
 
       <div
         className="p-4 shadow-sm bg-white border-0 rounded-4 mb-2"
-      // onClick={() => navigate("/order-timeline")}
       >
 
         <div className="row justify-content-between">
@@ -66,7 +74,6 @@ function MySipStpSwp() {
       </div>
       <div
         className="p-4 shadow-sm bg-white border-0 rounded-4 mb-2"
-      // onClick={() => navigate("/order-timeline")}
 
       >
 

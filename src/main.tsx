@@ -1,12 +1,12 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App.tsx'
-import { SinglePortfolioProvider } from './context/SinglePortfolioContext.tsx'
+import { AdminUserProvider } from './context/AdminContext.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <SinglePortfolioProvider>
+    <AdminUserProvider>
       <App />
-    </SinglePortfolioProvider>
+      </AdminUserProvider>
   </StrictMode>,
 )

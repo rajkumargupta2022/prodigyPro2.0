@@ -5,6 +5,7 @@ import Popover from 'react-bootstrap/Popover';
 import { CurrencyRupee } from "react-bootstrap-icons";
 import { useEffect, useState } from 'react';
 import { familyDataType } from '../data-interfaces/dashboard';
+import { useAdminUser } from '../../context/AdminContext';
 
 
 
@@ -13,11 +14,10 @@ interface investmetProps {
   setShow: (show: boolean) => void;
   target: any;
   refData: any;
-  familySnapShotData: familyDataType[],
-  snapshotData: familyDataType,
-  setSnapshotData: (snapshotData: familyDataType) => void
+
 }
-const SwitchPortfolio: React.FC<investmetProps> = ({ show, setShow, target, refData, familySnapShotData, snapshotData, setSnapshotData }) => {
+const SwitchPortfolio: React.FC<investmetProps> = ({ show, setShow, target, refData }) => {
+  const {familySnapShotData,snapshotData,setSnapshotData} = useAdminUser()
   const [selected, setSelected] = useState<"my" | "family">("my");
   // const [familyPortfolioData, setFamilyPortfolioData] = useState<familyWiseType[]>([])
 

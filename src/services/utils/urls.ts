@@ -9,8 +9,10 @@ export enum endPoints{
    requestKycData="register/request-kyc-data",
    getFamilywisePortfolio="portfolio/get-familywise-portfolio",
    getFamilySnapshot="portfolio/get-family-snapshot",
+   getAllFamily="user/get-all-family",
    userStatus="user/user-status",
    swpCalculator="calculators/swp",
-   getDetailedPortfolio="/portfolio/get-detailed-portfolio",
-   getPortfolioTransactionDetail="portfolio/get-portfolio-transaction-detail"
+   getDetailedPortfolio="portfolio/get-detailed-portfolio",
+   getPortfolioTransactionDetail="portfolio/get-portfolio-transaction-detail",
+   sipStpSwpReport="reports/sip-stp-swp-report"
 }
