@@ -1223,7 +1223,7 @@ input[type="number"] {
 .my-portfolio-area25 {
   display: flex;
   justify-content: space-between;
-  width: 185px;
+  width: 210px;
 }
 
 .amount-area25 p {
@@ -1289,7 +1289,6 @@ input[type="number"] {
   background-color: #011EFE !important;
   color: #f1f1f1 !important;
 }
-<<<<<<< HEAD
 .nameTitle{
   background-color: #011EFE !important;
   color: #f1f1f1 !important;
@@ -1308,7 +1307,6 @@ input[type="number"] {
 .circle{
   border-radius: 50%;
 }
-=======
 
 
 .dotted_sip_prodyg svg {
@@ -1425,4 +1423,3 @@ span.text-secondary.text-uppercase.fs-7 {
     left: 18px;
   }
 }
->>>>>>> a1af1f147f91b7d3455b7ec8402e7f58cf9216f2

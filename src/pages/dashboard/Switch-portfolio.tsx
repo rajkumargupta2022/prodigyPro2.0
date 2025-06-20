@@ -16,7 +16,7 @@ interface investmetProps {
 
 }
 const SwitchPortfolio: React.FC<investmetProps> = ({ show, setShow, target, refData }) => {
-  const {familySnapShotData,snapshotData,setSnapshotData} = useAdminUser()
+  const {familySnapShotData,setSnapshotData} = useAdminUser()
   const [selected, setSelected] = useState<"my" | "family">("my");
   // const [familyPortfolioData, setFamilyPortfolioData] = useState<familyWiseType[]>([])
 
@@ -24,24 +24,23 @@ const SwitchPortfolio: React.FC<investmetProps> = ({ show, setShow, target, refD
    const portfolioType = localStorage.getItem("portfolioType")
    if(portfolioType==="family"){
      setSelected(portfolioType)
+     console.log("============");
+     
+     handleCheckboxChange(portfolioType)
    }else{
      setSelected("my")
+     handleCheckboxChange("my")
    }
   },[])
 
   const handleCheckboxChange = (type: "my" | "family") => {
     if (type === "my") {
       localStorage.setItem("portfolioType",type)
-      console.log("mytype",type);
-      
       let family = familySnapShotData?.filter((item) => item?.myPortfolio === true)
-      console.log("myyyy",family);
       setSnapshotData(family[0])
     } else {
       localStorage.setItem("portfolioType",type)
-      console.log("familytype",type);
       let family = familySnapShotData?.filter((item) => item?.myPortfolio !== true)
-      console.log("family",family);
       setSnapshotData(family[0])
     }
     setSelected(type);
@@ -79,8 +78,7 @@ const SwitchPortfolio: React.FC<investmetProps> = ({ show, setShow, target, refD
               </div>
               <div className="amount-area25">
                 <p>
-                  <CurrencyRupee className="mb-1" />
-                  {snapshotData?.Totalmarketvalue}
+                  <CurrencyRupee className="mb-1" />{familySnapShotData[0]?.Totalmarketvalue?.toLocaleString("en-In")}
                 </p>
               </div>
             </div>
@@ -104,8 +102,7 @@ const SwitchPortfolio: React.FC<investmetProps> = ({ show, setShow, target, refD
               </div>
               <div className="amount-area25">
                 <p>
-                  <CurrencyRupee className="mb-1" />
-                  {snapshotData?.Totalmarketvalue.toLocaleString("en-IN")}
+                  <CurrencyRupee className="mb-1" />{familySnapShotData[1]?.Totalmarketvalue?.toLocaleString("en-In")}
                 </p>
               </div>
             </div>

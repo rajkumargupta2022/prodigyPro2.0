@@ -1,5 +1,4 @@
-import { Container, Row, Col } from "react-bootstrap";
-import { CurrencyRupee, Calendar2 } from "react-bootstrap-icons";
+import { Container} from "react-bootstrap";
 import MyNavbar from "../components/Navbar";
 import HDFC from "../assets/img/icons/hdfc.svg";
 import SimpleLineChart from "../components/chart";

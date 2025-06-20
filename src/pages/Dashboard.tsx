@@ -35,7 +35,6 @@ const Dashboard = () => {
   };
   useEffect(() => {
       familyPortfolio(adminUser)
-      
   }, [])
 
  

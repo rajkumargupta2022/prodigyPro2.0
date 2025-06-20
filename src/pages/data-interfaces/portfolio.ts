@@ -44,6 +44,7 @@ export interface detailPortfolioSchemeType {
   currentNavDiff: number;
   updated: string;
   gain: string;
+  amcCode:string
 }
 export interface detailPortfolioTotalTransactionType {
   TotalMarketValue: number;

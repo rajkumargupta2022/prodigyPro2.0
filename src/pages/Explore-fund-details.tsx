@@ -1,5 +1,5 @@
 import { Container, Row, Col } from "react-bootstrap";
-import { CurrencyRupee, Calendar2 } from "react-bootstrap-icons";
+import { Calendar2 } from "react-bootstrap-icons";
 import MyNavbar from "../components/Navbar";
 import HDFC from "../assets/img/icons/hdfc.svg";
 import SimpleLineChart from "../components/chart";
@@ -8,7 +8,7 @@ import { useState } from "react";
 import SelectFolioPopup from "../components/select-folio-popup";
 
 const ExploreFundDetails = () => {
-  const [openSelectFolio, setOpenSelectFolio] = useState(false)
+  const [openSelectFolio, setOpenSelectFolio] = useState(false);
   return (
     <>
       <MyNavbar />
@@ -43,40 +43,60 @@ const ExploreFundDetails = () => {
               <h5 className="fw-bold">Fund Details</h5>
               <div className="row pt-2">
                 <div className="col-6 py-2">
-                  <span className="text-secondary text-uppercase fs-7">Fund Size</span>
+                  <span className="text-secondary text-uppercase fs-7">
+                    Fund Size
+                  </span>
                   <h4 className="fs-6">₹66,304.16 Cr</h4>
                 </div>
                 <div className="col-6 py-2">
-                  <span className="text-secondary text-uppercase fs-7">Launched</span>
+                  <span className="text-secondary text-uppercase fs-7">
+                    Launched
+                  </span>
                   <h4 className="fs-6">01 Jan 1995</h4>
                 </div>
                 <div className="col-6 py-2">
-                  <span className="text-secondary text-uppercase fs-7">Expense Ratio</span>
+                  <span className="text-secondary text-uppercase fs-7">
+                    Expense Ratio
+                  </span>
                   <h4 className="fs-6">0.56%</h4>
                 </div>
                 <div className="col-6 py-2">
-                  <span className="text-secondary text-uppercase fs-7">Lock-in</span>
+                  <span className="text-secondary text-uppercase fs-7">
+                    Lock-in
+                  </span>
                   <h4 className="fs-6">0 Yr</h4>
                 </div>
                 <div className="col-6 py-2">
-                  <span className="text-secondary text-uppercase fs-7">Plan Type</span>
+                  <span className="text-secondary text-uppercase fs-7">
+                    Plan Type
+                  </span>
                   <h4 className="fs-6">Regular</h4>
                 </div>
                 <div className="col-6 py-2">
-                  <span className="text-secondary text-uppercase fs-7">Plan Option</span>
+                  <span className="text-secondary text-uppercase fs-7">
+                    Plan Option
+                  </span>
                   <h4 className="fs-6">Growth</h4>
                 </div>
                 <div className="col-6 py-2">
-                  <span className="text-secondary text-uppercase fs-7">Risk</span>
+                  <span className="text-secondary text-uppercase fs-7">
+                    Risk
+                  </span>
                   <h4 className="fs-6">Very High</h4>
                 </div>
                 <div className="col-6 py-2">
-                  <span className="text-secondary text-uppercase fs-7">Min. Investment</span>
+                  <span className="text-secondary text-uppercase fs-7">
+                    Min. Investment
+                  </span>
                   <h4 className="fs-6">₹100</h4>
                 </div>
                 <div className="col-6 py-2">
-                  <span className="text-secondary text-uppercase fs-7">Withdrawal Charges</span>
-                  <h4 className="fs-6">Exit load 1% if redeemed within 1 year</h4>
+                  <span className="text-secondary text-uppercase fs-7">
+                    Withdrawal Charges
+                  </span>
+                  <h4 className="fs-6">
+                    Exit load 1% if redeemed within 1 year
+                  </h4>
                 </div>
               </div>
             </div>
@@ -133,16 +153,53 @@ const ExploreFundDetails = () => {
                 </div>
                 <div className="col-lg-6 col-md-6 align-self-md-end py-2">
                   <p className="text-uppercase">For a period of</p>
-                  <div className="btn-group" role="group" aria-label="Basic radio toggle button group">
+                  <div
+                    className="btn-group"
+                    role="group"
+                    aria-label="Basic radio toggle button group"
+                  >
+                    <input
+                      type="radio"
+                      className="btn-check"
+                      name="btnradio"
+                      id="btnradio1"
+                      autoComplete="off"
+                      checked
+                    />
+                    <label
+                      className="btn btn-outline-primary px-xl-5 px-4"
+                      htmlFor="btnradio1"
+                    >
+                      1Y
+                    </label>
 
-                    <input type="radio" className="btn-check" name="btnradio" id="btnradio1" autoComplete="off" checked />
-                    <label className="btn btn-outline-primary px-xl-5 px-4" htmlFor="btnradio1">1Y</label>
+                    <input
+                      type="radio"
+                      className="btn-check"
+                      name="btnradio"
+                      id="btnradio2"
+                      autoComplete="off"
+                    />
+                    <label
+                      className="btn btn-outline-primary px-xl-5 px-4"
+                      htmlFor="btnradio2"
+                    >
+                      3Y
+                    </label>
 
-                    <input type="radio" className="btn-check" name="btnradio" id="btnradio2" autoComplete="off" />
-                    <label className="btn btn-outline-primary px-xl-5 px-4" htmlFor="btnradio2">3Y</label>
-
-                    <input type="radio" className="btn-check" name="btnradio" id="btnradio3" autoComplete="off" />
-                    <label className="btn btn-outline-primary px-xl-5 px-4" htmlFor="btnradio3">5Y</label>
+                    <input
+                      type="radio"
+                      className="btn-check"
+                      name="btnradio"
+                      id="btnradio3"
+                      autoComplete="off"
+                    />
+                    <label
+                      className="btn btn-outline-primary px-xl-5 px-4"
+                      htmlFor="btnradio3"
+                    >
+                      5Y
+                    </label>
                   </div>
                 </div>
               </div>
@@ -181,41 +238,39 @@ const ExploreFundDetails = () => {
               <div className="p-4">
                 <h5 className="fw-bold bottom-border">Invest Now</h5>
 
-                   <div className="d-lg-flex gap-1 justify-content-between">
-                                  <div className="text-center">
-                                    <input
-                                      type="radio"
-                                      className="btn-check"
-                                      name="options"
-                                      id="option3"
-                                      autoComplete="off"
-                                    />
-                                    <label
-                                      className="font-size-16 btn_colorfull rounded-4 declaration-button w-100 paddingLeftRight px-md-4 py-2 my-2 mobile-fontset"
-                                      htmlFor="option3"
-                                    >
-                                      Monthly SIP
-                                    </label>
-                                  </div>
-                
-                                  <div>
-                                    <input
-                                      type="radio"
-                                      className="btn-check"
-                                      name="options"
-                                      id="option1"
-                                      autoComplete="off"
-                                    />
-                                    <label
-                                      className="font-size-16 btn btn-outline-primary rounded-4 declaration-button w-100 paddingLeftRight px-md-5 my-2 py-2 mobile-fontset"
-                                      htmlFor="option1"
-                                    >
-                                      One-time
-                                    </label>
-                                  </div>
-                
-                                  
-                                </div>
+                <div className="d-lg-flex gap-1 justify-content-between">
+                  <div className="text-center">
+                    <input
+                      type="radio"
+                      className="btn-check"
+                      name="options"
+                      id="option3"
+                      autoComplete="off"
+                    />
+                    <label
+                      className="font-size-16 btn_colorfull rounded-4 declaration-button w-100 paddingLeftRight px-md-4 py-2 my-2 mobile-fontset"
+                      htmlFor="option3"
+                    >
+                      Monthly SIP
+                    </label>
+                  </div>
+
+                  <div>
+                    <input
+                      type="radio"
+                      className="btn-check"
+                      name="options"
+                      id="option1"
+                      autoComplete="off"
+                    />
+                    <label
+                      className="font-size-16 btn btn-outline-primary rounded-4 declaration-button w-100 paddingLeftRight px-md-5 my-2 py-2 mobile-fontset"
+                      htmlFor="option1"
+                    >
+                      One-time
+                    </label>
+                  </div>
+                </div>
 
                 <div className="mt-2">
                   <p>DAY OF SIP</p>
@@ -247,7 +302,14 @@ const ExploreFundDetails = () => {
                   <span className="badge m-2">₹2,000</span>
                   <span className="badge m-2">₹5,000</span>
                 </div>
-                <button className="btn btn-primary" onClick={() => { setOpenSelectFolio(true) }}>Invest</button>
+                <button
+                  className="btn btn-primary"
+                  onClick={() => {
+                    setOpenSelectFolio(true);
+                  }}
+                >
+                  Invest
+                </button>
               </div>
               <span
                 className="text-center p-3"

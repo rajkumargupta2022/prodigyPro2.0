@@ -3,7 +3,7 @@ import { ArrowDownCircleFill, ArrowDownUp, ArrowUpCircleFill, CurrencyRupee } fr
 import { useEffect, useState } from "react";
 import SchemeDetails from "../components/SchemeDetails";
 import { postRequest } from "../services/Api/HandleApi";
-import { endPoints } from "../services/utils/urls";
+import { endPoints, imageUrl } from "../services/utils/urls";
 import { currentDateInStringNumber } from "../services/dates/dateFormater";
 import { getPercentageValue, getValueInThousand } from "../services/calculation/percentageCalculate";
 import { detailPortfolioSchemeType, detailPortfolioType } from "./data-interfaces/portfolio";
@@ -16,15 +16,15 @@ const Portfolio = () => {
   const {familyPortfolio,snapshotData} = useAdminUser()
   const [openSchemeDetail, setOpenSchemeDetail] = useState<boolean>(false)
   const [portfolioDetailData, setPortfolioDetailData] = useState<detailPortfolioSchemeType[]>([])
+  const adminUser = fetchAdminUser()
 
 
 
   useEffect(() => {
     const pan = localStorage.getItem("pan")
-    const adminUser = fetchAdminUser()
     if (pan) {
       familyPortfolio(adminUser)
-      fetchDetailedPortfolio(pan)
+      fetchDetailedPortfolio(adminUser?.ucc)
     }
   }, [])
 
@@ -39,13 +39,8 @@ const Portfolio = () => {
   //   }
 
   // }
-  const fetchDetailedPortfolio = async (pan: string) => {
-    let reqBody = {
-      name: "RAJKUMAR GUPTA",
-      pan,
-      gpan: ""
-    }
-    const res = await postRequest<detailPortfolioType>(endPoints.getDetailedPortfolio, reqBody);
+  const fetchDetailedPortfolio = async (ucc:string) => {
+    const res = await postRequest<detailPortfolioType>(endPoints.getDetailedPortfolio, {ucc});
     if (res) {
       console.log("res", res);
 
@@ -108,9 +103,9 @@ const Portfolio = () => {
                 <div className="d-flex justify-content-between">
                   <div className="d-flex">
                     <div className="prod_icon_img">
-                      {/* <img src={`${imageUrl+item.AMC_CODE}`} height={35} width={35} alt="" /> */}
+                      <img src={`${imageUrl+item.amcCode}.png`} height={55} width={55} alt="" />
                     </div>
-                    <div className="ms-2 prod_icon_heading">
+                    <div className="ms-2 prod_icon_heading mt-3">
                       <h4>{item.scheme}</h4>
                       <p>Folio: {item.folio}</p>
                     </div>
