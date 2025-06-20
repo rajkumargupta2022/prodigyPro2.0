@@ -6,7 +6,6 @@ function AreYouSure() {
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
   return (
     
       <Modal show={show} className='text-center'  onHide={handleClose}>

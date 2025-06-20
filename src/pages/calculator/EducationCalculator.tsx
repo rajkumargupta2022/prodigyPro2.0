@@ -57,7 +57,7 @@ const EducationCalculator = () => {
       var er: number = expectedRateofReturn * 0.01;
       var ei: number = expectedInflation * 0.01;
       var Tot: number = (1 + er) / (1 + ei) - 1;
-      var firstot: number = (1 + er) / (1 + er)
+      // var firstot: number = (1 + er) / (1 + er)
       var nomialRate: number = 12.0 * (Math.pow((1 + rate), (1 / 12.0)) - 1);
 
       var totalAmtRequired = (FV * ((1 - (Math.pow((1 + Tot), (-durationOfEducation)))) / Tot));

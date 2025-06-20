@@ -14,7 +14,7 @@ interface responseType {
   success: boolean;
 }
 
-const Otp = (e: any) => {
+const Otp = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [otp, setOtp] = useState<string>();
@@ -23,11 +23,9 @@ const Otp = (e: any) => {
 
   useEffect(() => {
     let timer: number;
-
     if (counter > 0) {
       timer = setTimeout(() => setCounter(prev => prev - 1), 1000);
     }
-
     return () => clearTimeout(timer);
   }, [counter]);
 

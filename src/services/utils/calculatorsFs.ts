@@ -10,9 +10,9 @@ export const amountHandler = (
   if (value <= 1000000000) {
     setter(value);
   }
-  //  else if (value >= maxAmount) {
-  //   setter(maxAmount);
-  // }
+   else if (value >= maxAmount) {
+    setter(maxAmount);
+  }
 };
 
 export const percentageHandler = (

@@ -1,6 +1,6 @@
 import GIRLDP from "../assets/img/girl-dp.png";
 
-function MyProfile({ backButton }: { backButton: any }) {
+function MyProfile() {
   return (
     <main className="col-md-9 ms-sm-auto col-lg-9 px-md-4 py-4">
       <h3>

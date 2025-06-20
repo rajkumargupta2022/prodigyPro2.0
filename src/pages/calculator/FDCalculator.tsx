@@ -90,13 +90,13 @@ const FDCalculator = () => {
       
       let pric: number = p;
       let amt: number = 0;
-      let inest: number = 0;
+      // let inest: number = 0;
       
       for (let i = 1; i <= t; i++) {
         const val1: number = 1 + r / (100 * n);
         const val2: number = n;
         amt = pric * Math.pow(val1, val2);
-        inest = amt - pric;
+        // inest = amt - pric;
         pric = parseFloat(amt.toFixed(0)); // Round to whole number
       }
       

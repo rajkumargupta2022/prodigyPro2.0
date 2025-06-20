@@ -7,10 +7,7 @@ function MySipStpSwp() {
     setSelectedDate(e.target.value)
   }
 
-  const fetchSipStpSwpReport = ()=>{
-    
-  }
-
+ 
   return (
     <>
       <div className="d-flex justify-content-between mb-3 align-items-center">

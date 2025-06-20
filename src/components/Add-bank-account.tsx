@@ -7,7 +7,7 @@ import { Link } from "react-router-dom"
 
 function AddBankAccount({
   backButton,
-  activeInactive,
+  
 }: {
   backButton: any;
   activeInactive: any;

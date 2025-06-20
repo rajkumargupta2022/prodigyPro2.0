@@ -2,13 +2,10 @@ import MyNavbar from "./Navbar"
 import rislBg from "../assets/img/bg-image/risk-profile.png"
 import {  ChevronRight } from "react-bootstrap-icons"
 import { useState } from "react"
-import { useNavigate } from "react-router-dom"
-import Login from "../pages/Login"
 
 
 
 const RiskProfile = () => {
-  const navigate = useNavigate()
   const profileQuestion: string[]  =["I seek above average returns from my investments","I’m patient with my investments & can bear short term volatility in my portfolio","I have a regular & stable source of income","My outstanding debt/loan is low or that has been provisioned for" ]
   const [question,setQuestion] =useState<number>(0)
   const [option,setOption] =useState<number>(0)

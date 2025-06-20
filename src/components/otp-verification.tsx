@@ -1,7 +1,7 @@
 import { useState } from "react";
 import OtpInput from "react-otp-input";
 
-function OTPVerification({ setActive }) {
+function OTPVerification() {
   const [otp, setOtp] = useState<string>();
   return (
     <div className="p-4 mb-2">
@@ -23,7 +23,7 @@ function OTPVerification({ setActive }) {
         <button
           className="mandate-button mt-4 w-100"
           style={{ marginRight: "32px" }}
-          onClick={() => setActive("p-input")}
+          // onClick={() => setActive("p-input")}
         >
           Verify OTP
         </button>

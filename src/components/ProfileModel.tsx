@@ -1,79 +1,16 @@
-import { useEffect, useState } from 'react';
+
 import Modal from 'react-bootstrap/Modal';
 import { Link, useNavigate } from 'react-router-dom';
-import GIRLDP from "../assets/img/girl-dp.png";
-// import GIRLDP from "../assets/img/icici.png";
 import { SlLogout } from "react-icons/sl";
-import { allFamilyListKeys, allFamilyResponseType, ProfileModelProps } from '../pages/data-interfaces/dashboard';
-import { postRequest } from '../services/Api/HandleApi';
-import { endPoints } from '../services/utils/urls';
+import {  ProfileModelProps } from '../pages/data-interfaces/dashboard';
 import {useAdminUser} from "../context/AdminContext"
 
 
 const ProfileModel: React.FC<ProfileModelProps> = ({ show, setShow }) => {
   const navigate = useNavigate()
   const {switchProfile,adminUser,familyMemberList} = useAdminUser()
-  // const [familyMemberList, setFamilyMemberList] = useState<allFamilyListKeys[]>([])
-  // const [adminUser, setAdminUser] = useState<allFamilyListKeys>()
-
   const handleClose = () => setShow(false);
 
-  // useEffect(() => {
-  //   fetchFamilyPortfoloData()
-  // }, [])
-
-  // const fetchFamilyPortfoloData = async () => {
-  //   const pan = localStorage.getItem("pan")
-  //   let adminData:any = localStorage.getItem("familyList")
-  //   adminData = JSON.parse(adminData)
-
-  //   if (pan && (!adminData[0]?.ucc)) {
-  //     const res = await postRequest<allFamilyResponseType>(endPoints.getAllFamily, {
-  //       pan
-  //     });
-  //     if (res) {
-  //       localStorage.setItem("familyList",JSON.stringify(res.data))
-  //       filterAdmin(res.data)
-  //     }
-  //   }else if(adminData[0]?.pan){
-  //      filterAdmin(adminData)
-
-  //   }
-  // }
-
-  // const filterAdmin = (data: allFamilyListKeys[]) => {
-  //   let familyMember: allFamilyListKeys[] = []
-  //   let adminData: any = localStorage.getItem("adminUser")
-  //   adminData= JSON.parse(adminData)
-  //   if (!adminData?.ucc) {
-  //     for (const item of data) {
-  //       if (item.relation === "Self") {
-  //         item.name = item.name.toLowerCase().replace(/\b\w/g, c => c.toUpperCase())
-  //         localStorage.setItem("adminUser", JSON.stringify(item))
-  //         setAdminUser(item)
-  //       } else {
-  //         item.name = item.name.toLowerCase().replace(/\b\w/g, c => c.toUpperCase())
-  //         familyMember.push(item)
-  //       }
-  //     }
-  //     setFamilyMemberList(familyMember)
-  //   }else{
-  //     for (const item of data) {
-  //       if (item.ucc === adminData.ucc) {
-  //         item.name = item.name.toLowerCase().replace(/\b\w/g, c => c.toUpperCase())
-  //         localStorage.setItem("adminUser", JSON.stringify(item))
-  //         setAdminUser(item)
-  //       } else {
-  //         item.name = item.name.toLowerCase().replace(/\b\w/g, c => c.toUpperCase())
-  //         familyMember.push(item)
-  //         console.log("item",item);
-          
-  //       }
-  //     }
-  //     setFamilyMemberList(familyMember)
-  //   }
-
-  // }
   const logOut = ()=>{
     localStorage.clear()
     navigate("/")

@@ -1,8 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Logo from "../assets/img/logo/logo.png";
 import LoginLeftImage from "../components/LoginLeftImage";
-// import { http, Http } from "../services/Api/Http";
 import { errorToast, successToast } from "../services/utils/toast";
 import { useState } from "react";
 import { handleNumbers } from "../services/utils/states";
@@ -21,6 +20,12 @@ const Login = () => {
   // const getOpt = () => {
   //   navigate("/otp")
   // }
+  useEffect(() => {
+    const token = localStorage.getItem("token")
+    if (token) {
+      navigate("/dashboard")
+    }
+  }, [])
 
   const sendOtp = async (e: React.FormEvent) => {
     e.preventDefault();

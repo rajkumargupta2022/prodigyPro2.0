@@ -1,21 +1,16 @@
 import { ArrowLeft } from "react-bootstrap-icons";
-import { useState } from "react";
+// import { useState } from "react";
 import OTPVerification from "./otp-verification";
 import PasswordInputs from "./Password-inputs";
 
-function ChangePassword({
-  backButton,
-  activeInactive,
-}: {
-  backButton: any;
-  activeInactive: any;
-}) {
-  const [active, setActive] = useState("otp-verification");
+function ChangePassword() {
+  // const [active, setActive] = useState("otp-verification");
+  let active = "otp-verification";
 
   const renderCompo = () => {
     switch (active) {
       case "otp-verification":
-        return <OTPVerification setActive={setActive} />;
+        return <OTPVerification  />;
       case "p-input":
         return <PasswordInputs />;
     }
@@ -24,7 +19,7 @@ function ChangePassword({
   return (
     <main className="col-md-9 ms-sm-auto col-lg-9 px-md-4 py-4">
       <h2>
-        <ArrowLeft className="crPointer" size={25} onClick={backButton} />{" "}
+        <ArrowLeft className="crPointer" size={25}  />{" "}
         Change Password
       </h2>
       <hr className="fw-light text-secondary" />

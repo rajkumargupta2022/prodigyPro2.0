@@ -1,4 +1,3 @@
-import { Navbar } from "react-bootstrap";
 import MyNavbar from "../components/Navbar";
 import { ChevronRight } from "react-bootstrap-icons";
 import { Link } from "react-router-dom";

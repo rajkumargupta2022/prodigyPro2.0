@@ -1,54 +1,44 @@
 import NavBar from "../components/Navbar";
-import icici from "../assets/img/bank-logo/icici.png"
 import { ArrowDownCircleFill, ArrowDownUp, ArrowUpCircleFill, CurrencyRupee } from "react-bootstrap-icons";
 import { useEffect, useState } from "react";
 import SchemeDetails from "../components/SchemeDetails";
-import { familyDataType, familySnapshotResponseType } from "./data-interfaces/dashboard";
 import { postRequest } from "../services/Api/HandleApi";
-import { endPoints, imageUrl } from "../services/utils/urls";
+import { endPoints } from "../services/utils/urls";
 import { currentDateInStringNumber } from "../services/dates/dateFormater";
 import { getPercentageValue, getValueInThousand } from "../services/calculation/percentageCalculate";
 import { detailPortfolioSchemeType, detailPortfolioType } from "./data-interfaces/portfolio";
 import { useNavigate } from "react-router-dom";
+import { useAdminUser } from "../context/AdminContext";
+import { fetchAdminUser } from "../services/user/adminUser";
 
 const Portfolio = () => {
   const navigate = useNavigate()
+  const {familyPortfolio,snapshotData} = useAdminUser()
   const [openSchemeDetail, setOpenSchemeDetail] = useState<boolean>(false)
   const [portfolioDetailData, setPortfolioDetailData] = useState<detailPortfolioSchemeType[]>([])
-  const [snapshotData, setSnapshotData] = useState<familyDataType>({
-    Totalpurchase: 0,
-    Totalmarketvalue: 0,
-    Finaldays: 0,
-    Finalcagr: "",
-    Totaldayschange: 0,
-    Gainloss: 0,
-    Dividend: 0,
-    debtPercentFinal: "",
-    goldPercentFinal: "",
-    equityPercentFinal: "",
-    myPortfolio: false,
-  })
+
 
 
   useEffect(() => {
     const pan = localStorage.getItem("pan")
+    const adminUser = fetchAdminUser()
     if (pan) {
-      fetchFamilyPortfolio(pan)
+      familyPortfolio(adminUser)
       fetchDetailedPortfolio(pan)
     }
   }, [])
 
-  const fetchFamilyPortfolio = async (pan: string) => {
+  // const fetchFamilyPortfolio = async (pan: string) => {
 
-    const res = await postRequest<familySnapshotResponseType>(endPoints.getFamilySnapshot, {
-      pan
-    });
-    if (res) {
-      let family = res.finalArray.filter((item) => item?.myPortfolio === true)
-      setSnapshotData(family[0])
-    }
+  //   const res = await postRequest<familySnapshotResponseType>(endPoints.getFamilySnapshot, {
+  //     pan
+  //   });
+  //   if (res) {
+  //     let family = res.finalArray.filter((item) => item?.myPortfolio === true)
+  //     setSnapshotData(family[0])
+  //   }
 
-  }
+  // }
   const fetchDetailedPortfolio = async (pan: string) => {
     let reqBody = {
       name: "RAJKUMAR GUPTA",

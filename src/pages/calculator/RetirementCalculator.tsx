@@ -22,7 +22,7 @@ const RetirementCalculator = () => {
 
   const [yearToRetirement, setYearToRetirement] = useState<number>(30);
   const [amountPostRetirementPM, setAmountPostRetirementPM] = useState<number>(172305);
-  const [corppusToBeAchive, setCorppusToBeAchive] = useState<number>(37702270);
+  // const [corppusToBeAchive, setCorppusToBeAchive] = useState<number>(37702270);
   const [corpusYouWillAccumalateWithCurrentSaving, setCorpusYouWillAccumalateWithCurrentSaving] = useState<number>(17474821);
   const [corpusYouWillAccumalateWithExistingSaving, setCorpusYouWillAccumalateWithExistingSaving] = useState<number>(5081744);
   const [sortfallAmount, setSortfallAmount] = useState<number>(15145705);
@@ -88,7 +88,7 @@ const RetirementCalculator = () => {
     fvvalue = Math.round(fvvalue)
     //let corpusAchieved = (fvvalue * pow) / inflationAdjustReturn;
     let onePlusinflationAdjustReturn:number = 1 + inflationAdjustReturn
-    let powValue:number = 1 - Math.pow(onePlusinflationAdjustReturn, -lifeExpectancy_yr);
+    // let powValue:number = 1 - Math.pow(onePlusinflationAdjustReturn, -lifeExpectancy_yr);
     let corpusAchieved = 0;
 
     if (onePlusinflationAdjustReturn == 0) {
@@ -125,7 +125,7 @@ const RetirementCalculator = () => {
     setExtraSavingPM(Math.round(newsipamt));
     setCorpusYouWillAccumalateWithCurrentSaving(Math.round(corpus_month));
     setCorpusYouWillAccumalateWithExistingSaving(Math.round(corpus_exist));
-    setCorppusToBeAchive(Math.round(corpusAchieved));
+    // setCorppusToBeAchive(Math.round(corpusAchieved));
     setIsCalculate(true)
     }
   };

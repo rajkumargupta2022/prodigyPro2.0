@@ -4,7 +4,6 @@ import Popover from 'react-bootstrap/Popover';
 
 import { CurrencyRupee } from "react-bootstrap-icons";
 import { useEffect, useState } from 'react';
-import { familyDataType } from '../data-interfaces/dashboard';
 import { useAdminUser } from '../../context/AdminContext';
 
 

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 function AddBankDetails({
   backButton,
-  activeInactive,
+
 }: {
   backButton: any;
   activeInactive: any;

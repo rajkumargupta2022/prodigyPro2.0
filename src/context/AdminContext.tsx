@@ -62,7 +62,6 @@ export const AdminUserProvider = ({ children }: { children: ReactNode }) => {
   }
 
   const filterAdmin = (data: allFamilyListKeys[]) => {
-    console.log("from filterer");
     
     let familyMember: allFamilyListKeys[] = []
     let adminData: any = localStorage.getItem("adminUser")

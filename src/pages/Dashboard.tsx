@@ -16,7 +16,7 @@ import SwitchPortfolio from "./dashboard/Switch-portfolio";
 
 
 const Dashboard = () => {
-  const {familySnapShotData,familyPortfolio,snapshotData,setSnapshotData} = useAdminUser()
+  const {familySnapShotData,familyPortfolio,snapshotData} = useAdminUser()
 
   const [openPortfolioSwitch, setOpenPortfolioSwitch] = useState<boolean>(false);
 
@@ -34,9 +34,8 @@ const Dashboard = () => {
     }
   };
   useEffect(() => {
-    if (adminUser?.ucc) {
       familyPortfolio(adminUser)
-    }
+      
   }, [])
 
  

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import { Rating } from "react-simple-star-rating";
 
@@ -8,15 +7,15 @@ interface investmetProps {
 }
 
 const RateYourRM: React.FC<investmetProps> = ({ show, setShow }) => {
-  const [rating, setRating] = useState(0);
+  // const [rating, setRating] = useState(0);
 
   const onPointerEnter = () => console.log("Enter");
   const onPointerLeave = () => console.log("Leave");
   const onPointerMove = (value: number, index: number) =>
     console.log(value, index);
 
-  const handleRating = (rate: number) => {
-    setRating(rate);
+  const handleRating = () => {
+    // setRating(rate);
 
     // other logic
   };

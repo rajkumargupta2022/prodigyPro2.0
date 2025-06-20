@@ -1,4 +1,3 @@
-import { ArrowLeft } from "react-bootstrap-icons";
 import FolioDetailsList from "./folio-details-list";
 import MySipStpSwp from "./Sip-Stp-Swp";
 import Dividends from "./Dividends";

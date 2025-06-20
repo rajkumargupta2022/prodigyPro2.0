@@ -1,5 +1,3 @@
-import { useState } from "react";
-import OtpInput from "react-otp-input";
 
 function PasswordInputs() {
   return (

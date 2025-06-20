@@ -1,24 +1,17 @@
 import NofolioImg from "../assets/img/no-folio-founds.jpeg";
-import FolioDetailsList from "./folio-details-list";
 import MySipStpSwp from "./Sip-Stp-Swp";
 import Dividends from "./Dividends";
 import { useState } from "react";
 import MyTransactions from "./My-transactions";
 
-function NoFolioFounds({
-    backButton,
-    activeInactive,
-}: {
-    backButton: any;
-    activeInactive: any;
-}) {
+function NoFolioFounds() {
     const [active, setActive] = useState("folio-details");
 
     const renderCompo = () => {
         switch (active) {
 
             case "sip-stp-swp":
-                return <MySipStpSwp activeInactive={activeInactive} />;
+                return <MySipStpSwp  />;
             case "my-transactions":
                 return <MyTransactions />;
             case "dividends":

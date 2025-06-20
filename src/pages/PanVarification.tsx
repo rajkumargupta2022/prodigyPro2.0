@@ -4,7 +4,7 @@ import { ArrowLeft } from "react-bootstrap-icons";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { errorToast } from "../services/utils/toast";
-import { getRequest, postRequest } from "../services/Api/HandleApi";
+import { getRequest } from "../services/Api/HandleApi";
 import { endPoints } from "../services/utils/urls";
 
 interface responseType {
