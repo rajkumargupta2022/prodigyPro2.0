@@ -10,77 +10,139 @@ const PopularFunds = ()=>{
        <Card border="light" className="mb-3 cardRadius">
                 <Card.Body>
                   <div className="row">
-                    <div className="col-sm-12 col-lg-7 d-flex justify-content-between w-100">
-                      <div className="fw-semibold">Popular Funds</div>
-                      <div className="text-end logoBlueColor crPointer">View all</div>
-                    </div>
-                    <div className="col-12 mt-2">
-                      <button type="button" className="btn btn-light popularButton">Large Cap</button>
-                      <button type="button" className="btn btn-light popularButton">Multi Cap</button>
-                      <button type="button" className="btn btn-light popularButton">Mid Cap</button>
-                      <button type="button" className="btn btn-light popularButton">Flexi Cap</button>
-                    </div>
-                    <div className="col-12 mt-2">
-                      <div className="row border-bottom borderColor py-2">
-                        <div className="col-1 pb-1">
-                          <img src={icici} height={50} width={50} alt="" />
-                        </div>
-                        <div className="col-10">
-                          <small className="">ICICI Prudential bluechip Funds <br />  <small className="congratesColor">25.08%</small> 3Y Returns <small> Min. SIP <CurrencyRupee className="mb-1" /></small>100</small>
-                        </div>
-                      </div>
-                      <div className="row border-bottom borderColor py-2">
-                        <div className="col-1">
-                          <img src={sbi} height={50} width={50} alt="" />
-                        </div>
-                        <div className="col-10">
-                          <small className="">SBI Large Cap funds <br />  <small className="congratesColor">25.08%</small> 3Y Returns <small> Min. SIP <CurrencyRupee className="mb-1" /></small>100</small>
-                        </div>
-                      </div>
-                      <div className="row border-bottom borderColor py-2">
-                        <div className="col-1">
-                          <img src={icici} height={50} width={50} alt="" />
-                        </div>
-                        <div className="col-10">
-                          <small className="">ICICI Prudential bluechip Funds <br />  <small className="congratesColor">25.08%</small> 3Y Returns <small> Min. SIP <CurrencyRupee className="mb-1" /></small>100</small>
-                        </div>
-                      </div>
-                      <div className="row border-bottom borderColor py-2">
-                        <div className="col-1">
-                          <img src={sbi} height={50} width={50} alt="" />
-                        </div>
-                        <div className="col-10">
-                          <small className="">SBI Large Cap funds <br />  <small className="congratesColor">25.08%</small> 3Y Returns <small> Min. SIP <CurrencyRupee className="mb-1" /></small>100</small>
-                        </div>
-                      </div>
+            <div className="col-sm-12 col-lg-7 d-flex justify-content-between w-100">
+              <div className="fw-semibold">Popular Funds</div>
+            </div>
+            <div className="col-12 mt-2">
+              <button type="button" className="btn btn-light popularButton text-primary rounded-3 align-self-start">
+                Large Cap
+              </button>
+              <button type="button" className="btn btn-light popularButton">
+                Multi Cap
+              </button>
+              <button type="button" className="btn btn-light popularButton">
+                Mid Cap
+              </button>
+              <button type="button" className="btn btn-light popularButton">
+                Flexi Cap
+              </button>
+            </div>
+            <div className="col-12 mt-2">
+              <div className="d-flex gap-3 border-bottom borderColor py-2">
+                <div className="pb-1">
+                  <img src={icici} height={50} width={50} alt="" />
+                </div>
+                <div className="">
+                  <small className="">
+                    ICICI Prudential bluechip Funds <br />{" "}
+                    <small className="congratesColor">25.08%</small> 3Y Returns{" "}
+                    <small>
+                      {" "}
+                      Min. SIP <CurrencyRupee />
+                    </small>
+                    100
+                  </small>
+                </div>
+              </div>
+              <div className="d-flex gap-3 border-bottom borderColor py-2">
+                <div className="">
+                  <img src={sbi} height={50} width={50} alt="" />
+                </div>
+                <div className="">
+                  <small className="">
+                    SBI Large Cap funds <br />{" "}
+                    <small className="congratesColor">25.08%</small> 3Y Returns{" "}
+                    <small>
+                      {" "}
+                      Min. SIP <CurrencyRupee />
+                    </small>
+                    100
+                  </small>
+                </div>
+              </div>
+              <div className="d-flex gap-3 border-bottom borderColor py-2">
+                <div className="">
+                  <img src={icici} height={50} width={50} alt="" />
+                </div>
+                <div className="">
+                  <small className="">
+                    ICICI Prudential bluechip Funds <br />{" "}
+                    <small className="congratesColor">25.08%</small> 3Y Returns{" "}
+                    <small>
+                      {" "}
+                      Min. SIP <CurrencyRupee />
+                    </small>
+                    100
+                  </small>
+                </div>
+              </div>
+              <div className="d-flex gap-3 border-bottom borderColor py-2">
+                <div className="">
+                  <img src={sbi} height={50} width={50} alt="" />
+                </div>
+                <div className="">
+                  <small className="">
+                    SBI Large Cap funds <br />{" "}
+                    <small className="congratesColor">25.08%</small> 3Y Returns{" "}
+                    <small>
+                      {" "}
+                      Min. SIP <CurrencyRupee />
+                    </small>
+                    100
+                  </small>
+                </div>
+              </div>
 
-                      <div className="row border-bottom borderColor py-2">
-                        <div className="col-1">
-                          <img src={icici} height={50} width={50} alt="" />
-                        </div>
-                        <div className="col-10">
-                          <small className="">ICICI Prudential bluechip Funds <br />  <small className="congratesColor">25.08%</small> 3Y Returns <small> Min. SIP <CurrencyRupee className="mb-1" /></small>100</small>
-                        </div>
-                      </div>
-                      <div className="row border-bottom borderColor py-2">
-                        <div className="col-1">
-                          <img src={sbi} height={50} width={50} alt="" />
-                        </div>
-                        <div className="col-10">
-                          <small className="">SBI Large Cap funds <br />  <small className="congratesColor">25.08%</small> 3Y Returns <small> Min. SIP <CurrencyRupee className="mb-1" /></small>100</small>
-                        </div>
-                      </div>
-                      <div className="row border-bottom borderColor py-2">
-                        <div className="col-1">
-                          <img src={icici} height={50} width={50} alt="" />
-                        </div>
-                        <div className="col-10">
-                          <small className="">ICICI Prudential bluechip Funds <br />  <small className="congratesColor">25.08%</small> 3Y Returns <small> Min. SIP <CurrencyRupee className="mb-1" /></small>100</small>
-                        </div>
-                      </div>
-
-                    </div>
-                  </div>
+              <div className="d-flex gap-3 border-bottom borderColor py-2">
+                <div className="">
+                  <img src={icici} height={50} width={50} alt="" />
+                </div>
+                <div className="">
+                  <small className="">
+                    ICICI Prudential bluechip Funds <br />{" "}
+                    <small className="congratesColor">25.08%</small> 3Y Returns{" "}
+                    <small>
+                      {" "}
+                      Min. SIP <CurrencyRupee />
+                    </small>
+                    100
+                  </small>
+                </div>
+              </div>
+              <div className="d-flex gap-3 border-bottom borderColor py-2">
+                <div className="">
+                  <img src={sbi} height={50} width={50} alt="" />
+                </div>
+                <div className="">
+                  <small className="">
+                    SBI Large Cap funds <br />{" "}
+                    <small className="congratesColor">25.08%</small> 3Y Returns{" "}
+                    <small>
+                      {" "}
+                      Min. SIP <CurrencyRupee />
+                    </small>
+                    100
+                  </small>
+                </div>
+              </div>
+              <div className="d-flex gap-3 border-bottom borderColor py-2">
+                <div className="">
+                  <img src={icici} height={50} width={50} alt="" />
+                </div>
+                <div className="">
+                  <small className="">
+                    ICICI Prudential bluechip Funds <br />{" "}
+                    <small className="congratesColor">25.08%</small> 3Y Returns{" "}
+                    <small>
+                      {" "}
+                      Min. SIP <CurrencyRupee />
+                    </small>
+                    100
+                  </small>
+                </div>
+              </div>
+            </div>
+          </div>
 
                 </Card.Body>
               </Card>

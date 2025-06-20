@@ -1274,17 +1274,22 @@ input[type="number"] {
     width: 40px !important;
     height: 40px;
   }
+
+  .mobile-fontset {
+    font-size: 13px;
+  }
 }
 
-.btn_colorfull{
+.btn_colorfull {
   background-color: #011EFE !important;
   color: #f1f1f1 !important;
 }
 
-.btn-check:checked+.btn{
+.btn-check:checked+.btn {
   background-color: #011EFE !important;
   color: #f1f1f1 !important;
 }
+<<<<<<< HEAD
 .nameTitle{
   background-color: #011EFE !important;
   color: #f1f1f1 !important;
@@ -1303,3 +1308,121 @@ input[type="number"] {
 .circle{
   border-radius: 50%;
 }
+=======
+
+
+.dotted_sip_prodyg svg {
+  font-size: 16px;
+}
+
+.port_holding_etails h1 {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.prod_sip_22 {
+  background-color: #E6E8FF;
+  border-radius: 25px;
+  padding: 2px 10px;
+}
+
+.prod_sip_22 span {
+  font-size: 13px;
+  font-weight: 500;
+  color: #1A35FE;
+}
+
+span.text-secondary.text-uppercase.fs-7 {
+  font-size: 13px;
+}
+
+.form-check-input:checked{
+    background-color: #1A35FE;
+    border-color: #1A35FE;
+}
+
+.font-size-16{
+  font-size: 16px;
+}
+
+.form-check{
+  margin-bottom: .8rem;
+}
+.explore-categoryprodgy{
+  font-size: 12px;
+}
+.card .form-check-input[type=checkbox] {
+    border-radius: 1.25em;
+}
+
+.form-check>label{
+  font-size: 16px;
+}
+
+.checkbox-grid-setprodgy{
+  display: grid;
+  grid-template-columns: auto auto;
+}
+
+@media (min-width: 1000px) and (max-width: 4000px) {
+  .grid-exploreprodgy {
+    display: grid;
+    grid-template-columns: auto auto auto auto auto auto auto;
+  }
+
+  .mutual-funds-searchbuttonprodgy12 {
+    position: absolute;
+    top: 18px;
+    left: 20px;
+  }
+}
+
+@media (min-width: 720px) and (max-width: 999px) {
+  .grid-exploreprodgy {
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+  }
+
+  .funds-list-nameprodgy p {
+    font-size: 15px;
+    margin-bottom: 8px;
+  }
+
+  .funds-sublist-nameprodgy {
+    font-size: 14px;
+  }
+
+  .mutual-funds-searchbuttonprodgy12 {
+    position: absolute;
+    top: 18px;
+    left: 20px;
+    width: 20px;
+  }
+}
+
+@media (min-width: 320px) and (max-width: 719px) {
+  .grid-exploreprodgy {
+    display: grid;
+    grid-template-columns: auto auto;
+  }
+
+  .funds-list-nameprodgy p {
+    font-size: 14px;
+    margin-bottom: 7px;
+  }
+
+  .funds-sublist-nameprodgy {
+    font-size: 13px;
+  }
+
+  .funds-rightsign-prodgy12 {
+    width: 20px;
+  }
+
+  .mutual-funds-searchbuttonprodgy12 {
+    position: absolute;
+    top: 35px;
+    left: 18px;
+  }
+}
+>>>>>>> a1af1f147f91b7d3455b7ec8402e7f58cf9216f2
