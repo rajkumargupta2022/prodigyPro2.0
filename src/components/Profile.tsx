@@ -1,7 +1,10 @@
 import { Link } from "react-router-dom";
-import GIRLDP from "../assets/img/girl-dp.png";
+import { useAdminUser } from "../context/AdminContext"
+
 
 function Profile() {
+  const { switchProfile, adminUser, familyMemberList } = useAdminUser()
+
   return (
     <main className="col-md-9 ms-sm-auto col-lg-9 px-md-4 py-4">
       <h3>
@@ -11,18 +14,20 @@ function Profile() {
       <hr className="fw-light text-secondary" />
       <form className="d-flex p-4 shadow-sm bg-white border-0 rounded-4">
         <div>
-          <img src={GIRLDP} alt="Image not found" height={80} width={80}/>
+          {adminUser?.profilePic ? <img src={adminUser?.profilePic} className='circleIMg' alt="Image not found" /> : <div className="nameTitleMain">
+            {adminUser?.name?.split(" ")?.slice(0, 2).map(word => word[0]).join("").toUpperCase()}
+          </div>}
         </div>
         <div className="m-2 " style={{ flex: 1 }}>
-          <h5>Nandani Sahu</h5>
-          <p>Member since 2023</p>
+          <h5>{adminUser?.name}</h5>
+          <p>Member since {adminUser?.createdAt?.split("-")[0]}</p>
         </div>
         <div className="crPointer">
           <Link to="/profile-details" className="logoBlueColor">
             Profile Details
           </Link>
         </div>
-        
+
       </form>
       <div className="p-4 shadow-sm bg-white border-0 rounded-4 mt-4">
 
@@ -32,43 +37,27 @@ function Profile() {
         </div>
 
         <div className="row">
-          <div className="col-lg-4 col-md-6 col-sm-12 py-2">
-            <div
-              className="profileCard"
-            >
-              <img src={GIRLDP} alt="Image not found" height={44} width={44}/>
-              <h5>Kamini Sahu</h5>
-              <p>Spouse</p>
-              <p className="logoBlueColor">Switch Profile</p>
-            </div>
-          </div>
-           <div className="col-lg-4 col-md-6 col-sm-12 py-2">
-            <div
-              className="profileCard"
-            >
-              <img src={GIRLDP} alt="Image not found" height={44} width={44}/>
-              <h5>Kamini Sahu</h5>
-              <p>Spouse</p>
-              <p className="logoBlueColor">Switch Profile</p>
-            </div>
-          </div>
-           <div className="col-lg-4 col-md-6 col-sm-12 py-2">
-            <div
-              className="profileCard"
-            >
-              <img src={GIRLDP} alt="Image not found" height={44} width={44}/>
-              <h5>Kamini Sahu</h5>
-              <p>Spouse</p>
-              <p className="logoBlueColor">Switch Profile</p>
-            </div>
-          </div>
+          {familyMemberList.length > 0 && familyMemberList.map((item) => {
+            return <>
+              <div className="col-lg-4 col-md-6 col-sm-12 py-2">
+                <div
+                  className="profileCard"
+                >
+                  {adminUser?.profilePic ? <img src={adminUser?.profilePic} className='circleImg-2' alt="Image not found" /> : <div className="nameTitle">
+                    {item?.name?.split(" ")?.slice(0, 2).map(word => word[0]).join("").toUpperCase()}
+                  </div>}
 
-
-        
-
-         
-
-      
+                  <h5> {item.name}</h5>
+                  <p> {item.jh1_name
+                    ? item.jh2_name
+                      ? `${item.jh1_name}, ${item.jh2_name}`
+                      : item.jh1_name
+                    : item.hold_n_code === "SI" && item.relation}</p>
+                  <p className="logoBlueColor" onClick={() => switchProfile(item)}>Switch Profile</p>
+                </div>
+              </div>
+            </>
+          })}
         </div>
       </div>
     </main>

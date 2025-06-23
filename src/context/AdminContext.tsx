@@ -8,7 +8,7 @@ import { endPoints } from "../services/utils/urls";
 interface AdminUserContextType {
   adminUser?: allFamilyListKeys;
   familyMemberList: allFamilyListKeys[];
-  switchProfile: (adminData: allFamilyListKeys, setShow: (value: boolean) => void
+  switchProfile: (adminData: allFamilyListKeys, setShow?: (value: boolean) => void
   ) => void;
   familySnapShotData: familyDataType[];
   snapshotData: familyDataType;
@@ -70,12 +70,18 @@ export const AdminUserProvider = ({ children }: { children: ReactNode }) => {
     if (!adminData?.ucc) {
       for (const item of data) {
         if (item.relation === "Self") {
-          item.name = item.name.toLowerCase().replace(/\b\w/g, c => c.toUpperCase())
+          item.name = nameFormatter(item.name)
           localStorage.setItem("adminUser", JSON.stringify(item))
+          item.relation = nameFormatter(item.relation)
+          item.jh1_name = nameFormatter(item.jh1_name)
+          item.jh2_name = nameFormatter(item.jh2_name)
           setAdminUser(item)
           familyPortfolio(item)
         } else {
-          item.name = item.name.toLowerCase().replace(/\b\w/g, c => c.toUpperCase())
+          item.name = nameFormatter(item.name)
+          item.relation = nameFormatter(item.relation)
+          item.jh1_name = nameFormatter(item.jh1_name)
+          item.jh2_name = nameFormatter(item.jh2_name)
           familyMember.push(item)
         }
       }
@@ -83,11 +89,17 @@ export const AdminUserProvider = ({ children }: { children: ReactNode }) => {
     } else {
       for (const item of data) {
         if (item.ucc === adminData.ucc) {
-          item.name = item.name.toLowerCase().replace(/\b\w/g, c => c.toUpperCase())
+          item.name = nameFormatter(item.name)
+          item.relation = nameFormatter(item.relation)
+          item.jh1_name = nameFormatter(item.jh1_name)
+          item.jh2_name = nameFormatter(item.jh2_name)
           localStorage.setItem("adminUser", JSON.stringify(item))
           setAdminUser(item)
         } else {
-          item.name = item.name.toLowerCase().replace(/\b\w/g, c => c.toUpperCase())
+          item.name = nameFormatter(item.name)
+          item.relation = nameFormatter(item.relation)
+          item.jh1_name = nameFormatter(item.jh1_name)
+          item.jh2_name = nameFormatter(item.jh2_name)
           familyMember.push(item)
 
         }
@@ -96,14 +108,19 @@ export const AdminUserProvider = ({ children }: { children: ReactNode }) => {
     }
 
   }
+  const nameFormatter = (name: string): string => {
+    return name
+      .toLowerCase()
+      .replace(/\b\w/g, (char: string) => char.toUpperCase());
+  };
 
   const switchProfile = (
-    adminData: allFamilyListKeys, setShow: (show: boolean) => void
+    adminData: allFamilyListKeys, setShow?: (show: boolean) => void
   ) => {
     localStorage.setItem("adminUser", JSON.stringify(adminData));
     fetchFamilyPortfoloData();
     familyPortfolio(adminData)
-    setShow(false);
+    if (setShow) setShow(false);
   };
 
   const familyPortfolio = async (adminUser: any) => {
@@ -112,6 +129,7 @@ export const AdminUserProvider = ({ children }: { children: ReactNode }) => {
         ucc: adminUser?.ucc
       });
       if (res) {
+
         setFamilySnapShotData(res.finalArray)
         if (res?.finalArray?.length > 1) {
           const portfolioType = localStorage.getItem("portfolioType")
@@ -120,14 +138,42 @@ export const AdminUserProvider = ({ children }: { children: ReactNode }) => {
           } else if (!res.finalArray[1]?.myPortfolio && portfolioType === "family") {
             setSnapshotData(res.finalArray[1])
           }
-        } else {
+        } else if (res?.finalArray?.length === 1) {
           localStorage.setItem("portfolioType", "my")
           setSnapshotData(res.finalArray[0])
+        } else {
+          console.log("rrrrrrrrrrrrrrrrr");
+          setSnapshotData({
+            Totalpurchase: 0,
+            Totalmarketvalue: 0,
+            Finaldays: 0,
+            Finalcagr: "",
+            Totaldayschange: 0,
+            Gainloss: 0,
+            Dividend: 0,
+            debtPercentFinal: "",
+            goldPercentFinal: "",
+            equityPercentFinal: "",
+            myPortfolio: false,
+          })
         }
 
       }
     } else {
       fetchFamilyPortfoloData();
+      setSnapshotData({
+        Totalpurchase: 0,
+        Totalmarketvalue: 0,
+        Finaldays: 0,
+        Finalcagr: "",
+        Totaldayschange: 0,
+        Gainloss: 0,
+        Dividend: 0,
+        debtPercentFinal: "",
+        goldPercentFinal: "",
+        equityPercentFinal: "",
+        myPortfolio: false,
+      })
     }
 
 

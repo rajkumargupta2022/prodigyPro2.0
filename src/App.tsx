@@ -69,7 +69,7 @@ import AddAccountVerification from "./components/bank-account-verification";
 import ChangePassword from "./components/Change-Password";
 import HelpSupport from "./components/help&support";
 import Statements from "./components/Statements";
-import MyProfile from "./components/My-Profile";
+import MyProfile from "./components/Profile-details";
 import Loader from "./services/Loader/Loader";
 import { LoaderProvider, useLoader } from "./context/LoaderContext";
 import { registerLoaderCallbacks } from "./services/Loader/LoaderController";

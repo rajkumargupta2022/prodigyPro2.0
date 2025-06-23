@@ -42,9 +42,10 @@ const Portfolio = () => {
   const fetchDetailedPortfolio = async (ucc:string) => {
     const res = await postRequest<detailPortfolioType>(endPoints.getDetailedPortfolio, {ucc});
     if (res) {
-      console.log("res", res);
-
-      setPortfolioDetailData(res.dataSent.data)
+    const modifiedData =  res.dataSent.data.filter((item)=>Number(item.purchase)>0)
+      setPortfolioDetailData(modifiedData)
+      console.log(modifiedData);
+      
     }
 
   }
@@ -62,11 +63,11 @@ const Portfolio = () => {
               <div className="col">
                 <small className="fw-semibold">OVERALL PROFIT</small> <span className="fs12px ms-1" > As on {currentDateInStringNumber()}</span>
               </div>
-              <h3 className={`fw-bold ${snapshotData.Gainloss >= 0 ? "congratesColor" : "errorColor2"}`}><CurrencyRupee className="mb-1" />{Math.abs(snapshotData.Gainloss).toLocaleString("en-In")}<small className={`fs-6 ${snapshotData.Gainloss >= 0 ? "congratesColor" : "errorColor2"}`} >({snapshotData.Finalcagr}%)</small></h3>
+              <h3 className={`fw-bold ${snapshotData?.Gainloss >= 0 ? "congratesColor" : "errorColor2"}`}><CurrencyRupee className="mb-1" />{Math.abs(snapshotData?.Gainloss)?.toLocaleString("en-In")}<small className={`fs-6 ${snapshotData?.Gainloss >= 0 ? "congratesColor" : "errorColor2"}`} >({snapshotData?.Finalcagr}%)</small></h3>
               <div className="textColor">1 Day change
-                {snapshotData.Totaldayschange >= 0 ?
-                  <span className="congratesColor"> <ArrowUpCircleFill /><CurrencyRupee className="mb-1" />{snapshotData.Totaldayschange.toLocaleString("en-In")} ({getPercentageValue(Number(snapshotData.Totalpurchase), snapshotData.Totaldayschange)}%)</span> :
-                  <span className="errorColor2"><ArrowDownCircleFill /><CurrencyRupee className="mb-1" />{snapshotData.Totaldayschange.toLocaleString("en-In")} ({getPercentageValue(Number(snapshotData.Totalpurchase), snapshotData.Totaldayschange)}%)</span>
+                {snapshotData?.Totaldayschange >= 0 ?
+                  <span className="congratesColor"> <ArrowUpCircleFill /><CurrencyRupee className="mb-1" />{snapshotData?.Totaldayschange?.toLocaleString("en-In")} ({getPercentageValue(Number(snapshotData?.Totalpurchase), snapshotData?.Totaldayschange)}%)</span> :
+                  <span className="errorColor2"><ArrowDownCircleFill /><CurrencyRupee className="mb-1" />{snapshotData?.Totaldayschange?.toLocaleString("en-In")} ({getPercentageValue(Number(snapshotData?.Totalpurchase), snapshotData?.Totaldayschange)}%)</span>
                 }
               </div>
             </div>
@@ -74,11 +75,11 @@ const Portfolio = () => {
             <div className="row  mt-1">
               <div className="col-6 text-end ">
                 <small className="fs14px">Investment</small><br />
-                <small className="fs16px"><CurrencyRupee className="mb-1" />{Number(snapshotData.Totalpurchase).toLocaleString("en-In")} </small>
+                <small className="fs16px"><CurrencyRupee className="mb-1" />{Math.round(Number(snapshotData?.Totalpurchase))?.toLocaleString("en-In")} </small>
               </div>
               <div className="col-5 text-start ">
                 <small className="fs14px">Current Value</small><br />
-                <small className="fs16px"><CurrencyRupee className="mb-1" />{snapshotData.Totalmarketvalue.toLocaleString("en-In")} </small>
+                <small className="fs16px"><CurrencyRupee className="mb-1" />{Math.round(Number(snapshotData?.Totalmarketvalue))?.toLocaleString("en-In")} </small>
               </div>
             </div>
           </div>
@@ -95,7 +96,7 @@ const Portfolio = () => {
         </div>
       </div>
 
-      {portfolioDetailData.length && portfolioDetailData.map((item) => {
+      {portfolioDetailData?.length>0 ? portfolioDetailData?.map((item) => {
         return (
           <div className="container py-2" onClick={()=>navigate("/fund-details")}>
             <div className="personal_form_container">
@@ -103,11 +104,11 @@ const Portfolio = () => {
                 <div className="d-flex justify-content-between">
                   <div className="d-flex">
                     <div className="prod_icon_img">
-                      <img src={`${imageUrl+item.amcCode}.png`} height={55} width={55} alt="" />
+                      <img src={`${imageUrl+item?.amcCode}.png`} height={50} width={50} alt="" />
                     </div>
                     <div className="ms-2 prod_icon_heading mt-3">
-                      <h4>{item.scheme}</h4>
-                      <p>Folio: {item.folio}</p>
+                      <h4>{item?.scheme}</h4>
+                      <p>Folio: {item?.folio}</p>
                     </div>
                   </div>
 
@@ -116,15 +117,15 @@ const Portfolio = () => {
                 <div className="row text-start mt-2">
                   <div className="col-md-4 py-2 py-md-0">
                     <small className="fs14px">Invested</small><br />
-                    <small> <CurrencyRupee className="mb-1" />{getValueInThousand(Number(item.purchase))}K</small>
+                    <small> <CurrencyRupee className="mb-1" />{getValueInThousand(Number(item?.purchase))}K</small>
                   </div>
                   <div className="col-md-4 py-2 py-md-0">
                     <small className="fs14px">Current Value</small><br />
-                    <small> <CurrencyRupee className="mb-1" />{getValueInThousand(Number(item.currentvalue))}K</small>
+                    <small> <CurrencyRupee className="mb-1" />{getValueInThousand(Number(item?.currentvalue))}K</small>
                   </div>
                   <div className="col-md-4 py-2 py-md-0">
                     <small className="fs14px">Gain/Loss</small><br />
-                    <small> <CurrencyRupee className="mb-1" />{getValueInThousand(Number(item.gain))}K</small> <small className={`fs12px ${Number(item.finalcagr) > 0 ? "congratesColor" : "errorColor2"}`}>{item.finalcagr}%</small>
+                    <small> <CurrencyRupee className="mb-1" />{getValueInThousand(Number(item?.gain))}K</small> <small className={`fs12px ${Number(item?.finalcagr) > 0 ? "congratesColor" : "errorColor2"}`}>{item.finalcagr}%</small>
                   </div>
                 </div>
               </div>
@@ -132,7 +133,7 @@ const Portfolio = () => {
             </div>
           </div>
         )
-      })}
+      }):""}
 
 
       <SchemeDetails show={openSchemeDetail} setShow={setOpenSchemeDetail} />
