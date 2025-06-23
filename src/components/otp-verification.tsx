@@ -10,7 +10,7 @@ function OTPVerification() {
       <div className="mb-3 row w-50 mt-4 otp-input-field">
         <OtpInput
           value={otp}
-          inputStyle="col otpBox2 "
+          inputStyle="col otpBox2"
           onChange={setOtp}
           numInputs={4}
           p-input
