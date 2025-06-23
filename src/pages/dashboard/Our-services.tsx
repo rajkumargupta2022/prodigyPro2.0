@@ -7,22 +7,21 @@ import money from "../../assets/img/icons/rupee 1.svg"
 import Card from 'react-bootstrap/Card';
 import { Link } from "react-router-dom"
 
-const OurServices = ()=>{
-  return(
-      <Card border="light mb-3 cardRadius">
-                <Card.Body>
-                  <div className="row ">
-                    <h6 className="fw-semibold mb-4">Our Services</h6>
-                    <Link className="col text-center" to="/emergency-funds"><img src={money} alt="" className="" height={24} /><small className="d-block adjustText ">Emergengy Fund </small></Link>
-                    <Link to="/recommended-funds" className="col text-center " ><img src={recomended} alt="" className="" height={24} /><small className="d-block  adjustText">Recommended Funds</small></Link>
-                    <Link to="/tax-saving" className="col text-center " ><img src={taxSaving} alt="" className="" height={24} /><small className="d-block  adjustText">Tax Saving</small></Link>
-                    <Link to="/portfolio-review" className="col text-center" ><img src={portfolio} alt="" className="" height={24} /><small className="d-block  adjustText">Portfolio Review</small></Link>
-                    <Link to="/nfo-live" className="col text-center" ><img src={nfo} alt="" className="" height={24} /><small className="d-block  adjustText">NFO Live</small></Link>
-                    <Link to="/emergency-funds" className="col text-center" ><img src={transact} alt="" className="" height={24} /><small className="d-block  adjustText">All Orders</small></Link>
-
-                  </div>
-                </Card.Body>
-              </Card>
+const OurServices = () => {
+  return (
+    <Card border="light mb-3 cardRadius">
+      <Card.Body>
+        <div className="row">
+          <h6 className="fw-semibold mb-4">Our Services</h6>
+          <div className="col-6 col-md-3 col-lg-2 py-1 text-center"> <Link className=" text-center" to="/emergency-funds"><img src={money} alt="" className="" height={24} /><small className="d-block adjustText ">Emergengy Fund </small></Link></div>
+          <div className="col-6 col-md-3 col-lg-2 py-1 text-center"> <Link to="/recommended-funds" className=" text-center " ><img src={recomended} alt="" className="" height={24} /><small className="d-block  adjustText">Recommended Funds</small></Link></div>
+          <div className="col-6 col-md-3 col-lg-2 py-1 text-center"> <Link to="/tax-saving" className=" text-center " ><img src={taxSaving} alt="" className="" height={24} /><small className="d-block  adjustText">Tax Saving</small></Link></div>
+          <div className="col-6 col-md-3 col-lg-2 py-1 text-center"> <Link to="/portfolio-review" className=" text-center" ><img src={portfolio} alt="" className="" height={24} /><small className="d-block  adjustText">Portfolio Review</small></Link></div>
+          <div className="col-6 col-md-3 col-lg-2 py-1 text-center"> <Link to="/nfo-live" className=" text-center" ><img src={nfo} alt="" className="" height={24} /><small className="d-block  adjustText">NFO Live</small></Link></div>
+          <div className="col-6 col-md-3 col-lg-2 py-1 text-center"> <Link to="/emergency-funds" className=" text-center" ><img src={transact} alt="" className="" height={24} /><small className="d-block  adjustText">All Orders</small></Link></div>
+        </div>
+      </Card.Body>
+    </Card>
   )
 }
 export default OurServices

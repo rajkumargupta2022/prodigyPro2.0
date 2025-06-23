@@ -15,12 +15,14 @@ const EmergencyFund = () => {
       <NavBar />
 
       <div className="breadcum_area" style={{ backgroundColor: "#F2F4FB" }}>
-        <div className="personal_form_container p-3">
+        <div className="personal_form_container pt-3">
           <Breadcrumb>
             <Breadcrumb.Item href="#">Home</Breadcrumb.Item>
-            <Breadcrumb.Item href="https://getbootstrap.com/docs/4.0/components/breadcrumb/">
+            <ChevronRight className="fs14px" />
+            <Breadcrumb.Item href="#">
               Library
             </Breadcrumb.Item>
+            <ChevronRight className="fs14px" />
             <Breadcrumb.Item active>Data</Breadcrumb.Item>
           </Breadcrumb>
         </div>

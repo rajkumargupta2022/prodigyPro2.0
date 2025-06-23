@@ -135,6 +135,16 @@ p {
 
 }
 
+.breadcrumb {
+  align-items: center;
+  gap: 5px;
+}
+
+.breadcrumb-item a {
+  font-size: 1.1rem;
+  color: #011efe;
+}
+
 .declaration-button {
   border-radius: 15px;
   margin-right: 1%;
@@ -788,6 +798,7 @@ hr {
 .user_profile_icon {
   display: flex;
   gap: 15px;
+  align-items: center;
 }
 
 .prodgy_menu {
@@ -1270,6 +1281,11 @@ input[type="number"] {
 
 @media only screen and (max-width:800px) {
 
+  .smallModel {
+    width: 100%;
+    margin-left: 0%;
+  }
+
   .otp-input-field input[type="text"] {
     width: 40px !important;
     height: 40px;
@@ -1289,14 +1305,16 @@ input[type="number"] {
   background-color: #011EFE !important;
   color: #f1f1f1 !important;
 }
-.nameTitle{
+
+.nameTitle {
   background-color: #011EFE !important;
   color: #f1f1f1 !important;
   font-size: 15px;
   padding: 8px;
   border-radius: 50%;
 }
-.nameTitleMain{
+
+.nameTitleMain {
   background-color: #011EFE !important;
   color: #f1f1f1 !important;
   font-size: 18px;
@@ -1304,7 +1322,7 @@ input[type="number"] {
   border-radius: 80%;
 }
 
-.circle{
+.circle {
   border-radius: 50%;
 }
 
@@ -1334,30 +1352,32 @@ span.text-secondary.text-uppercase.fs-7 {
   font-size: 13px;
 }
 
-.form-check-input:checked{
-    background-color: #1A35FE;
-    border-color: #1A35FE;
+.form-check-input:checked {
+  background-color: #1A35FE;
+  border-color: #1A35FE;
 }
 
-.font-size-16{
+.font-size-16 {
   font-size: 16px;
 }
 
-.form-check{
+.form-check {
   margin-bottom: .8rem;
 }
-.explore-categoryprodgy{
+
+.explore-categoryprodgy {
   font-size: 12px;
 }
+
 .card .form-check-input[type=checkbox] {
-    border-radius: 1.25em;
+  border-radius: 1.25em;
 }
 
-.form-check>label{
+.form-check>label {
   font-size: 16px;
 }
 
-.checkbox-grid-setprodgy{
+.checkbox-grid-setprodgy {
   display: grid;
   grid-template-columns: auto auto;
 }

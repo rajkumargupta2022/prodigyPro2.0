@@ -83,7 +83,7 @@ const MyNavbar = () => {
               </div>
             </Link>
           </Nav>
-          <div className="d-flex user_profile_icon prodgy_menu">
+          <div className="user_profile_icon prodgy_menu m-2">
             <Link to="#" className="prodgy_menu">
               <QuestionCircle size={24} />
             </Link>

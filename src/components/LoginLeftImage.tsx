@@ -2,7 +2,7 @@ import journeyImage from "../assets/img/left-login.svg"
 const LoginLeftImage = ({ LeftImage = journeyImage }) => {
   return (
     <>
-        <div className="col-md-6 col-12 m-0 loginBg px-lg-5">
+        <div className="col-md-6 col-12 m-0 loginBg px-lg-5 d-md-block d-none">
           <img className="w-lg-85 mx-auto d-block loginimg" height={500} src={LeftImage} alt="leftLogin" />
           <h4 className="text-white px-5">Your Journey to Wealth
             Begins Today</h4>
