@@ -32,7 +32,6 @@ import Explore from "./pages/explore";
 import AllMutualFunds from "./pages/All-Mutual-Funds";
 import FundDetails from "./pages/Fund-Details";
 import Account from "./pages/account";
-import PortfolioEmpty from "./pages/PortfolioEmpty";
 import GoalPlanning from "./pages/planning/GoalPlanning";
 import GoalSummary from "./pages/planning/GoalSummary";
 import Goal from "./pages/planning/Goal";
@@ -224,7 +223,6 @@ function App() {
 
           {/* account related pages end */}
 
-          <Route path="/portfolio-empty" element={<PortfolioEmpty />} />
           <Route path="/goal-planning" element={<GoalPlanning />} />
           <Route path="/goal-summary" element={<GoalSummary />} />
           <Route path="/goal" element={<Goal />} />

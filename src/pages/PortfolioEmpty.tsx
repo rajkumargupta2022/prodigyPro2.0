@@ -1,33 +1,54 @@
-import NavBar from "../components/Navbar";
-import empty from "../assets/img/empty-img.svg"
+// import empty from "../assets/img/empty-img.svg"
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const PortfolioEmpty = () => {
-   const navigate = useNavigate()
+interface PortfolioEmptyProps{
+  images:any;
+  title?:string;
+  body?:string;
+  btnName? : string;
+  btnUrl?:string
 
-  const getOtp = () => {
-    navigate("/explore")
+}
+const PortfolioEmpty: React.FC<PortfolioEmptyProps> = ({
+  images,  // Replace with a default value or imported image
+  title,
+  body,
+  btnName,
+  btnUrl = "#"
+}) => {
+    const [show, setShow] = useState<boolean>(false);
+  const navigate = useNavigate()
+  const navigateOnPage = () => {
+    navigate(btnUrl)
   }
+    useEffect(() => {
+    const timer = setTimeout(() => {
+      setShow(true);
+    }, 1000); // Delay 2 seconds
+
+    return () => clearTimeout(timer); // Cleanup
+  }, []);
 
   return (
     <>
-      <NavBar />
+      {/* <NavBar /> */}
       <div className="container px-4 mt-3" >
         <div className="row">
-        
-          <div className="col-md-12 col-sm-12 ">
+        {show&&<div className="col-md-12 col-sm-12 ">
             <div className="row  justify-content-center mb-3">
               <div className="col-lg-6 col-md-12 col-sm-12 ">
                 <div className="d-flex justify-content-center my-4">
-                  <img src={empty} alt="" height={300}  />
+                  <img src={images} alt="" height={300}  />
                 </div>
-                  <h4 className="text-center">You Have No Investments Yet</h4>
-                  <p className="fs16px mt-1 text-center">Start investing today to build your portfolio and achieve your financial goals.</p>
+               {title?  <h4 className="text-center">{title}</h4>:""}  
+                 {body?<p className="fs16px mt-1 text-center">{body}</p>:""} 
                  
-                  <button type="button"  className="customButton px-4 mx-auto d-block" onClick={getOtp}>Explore Funds</button>
+                 {btnName?<button type="button"  className="customButton px-4 mx-auto d-block" onClick={navigateOnPage}>{btnName}</button>:""} 
               </div>
             </div>
-          </div>
+          </div>}
+          
 
         </div>
       </div>

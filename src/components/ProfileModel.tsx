@@ -53,7 +53,11 @@ const ProfileModel: React.FC<ProfileModelProps> = ({ show, setShow }) => {
                       {item.name}
                     </h6>
                     <span className="text-secondary fs12px">
-                      {item.relation}
+                     {item.jh1_name
+                    ? item.jh2_name
+                      ? `${item.jh1_name}, ${item.jh2_name}`
+                      : item.jh1_name
+                    : item.hold_n_code === "SI" && item.relation}
                     </span>
                   </div>
                   <span className="logoBlueColor crPointer" onClick={() => switchProfile(item, setShow)}>Switch Profile</span>

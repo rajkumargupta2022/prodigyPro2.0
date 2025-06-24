@@ -3,6 +3,7 @@ import { createContext, useContext, useState, ReactNode, useEffect } from "react
 import { allFamilyListKeys, allFamilyResponseType, familyDataType, familySnapshotResponseType } from "../pages/data-interfaces/dashboard";
 import { postRequest } from "../services/Api/HandleApi";
 import { endPoints } from "../services/utils/urls";
+import { detailPortfolioSchemeType, detailPortfolioType } from "../pages/data-interfaces/portfolio";
 
 
 interface AdminUserContextType {
@@ -14,7 +15,9 @@ interface AdminUserContextType {
   snapshotData: familyDataType;
   familyPortfolio: (adminData: allFamilyListKeys) => void;
   setSnapshotData: (value: any) => void;
-  // setFamilySnapShotData:(value:any)=>void;
+  fetchDetailedPortfolio: (value: string) => void;
+  setPortfolioDetailData: (value: any) => void;
+  portfolioDetailData: detailPortfolioSchemeType[];
 
 }
 
@@ -26,6 +29,8 @@ export const AdminUserProvider = ({ children }: { children: ReactNode }) => {
   const [familyMemberList, setFamilyMemberList] = useState<allFamilyListKeys[]>([])
   const [adminUser, setAdminUser] = useState<allFamilyListKeys>()
   const [familySnapShotData, setFamilySnapShotData] = useState<familyDataType[]>([])
+  const [portfolioDetailData, setPortfolioDetailData] = useState<detailPortfolioSchemeType[]>([])
+  
   const [snapshotData, setSnapshotData] = useState<familyDataType>({
     Totalpurchase: 0,
     Totalmarketvalue: 0,
@@ -120,6 +125,7 @@ export const AdminUserProvider = ({ children }: { children: ReactNode }) => {
     localStorage.setItem("adminUser", JSON.stringify(adminData));
     fetchFamilyPortfoloData();
     familyPortfolio(adminData)
+    fetchDetailedPortfolio(adminData?.ucc)
     if (setShow) setShow(false);
   };
 
@@ -129,7 +135,6 @@ export const AdminUserProvider = ({ children }: { children: ReactNode }) => {
         ucc: adminUser?.ucc
       });
       if (res) {
-
         setFamilySnapShotData(res.finalArray)
         if (res?.finalArray?.length > 1) {
           const portfolioType = localStorage.getItem("portfolioType")
@@ -142,7 +147,6 @@ export const AdminUserProvider = ({ children }: { children: ReactNode }) => {
           localStorage.setItem("portfolioType", "my")
           setSnapshotData(res.finalArray[0])
         } else {
-          console.log("rrrrrrrrrrrrrrrrr");
           setSnapshotData({
             Totalpurchase: 0,
             Totalmarketvalue: 0,
@@ -156,6 +160,7 @@ export const AdminUserProvider = ({ children }: { children: ReactNode }) => {
             equityPercentFinal: "",
             myPortfolio: false,
           })
+
         }
 
       }
@@ -179,17 +184,30 @@ export const AdminUserProvider = ({ children }: { children: ReactNode }) => {
 
   }
 
-  return (
-    <AdminUserContext.Provider value={{ adminUser, familyMemberList, switchProfile, familySnapShotData, snapshotData, familyPortfolio, setSnapshotData }}>
-      {children}
-    </AdminUserContext.Provider>
-  );
-};
-
-export const useAdminUser = () => {
-  const context = useContext(AdminUserContext);
-  if (!context) {
-    throw new Error("Error during export  admin user from context");
+  const fetchDetailedPortfolio = async (ucc: string) => {
+    try {
+      const res = await postRequest<detailPortfolioType>(endPoints.getDetailedPortfolio, { ucc });
+      if (res) {
+        const modifiedData = res.dataSent.data.filter((item) => Number(item.purchase) > 0)
+        setPortfolioDetailData(modifiedData)
+      } else {
+        setPortfolioDetailData([])
+      }
+    } catch (err) {
+      setPortfolioDetailData([])
+    }
   }
-  return context;
-};
+    return (
+      <AdminUserContext.Provider value={{ adminUser, familyMemberList, switchProfile, familySnapShotData, snapshotData, familyPortfolio, setSnapshotData, fetchDetailedPortfolio, setPortfolioDetailData, portfolioDetailData }}>
+        {children}
+      </AdminUserContext.Provider>
+    );
+  };
+
+  export const useAdminUser = () => {
+    const context = useContext(AdminUserContext);
+    if (!context) {
+      throw new Error("Error during export  admin user from context");
+    }
+    return context;
+  };
