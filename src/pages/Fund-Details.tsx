@@ -1,4 +1,4 @@
-import { Container} from "react-bootstrap";
+import { Container } from "react-bootstrap";
 import MyNavbar from "../components/Navbar";
 import HDFC from "../assets/img/icons/hdfc.svg";
 import SimpleLineChart from "../components/chart";
@@ -6,6 +6,7 @@ import MyStackBar from "../components/Stack-bar";
 import { useState } from "react";
 import SelectFolioPopup from "../components/select-folio-popup";
 import { AiOutlineMore } from "react-icons/ai";
+import Footer from "../components/Footer";
 
 const FundDetails = () => {
   const [openSelectFolio, setOpenSelectFolio] = useState(false)
@@ -283,6 +284,7 @@ const FundDetails = () => {
 
       </Container>
       <SelectFolioPopup show={openSelectFolio} setShow={setOpenSelectFolio} />
+      <Footer />
     </>
   );
 };

@@ -20,11 +20,11 @@ const OrderPlaces: React.FC<OrderPlaces> = ({ show, setShow }) => {
       >
         <Modal.Body style={{ padding: 0 }}>
           <div className="d-flex justify-content-center align-items-center">
-            <div className=" text-white text-center rounded-4 shadow-lg" style={{ backgroundImage: `url(${successImg})`,backgroundSize:"cover",backgroundPosition:"center" }}>
+            <div className=" text-white text-center rounded-4 shadow-lg" style={{ backgroundImage: `url(${successImg})`, backgroundSize: "cover", backgroundPosition: "center" }}>
               {/* Image Wrapper */}
               <div className="position-relative d-inline-block">
                 {/* Background Image */}
-                <img src={group} alt="Group" className="img-fluid" height={110} width={250}/>
+                <img src={group} alt="Group" className="img-fluid" height={110} width={250} />
                 {/* Overlay Image */}
                 <img
                   src={correct}
@@ -35,15 +35,15 @@ const OrderPlaces: React.FC<OrderPlaces> = ({ show, setShow }) => {
                 />
               </div>
 
-              <h3>Order Placed</h3>
-              <p className="text-white fs18px">
+              <h3 className="mb-3">Order Placed</h3>
+              <p className="text-white fs18px mb-0">
                 Units will be alloted subject to realization of funds in AMC’s
                 account
               </p>
 
               <div
-               
-                className="m-5 schemeDetailBox"
+
+                className="mx-md-5 m-2 schemeDetailBox my-md-3 my-1"
               >
                 <div className="d-flex text-start fs12pxWhite">
                   <p className="order-Placed-modal  text-start">
@@ -51,12 +51,10 @@ const OrderPlaces: React.FC<OrderPlaces> = ({ show, setShow }) => {
                   </p>
                   <p className="fs16">32545525</p>
                 </div>
-
                 <div className="d-flex  text-start fs12pxWhite">
                   <p className="order-Placed-modal ">TRXN NUMBER:</p>
                   <p className="fs16">32545525</p>
                 </div>
-
                 <div className="d-flex text-start fs12pxWhite">
                   <p className="order-Placed-modal ">FUND:</p>
                   <p className="fs16">HDFC Flexi Cap Fund-Regular-Growth</p>
@@ -73,9 +71,10 @@ const OrderPlaces: React.FC<OrderPlaces> = ({ show, setShow }) => {
                   <p className="order-Placed-modal ">STATUS:</p>
                   <p className="fs16">Successful</p>
                 </div>
+
               </div>
 
-              <div className="mt-2 px-5" style={{ textAlign: "start" }}>
+              <div className="mt-2 px-md-5 px-2" style={{ textAlign: "start" }}>
                 <span className="text-white">Note:</span>
                 <br />
                 <p className="text-white fs14px" style={{ textAlign: "start" }}>

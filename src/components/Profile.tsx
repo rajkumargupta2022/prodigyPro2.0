@@ -9,15 +9,18 @@ function Profile() {
       </h3>
 
       <hr className="fw-light text-secondary" />
-      <form className="d-flex p-4 shadow-sm bg-white border-0 rounded-4">
-        <div>
+      <form className="row p-4 align-items-center shadow-sm bg-white border-0 rounded-4">
+
+        <div className="col-md-2 col-4" >
           <img src={GIRLDP} alt="Image not found" height={80} width={80}/>
         </div>
-        <div className="m-2 " style={{ flex: 1 }}>
+
+        <div className="col-md-4 col-8 m-2" >
           <h5>Nandani Sahu</h5>
           <p>Member since 2023</p>
         </div>
-        <div className="crPointer">
+
+        <div className="col-md-4 col-12 text-md-end  mt-md-0 mt-2 crPointer align-items-center">
           <Link to="/profile-details" className="logoBlueColor">
             Profile Details
           </Link>

@@ -3,6 +3,7 @@ import { ChevronRight, Search } from "react-bootstrap-icons";
 import MyNavbar from "../components/Navbar";
 import AMCLOGO from "../assets/img/icons/AMC Logo.svg";
 import { useNavigate } from "react-router-dom";
+import Footer from "../components/Footer";
 
 const AllMutualFunds = () => {
   const navigate = useNavigate()
@@ -204,6 +205,7 @@ const AllMutualFunds = () => {
           </Col>
         </Row>
       </Container>
+      <Footer />
     </>
   );
 };

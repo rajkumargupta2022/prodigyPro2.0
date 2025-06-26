@@ -6,6 +6,7 @@ import SimpleLineChart from "../components/chart";
 import MyStackBar from "../components/Stack-bar";
 import { useState } from "react";
 import SelectFolioPopup from "../components/select-folio-popup";
+import Footer from "../components/Footer";
 
 const ExploreFundDetails = () => {
   const [openSelectFolio, setOpenSelectFolio] = useState(false);
@@ -326,6 +327,7 @@ const ExploreFundDetails = () => {
         </Row>
       </Container>
       <SelectFolioPopup show={openSelectFolio} setShow={setOpenSelectFolio} />
+      <Footer />
     </>
   );
 };

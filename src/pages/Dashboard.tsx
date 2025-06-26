@@ -13,6 +13,8 @@ import { getPercentageValue } from "../services/calculation/percentageCalculate"
 import { fetchAdminUser } from "../services/user/adminUser";
 import { useAdminUser } from "../context/AdminContext";
 import SwitchPortfolio from "./dashboard/Switch-portfolio";
+import Footer from "../components/Footer";
+
 
 
 const Dashboard = () => {
@@ -91,6 +93,8 @@ const Dashboard = () => {
       />
 
       <AreYouSure />
+
+      <Footer />
     </>
   )
 }

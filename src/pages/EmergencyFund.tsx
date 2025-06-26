@@ -4,6 +4,7 @@ import icici from "../assets/img/bank-logo/icici.png"
 import { ChevronRight } from "react-bootstrap-icons";
 import { useState } from "react";
 import SchemeDetails from "../components/SchemeDetails";
+import Footer from "../components/Footer";
 
 const EmergencyFund = () => {
   const [openSchemeDetail,setOpenSchemeDetail] = useState<boolean>(false)
@@ -14,7 +15,7 @@ const EmergencyFund = () => {
     <>
       <NavBar />
 
-      <div className="breadcum_area" style={{ backgroundColor: "#F2F4FB" }}>
+      <div className="breadcum_area">
         <div className="personal_form_container pt-3">
           <Breadcrumb>
             <Breadcrumb.Item href="#">Home</Breadcrumb.Item>
@@ -84,6 +85,7 @@ const EmergencyFund = () => {
         </div>
       </div>
       <SchemeDetails show={openSchemeDetail} setShow={setOpenSchemeDetail}/>
+        <Footer />
     </>
   );
 };
