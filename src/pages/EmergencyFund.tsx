@@ -3,7 +3,11 @@ import icici from "../assets/img/bank-logo/icici.png"
 import { ChevronRight } from "react-bootstrap-icons";
 import { useState } from "react";
 import SchemeDetails from "../components/SchemeDetails";
+<<<<<<< HEAD
 import { useNavigate } from "react-router-dom";
+=======
+import Footer from "../components/Footer";
+>>>>>>> 62a40d364abda7de9d4a85191f9da620f5dd1284
 
 const EmergencyFund = () => {
   const navigate = useNavigate()
@@ -15,7 +19,23 @@ const EmergencyFund = () => {
     <>
       <NavBar />
 
+<<<<<<< HEAD
       
+=======
+      <div className="breadcum_area">
+        <div className="personal_form_container pt-3">
+          <Breadcrumb>
+            <Breadcrumb.Item href="#">Home</Breadcrumb.Item>
+            <ChevronRight className="fs14px" />
+            <Breadcrumb.Item href="#">
+              Library
+            </Breadcrumb.Item>
+            <ChevronRight className="fs14px" />
+            <Breadcrumb.Item active>Data</Breadcrumb.Item>
+          </Breadcrumb>
+        </div>
+      </div>
+>>>>>>> 62a40d364abda7de9d4a85191f9da620f5dd1284
       <div className="container pt-2">
         <div className="personal_form_container">
         <div className="d-flex my-3">
@@ -76,6 +96,7 @@ const EmergencyFund = () => {
         </div>
       </div>
       <SchemeDetails show={openSchemeDetail} setShow={setOpenSchemeDetail}/>
+        <Footer />
     </>
   );
 };

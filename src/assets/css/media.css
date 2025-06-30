@@ -1,53 +1,85 @@
 @media only screen and (max-width: 800px) {
-  .mrgin_With20{
+  .mrgin_With20 {
     margin: 0 auto;
     width: 85%;
   }
-  .loginimg{
-    width:100% !important;
-    height:400px !important;
+
+  .loginimg {
+    width: 100% !important;
+    height: 400px !important;
   }
-  .logincontent{
+
+  .logincontent {
     padding-bottom: 35px;
   }
-  .hideImage{
+
+  .hideImage {
     display: none;
   }
-  .mrgin_With20{
+
+  .mrgin_With20 {
     /* text-align: center; */
     margin-top: 15%;
   }
-  .logoImage{
+
+  .logoImage {
     height: 60px;
   }
-  .modelSize{
+
+  .modelSize {
     margin: 0 15px 0 19px;
   }
- 
+
 }
 
-  
+
 @media (min-width: 1400px) and (max-width: 2560px) {
-  .back_absolute_btn{
+  .back_absolute_btn {
     top: -35%;
   }
 }
+
 @media (min-width: 1000px) and (max-width: 1300px) {
-  .back_absolute_btn{
+  .back_absolute_btn {
     top: -35%;
   }
 }
+
 @media only screen and (max-width: 1000px) {
-  .back_absolute_btn{
+  .back_absolute_btn {
     top: 5%;
   }
-  .mTopForMobile{
+
+  .mTopForMobile {
     margin-top: 10px;
   }
 }
+
 @media only screen and (min-width: 1000px) {
-  .modelSize{
+  .modelSize {
     margin: 0 285px 0 26px;
   }
 }
 
+@media only screen and (max-width: 767px) {
+  .hide_on_desktop_btn {
+    display: block;
+    display: block;
+    width: auto;
+    padding:8px 10px;
+    border-radius: 10px;
+    background: #011EFE;
+    color: #fff;
+    border: 0;
+    margin-bottom: 20px;
+  }
+  .hide_on_desktop_btn p{
+    color: #fff;
+    font-size: 18px;
+  }
+  .filter_acounts_mobile {
+    position: absolute;
+    width: 100%;
+    left: -5500px;
+  }
+}

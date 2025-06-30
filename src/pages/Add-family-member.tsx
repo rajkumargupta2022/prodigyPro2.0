@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import MyNavbar from "../components/Navbar";
 import { ArrowLeft, ChevronRight } from "react-bootstrap-icons";
+import Footer from "../components/Footer";
 
 const AddFamilyMember = () => {
   const navigate = useNavigate()
@@ -120,7 +121,7 @@ const AddFamilyMember = () => {
                 <select id="holding-nature" className="form-control">
                   <option>Single</option>
                 </select>
-                <button type="button" onClick={()=>{navigate("/kyc-status-check")}} className="btn btn-primary mt-2">
+                <button type="button" onClick={() => { navigate("/kyc-status-check") }} className="btn btn-primary mt-2">
                   Proceed
                 </button>
               </div>
@@ -145,6 +146,7 @@ const AddFamilyMember = () => {
           </main>
         </div>
       </div>
+      <Footer />
     </>
   );
 };

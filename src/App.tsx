@@ -77,6 +77,7 @@ import StateFolioDetails from "./components/statement-folio-details";
 import NoFolioFounds from "./components/no-folio-found";
 import ExploreFundDetails from "./pages/Explore-fund-details";
 
+
 const LoaderHandler = () => {
   const { showLoader, hideLoader } = useLoader();
 

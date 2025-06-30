@@ -8,8 +8,12 @@ import { getPercentageValue, getValueInThousand, percentageDetailFolio } from ".
 import { useNavigate } from "react-router-dom";
 import { useAdminUser } from "../context/AdminContext";
 import { fetchAdminUser } from "../services/user/adminUser";
+<<<<<<< HEAD
 import PortfolioEmpty from "./PortfolioEmpty";
 import emptyImg from "../assets/img/empty-img.svg"
+=======
+import Footer from "../components/Footer";
+>>>>>>> 62a40d364abda7de9d4a85191f9da620f5dd1284
 
 const Portfolio = () => {
   const navigate = useNavigate()
@@ -83,7 +87,15 @@ const Portfolio = () => {
       {portfolioDetailData.length > 0 ? <div className="container py-2 personal_form_container">
         <div className="row ">
           <div className="col-6 text-start"><h6 >Invested funds</h6> </div>
+<<<<<<< HEAD
           <div className="col-6 text-end" onClick={toggleSort} > <button type="button" className="btn gainLossBtn ">Gain/Loss <ArrowDownUp />
+=======
+          <div className="col-6 text-end">
+            <button type="button" className="btn gainLossBtn ">Gain/Loss <ArrowDownUp />
+            {/* &#x25B2;
+<br/>
+<small>&#x25BC;</small> */}
+>>>>>>> 62a40d364abda7de9d4a85191f9da620f5dd1284
           </button></div>
         </div>
       </div> : ""}
@@ -108,15 +120,15 @@ const Portfolio = () => {
                 </div>
                 <hr />
                 <div className="row text-start mt-2">
-                  <div className="col-md-4 py-2 py-md-0">
+                  <div className="col-6 col-md-4 py-2 py-md-0">
                     <small className="fs14px">Invested</small><br />
                     <small> <CurrencyRupee className="mb-1" />{getValueInThousand(Number(item?.purchase))}K</small>
                   </div>
-                  <div className="col-md-4 py-2 py-md-0">
+                  <div className="col-6 col-md-4 py-2 py-md-0">
                     <small className="fs14px">Current Value</small><br />
                     <small> <CurrencyRupee className="mb-1" />{getValueInThousand(Number(item?.currentvalue))}K</small>
                   </div>
-                  <div className="col-md-4 py-2 py-md-0">
+                  <div className="col-6 col-md-4 py-2 py-md-0">
                     <small className="fs14px">Gain/Loss</small><br />
                     <small> <CurrencyRupee className="mb-1" />{getValueInThousand(Number(item?.gain))}K</small> <small className={`fs12px ${Number(item?.finalcagr) > 0 ? "congratesColor" : "errorColor2"}`}>{getPercentageValue(Number(item?.purchase), item?.gain)}%</small>
                   </div>
@@ -130,6 +142,8 @@ const Portfolio = () => {
 
 
       <SchemeDetails show={openSchemeDetail} setShow={setOpenSchemeDetail} />
+
+        <Footer />
     </>
   );
 };

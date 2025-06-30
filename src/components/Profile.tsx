@@ -12,6 +12,7 @@ function Profile() {
       </h3>
 
       <hr className="fw-light text-secondary" />
+<<<<<<< HEAD
       <form className="d-flex p-4 shadow-sm bg-white border-0 rounded-4">
         <div>
           {adminUser?.profilePic ? <img src={adminUser?.profilePic} className='circleIMg' alt="Image not found" /> : <div className="nameTitleMain">
@@ -21,8 +22,20 @@ function Profile() {
         <div className="m-2 " style={{ flex: 1 }}>
           <h5>{adminUser?.name}</h5>
           <p>Member since {adminUser?.createdAt?.split("-")[0]}</p>
+=======
+      <form className="row p-4 align-items-center shadow-sm bg-white border-0 rounded-4">
+
+        <div className="col-md-2 col-4" >
+          <img src={GIRLDP} alt="Image not found" height={80} width={80}/>
         </div>
-        <div className="crPointer">
+
+        <div className="col-md-4 col-8 m-2" >
+          <h5>Nandani Sahu</h5>
+          <p>Member since 2023</p>
+>>>>>>> 62a40d364abda7de9d4a85191f9da620f5dd1284
+        </div>
+
+        <div className="col-md-4 col-12 text-md-end  mt-md-0 mt-2 crPointer align-items-center">
           <Link to="/profile-details" className="logoBlueColor">
             Profile Details
           </Link>

@@ -10,6 +10,7 @@ import SBI from "../assets/img/icons/sbi.png";
 import { CurrencyRupee, Search } from "react-bootstrap-icons";
 import MyNavbar from "../components/Navbar";
 import { useNavigate } from "react-router-dom";
+import Footer from "../components/Footer";
 
 
 
@@ -208,6 +209,8 @@ const Explore = () => {
           </div>
         </div>
       </div>
+
+      <Footer />
     </>
   );
 };
