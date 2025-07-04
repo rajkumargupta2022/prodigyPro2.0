@@ -152,11 +152,17 @@ const FundDetails = () => {
     }
 
   }
+  const [show, setShow] = useState(false);
+
+  const handleClick = () => {
+    setShow(!show); 
+  };
 
   return (
     <>
       <MyNavbar />
       <Container className="mt-4">
+
         <div className="d-flex align-items-center">
           <img src={`${imageUrl + location.state?.amcCode}.png`} className="logoRadius" alt="Image not found" width={60} height={60} />
           <div style={{ marginLeft: "2%", marginTop: "2%" }}>
@@ -164,34 +170,41 @@ const FundDetails = () => {
             <p>Equity: Flexi Cap</p>
           </div>
         </div>
+
         <div className="row mt-4">
           <div className="col-lg-8 col-md-8 col-12 border-end">
 
-            <div className="row" >
-              <div className="col-5 m-3" >
-                <p className="fs12px mb-0">NAV</p>
-                <p className="fs16px">₹{location.state.cnav}</p>
-              </div>
-              <div className="col-5 m-3">
-                <p className="fs12px mb-0">Last {durarinInYear} CAGR</p>
-                <h5 className="sf12px congratesColor">{cagr}%</h5>
+            <div className="card border-0">
+              <div className="row px-4 pt-4" >
+                <div className="col-6" >
+                  <p className="fs12px mb-0">NAV</p>
+                  <p className="fs16px">₹{location.state.cnav}</p>
+                </div>
+                <div className="col-6">
+                  <p className="fs12px mb-0">Last {durarinInYear} CAGR</p>
+                  <h5 className="sf12px congratesColor">{cagr}%</h5>
+                </div>
+
               </div>
 
-            </div>
-            <ReactApexChart
-              options={state.options}
-              series={state.series}
-              type="area"
-              height={250}
-            />
-            <div className="d-flex justify-content-between align-items-center mx-4 mt-0 crPointer" >
-              <p className={`${duration === 1 && "activeDuratin"} `} onClick={() => fetchNavHistory(1)}>1M</p>
-              <p className={`${duration === 3 && "activeDuratin"}`} onClick={() => fetchNavHistory(3)}>3M</p>
-              <p className={`${duration === 6 && "activeDuratin"}`} onClick={() => fetchNavHistory(6)}> 6M</p>
-              <p className={`${duration === 12 && "activeDuratin"}`} onClick={() => fetchNavHistory(12)}>1Y</p>
-              <p className={`${duration === 36 && "activeDuratin"}`} onClick={() => fetchNavHistory(36)}>3Y</p>
-              <p className={`${duration === 60 && "activeDuratin"}`} onClick={() => fetchNavHistory(60)}>5Y</p>
-              <p className={`${duration === -1 && "activeDuratin"}`} onClick={() => fetchNavHistory(-1)}>Max</p>
+              <div className="">
+                <ReactApexChart
+                  options={state.options}
+                  series={state.series}
+                  type="area"
+                  height={250}
+                />
+              </div>
+
+              <div className="d-flex justify-content-between align-items-center mx-4 mt-0 crPointer" >
+                <p className={`${duration === 1 && "activeDuratin"} `} onClick={() => fetchNavHistory(1)}>1M</p>
+                <p className={`${duration === 3 && "activeDuratin"}`} onClick={() => fetchNavHistory(3)}>3M</p>
+                <p className={`${duration === 6 && "activeDuratin"}`} onClick={() => fetchNavHistory(6)}> 6M</p>
+                <p className={`${duration === 12 && "activeDuratin"}`} onClick={() => fetchNavHistory(12)}>1Y</p>
+                <p className={`${duration === 36 && "activeDuratin"}`} onClick={() => fetchNavHistory(36)}>3Y</p>
+                <p className={`${duration === 60 && "activeDuratin"}`} onClick={() => fetchNavHistory(60)}>5Y</p>
+                <p className={`${duration === -1 && "activeDuratin"}`} onClick={() => fetchNavHistory(-1)}>Max</p>
+              </div>
             </div>
 
 
@@ -240,11 +253,11 @@ const FundDetails = () => {
               </div>
             </div>
 
-           <MyStackBar/>
+            <MyStackBar />
           </div>
 
           {/* Mutual Funds List */}
-          <div className="col-md-4 col-12" >
+          <div className="col-md-4 col-12 position-relative" >
             <div
               className="card mb-4"
               style={{
@@ -274,7 +287,7 @@ const FundDetails = () => {
                     </label>
                   </div>
 
-                  <div className="">
+                  <div onClick={handleClick} className="">
                     <label
                       className="btn_colorfull dotted_sip_prodyg rounded-3 declaration-button w-100 paddingLeftRight px-4 py-2 mobile-fontset"
                       htmlFor="option1"
@@ -286,7 +299,22 @@ const FundDetails = () => {
               </div>
 
             </div>
+            {show && (
+              
+              <div className="card mb-4 popup_card_steup_area">
+                <div className="p-3">
+                  <ul className="ps-0 style-unerline-prodgy mb-0">
+                    <li>Redeem Fund</li>
+                    <li>Systematic Transfer Plan (STP)</li>
+                    <li>Systematic Withdrawal Plan (SWP)</li>
+                    <li>Transaction History</li>
 
+                  </ul>
+                </div>
+              </div>
+              
+            )}
+            
             <div
               className="card mb-4"
               style={{
@@ -295,6 +323,7 @@ const FundDetails = () => {
                 overflow: "hidden",
               }}
             >
+
               <div className="p-lg-3 p-4">
 
                 <div className="mt-2">
@@ -338,6 +367,7 @@ const FundDetails = () => {
               </div>
 
             </div>
+
           </div>
         </div>
 
