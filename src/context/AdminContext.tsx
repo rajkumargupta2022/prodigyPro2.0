@@ -3,18 +3,21 @@ import { createContext, useContext, useState, ReactNode, useEffect } from "react
 import { allFamilyListKeys, allFamilyResponseType, familyDataType, familySnapshotResponseType } from "../pages/data-interfaces/dashboard";
 import { postRequest } from "../services/Api/HandleApi";
 import { endPoints } from "../services/utils/urls";
+import { detailPortfolioSchemeType, detailPortfolioType } from "../pages/data-interfaces/portfolio";
 
 
 interface AdminUserContextType {
   adminUser?: allFamilyListKeys;
   familyMemberList: allFamilyListKeys[];
-  switchProfile: (adminData: allFamilyListKeys, setShow: (value: boolean) => void
+  switchProfile: (adminData: allFamilyListKeys, setShow?: (value: boolean) => void
   ) => void;
   familySnapShotData: familyDataType[];
   snapshotData: familyDataType;
   familyPortfolio: (adminData: allFamilyListKeys) => void;
   setSnapshotData: (value: any) => void;
-  // setFamilySnapShotData:(value:any)=>void;
+  fetchDetailedPortfolio: (value: string) => void;
+  setPortfolioDetailData: (value: any) => void;
+  portfolioDetailData: detailPortfolioSchemeType[];
 
 }
 
@@ -26,6 +29,8 @@ export const AdminUserProvider = ({ children }: { children: ReactNode }) => {
   const [familyMemberList, setFamilyMemberList] = useState<allFamilyListKeys[]>([])
   const [adminUser, setAdminUser] = useState<allFamilyListKeys>()
   const [familySnapShotData, setFamilySnapShotData] = useState<familyDataType[]>([])
+  const [portfolioDetailData, setPortfolioDetailData] = useState<detailPortfolioSchemeType[]>([])
+  
   const [snapshotData, setSnapshotData] = useState<familyDataType>({
     Totalpurchase: 0,
     Totalmarketvalue: 0,
@@ -70,12 +75,18 @@ export const AdminUserProvider = ({ children }: { children: ReactNode }) => {
     if (!adminData?.ucc) {
       for (const item of data) {
         if (item.relation === "Self") {
-          item.name = item.name.toLowerCase().replace(/\b\w/g, c => c.toUpperCase())
+          item.name = nameFormatter(item.name)
           localStorage.setItem("adminUser", JSON.stringify(item))
+          item.relation = nameFormatter(item.relation)
+          item.jh1_name = nameFormatter(item.jh1_name)
+          item.jh2_name = nameFormatter(item.jh2_name)
           setAdminUser(item)
           familyPortfolio(item)
         } else {
-          item.name = item.name.toLowerCase().replace(/\b\w/g, c => c.toUpperCase())
+          item.name = nameFormatter(item.name)
+          item.relation = nameFormatter(item.relation)
+          item.jh1_name = nameFormatter(item.jh1_name)
+          item.jh2_name = nameFormatter(item.jh2_name)
           familyMember.push(item)
         }
       }
@@ -83,11 +94,17 @@ export const AdminUserProvider = ({ children }: { children: ReactNode }) => {
     } else {
       for (const item of data) {
         if (item.ucc === adminData.ucc) {
-          item.name = item.name.toLowerCase().replace(/\b\w/g, c => c.toUpperCase())
+          item.name = nameFormatter(item.name)
+          item.relation = nameFormatter(item.relation)
+          item.jh1_name = nameFormatter(item.jh1_name)
+          item.jh2_name = nameFormatter(item.jh2_name)
           localStorage.setItem("adminUser", JSON.stringify(item))
           setAdminUser(item)
         } else {
-          item.name = item.name.toLowerCase().replace(/\b\w/g, c => c.toUpperCase())
+          item.name = nameFormatter(item.name)
+          item.relation = nameFormatter(item.relation)
+          item.jh1_name = nameFormatter(item.jh1_name)
+          item.jh2_name = nameFormatter(item.jh2_name)
           familyMember.push(item)
 
         }
@@ -96,14 +113,20 @@ export const AdminUserProvider = ({ children }: { children: ReactNode }) => {
     }
 
   }
+  const nameFormatter = (name: string): string => {
+    return name
+      .toLowerCase()
+      .replace(/\b\w/g, (char: string) => char.toUpperCase());
+  };
 
   const switchProfile = (
-    adminData: allFamilyListKeys, setShow: (show: boolean) => void
+    adminData: allFamilyListKeys, setShow?: (show: boolean) => void
   ) => {
     localStorage.setItem("adminUser", JSON.stringify(adminData));
     fetchFamilyPortfoloData();
     familyPortfolio(adminData)
-    setShow(false);
+    fetchDetailedPortfolio(adminData?.ucc)
+    if (setShow) setShow(false);
   };
 
   const familyPortfolio = async (adminUser: any) => {
@@ -120,30 +143,71 @@ export const AdminUserProvider = ({ children }: { children: ReactNode }) => {
           } else if (!res.finalArray[1]?.myPortfolio && portfolioType === "family") {
             setSnapshotData(res.finalArray[1])
           }
-        } else {
+        } else if (res?.finalArray?.length === 1) {
           localStorage.setItem("portfolioType", "my")
           setSnapshotData(res.finalArray[0])
+        } else {
+          setSnapshotData({
+            Totalpurchase: 0,
+            Totalmarketvalue: 0,
+            Finaldays: 0,
+            Finalcagr: "",
+            Totaldayschange: 0,
+            Gainloss: 0,
+            Dividend: 0,
+            debtPercentFinal: "",
+            goldPercentFinal: "",
+            equityPercentFinal: "",
+            myPortfolio: false,
+          })
+
         }
 
       }
     } else {
       fetchFamilyPortfoloData();
+      setSnapshotData({
+        Totalpurchase: 0,
+        Totalmarketvalue: 0,
+        Finaldays: 0,
+        Finalcagr: "",
+        Totaldayschange: 0,
+        Gainloss: 0,
+        Dividend: 0,
+        debtPercentFinal: "",
+        goldPercentFinal: "",
+        equityPercentFinal: "",
+        myPortfolio: false,
+      })
     }
 
 
   }
 
-  return (
-    <AdminUserContext.Provider value={{ adminUser, familyMemberList, switchProfile, familySnapShotData, snapshotData, familyPortfolio, setSnapshotData }}>
-      {children}
-    </AdminUserContext.Provider>
-  );
-};
-
-export const useAdminUser = () => {
-  const context = useContext(AdminUserContext);
-  if (!context) {
-    throw new Error("Error during export  admin user from context");
+  const fetchDetailedPortfolio = async (ucc: string) => {
+    try {
+      const res = await postRequest<detailPortfolioType>(endPoints.getDetailedPortfolio, { ucc });
+      if (res) {
+        const modifiedData = res.dataSent.data.filter((item) => Number(item.purchase) > 0)
+        setPortfolioDetailData(modifiedData)
+      } else {
+        setPortfolioDetailData([])
+      }
+    } catch (err) {
+      setPortfolioDetailData([])
+    }
   }
-  return context;
-};
+    return (
+      <AdminUserContext.Provider value={{ adminUser, familyMemberList, switchProfile, familySnapShotData, snapshotData, familyPortfolio, setSnapshotData, fetchDetailedPortfolio, setPortfolioDetailData, portfolioDetailData }}>
+        {children}
+      </AdminUserContext.Provider>
+    );
+  };
+
+  export const useAdminUser = () => {
+    const context = useContext(AdminUserContext);
+    if (!context) {
+      throw new Error("Error during export  admin user from context");
+    }
+    return context;
+  };

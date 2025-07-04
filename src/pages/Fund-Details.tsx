@@ -1,42 +1,199 @@
 import { Container } from "react-bootstrap";
 import MyNavbar from "../components/Navbar";
-import HDFC from "../assets/img/icons/hdfc.svg";
-import SimpleLineChart from "../components/chart";
 import MyStackBar from "../components/Stack-bar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SelectFolioPopup from "../components/select-folio-popup";
 import { AiOutlineMore } from "react-icons/ai";
+import { useLocation, useNavigate } from "react-router-dom";
+import { postRequest } from "../services/Api/HandleApi";
+import { navHistoryResponse, schemeDeatilDataKeys, schemeDetailType } from "./data-interfaces/transact";
+import { endPoints, imageUrl } from "../services/utils/urls";
+import { dateInStringNumber } from "../services/dates/dateFormater";
+import ReactApexChart from "react-apexcharts";
+import { ApexOptions } from "apexcharts";
 import Footer from "../components/Footer";
+import { detailPortfolioSchemeType } from "./data-interfaces/portfolio";
+
+interface ChartState {
+  options: ApexOptions;
+  series: { name: string; data: number[] }[];
+}
+
 
 const FundDetails = () => {
+  const location = useLocation()
+  const navigate = useNavigate()
   const [openSelectFolio, setOpenSelectFolio] = useState(false)
+  const [schemeDetailArray, setSchemeDetailArray] = useState<schemeDeatilDataKeys[]>([])
+  const [navDate, setNavDate] = useState<string[]>([])
+  const [navValue, setNavValue] = useState<number[]>([])
+  const [duration, setDuration] = useState<number>(12)
+  const [cagr, setCagr] = useState<number>(0)
+  const [durarinInYear, setDurarinInYear] = useState<string>("")
+
+  const state: ChartState = {
+    series: [
+      {
+        name: "₹ ",
+        data: navValue,
+      },
+    ],
+    options: {
+      chart: {
+        height: 350,
+        type: "area",
+        background: "transparent",
+        toolbar: {
+          show: false,
+        },
+        zoom: {
+          enabled: false,
+        },
+      },
+      dataLabels: {
+        enabled: false,
+      },
+      stroke: {
+        curve: "smooth",
+        width: [2], // ✅ Custom width (3px for first line, 2px for second line)
+        colors: ["#357AF6"],
+      },
+      xaxis: {
+        categories: navDate,
+        labels: {
+          show: false, // ❌ Hide date labels
+        },
+        axisBorder: {
+          show: false, // ❌ Hide bottom axis line
+        },
+        axisTicks: {
+          show: false, // ❌ Hide tick marks
+        },// ✅ Custom X-axis labels
+      },
+
+      yaxis: {
+        labels: {
+          show: false, // ❌ Hide Y-axis labels
+        },
+        axisBorder: {
+          show: false, // ❌ Hide Y-axis line
+        },
+        axisTicks: {
+          show: false, // ❌ Hide Y-axis ticks
+        },
+      },
+
+      grid: {
+        show: false, // ✅ Removes background grey lines
+      },
+    },
+  };
+
+  useEffect(() => {
+
+    if (location.state.accordSchemeCode) {
+      fetchSchemeDetail()
+      fetchNavHistory(12)
+    } else {
+      navigate("/portfolio")
+    }
+
+  }, [])
+
+  const fetchSchemeDetail = async () => {
+    try {
+      const res = await postRequest<schemeDetailType>(endPoints.getSchemeDetails, { productcode: location.state.accordSchemeCode })
+      setSchemeDetailArray(res.data)
+      console.log(res);
+
+    } catch (err) {
+      console.log(err);
+
+    }
+  }
+  const fetchNavHistory = async (durationMonth: number) => {
+    try {
+      const res = await postRequest<navHistoryResponse>(endPoints.getNavHistory, { productcode: location.state.accordSchemeCode, duration: durationMonth })
+      setCagr(res.cagr)
+      setNavDate(res.history.map(item => item.date))
+
+      setNavValue(res.history.map(item => parseFloat(Number(item.nav).toFixed(2))))
+      setDuration(durationMonth)
+      console.log(res);
+      yearInString(durationMonth)
+
+    } catch (err) {
+      console.log(err);
+
+    }
+  }
+  const yearInString = (year: number) => {
+    switch (year) {
+      case 1:
+        setDurarinInYear("1M")
+        break;
+      case 3:
+        setDurarinInYear("3M")
+        break;
+      case 6:
+        setDurarinInYear("6M")
+        break;
+      case 12:
+        setDurarinInYear("1Y")
+        break;
+      case 36:
+        setDurarinInYear("3Y")
+        break;
+      case 60:
+        setDurarinInYear("5Y")
+        break;
+      default:
+        setDurarinInYear("Max")
+    }
+
+  }
+
   return (
     <>
       <MyNavbar />
       <Container className="mt-4">
         <div className="d-flex align-items-center">
-          <img src={HDFC} alt="Image not found" width={70} height={70} />
+          <img src={`${imageUrl + location.state?.amcCode}.png`} className="logoRadius" alt="Image not found" width={60} height={60} />
           <div style={{ marginLeft: "2%", marginTop: "2%" }}>
-            <h4 className="fw-bold">HDFC Flexi Cap Fund</h4>
+            <h4 className="fw-bold">{location.state?.scheme}</h4>
             <p>Equity: Flexi Cap</p>
           </div>
         </div>
-        <div className="row">
-
-          {/* Sidebar Filters */}
+        <div className="row mt-4">
           <div className="col-lg-8 col-md-8 col-12 border-end">
-            <div
-              style={{
-                width: "100%",
-                height: "30%",
-                border: "none",
-                padding: "2%",
-                borderRadius: "16px",
-              }}
-              className="mt-2 card"
-            >
-              <SimpleLineChart />
+
+            <div className="row" >
+              <div className="col-5 m-3" >
+                <p className="fs12px mb-0">NAV</p>
+                <p className="fs16px">₹{location.state.cnav}</p>
+              </div>
+              <div className="col-5 m-3">
+                <p className="fs12px mb-0">Last {durarinInYear} CAGR</p>
+                <h5 className="sf12px congratesColor">{cagr}%</h5>
+              </div>
+
             </div>
+            <ReactApexChart
+              options={state.options}
+              series={state.series}
+              type="area"
+              height={250}
+            />
+            <div className="d-flex justify-content-between align-items-center mx-4 mt-0 crPointer" >
+              <p className={`${duration === 1 && "activeDuratin"} `} onClick={() => fetchNavHistory(1)}>1M</p>
+              <p className={`${duration === 3 && "activeDuratin"}`} onClick={() => fetchNavHistory(3)}>3M</p>
+              <p className={`${duration === 6 && "activeDuratin"}`} onClick={() => fetchNavHistory(6)}> 6M</p>
+              <p className={`${duration === 12 && "activeDuratin"}`} onClick={() => fetchNavHistory(12)}>1Y</p>
+              <p className={`${duration === 36 && "activeDuratin"}`} onClick={() => fetchNavHistory(36)}>3Y</p>
+              <p className={`${duration === 60 && "activeDuratin"}`} onClick={() => fetchNavHistory(60)}>5Y</p>
+              <p className={`${duration === -1 && "activeDuratin"}`} onClick={() => fetchNavHistory(-1)}>Max</p>
+            </div>
+
 
             <div
               className="card mt-4 p-4"
@@ -46,23 +203,23 @@ const FundDetails = () => {
               <div className="row pt-4">
                 <div className="col-6 py-2">
                   <span className="text-secondary text-uppercase fs-7">Fund Size</span>
-                  <h4 className="fs-6">₹66,304.16 Cr</h4>
+                  <h4 className="fs-6">₹{schemeDetailArray[0]?.fundSize} Cr</h4>
                 </div>
                 <div className="col-6 py-2">
                   <span className="text-secondary text-uppercase fs-7">Launched</span>
-                  <h4 className="fs-6">01 Jan 1995</h4>
+                  <h4 className="fs-6">{dateInStringNumber(schemeDetailArray[0]?.launchDate)} </h4>
                 </div>
                 <div className="col-6 py-2">
                   <span className="text-secondary text-uppercase fs-7">Expense Ratio</span>
-                  <h4 className="fs-6">0.56%</h4>
+                  <h4 className="fs-6">{schemeDetailArray?.[0]?.expenseRatio}%</h4>
                 </div>
                 <div className="col-6 py-2">
                   <span className="text-secondary text-uppercase fs-7">Lock-in</span>
-                  <h4 className="fs-6">0 Yr</h4>
+                  <h4 className="fs-6">{schemeDetailArray?.[0]?.lockInPeriod} Yr</h4>
                 </div>
                 <div className="col-6 py-2">
                   <span className="text-secondary text-uppercase fs-7">Plan Type</span>
-                  <h4 className="fs-6">Regular</h4>
+                  <h4 className="fs-6">{schemeDetailArray?.[0]?.planType}</h4>
                 </div>
                 <div className="col-6 py-2">
                   <span className="text-secondary text-uppercase fs-7">Plan Option</span>
@@ -70,11 +227,11 @@ const FundDetails = () => {
                 </div>
                 <div className="col-6 py-2">
                   <span className="text-secondary text-uppercase fs-7">Risk</span>
-                  <h4 className="fs-6">Very High</h4>
+                  <h4 className="fs-6">{schemeDetailArray?.[0]?.risk}</h4>
                 </div>
                 <div className="col-6 py-2">
                   <span className="text-secondary text-uppercase fs-7">Min. Investment</span>
-                  <h4 className="fs-6">₹100</h4>
+                  <h4 className="fs-6">₹{schemeDetailArray?.[0]?.minInvestment}</h4>
                 </div>
                 <div className="col-6 py-2">
                   <span className="text-secondary text-uppercase fs-7">Withdrawal Charges</span>
@@ -83,91 +240,7 @@ const FundDetails = () => {
               </div>
             </div>
 
-            <div
-              className="card mt-4 p-4 mb-4"
-              style={{ border: "none", borderRadius: "16px" }}
-            >
-              <h5 className="fw-bold">Return Calulator</h5>
-
-              <div className="row bottom-border">
-                <div className="col-md-6 py-1">
-                  <input
-                    type="radio"
-                    className="btn-check"
-                    name="options"
-                    id="option3"
-                    autoComplete="off"
-                  />
-                  <label
-                    className="btn_colorfull btn btn-outline-primary declaration-button w-100 "
-                    htmlFor="option3"
-                  >
-                    Monthly SIP
-                  </label>
-                </div>
-
-                <div className="col-md-6 py-1">
-                  <input
-                    type="radio"
-                    className="btn-check"
-                    name="options"
-                    id="option1"
-                    autoComplete="off"
-                  />
-                  <label
-                    className="btn btn-outline-primary declaration-button w-100 "
-                    htmlFor="option1"
-                  >
-                    One-time
-                  </label>
-                </div>
-              </div>
-
-              <div className="row justify-content-between gap-lg-5">
-                <div className="col-lg-4 col-md-6 py-2">
-                  <p>INVESTMENT OF</p>
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="1000"
-                    style={{ fontWeight: 400, fontSize: "16px" }}
-                  />
-                </div>
-                <div className="col-lg-6 col-md-6 align-self-md-end py-2">
-                  <p className="text-uppercase">For a period of</p>
-                  <div className="btn-group" role="group" aria-label="Basic radio toggle button group">
-
-                    <input type="radio" className="btn-check" name="btnradio" id="btnradio1" autoComplete="off" checked />
-                    <label className="btn btn-outline-primary px-xl-5 px-4" htmlFor="btnradio1">1Y</label>
-
-                    <input type="radio" className="btn-check" name="btnradio" id="btnradio2" autoComplete="off" />
-                    <label className="btn btn-outline-primary px-xl-5 px-4" htmlFor="btnradio2">3Y</label>
-
-                    <input type="radio" className="btn-check" name="btnradio" id="btnradio3" autoComplete="off" />
-                    <label className="btn btn-outline-primary px-xl-5 px-4" htmlFor="btnradio3">5Y</label>
-                  </div>
-                </div>
-              </div>
-
-              <div className="mt-2 border-bottom">
-                <p>
-                  Investment of
-                  <span className="fw-bold" style={{ color: "black" }}>
-                    {" "}
-                    ₹36k{" "}
-                  </span>
-                  could have been
-                </p>
-                <h6 className="fw-bold">
-                  ₹50,028.46 <span style={{ color: "#00b860" }}>(+22.56%)</span>
-                </h6>
-              </div>
-
-              <div className="mt-4">
-                <h6 className="fs-5 mb-0">Returns Comparison</h6>
-                <MyStackBar />
-              </div>
-            </div>
+           <MyStackBar/>
           </div>
 
           {/* Mutual Funds List */}
@@ -176,7 +249,7 @@ const FundDetails = () => {
               className="card mb-4"
               style={{
                 border: "none",
-                borderRadius: "20px",
+                borderRadius: "16px",
                 overflow: "hidden",
               }}
             >
@@ -184,15 +257,8 @@ const FundDetails = () => {
 
                 <div className="d-flex gap-2 justify-content-around">
                   <div>
-                    <input
-                      type="radio"
-                      className="btn-check"
-                      name="options"
-                      id="option3"
-                      autoComplete="off"
-                    />
                     <label
-                      className="btn_colorfull rounded-4 declaration-button w-100 paddingLeftRight px-4 py-2 mobile-fontset"
+                      className="btn_colorfull rounded-3 declaration-button w-100 paddingLeftRight px-4 py-2 mobile-fontset"
                       htmlFor="option3"
                     >
                       Invest More
@@ -200,15 +266,8 @@ const FundDetails = () => {
                   </div>
 
                   <div>
-                    <input
-                      type="radio"
-                      className="btn-check"
-                      name="options"
-                      id="option1"
-                      autoComplete="off"
-                    />
                     <label
-                      className="btn_colorfull rounded-4 declaration-button w-100 paddingLeftRight px-4 py-2 mobile-fontset"
+                      className="btn_colorfull rounded-3 declaration-button w-100 paddingLeftRight px-4 py-2 mobile-fontset"
                       htmlFor="option1"
                     >
                       Switch
@@ -217,7 +276,7 @@ const FundDetails = () => {
 
                   <div className="">
                     <label
-                      className="btn_colorfull dotted_sip_prodyg rounded-4 declaration-button w-100 paddingLeftRight px-3 py-2 mobile-fontset"
+                      className="btn_colorfull dotted_sip_prodyg rounded-3 declaration-button w-100 paddingLeftRight px-4 py-2 mobile-fontset"
                       htmlFor="option1"
                     >
                       <AiOutlineMore />

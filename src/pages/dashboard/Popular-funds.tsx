@@ -38,9 +38,7 @@ const PopularFunds = ()=>{
                     <small className="congratesColor">25.08%</small> 3Y Returns{" "}
                     <small>
                       {" "}
-                      Min. SIP <CurrencyRupee />
-                    </small>
-                    100
+                      Min. SIP <CurrencyRupee /></small>100
                   </small>
                 </div>
               </div>

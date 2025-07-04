@@ -32,7 +32,6 @@ import Explore from "./pages/explore";
 import AllMutualFunds from "./pages/All-Mutual-Funds";
 import FundDetails from "./pages/Fund-Details";
 import Account from "./pages/account";
-import PortfolioEmpty from "./pages/PortfolioEmpty";
 import GoalPlanning from "./pages/planning/GoalPlanning";
 import GoalSummary from "./pages/planning/GoalSummary";
 import Goal from "./pages/planning/Goal";
@@ -69,7 +68,7 @@ import AddAccountVerification from "./components/bank-account-verification";
 import ChangePassword from "./components/Change-Password";
 import HelpSupport from "./components/help&support";
 import Statements from "./components/Statements";
-import MyProfile from "./components/My-Profile";
+import MyProfile from "./components/Profile-details";
 import Loader from "./services/Loader/Loader";
 import { LoaderProvider, useLoader } from "./context/LoaderContext";
 import { registerLoaderCallbacks } from "./services/Loader/LoaderController";
@@ -225,7 +224,6 @@ function App() {
 
           {/* account related pages end */}
 
-          <Route path="/portfolio-empty" element={<PortfolioEmpty />} />
           <Route path="/goal-planning" element={<GoalPlanning />} />
           <Route path="/goal-summary" element={<GoalSummary />} />
           <Route path="/goal" element={<Goal />} />

@@ -2,11 +2,12 @@ import NavBar from "../components/Navbar";
 import icici from "../assets/img/bank-logo/icici.png"
 import sbi from "../assets/img/bank-logo/sbi.png"
 import { ChevronRight } from "react-bootstrap-icons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import SchemeDetails from "../components/SchemeDetails";
 
 const TaxSaving = () => {
+  const navigate = useNavigate()
   const [openSchemeDetail, setOpenSchemeDetail] = useState<boolean>(false)
   const handleSchemeDetail = () => {
     setOpenSchemeDetail(true)
@@ -19,7 +20,7 @@ const TaxSaving = () => {
       <div className="container pt-2">
         <div className="personal_form_container">
         <div className="d-flex my-3">
-            <h6 className="logoBlueColor">Home <small className="greyColor"> <ChevronRight className="fs12px bold" /> Tax Saving</small> </h6>
+            <h6 className="logoBlueColor crPointer" onClick={()=>navigate("/dashboard")}>Home <small className="greyColor"> <ChevronRight className="fs12px bold" /> Tax Saving</small> </h6>
           </div>
           <div className="row">
             <div className=" col">

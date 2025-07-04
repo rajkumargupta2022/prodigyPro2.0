@@ -17,11 +17,12 @@ const Login = () => {
   const navigate = useNavigate();
   const [mobile, setMobile] = useState<string>("");
   const [mobileError, setMobileError] = useState<string>("");
-  // const getOpt = () => {
-  //   navigate("/otp")
-  // }
+
   useEffect(() => {
-    const token = localStorage.getItem("token")
+    // const token = localStorage.getItem("token")
+    let token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ3cTgxc2xpNGZ4Y2pnIiwibW9iaWxlIjo4OTYwMDA2NjAxLCJpYXQiOjE3NDkxODUzMjksImV4cCI6MTc1MTc3NzMyOX0.EloBnAdP7vyJCDNRrbFDPz28N9fFUhIMAIYk1cE9Vt8"
+    localStorage.setItem("token",token)
+    localStorage.setItem("pan","AHNPG8965C")
     if (token) {
       navigate("/dashboard")
     }

@@ -2,21 +2,27 @@ import NavBar from "../components/Navbar";
 import { ArrowDownCircleFill, ArrowDownUp, ArrowUpCircleFill, CurrencyRupee } from "react-bootstrap-icons";
 import { useEffect, useState } from "react";
 import SchemeDetails from "../components/SchemeDetails";
-import { postRequest } from "../services/Api/HandleApi";
-import { endPoints, imageUrl } from "../services/utils/urls";
+import {  imageUrl } from "../services/utils/urls";
 import { currentDateInStringNumber } from "../services/dates/dateFormater";
-import { getPercentageValue, getValueInThousand } from "../services/calculation/percentageCalculate";
-import { detailPortfolioSchemeType, detailPortfolioType } from "./data-interfaces/portfolio";
+import { getPercentageValue, getValueInThousand, percentageDetailFolio } from "../services/calculation/percentageCalculate";
 import { useNavigate } from "react-router-dom";
 import { useAdminUser } from "../context/AdminContext";
 import { fetchAdminUser } from "../services/user/adminUser";
+import PortfolioEmpty from "./PortfolioEmpty";
+import emptyImg from "../assets/img/empty-img.svg"
 import Footer from "../components/Footer";
+import { detailPortfolioSchemeType } from "./data-interfaces/portfolio";
+
 
 const Portfolio = () => {
   const navigate = useNavigate()
-  const {familyPortfolio,snapshotData} = useAdminUser()
+  const { familyPortfolio, snapshotData,setPortfolioDetailData,portfolioDetailData,fetchDetailedPortfolio } = useAdminUser()
   const [openSchemeDetail, setOpenSchemeDetail] = useState<boolean>(false)
-  const [portfolioDetailData, setPortfolioDetailData] = useState<detailPortfolioSchemeType[]>([])
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
+  const title: string = "You Have No Investments Yet";
+  const body: string = "Start investing today to build your portfolio and achieve your financial goals.";
+  const btnName = "Explore Funds";
+  const btnUrl = "/"
   const adminUser = fetchAdminUser()
 
 
@@ -29,87 +35,80 @@ const Portfolio = () => {
     }
   }, [])
 
-  // const fetchFamilyPortfolio = async (pan: string) => {
+ 
+ 
 
-  //   const res = await postRequest<familySnapshotResponseType>(endPoints.getFamilySnapshot, {
-  //     pan
-  //   });
-  //   if (res) {
-  //     let family = res.finalArray.filter((item) => item?.myPortfolio === true)
-  //     setSnapshotData(family[0])
-  //   }
-
-  // }
-  const fetchDetailedPortfolio = async (ucc:string) => {
-    const res = await postRequest<detailPortfolioType>(endPoints.getDetailedPortfolio, {ucc});
-    if (res) {
-      console.log("res", res);
-
-      setPortfolioDetailData(res.dataSent.data)
-    }
-
+  const toggleSort = () => {
+    const sorted = [...portfolioDetailData].sort((a, b) => {
+      const aVal = percentageDetailFolio(Number(a.purchase), Number(a.gain));
+      const bVal = percentageDetailFolio(Number(b.purchase), Number(b.gain));
+      return sortDirection === "asc" ? aVal - bVal : bVal - aVal;
+    });
+    setPortfolioDetailData(sorted);
+    setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+  };
+  const fundDetails = (item:detailPortfolioSchemeType)=>{
+     navigate("/fund-details",{state:item})
   }
-
 
   return (
     <>
       <NavBar />
 
-
       <div className="container py-2 mt-4">
         <div className="personal_form_container">
-          <div className="borderColor p-3 rounded-4 bg-white">
-            <div className="row text-center">
-              <div className="col">
-                <small className="fw-semibold">OVERALL PROFIT</small> <span className="fs12px ms-1" > As on {currentDateInStringNumber()}</span>
+          {portfolioDetailData?.length > 0 ? <>
+            <div className="borderColor p-3 rounded-4 bg-white">
+              <div className="row text-center">
+                <div className="col">
+                  <small className="fw-semibold">OVERALL PROFIT</small> <span className="fs12px ms-1" > As on {currentDateInStringNumber()}</span>
+                </div>
+                <h3 className={`fw-bold ${snapshotData?.Gainloss >= 0 ? "congratesColor" : "errorColor2"}`}><CurrencyRupee className="mb-1" />{Math.abs(snapshotData?.Gainloss)?.toLocaleString("en-In")}<small className={`fs-6 ${snapshotData?.Gainloss >= 0 ? "congratesColor" : "errorColor2"}`} >({snapshotData?.Finalcagr}%)</small></h3>
+                <div className="textColor">1 Day change
+                  {snapshotData?.Totaldayschange >= 0 ?
+                    <span className="congratesColor"> <ArrowUpCircleFill /><CurrencyRupee className="mb-1" />{snapshotData?.Totaldayschange?.toLocaleString("en-In")} ({getPercentageValue(Number(snapshotData?.Totalpurchase), snapshotData?.Totaldayschange)}%)</span> :
+                    <span className="errorColor2"><ArrowDownCircleFill /><CurrencyRupee className="mb-1" />{snapshotData?.Totaldayschange?.toLocaleString("en-In")} ({getPercentageValue(Number(snapshotData?.Totalpurchase), snapshotData?.Totaldayschange)}%)</span>
+                  }
+                </div>
               </div>
-              <h3 className={`fw-bold ${snapshotData.Gainloss >= 0 ? "congratesColor" : "errorColor2"}`}><CurrencyRupee className="mb-1" />{Math.abs(snapshotData.Gainloss).toLocaleString("en-In")}<small className={`fs-6 ${snapshotData.Gainloss >= 0 ? "congratesColor" : "errorColor2"}`} >({snapshotData.Finalcagr}%)</small></h3>
-              <div className="textColor">1 Day change
-                {snapshotData.Totaldayschange >= 0 ?
-                  <span className="congratesColor"> <ArrowUpCircleFill /><CurrencyRupee className="mb-1" />{snapshotData.Totaldayschange.toLocaleString("en-In")} ({getPercentageValue(Number(snapshotData.Totalpurchase), snapshotData.Totaldayschange)}%)</span> :
-                  <span className="errorColor2"><ArrowDownCircleFill /><CurrencyRupee className="mb-1" />{snapshotData.Totaldayschange.toLocaleString("en-In")} ({getPercentageValue(Number(snapshotData.Totalpurchase), snapshotData.Totaldayschange)}%)</span>
-                }
+              <hr />
+              <div className="row  mt-1">
+                <div className="col-6 text-end ">
+                  <small className="fs14px">Investment</small><br />
+                  <small className="fs16px"><CurrencyRupee className="mb-1" />{Math.round(Number(snapshotData?.Totalpurchase))?.toLocaleString("en-In")} </small>
+                </div>
+                <div className="col-5 text-start ">
+                  <small className="fs14px">Current Value</small><br />
+                  <small className="fs16px"><CurrencyRupee className="mb-1" />{Math.round(Number(snapshotData?.Totalmarketvalue))?.toLocaleString("en-In")} </small>
+                </div>
               </div>
             </div>
-            <hr />
-            <div className="row  mt-1">
-              <div className="col-6 text-end ">
-                <small className="fs14px">Investment</small><br />
-                <small className="fs16px"><CurrencyRupee className="mb-1" />{Number(snapshotData.Totalpurchase).toLocaleString("en-In")} </small>
-              </div>
-              <div className="col-5 text-start ">
-                <small className="fs14px">Current Value</small><br />
-                <small className="fs16px"><CurrencyRupee className="mb-1" />{snapshotData.Totalmarketvalue.toLocaleString("en-In")} </small>
-              </div>
-            </div>
-          </div>
+          </> : <PortfolioEmpty images={emptyImg} title={title} body={body} btnName={btnName} btnUrl={btnUrl} />}
+
         </div>
       </div>
-      <div className="container py-2 personal_form_container">
+      {portfolioDetailData.length > 0 ? <div className="container py-2 personal_form_container">
         <div className="row ">
           <div className="col-6 text-start"><h6 >Invested funds</h6> </div>
-          <div className="col-6 text-end">
-            <button type="button" className="btn gainLossBtn ">Gain/Loss <ArrowDownUp />
-            {/* &#x25B2;
-<br/>
-<small>&#x25BC;</small> */}
+          <div className="col-6 text-end" onClick={toggleSort} > <button type="button" className="btn gainLossBtn ">Gain/Loss <ArrowDownUp />
           </button></div>
         </div>
-      </div>
+      </div> : ""}
 
-      {portfolioDetailData.length && portfolioDetailData.map((item) => {
+
+      { portfolioDetailData?.length > 0 ? portfolioDetailData?.map((item) => {
         return (
-          <div className="container py-2" onClick={()=>navigate("/fund-details")}>
+          <div className="container py-2" onClick={()=>fundDetails(item)}>
             <div className="personal_form_container">
               <div className="borderColor p-3 rounded-4 bg-white">
                 <div className="d-flex justify-content-between">
                   <div className="d-flex">
                     <div className="prod_icon_img">
-                      <img src={`${imageUrl+item.amcCode}.png`} height={55} width={55} alt="" />
+                      <img src={`${imageUrl + item?.amcCode}.png`} className="logoRadius" height={50} width={50} alt="" />
                     </div>
                     <div className="ms-2 prod_icon_heading mt-3">
-                      <h4>{item.scheme}</h4>
-                      <p>Folio: {item.folio}</p>
+                      <h4>{item?.scheme}</h4>
+                      <p>Folio: {item?.folio}</p>
                     </div>
                   </div>
 
@@ -118,15 +117,15 @@ const Portfolio = () => {
                 <div className="row text-start mt-2">
                   <div className="col-6 col-md-4 py-2 py-md-0">
                     <small className="fs14px">Invested</small><br />
-                    <small> <CurrencyRupee className="mb-1" />{getValueInThousand(Number(item.purchase))}K</small>
+                    <small> <CurrencyRupee className="mb-1" />{getValueInThousand(Number(item?.purchase))}K</small>
                   </div>
                   <div className="col-6 col-md-4 py-2 py-md-0">
                     <small className="fs14px">Current Value</small><br />
-                    <small> <CurrencyRupee className="mb-1" />{getValueInThousand(Number(item.currentvalue))}K</small>
+                    <small> <CurrencyRupee className="mb-1" />{getValueInThousand(Number(item?.currentvalue))}K</small>
                   </div>
                   <div className="col-6 col-md-4 py-2 py-md-0">
                     <small className="fs14px">Gain/Loss</small><br />
-                    <small> <CurrencyRupee className="mb-1" />{getValueInThousand(Number(item.gain))}K</small> <small className={`fs12px ${Number(item.finalcagr) > 0 ? "congratesColor" : "errorColor2"}`}>{item.finalcagr}%</small>
+                    <small> <CurrencyRupee className="mb-1" />{getValueInThousand(Number(item?.gain))}K</small> <small className={`fs12px ${Number(item?.finalcagr) > 0 ? "congratesColor" : "errorColor2"}`}>{getPercentageValue(Number(item?.purchase), item?.gain)}%</small>
                   </div>
                 </div>
               </div>
@@ -134,7 +133,7 @@ const Portfolio = () => {
             </div>
           </div>
         )
-      })}
+      }) : ""}
 
 
       <SchemeDetails show={openSchemeDetail} setShow={setOpenSchemeDetail} />

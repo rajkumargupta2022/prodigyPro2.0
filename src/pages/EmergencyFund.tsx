@@ -1,12 +1,14 @@
 import NavBar from "../components/Navbar";
-import Breadcrumb from "react-bootstrap/Breadcrumb";
 import icici from "../assets/img/bank-logo/icici.png"
 import { ChevronRight } from "react-bootstrap-icons";
 import { useState } from "react";
 import SchemeDetails from "../components/SchemeDetails";
 import Footer from "../components/Footer";
+import { useNavigate } from "react-router-dom";
+import { Breadcrumb } from "react-bootstrap";
 
 const EmergencyFund = () => {
+  const navigate = useNavigate()
   const [openSchemeDetail,setOpenSchemeDetail] = useState<boolean>(false)
   const handleSchemeDetail = ()=>{
     setOpenSchemeDetail(true)
@@ -30,6 +32,9 @@ const EmergencyFund = () => {
       </div>
       <div className="container pt-2">
         <div className="personal_form_container">
+        <div className="d-flex my-3">
+            <h6 className="logoBlueColor crPointer" onClick={()=>navigate("/dashboard")}>Home <small className="greyColor"> <ChevronRight className="fs14px" /> Emergency Fund</small> </h6>
+          </div>
           <div className="row">
             <div className=" col">
               <h4>Emergency Fund</h4>
