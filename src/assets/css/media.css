@@ -29,20 +29,25 @@
   .modelSize {
     margin: 0 15px 0 19px;
   }
-
 }
-
 
 @media (min-width: 1400px) and (max-width: 2560px) {
   .back_absolute_btn {
     top: -35%;
   }
+  .set-margin-left {
+    margin-left: 41%;
+}
 }
 
 @media (min-width: 1000px) and (max-width: 1300px) {
   .back_absolute_btn {
     top: -35%;
   }
+
+  .set-margin-left{
+      margin-left: 29%;
+}
 }
 
 @media only screen and (max-width: 1000px) {
@@ -53,27 +58,33 @@
   .mTopForMobile {
     margin-top: 10px;
   }
+      .set-margin-left {
+    margin-left: 0%;
+  }
 }
 
 @media only screen and (min-width: 1000px) {
   .modelSize {
     margin: 0 285px 0 26px;
   }
+
 }
 
 @media only screen and (max-width: 767px) {
+
+
   .hide_on_desktop_btn {
     display: block;
     display: block;
     width: auto;
-    padding:8px 10px;
+    padding: 8px 10px;
     border-radius: 10px;
-    background: #011EFE;
+    background: #011efe;
     color: #fff;
     border: 0;
     margin-bottom: 20px;
   }
-  .hide_on_desktop_btn p{
+  .hide_on_desktop_btn p {
     color: #fff;
     font-size: 18px;
   }
@@ -84,9 +95,9 @@
   }
 }
 
-.activeDuratin{
+.activeDuratin {
   background: rgba(230, 232, 255, 1);
-    color: rgba(1, 30, 254, 1);
-    border-radius: 3px;
-    padding: 2px 8px;
+  color: rgba(1, 30, 254, 1);
+  border-radius: 3px;
+  padding: 2px 8px;
 }

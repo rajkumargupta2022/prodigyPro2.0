@@ -12,7 +12,6 @@ import { dateInStringNumber } from "../services/dates/dateFormater";
 import ReactApexChart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
 import Footer from "../components/Footer";
-import { detailPortfolioSchemeType } from "./data-interfaces/portfolio";
 
 interface ChartState {
   options: ApexOptions;
@@ -211,15 +210,15 @@ const FundDetails = () => {
                 </div>
                 <div className="col-6 py-2">
                   <span className="text-secondary text-uppercase fs-7">Expense Ratio</span>
-                  <h4 className="fs-6">{schemeDetailArray?.[0]?.expenseRatio}%</h4>
+                  <h4 className="fs-6">{schemeDetailArray[0]?.expenseRatio}%</h4>
                 </div>
                 <div className="col-6 py-2">
                   <span className="text-secondary text-uppercase fs-7">Lock-in</span>
-                  <h4 className="fs-6">{schemeDetailArray?.[0]?.lockInPeriod} Yr</h4>
+                  <h4 className="fs-6">{schemeDetailArray[0]?.lockInPeriod} Yr</h4>
                 </div>
                 <div className="col-6 py-2">
                   <span className="text-secondary text-uppercase fs-7">Plan Type</span>
-                  <h4 className="fs-6">{schemeDetailArray?.[0]?.planType}</h4>
+                  <h4 className="fs-6">{schemeDetailArray[0]?.planType}</h4>
                 </div>
                 <div className="col-6 py-2">
                   <span className="text-secondary text-uppercase fs-7">Plan Option</span>
@@ -227,11 +226,11 @@ const FundDetails = () => {
                 </div>
                 <div className="col-6 py-2">
                   <span className="text-secondary text-uppercase fs-7">Risk</span>
-                  <h4 className="fs-6">{schemeDetailArray?.[0]?.risk}</h4>
+                  <h4 className="fs-6">{schemeDetailArray[0]?.risk}</h4>
                 </div>
                 <div className="col-6 py-2">
                   <span className="text-secondary text-uppercase fs-7">Min. Investment</span>
-                  <h4 className="fs-6">₹{schemeDetailArray?.[0]?.minInvestment}</h4>
+                  <h4 className="fs-6">₹{schemeDetailArray[0]?.minInvestment}</h4>
                 </div>
                 <div className="col-6 py-2">
                   <span className="text-secondary text-uppercase fs-7">Withdrawal Charges</span>
@@ -240,7 +239,7 @@ const FundDetails = () => {
               </div>
             </div>
 
-           <MyStackBar/>
+           <MyStackBar schemeData={schemeDetailArray[0]}/>
           </div>
 
           {/* Mutual Funds List */}

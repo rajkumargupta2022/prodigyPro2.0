@@ -1491,3 +1491,19 @@ span.text-secondary.text-uppercase.fs-7 {
 .ml20{
   margin-left: 20px;
 }
+
+.rounded-tab-btn label{
+  font-size: 14px;
+}
+
+.padding-under-area{
+  padding: 6px 31px;
+   border-radius: 13px;
+}
+.btn-check:checked+.btn{
+  border: 2px solid #011EFE !important;
+}
+
+.set-margin-left{
+      margin-left: 29%;
+}
