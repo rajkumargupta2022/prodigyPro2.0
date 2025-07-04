@@ -20,8 +20,8 @@ const FutureValueCalculator = () => {
   const [investAmount, setInvestAmount] = useState<number>(50000);
   const [rateOfReturn, setRateOfReturn] = useState<number>(12);
   const [resultInvestment, setResultInvestment] = useState<number>(50000);
-  const [resultPeriod, setResultPeriod] = useState<number>(10);
   const [gains, setGains] = useState<number>(155292);
+  const [resultPeriod, setResultPeriod] = useState<number>(10);
 
   const investAmountRef = useRef<{
     validate: (value: number) => boolean;

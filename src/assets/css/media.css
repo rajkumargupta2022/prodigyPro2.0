@@ -83,3 +83,10 @@
     left: -5500px;
   }
 }
+
+.activeDuratin{
+  background: rgba(230, 232, 255, 1);
+    color: rgba(1, 30, 254, 1);
+    border-radius: 3px;
+    padding: 2px 8px;
+}

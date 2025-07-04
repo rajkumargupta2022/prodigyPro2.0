@@ -1,7 +1,7 @@
 export interface detailPortfolioSchemeType {
   folio: string;
   productcode: string;
-  ACCORD_SCHEMECODE: number;
+  accordSchemeCode: number;
   gpan: string | null;
   name: string;
   pan: string | null;

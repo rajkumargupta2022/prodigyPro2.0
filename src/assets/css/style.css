@@ -1455,8 +1455,6 @@ span.text-secondary.text-uppercase.fs-7 {
     left: 18px;
   }
 }
-<<<<<<< HEAD
-=======
 
 .folio_latter_prodgy {
   font-size: 16px;
@@ -1486,4 +1484,10 @@ span.text-secondary.text-uppercase.fs-7 {
 .footer a:hover {
   text-decoration: underline;
 }
->>>>>>> 62a40d364abda7de9d4a85191f9da620f5dd1284
+.logoRadius{
+  border-radius: 10px;
+}
+
+.ml20{
+  margin-left: 20px;
+}

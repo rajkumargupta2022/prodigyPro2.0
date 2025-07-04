@@ -8,12 +8,11 @@ import { getPercentageValue, getValueInThousand, percentageDetailFolio } from ".
 import { useNavigate } from "react-router-dom";
 import { useAdminUser } from "../context/AdminContext";
 import { fetchAdminUser } from "../services/user/adminUser";
-<<<<<<< HEAD
 import PortfolioEmpty from "./PortfolioEmpty";
 import emptyImg from "../assets/img/empty-img.svg"
-=======
 import Footer from "../components/Footer";
->>>>>>> 62a40d364abda7de9d4a85191f9da620f5dd1284
+import { detailPortfolioSchemeType } from "./data-interfaces/portfolio";
+
 
 const Portfolio = () => {
   const navigate = useNavigate()
@@ -48,6 +47,10 @@ const Portfolio = () => {
     setPortfolioDetailData(sorted);
     setSortDirection(sortDirection === "asc" ? "desc" : "asc");
   };
+  const fundDetails = (item:detailPortfolioSchemeType)=>{
+     navigate("/fund-details",{state:item})
+  }
+
   return (
     <>
       <NavBar />
@@ -87,15 +90,7 @@ const Portfolio = () => {
       {portfolioDetailData.length > 0 ? <div className="container py-2 personal_form_container">
         <div className="row ">
           <div className="col-6 text-start"><h6 >Invested funds</h6> </div>
-<<<<<<< HEAD
           <div className="col-6 text-end" onClick={toggleSort} > <button type="button" className="btn gainLossBtn ">Gain/Loss <ArrowDownUp />
-=======
-          <div className="col-6 text-end">
-            <button type="button" className="btn gainLossBtn ">Gain/Loss <ArrowDownUp />
-            {/* &#x25B2;
-<br/>
-<small>&#x25BC;</small> */}
->>>>>>> 62a40d364abda7de9d4a85191f9da620f5dd1284
           </button></div>
         </div>
       </div> : ""}
@@ -103,13 +98,13 @@ const Portfolio = () => {
 
       { portfolioDetailData?.length > 0 ? portfolioDetailData?.map((item) => {
         return (
-          <div className="container py-2" onClick={() => navigate("/fund-details")}>
+          <div className="container py-2" onClick={()=>fundDetails(item)}>
             <div className="personal_form_container">
               <div className="borderColor p-3 rounded-4 bg-white">
                 <div className="d-flex justify-content-between">
                   <div className="d-flex">
                     <div className="prod_icon_img">
-                      <img src={`${imageUrl + item?.amcCode}.png`} height={50} width={50} alt="" />
+                      <img src={`${imageUrl + item?.amcCode}.png`} className="logoRadius" height={50} width={50} alt="" />
                     </div>
                     <div className="ms-2 prod_icon_heading mt-3">
                       <h4>{item?.scheme}</h4>
