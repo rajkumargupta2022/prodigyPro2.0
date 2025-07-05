@@ -317,7 +317,7 @@ p {
 
 .crPointer {
   cursor: pointer;
- 
+
 }
 
 .borderColor {
@@ -1338,6 +1338,9 @@ input[type="number"] {
   border-radius: 50%;
 }
 
+.dotted_sip_prodyg {
+  cursor: pointer;
+}
 
 .dotted_sip_prodyg svg {
   font-size: 16px;
@@ -1461,7 +1464,7 @@ span.text-secondary.text-uppercase.fs-7 {
   letter-spacing: 0.5px;
 }
 
-.hide_on_desktop_btn{
+.hide_on_desktop_btn {
   display: none;
 }
 
@@ -1484,11 +1487,12 @@ span.text-secondary.text-uppercase.fs-7 {
 .footer a:hover {
   text-decoration: underline;
 }
-.logoRadius{
+
+.logoRadius {
   border-radius: 10px;
 }
 
-.ml20{
+.ml20 {
   margin-left: 20px;
 }
 
@@ -1506,4 +1510,31 @@ span.text-secondary.text-uppercase.fs-7 {
 
 .set-margin-left{
       margin-left: 29%;
+}
+.style-unerline-prodgy li {
+  list-style: none;
+  padding: 8px 0px;
+  border-bottom: 1px solid #E9E9E9;
+  font-weight: 400;
+}
+
+.style-unerline-prodgy li:last-child {
+  border-bottom: 0px;
+  padding-bottom: 0px;
+}
+
+.style-unerline-prodgy li:first-child {
+  padding-top: 0px;
+}
+
+.popup_card_steup_area {
+  width: 80%;
+  border: none;
+  border-radius: 20px;
+  overflow: hidden;
+  position: absolute;
+  top: 62px;
+  right: 22px;
+  z-index: 1;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
 }
