@@ -25,11 +25,12 @@ export const getValueInSort = (value: number): string => {
     let result = value / 100000;
     return result.toFixed(1)+"L";
   }
-  else if(value < 10000000000){
+  else if(value > 100000){
     let result = value / 10000000;
     return result.toFixed(1)+"Cr";
   }else{
-    return "0"
+      
+    return "N/A";
   }
 };
 

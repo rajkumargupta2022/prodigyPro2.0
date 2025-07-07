@@ -144,6 +144,7 @@ const InvestmentChart: React.FC<schemeDataProps> = ({ schemeData }) => {
             },
           },
         },
+        
       },
       stroke: {
         width: 0,
@@ -175,6 +176,19 @@ const InvestmentChart: React.FC<schemeDataProps> = ({ schemeData }) => {
       fill: {
         opacity: 1,
       },
+        tooltip: {
+
+        custom: function ({ series, seriesIndex, dataPointIndex }) {
+          const maturityAmount = series[seriesIndex][dataPointIndex];
+
+          return `
+          <div style="padding: 10px; background: white; border-radius: 8px; box-shadow: 0px 0px 10px rgba(0,0,0,0.1); font-family: sans-serif; text-align: center;">
+          
+            <div style="font-size: 14px; color: #333;"> ₹${maturityAmount.toLocaleString('en-IN')}</div>
+          </div>
+        `;
+        }
+      }
     },
   };
 

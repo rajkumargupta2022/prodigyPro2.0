@@ -196,7 +196,7 @@ const FundDetails = () => {
               <div className="row px-4 pt-4" >
                 <div className="col-6" >
                   <p className="fs12px mb-0">NAV</p>
-                  <p className="fs16px">₹{location.state.cnav}</p>
+                  <p className="fs16px">₹{location.state?.cnav}</p>
                 </div>
                 <div className="col-6">
                   <p className="fs12px mb-0">Last {durarinInYear} CAGR</p>
@@ -234,7 +234,7 @@ const FundDetails = () => {
               <div className="row pt-4">
                 <div className="col-6 py-2">
                   <span className="text-secondary text-uppercase fs-7">Fund Size</span>
-                  <h4 className="fs-6">₹{schemeDetailArray[0]?.fundSize} </h4>
+                  <h4 className="fs-6">₹{getValueInSort(Number(schemeDetailArray[0]?.fundSize))} </h4>
                 </div>
                 <div className="col-6 py-2">
                   <span className="text-secondary text-uppercase fs-7">Launched</span>
