@@ -1285,8 +1285,8 @@ input[type="number"] {
 }
 
 .smallModel {
-  width: 50%;
-  margin-left: 25%;
+  width: 70%;
+  margin-left: 15%;
 }
 
 
@@ -1323,15 +1323,22 @@ input[type="number"] {
   font-size: 15px;
   padding: 8px;
   border-radius: 50%;
-  width: fit-content;
+  width: 45px;
+  height: 45px;
+  text-align: center;
+  padding-top: 12px !important;
 }
 
 .nameTitleMain {
   background-color: #011EFE !important;
   color: #f1f1f1 !important;
   font-size: 18px;
+  padding-top: 10px !important;
   padding: 12px;
   border-radius: 80%;
+  width: 45px;
+  height: 45px;
+  text-align: center;
 }
 
 .circle {
@@ -1496,21 +1503,23 @@ span.text-secondary.text-uppercase.fs-7 {
   margin-left: 20px;
 }
 
-.rounded-tab-btn label{
+.rounded-tab-btn label {
   font-size: 14px;
 }
 
-.padding-under-area{
+.padding-under-area {
   padding: 6px 31px;
-   border-radius: 13px;
+  border-radius: 13px;
 }
-.btn-check:checked+.btn{
+
+.btn-check:checked+.btn {
   border: 2px solid #011EFE !important;
 }
 
-.set-margin-left{
-      margin-left: 29%;
+.set-margin-left {
+  margin-left: 29%;
 }
+
 .style-unerline-prodgy li {
   list-style: none;
   padding: 8px 0px;
@@ -1537,4 +1546,16 @@ span.text-secondary.text-uppercase.fs-7 {
   right: 22px;
   z-index: 1;
   box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+}
+
+.navbar {
+  position: sticky;
+  top: 0px;
+  z-index: 1;
+}
+
+.portfolio_sticky_2025{
+  position: sticky;
+  top: 70px;
+  z-index: 1;
 }

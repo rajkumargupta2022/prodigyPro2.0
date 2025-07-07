@@ -44,8 +44,9 @@ const ProfileModel: React.FC<ProfileModelProps> = ({ show, setShow }) => {
 
               {familyMemberList.length > 0 && familyMemberList.map((item) => {
                 return <> <div className="d-flex justify-content-around">
+
                   {adminUser?.profilePic ? <img src={adminUser?.profilePic} className='circleImg-2' alt="Image not found" /> : <div className="nameTitle">
-                    {item?.name?.split(" ")?.slice(0, 2).map(word => word[0]).join("").toUpperCase()}
+                    <p className='mb-0 text-white'>{item?.name?.split(" ")?.slice(0, 2).map(word => word[0]).join("").toUpperCase()}</p>
                   </div>}
 
                   <div className="ms-2" style={{ flex: 4 }}>

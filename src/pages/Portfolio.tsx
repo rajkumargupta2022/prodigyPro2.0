@@ -55,7 +55,7 @@ const Portfolio = () => {
     <>
       <NavBar />
 
-      <div className="container py-2 mt-4">
+      <div className="container py-2 mt-4 portfolio_sticky_2025">
         <div className="personal_form_container">
           {portfolioDetailData?.length > 0 ? <>
             <div className="borderColor p-3 rounded-4 bg-white">
