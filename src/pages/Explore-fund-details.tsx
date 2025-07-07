@@ -3,7 +3,7 @@ import { Calendar2 } from "react-bootstrap-icons";
 import MyNavbar from "../components/Navbar";
 import HDFC from "../assets/img/icons/hdfc.svg";
 import SimpleLineChart from "../components/chart";
-import MyStackBar from "../components/Stack-bar";
+// import MyStackBar from "../components/Stack-bar";
 import { useState } from "react";
 import SelectFolioPopup from "../components/select-folio-popup";
 import Footer from "../components/Footer";
@@ -221,7 +221,7 @@ const ExploreFundDetails = () => {
 
               <div className="mt-4">
                 <h6 className="fs-5 mb-0">Returns Comparison</h6>
-                <MyStackBar />
+                {/* <MyStackBar /> */}
               </div>
             </div>
           </Col>

@@ -12,6 +12,7 @@ import { dateInStringNumber } from "../services/dates/dateFormater";
 import ReactApexChart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
 import Footer from "../components/Footer";
+import { getPercentageValue, getValueInSort } from "../services/calculation/percentageCalculate";
 
 interface ChartState {
   options: ApexOptions;
@@ -29,6 +30,7 @@ const FundDetails = () => {
   const [duration, setDuration] = useState<number>(12)
   const [cagr, setCagr] = useState<number>(0)
   const [durarinInYear, setDurarinInYear] = useState<string>("")
+  const schmeDetail = location.state
 
   const state: ChartState = {
     series: [
@@ -57,6 +59,7 @@ const FundDetails = () => {
         width: [2], // ✅ Custom width (3px for first line, 2px for second line)
         colors: ["#357AF6"],
       },
+
       xaxis: {
         categories: navDate,
         labels: {
@@ -85,6 +88,22 @@ const FundDetails = () => {
       grid: {
         show: false, // ✅ Removes background grey lines
       },
+
+      tooltip: {
+
+        custom: function ({ series, seriesIndex, dataPointIndex }) {
+          const maturityAmount = series[seriesIndex][dataPointIndex];
+          const date = navDate[dataPointIndex];
+
+          return `
+          <div style="padding: 10px; background: white; border-radius: 8px; box-shadow: 0px 0px 10px rgba(0,0,0,0.1); font-family: sans-serif; text-align: center;">
+          
+            <div style="font-size: 14px; color: #333;">${dateInStringNumber(date)}</div>
+            <div style="font-size: 14px; color: #333;"> ₹${maturityAmount.toLocaleString('en-IN')}</div>
+          </div>
+        `;
+        }
+      }
     },
   };
 
@@ -154,7 +173,7 @@ const FundDetails = () => {
   const [show, setShow] = useState(false);
 
   const handleClick = () => {
-    setShow(!show); 
+    setShow(!show);
   };
 
   return (
@@ -173,7 +192,7 @@ const FundDetails = () => {
         <div className="row mt-4">
           <div className="col-lg-8 col-md-8 col-12 border-end">
 
-            <div className="card border-0">
+            <div className=" border-0">
               <div className="row px-4 pt-4" >
                 <div className="col-6" >
                   <p className="fs12px mb-0">NAV</p>
@@ -215,7 +234,7 @@ const FundDetails = () => {
               <div className="row pt-4">
                 <div className="col-6 py-2">
                   <span className="text-secondary text-uppercase fs-7">Fund Size</span>
-                  <h4 className="fs-6">₹{schemeDetailArray[0]?.fundSize} Cr</h4>
+                  <h4 className="fs-6">₹{schemeDetailArray[0]?.fundSize} </h4>
                 </div>
                 <div className="col-6 py-2">
                   <span className="text-secondary text-uppercase fs-7">Launched</span>
@@ -243,17 +262,22 @@ const FundDetails = () => {
                 </div>
                 <div className="col-6 py-2">
                   <span className="text-secondary text-uppercase fs-7">Min. Investment</span>
-                  <h4 className="fs-6">₹{schemeDetailArray[0]?.minInvestment}</h4>
+                  <h4 className="fs-6">₹{schemeDetailArray[0]?.minSIPAmt}</h4>
                 </div>
                 <div className="col-6 py-2">
                   <span className="text-secondary text-uppercase fs-7">Withdrawal Charges</span>
-                  <h4 className="fs-6">Exit load 1% if redeemed within 1 year</h4>
+                  <h4 className="fs-6"> {schemeDetailArray[0]?.exitLoad.split(',').map((line, index) => (
+                    <span key={index}>
+                      {line.trim()}
+                      <br />
+                    </span>
+                  ))}</h4>
                 </div>
               </div>
             </div>
 
-           <MyStackBar schemeData={schemeDetailArray[0]}/>
-          
+            <MyStackBar schemeData={schemeDetailArray[0]} />
+
           </div>
 
           {/* Mutual Funds List */}
@@ -300,7 +324,7 @@ const FundDetails = () => {
 
             </div>
             {show && (
-              
+
               <div className="card mb-4 popup_card_steup_area">
                 <div className="p-3">
                   <ul className="ps-0 style-unerline-prodgy mb-0">
@@ -312,9 +336,9 @@ const FundDetails = () => {
                   </ul>
                 </div>
               </div>
-              
+
             )}
-            
+
             <div
               className="card mb-4"
               style={{
@@ -332,35 +356,33 @@ const FundDetails = () => {
                     <div className="port_holding_etails">
                       <h1>Holding Details</h1>
                     </div>
-                    <div className="prod_sip_22">
-                      <span>SIP: ₹5.5K</span>
-                    </div>
+
                   </div>
 
                   <div className="row pt-4">
                     <div className="col-6 py-2">
                       <span className="text-secondary text-uppercase fs-7">Units</span>
-                      <h4 className="fs-6">1,304.161</h4>
+                      <h4 className="fs-6">{Math.round(schmeDetail?.unit * 100) / 100}</h4>
                     </div>
                     <div className="col-6 py-2">
                       <span className="text-secondary text-uppercase fs-7">Folio</span>
-                      <h4 className="fs-6">323253255</h4>
+                      <h4 className="fs-6">{schmeDetail?.folio}</h4>
                     </div>
                     <div className="col-6 py-2">
                       <span className="text-secondary text-uppercase fs-7">Total invested</span>
-                      <h4 className="fs-6">₹ 1.14L</h4>
+                      <h4 className="fs-6">₹ {getValueInSort(schmeDetail?.purchase)}</h4>
                     </div>
                     <div className="col-6 py-2">
-                      <span className="text-secondary text-uppercase fs-7">Current Nav</span>
-                      <h4 className="fs-6">₹ 1,598.62</h4>
+                      <span className="text-secondary text-uppercase fs-7">Current Value</span>
+                      <h4 className="fs-6">₹ {getValueInSort(schmeDetail?.currentvalue)}</h4>
                     </div>
                     <div className="col-6 py-2">
-                      <span className="text-secondary text-uppercase fs-7">CAGR</span>
-                      <h4 className="fs-6">19.56%</h4>
+                      <span className="text-secondary text-uppercase fs-7">Gain/Loss</span>
+                      <h4 className="fs-6">{getPercentageValue(Number(schmeDetail?.purchase), schmeDetail?.gain)}%</h4>
                     </div>
                     <div className="col-6 py-2">
                       <span className="text-secondary text-uppercase fs-7">Avg. Days</span>
-                      <h4 className="fs-6">432</h4>
+                      <h4 className="fs-6">{schmeDetail?.days}</h4>
                     </div>
                   </div>
                 </div>

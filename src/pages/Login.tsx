@@ -20,7 +20,7 @@ const Login = () => {
 
   useEffect(() => {
     // const token = localStorage.getItem("token")
-    let token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ3cTgxc2xpNGZ4Y2pnIiwibW9iaWxlIjo4OTYwMDA2NjAxLCJpYXQiOjE3NDkxODUzMjksImV4cCI6MTc1MTc3NzMyOX0.EloBnAdP7vyJCDNRrbFDPz28N9fFUhIMAIYk1cE9Vt8"
+    let token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ3cTgxc2xpNGZ4Y2pnIiwibW9iaWxlIjo4OTYwMDA2NjAxLCJpYXQiOjE3NTE4NjIyMTgsImV4cCI6MTc1NDQ1NDIxOH0.d9M46Pv5BYWCsrVWOr7n_gGO4m-HrYmaXl52recFRKE"
     localStorage.setItem("token",token)
     localStorage.setItem("pan","AHNPG8965C")
     if (token) {

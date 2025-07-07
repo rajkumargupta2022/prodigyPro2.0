@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import SchemeDetails from "../components/SchemeDetails";
 import {  imageUrl } from "../services/utils/urls";
 import { currentDateInStringNumber } from "../services/dates/dateFormater";
-import { getPercentageValue, getValueInThousand, percentageDetailFolio } from "../services/calculation/percentageCalculate";
+import { getPercentageValue, getValueInSort, percentageDetailFolio } from "../services/calculation/percentageCalculate";
 import { useNavigate } from "react-router-dom";
 import { useAdminUser } from "../context/AdminContext";
 import { fetchAdminUser } from "../services/user/adminUser";
@@ -117,15 +117,15 @@ const Portfolio = () => {
                 <div className="row text-start mt-2">
                   <div className="col-6 col-md-4 py-2 py-md-0">
                     <small className="fs14px">Invested</small><br />
-                    <small> <CurrencyRupee className="mb-1" />{getValueInThousand(Number(item?.purchase))}K</small>
+                    <small> <CurrencyRupee className="mb-1" />{getValueInSort(Number(item?.purchase))}</small>
                   </div>
                   <div className="col-6 col-md-4 py-2 py-md-0">
                     <small className="fs14px">Current Value</small><br />
-                    <small> <CurrencyRupee className="mb-1" />{getValueInThousand(Number(item?.currentvalue))}K</small>
+                    <small> <CurrencyRupee className="mb-1" />{getValueInSort(Number(item?.currentvalue))}</small>
                   </div>
                   <div className="col-6 col-md-4 py-2 py-md-0">
                     <small className="fs14px">Gain/Loss</small><br />
-                    <small> <CurrencyRupee className="mb-1" />{getValueInThousand(Number(item?.gain))}K</small> <small className={`fs12px ${Number(item?.finalcagr) > 0 ? "congratesColor" : "errorColor2"}`}>{getPercentageValue(Number(item?.purchase), item?.gain)}%</small>
+                    <small> <CurrencyRupee className="mb-1" />{getValueInSort(Number(item?.gain))}</small> <small className={`fs12px ${Number(item?.finalcagr) > 0 ? "congratesColor" : "errorColor2"}`}>{getPercentageValue(Number(item?.purchase), item?.gain)}%</small>
                   </div>
                 </div>
               </div>

@@ -3,6 +3,7 @@ import { useState } from "react";
 import ReactApexChart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
 import { schemeDeatilDataKeys } from "../pages/data-interfaces/transact";
+import { getValueInSort } from "../services/calculation/percentageCalculate";
 
 interface ChartState {
   options: ApexOptions;
@@ -76,6 +77,7 @@ const InvestmentChart: React.FC<schemeDataProps> = ({ schemeData }) => {
       grid: {
         show: false,
       },
+      
       xaxis: {
         categories: [2],
         labels: {
@@ -336,12 +338,12 @@ const InvestmentChart: React.FC<schemeDataProps> = ({ schemeData }) => {
           Investment of
           <span className="fw-bold text-dark" >
             {" "}
-            ₹{totalInvestment}{" "}
+            ₹{getValueInSort(totalInvestment)}{" "}
           </span>
           could have been
         </p>
         <h6 className="">
-          ₹{totalProfit} <span className="congratesColor">(+{returnPercentage}%)</span>
+          ₹{getValueInSort(totalProfit)} <span className="congratesColor">(+{returnPercentage}%)</span>
         </h6>
       </div>
 
@@ -360,7 +362,7 @@ const InvestmentChart: React.FC<schemeDataProps> = ({ schemeData }) => {
                 width={80}
               />
 
-              <p className="mb-0 text-muted ml20">₹{totalFixedProfit+totalInvestment}</p>
+              <p className="mb-0 text-muted ml20">₹{getValueInSort(totalFixedProfit+totalInvestment)}</p>
               <p className="mb-0 text-success ml20">6.55%</p>
               <p className="text-muted ml20">Fixed Deposit</p>
             </div>
@@ -371,7 +373,7 @@ const InvestmentChart: React.FC<schemeDataProps> = ({ schemeData }) => {
               height={300}
               width={80}
             />
-              <p className="mb-0 text-muted ml20">₹{totalProfit}</p>
+              <p className="mb-0 text-muted ml20">₹{getValueInSort(totalProfit)}</p>
               <p className="mb-0 text-success ml20">{returnPercentage}%</p>
               <p className="text-muted ml20">This Fund</p></div>
 

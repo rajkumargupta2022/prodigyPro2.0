@@ -18,6 +18,8 @@ export interface schemeDeatilDataKeys {
   planOption: string;
   risk: string;
   minInvestment: string;
+  minSIPAmt:number;
+  minLumSumAmt:number;
   exitLoad: string;
   sipDateList: string;
   oneYearCAGR: number;
