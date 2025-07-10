@@ -32,6 +32,8 @@ const FundDetails = () => {
   const [durarinInYear, setDurarinInYear] = useState<string>("")
   const schmeDetail = location.state
 
+
+  
   const state: ChartState = {
     series: [
       {
@@ -71,6 +73,8 @@ const FundDetails = () => {
         axisTicks: {
           show: false, // ❌ Hide tick marks
         },// ✅ Custom X-axis labels
+
+        
       },
 
       yaxis: {
@@ -107,9 +111,12 @@ const FundDetails = () => {
     },
   };
 
+
+
+
   useEffect(() => {
 
-    if (location.state.accordSchemeCode) {
+    if (location?.state?.accordSchemeCode) {
       fetchSchemeDetail()
       fetchNavHistory(12)
     } else {
@@ -196,7 +203,7 @@ const FundDetails = () => {
               <div className="row px-4 pt-4" >
                 <div className="col-6" >
                   <p className="fs12px mb-0">NAV</p>
-                  <p className="fs16px">₹{location.state?.cnav}</p>
+                  <p className="fs16px">₹{location.state?.cnav.toFixed(2)}</p>
                 </div>
                 <div className="col-6">
                   <p className="fs12px mb-0">Last {durarinInYear} CAGR</p>
@@ -268,7 +275,7 @@ const FundDetails = () => {
                   <span className="text-secondary text-uppercase fs-7">Withdrawal Charges</span>
                   <h4 className="fs-6"> {schemeDetailArray[0]?.exitLoad.split(',').map((line, index) => (
                     <span key={index}>
-                      {line.trim()}
+                      {line.trim() || "N/A"}
                       <br />
                     </span>
                   ))}</h4>

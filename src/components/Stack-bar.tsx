@@ -1,5 +1,5 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ReactApexChart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
 import { schemeDeatilDataKeys } from "../pages/data-interfaces/transact";
@@ -16,99 +16,22 @@ interface schemeDataProps {
 const InvestmentChart: React.FC<schemeDataProps> = ({ schemeData }) => {
   const [investmentAmount, setInvestmentAmount] = useState<number>(5000)
   const [totalInvestment, setTotalInvestment] = useState<number>(180000)
-  const [totalFixedProfit, setTotalFixedProfit] = useState<number>(1049)
-  const [totalProfit, setTotalProfit] = useState<number>(180000)
+  const [totalFixedProfit, setTotalFixedProfit] = useState<number>(218967)
+  const [totalProfit, setTotalProfit] = useState<number>(255641)
   const [investmentPeriod, setInvestmentPeriod] = useState<number>(3)
-  const [returnPercentage, setReturnPercentage] = useState<number>(6.55)
+  const [returnPercentage, setReturnPercentage] = useState<number>(schemeData?.threeYearCAGR)
   const [selectedInvestmentType, setSelectedInvestmentType] = useState<"sip" | "oneTime">("sip")
+
 
   const state: ChartState = {
     series: [
       {
         name: "Invested",
-        data: [investmentAmount*12*investmentPeriod],
+        data: [totalInvestment,0,0,0,0,0,0, totalInvestment],
       },
       {
         name: "Maturity",
-        data: [totalFixedProfit],
-      },
-    ],
-    options: {
-      chart: {
-        type: "bar",
-        height: 100,
-        stacked: true,
-        toolbar: {
-          show: false,
-        },
-      },
-      colors: ["#CCD2FF", "#1A35FE"],
-       states: {
-        hover: {
-          filter: {
-            type: "none", // Prevent dimming or changing on hover
-          },
-        },
-      },
-      plotOptions: {
-        bar: {
-          borderRadius: 3,
-          borderRadiusApplication: "end",
-          horizontal: false,
-          dataLabels: {
-            total: {
-              enabled: false,
-              offsetX: 0,
-              style: {
-                fontSize: "13px",
-                fontWeight: 100,
-              },
-            },
-          },
-        },
-      },
-      stroke: {
-        width: 0,
-        colors: ["#1A35FE"],
-      },
-      dataLabels: {
-        enabled: false,
-      },
-      grid: {
-        show: false,
-      },
-      
-      xaxis: {
-        categories: [2],
-        labels: {
-          show: false,
-        },
-        axisTicks: {
-          show: false,
-        },
-      },
-      yaxis: {
-        labels: {
-          show: false,
-        },
-      },
-      legend: {
-        show: false,
-      },
-      fill: {
-        opacity: 1,
-      },
-    },
-  };
-  const state2: ChartState = {
-    series: [
-      {
-        name: "Invested",
-        data: [totalInvestment],
-      },
-      {
-        name: "Maturity",
-        data: [totalProfit],
+        data: [totalFixedProfit,0,0,0,0,0,0, totalProfit],
       },
     ],
     options: {
@@ -144,7 +67,6 @@ const InvestmentChart: React.FC<schemeDataProps> = ({ schemeData }) => {
             },
           },
         },
-        
       },
       stroke: {
         width: 0,
@@ -156,6 +78,7 @@ const InvestmentChart: React.FC<schemeDataProps> = ({ schemeData }) => {
       grid: {
         show: false,
       },
+
       xaxis: {
         categories: [2],
         labels: {
@@ -175,53 +98,76 @@ const InvestmentChart: React.FC<schemeDataProps> = ({ schemeData }) => {
       },
       fill: {
         opacity: 1,
-      },
-        tooltip: {
+      }, tooltip: {
+        custom: function ({ series, dataPointIndex }) {
 
-        custom: function ({ series, seriesIndex, dataPointIndex }) {
-          const maturityAmount = series[seriesIndex][dataPointIndex];
+          const invested = series[0][dataPointIndex];
+          const maturity = series[1][dataPointIndex];
 
           return `
-          <div style="padding: 10px; background: white; border-radius: 8px; box-shadow: 0px 0px 10px rgba(0,0,0,0.1); font-family: sans-serif; text-align: center;">
-          
-            <div style="font-size: 14px; color: #333;"> ₹${maturityAmount.toLocaleString('en-IN')}</div>
-          </div>
-        `;
+      <div style="padding: 10px; background: white; border-radius: 8px; box-shadow: 0px 0px 10px rgba(0,0,0,0.1); font-family: sans-serif; text-align: center;">
+        <div style="font-size: 14px; color: #011EFE ;">${dataPointIndex ? "This Fund" : "Fixed Deposit"}</div>
+        <div style="font-size: 14px; color: #333;">Invested: ₹${invested.toLocaleString('en-IN')}</div>
+        <div style="font-size: 14px; color: #333;">Maturity: ₹${maturity.toLocaleString('en-IN')}</div>
+      </div>
+    `;
         }
       }
     },
   };
 
+  useEffect(() => {
+    setReturnPercentage(schemeData?.threeYearCAGR)
+    
+  }, [schemeData?.threeYearCAGR]);
+  //  useEffect(() => {
+  //   const style = document.createElement("style");
+  //   style.innerHTML = `
+  //     .apexcharts-series[data\\:series-index="1"] {
+  //       transform: translateX(500px);
+  //     }
+  //   `;
+  //   document.head.appendChild(style);
+
+  //   return () => {
+  //     document.head.removeChild(style);
+  //   };
+  // }, []);
+
+
   const handleInvestType = (type: "sip" | "oneTime") => {
     setSelectedInvestmentType(type)
     checkInvestmentType(type, investmentAmount, investmentPeriod)
   }
-  const handlePeriod = (period: 1 | 3 | 5) => {
+  const handlePeriod = (period: 1 | 3 | 5, type: "sip" | "oneTime") => {
     setInvestmentPeriod(period)
-    calculateFixedDeposit(period, investmentAmount)
-    checkInvestmentType(selectedInvestmentType, investmentAmount, period)
+    calculateFixedDeposit(period, investmentAmount, type)
+    checkInvestmentType(type, investmentAmount, period)
   }
-  const calculateFixedDeposit = (period: number, amount: number) => {
+  const calculateFixedDeposit = (period: number, amount: number, type: "sip" | "oneTime") => {
     let cagr: number = 6.55;
-    let p: number = amount*12*period;
+    let p: number = 0
+    if (type === "sip") {
+      p = amount * 12 * period;
+    } else {
+      p = amount
+    }
     let t: number = period;
     let r: number = cagr;
     let n: number = 12;
 
     let pric: number = p;
     let amt: number = 0;
-    // let inest: number = 0;
 
     for (let i = 1; i <= t; i++) {
       const val1: number = 1 + r / (100 * n);
       const val2: number = n;
       amt = pric * Math.pow(val1, val2);
-      // inest = amt - pric;
-      pric = parseFloat(amt.toFixed(0)); // Round to whole number
+      pric = parseFloat(amt.toFixed(0));
     }
 
-    setTotalInvestment(amount*12*period)
-    setTotalFixedProfit(Math.round(amt - amount*12*period))
+    setTotalInvestment(p)
+    setTotalFixedProfit(Math.round(amt))
 
 
   }
@@ -231,6 +177,7 @@ const InvestmentChart: React.FC<schemeDataProps> = ({ schemeData }) => {
     } else {
       calculateFutureValue(amount, period)
     }
+    calculateFixedDeposit(period, amount, type)
   }
 
   const calculateFutureValue = (amount: number, period: number) => {
@@ -252,7 +199,7 @@ const InvestmentChart: React.FC<schemeDataProps> = ({ schemeData }) => {
         return
     }
     let lumpsums: number = amount * Math.pow((1 + cagr / 100), period);
-      setTotalInvestment( amount)
+    setTotalInvestment(amount)
     setTotalProfit(Math.round(lumpsums))
   }
 
@@ -280,9 +227,9 @@ const InvestmentChart: React.FC<schemeDataProps> = ({ schemeData }) => {
     futureValue = (amount * (Math.pow(1 + monthlyRate, months) - 1)) / monthlyRate;
 
     setTotalInvestment(months * amount)
-    let mainresults: number = Math.round(futureValue);
-    let gain: number = mainresults - amount * months;
-    setTotalProfit(Math.round(gain+(months * amount)))
+    let mainresults: number = futureValue
+    let gain: number = mainresults - (amount * months);
+    setTotalProfit(Math.round(gain + (months * amount)))
   }
 
   const amountHandler = (
@@ -292,12 +239,12 @@ const InvestmentChart: React.FC<schemeDataProps> = ({ schemeData }) => {
     let value = Number(e.target.value.trim());
     if (value <= 1000000000) {
       setInvestmentAmount(value);
-      calculateFixedDeposit(investmentPeriod, value)
+      calculateFixedDeposit(investmentPeriod, value, selectedInvestmentType)
       checkInvestmentType(selectedInvestmentType, value, investmentPeriod)
     }
     else if (value >= maxAmount) {
       setInvestmentAmount(value);
-      calculateFixedDeposit(investmentPeriod, value)
+      calculateFixedDeposit(investmentPeriod, value, selectedInvestmentType)
       checkInvestmentType(selectedInvestmentType, value, investmentPeriod)
     }
 
@@ -334,13 +281,13 @@ const InvestmentChart: React.FC<schemeDataProps> = ({ schemeData }) => {
           <div className="text-lg-end">
             <div className="btn-group rounded-tab-btn" role="group" aria-label="Basic radio toggle button group">
 
-              <input type="radio" className="btn-check" name="btnradio" onClick={() => handlePeriod(1)} id="btnradio1" autoComplete="off" checked={investmentPeriod === 1} />
+              <input type="radio" className="btn-check" name="btnradio" onClick={() => handlePeriod(1, selectedInvestmentType)} id="btnradio1" autoComplete="off" checked={investmentPeriod === 1} />
               <label className="btn  padding-under-area border" htmlFor="btnradio1">1Y</label>
 
-              <input type="radio" className="btn-check" name="btnradio" onClick={() => handlePeriod(3)} id="btnradio2" autoComplete="off" checked={investmentPeriod === 3} />
+              <input type="radio" className="btn-check" name="btnradio" onClick={() => handlePeriod(3, selectedInvestmentType)} id="btnradio2" autoComplete="off" checked={investmentPeriod === 3} />
               <label className="btn  padding-under-area border" htmlFor="btnradio2">3Y</label>
 
-              <input type="radio" className="btn-check" name="btnradio" onClick={() => handlePeriod(5)} id="btnradio3" autoComplete="off" checked={investmentPeriod === 5} />
+              <input type="radio" className="btn-check" name="btnradio" onClick={() => handlePeriod(5, selectedInvestmentType)} id="btnradio3" autoComplete="off" checked={investmentPeriod === 5} />
               <label className="btn  padding-under-area border" htmlFor="btnradio3">5Y</label>
             </div>
           </div>
@@ -357,41 +304,36 @@ const InvestmentChart: React.FC<schemeDataProps> = ({ schemeData }) => {
           could have been
         </p>
         <h6 className="">
-          ₹{getValueInSort(totalProfit)} <span className="congratesColor">(+{returnPercentage}%)</span>
+          ₹{totalProfit} <span className="congratesColor">(+{returnPercentage}%)</span>
         </h6>
       </div>
 
       <div className="mt-4">
         <h6 className="fs16px mb-0">Returns Comparison</h6>
         <div className="container">
-          <div
-            className="row "
-          >
-            <div className="col-5 mx-auto ">
+          <div className="row ">
+            <div className="col-md-12" >
               <ReactApexChart
                 options={state.options}
                 series={state.series}
                 type="bar"
-                height={300}
-                width={80}
+                height={200}
+                width={"62%"}
               />
-
-              <p className="mb-0 text-muted ml20">₹{getValueInSort(totalFixedProfit+totalInvestment)}</p>
-              <p className="mb-0 text-success ml20">6.55%</p>
-              <p className="text-muted ml20">Fixed Deposit</p>
             </div>
-            <div className="col-5 mx-auto"><ReactApexChart
-              options={state2.options}
-              series={state2.series}
-              type="bar"
-              height={300}
-              width={80}
-            />
-              <p className="mb-0 text-muted ml20">₹{getValueInSort(totalProfit)}</p>
-              <p className="mb-0 text-success ml20">{returnPercentage}%</p>
-              <p className="text-muted ml20">This Fund</p></div>
-
           </div>
+          <div className="row">
+              <div className="col-6">
+                <p className="mb-0 text-muted ml20">₹{getValueInSort(totalFixedProfit)}</p>
+                <p className="mb-0 text-success ml20">6.55%</p>
+                <p className="text-muted ml20">Fixed Deposit</p>
+              </div>
+              <div className="col-6">
+                <p className="mb-0 text-muted ml20 m-0">₹{getValueInSort(totalProfit)}</p>
+                <p className="mb-0 text-success ml20 m-0">{returnPercentage}%</p>
+                <p className="text-muted ml20 m-0">This Fund</p>
+              </div>
+            </div>
 
         </div>
       </div>

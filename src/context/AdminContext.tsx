@@ -136,7 +136,7 @@ export const AdminUserProvider = ({ children }: { children: ReactNode }) => {
       });
       if (res) {
         setFamilySnapShotData(res.finalArray)
-        if (res?.finalArray?.length > 1) {
+        if (res?.finalArray?.length > 1 ) {
           const portfolioType = localStorage.getItem("portfolioType")
           if (res.finalArray[0]?.myPortfolio && portfolioType === "my") {
             setSnapshotData(res.finalArray[0])

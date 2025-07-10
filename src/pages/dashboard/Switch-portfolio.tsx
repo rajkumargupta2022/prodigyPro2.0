@@ -24,8 +24,6 @@ const SwitchPortfolio: React.FC<investmetProps> = ({ show, setShow, target, refD
    const portfolioType = localStorage.getItem("portfolioType")
    if(portfolioType==="family"){
      setSelected(portfolioType)
-     console.log("============");
-     
      handleCheckboxChange(portfolioType)
    }else{
      setSelected("my")
