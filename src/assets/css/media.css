@@ -35,9 +35,10 @@
   .back_absolute_btn {
     top: -35%;
   }
+
   .set-margin-left {
     margin-left: 41%;
-}
+  }
 }
 
 @media (min-width: 1000px) and (max-width: 1300px) {
@@ -45,9 +46,9 @@
     top: -35%;
   }
 
-  .set-margin-left{
-      margin-left: 29%;
-}
+  .set-margin-left {
+    margin-left: 29%;
+  }
 }
 
 @media only screen and (max-width: 1000px) {
@@ -58,7 +59,8 @@
   .mTopForMobile {
     margin-top: 10px;
   }
-      .set-margin-left {
+
+  .set-margin-left {
     margin-left: 0%;
   }
 }
@@ -72,6 +74,11 @@
 
 @media only screen and (max-width: 767px) {
 
+  .mutual-funds-searchbuttonprodgy12 {
+    position: absolute;
+    top: 30px;
+    left: 15px;
+  }
 
   .hide_on_desktop_btn {
     display: block;
@@ -84,10 +91,12 @@
     border: 0;
     margin-bottom: 20px;
   }
+
   .hide_on_desktop_btn p {
     color: #fff;
     font-size: 18px;
   }
+
   .filter_acounts_mobile {
     position: absolute;
     width: 100%;

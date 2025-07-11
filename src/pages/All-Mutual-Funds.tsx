@@ -57,15 +57,15 @@ const AllMutualFunds = () => {
 
               <div className="explore-categoryprodgy">
                 <p>Type</p>
-                <div className="">
-                  <button type="button" className="btn riskProfileBtn btn_colorfull ">Equity</button>
-                  <button type="button" className="btn riskProfileBtn mx-2">Debt</button>
-                  <button type="button" className="btn riskProfileBtn">Hybrid</button>
-                  <button type="button" className="btn riskProfileBtn mx-2">Other Funds</button>
+                <div className="d-flex justify-content-between gap-1">
+                  <button type="button" className="btn riskProfileBtn btn_colorfull w-50">Equity</button>
+                  <button type="button" className="btn riskProfileBtn w-50">Debt</button>
+                  <button type="button" className="btn riskProfileBtn w-50">Hybrid</button>
+                  <button type="button" className="btn riskProfileBtn w-75">Other Funds</button>
                 </div>
                 <p className="pt-3">Category</p>
               </div>
-              <Form>
+              <Form className="fixed-scrolling-amc">
                 <Form.Check type="checkbox" label="Aggressive Hybrid" name="category" defaultChecked />
                 <Form.Check type="checkbox" label="Dividend Yield Funds" name="category" />
                 <Form.Check type="checkbox" label="Flexi Cap Funds" name="category" />
@@ -95,7 +95,7 @@ const AllMutualFunds = () => {
               style={{ border: "none", borderRadius: "16px" }}
             >
               <h5 className="font-size-16 mb-3">AMC</h5>
-              <Form>
+              <Form className="fixed-scrolling-amc">
                 <Form.Check
                   type="checkbox"
                   label="360 ONE"
@@ -143,7 +143,7 @@ const AllMutualFunds = () => {
 
           {/* Mutual Funds List */}
           <Col md={8}>
-            <Row className="justify-content-between py-4 align-items-center">
+            <Row className="justify-content-between pb-4 pt-md-0 pt-4 align-items-center">
               <Col md={6} className="">
                 <h5 className="fw-bold mb-0">431 Mutual Funds</h5>
               </Col>
@@ -151,13 +151,13 @@ const AllMutualFunds = () => {
                 <div className="position-relative pt-md-0 pt-3">
                   <Search
                     className="mutual-funds-searchbuttonprodgy12 text-secondary "
-                    size={25}
+                    size={20}
                   />
-                  <input
+                  {/* <input
                     type="text"
-                    className="form-control rounded-4 p-3 ps-5 search_input"
-                    placeholder="Search for mutual funds to invest..."
-                  />
+                    className="form-control rounded-4 search_input exlore-search-box" placeholder="Search for mutual funds to invest..."
+                  /> */}
+                  <input className="rounded-4 exlore-search-box w-100" type="text" placeholder="Search for mutual funds to invest..."></input>
                 </div>
               </Col>
             </Row>
@@ -169,7 +169,52 @@ const AllMutualFunds = () => {
                 style={{ border: "none", borderRadius: "16px" }}
               >
                 <Card.Body>
-                  <div className="row justify-content-between align-items-center border-bottom pb-3">
+
+                  <div className="row justify-content-between">
+                    <div className="col-8 py-2">
+                      <div className="d-flex">
+                        <img src={AMCLOGO} alt="Image not found" />
+                        <div className="ms-2" style={{ flex: 4 }}>
+                          <h6 style={{ margin: 0 }}>
+                            Nippon India Large Cap Fund
+                          </h6>
+                          <span className="text-secondary">
+                            Equity - Large Cap
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="col-2 py-2 text-md-end text-start">
+                      <div className="text-secondary" onClick={() => { navigate("/explore-fund-details") }}>
+                        <ChevronRight className="funds-rightsign-prodgy12" size={25} />
+                      </div>
+                    </div>
+                  </div>
+                  <hr className="fw-light text-secondary my-1" />
+                  <div className="row">
+                    <div className="col-4">
+                      <span className="text-secondary">Last 3Y</span>
+                      <br />
+                      <span className="value-font2 text-success">29.35%</span>
+                    </div>
+
+                    <div className="col-4">
+                      <span className="text-secondary">Min. SIP</span>
+                      <br />
+                      <span className="value-font2">
+                        ₹500
+                      </span>
+                    </div>
+
+                    <div className="col-4">
+                      <span className="text-secondary">Fund Size</span>
+                      <br />
+                      <span className="value-font2">₹26,776.87 Cr</span>
+                    </div>
+                  </div>
+
+                  
+                  {/* <div className="row justify-content-between align-items-center border-bottom pb-3">
                     <div className="col-10">
                       <div className="d-flex align-items-center">
                         <Image src={AMCLOGO} />
@@ -185,6 +230,7 @@ const AllMutualFunds = () => {
                       <ChevronRight className="funds-rightsign-prodgy12" size={25} />
                     </div>
                   </div>
+
                   <div className="row pt-3">
                     <div className="col-lg-4 col-6 py-1">
                       <p className="mb-1">Last 3Y</p>
@@ -198,7 +244,8 @@ const AllMutualFunds = () => {
                       <p className="mb-1">Fund Size</p>
                       <h5>₹26,776.87 Cr</h5>
                     </div>
-                  </div>
+                  </div> */}
+
                 </Card.Body>
               </Card>
             ))}

@@ -1393,6 +1393,8 @@ span.text-secondary.text-uppercase.fs-7 {
 
 .card .form-check-input[type=checkbox] {
   border-radius: 1.25em;
+  padding: 8px;
+  margin-right: 10px !important;
 }
 
 .form-check>label {
@@ -1412,7 +1414,7 @@ span.text-secondary.text-uppercase.fs-7 {
 
   .mutual-funds-searchbuttonprodgy12 {
     position: absolute;
-    top: 18px;
+    top: 14px;
     left: 20px;
   }
 }
@@ -1434,7 +1436,7 @@ span.text-secondary.text-uppercase.fs-7 {
 
   .mutual-funds-searchbuttonprodgy12 {
     position: absolute;
-    top: 18px;
+    top: 14px;
     left: 20px;
     width: 20px;
   }
@@ -1554,8 +1556,31 @@ span.text-secondary.text-uppercase.fs-7 {
   z-index: 1;
 }
 
-.portfolio_sticky_2025{
+.portfolio_sticky_2025 {
   position: sticky;
   top: 70px;
   z-index: 1;
+}
+
+.fixed-scrolling-amc {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.exlore-search-box {
+  padding: 10px;
+  padding-left: 50px;
+  border: 1px solid #D0DBEA;
+}
+
+.exlore-search-box:focus {
+  outline: 1px solid #011EFE;
+}
+
+.exlore-search-box::placeholder {
+  font-size: 15px;
+}
+
+.exlore-search-box::-ms-input-placeholder {
+  font-size: 15px;
 }
