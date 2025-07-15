@@ -26,6 +26,10 @@
     height: 60px;
   }
 
+  .sip-date-modalesize {
+    margin: 0px 20px;
+  }
+
   .modelSize {
     margin: 0 15px 0 19px;
   }
@@ -37,7 +41,7 @@
   }
   .set-margin-left {
     margin-left: 41%;
-}
+  }
 }
 
 @media (min-width: 1000px) and (max-width: 1300px) {
@@ -45,9 +49,9 @@
     top: -35%;
   }
 
-  .set-margin-left{
-      margin-left: 29%;
-}
+  .set-margin-left {
+    margin-left: 29%;
+  }
 }
 
 @media only screen and (max-width: 1000px) {
@@ -58,21 +62,19 @@
   .mTopForMobile {
     margin-top: 10px;
   }
-      .set-margin-left {
+  .set-margin-left {
     margin-left: 0%;
   }
 }
 
 @media only screen and (min-width: 1000px) {
+
   .modelSize {
     margin: 0 285px 0 26px;
   }
-
 }
 
 @media only screen and (max-width: 767px) {
-
-
   .hide_on_desktop_btn {
     display: block;
     display: block;

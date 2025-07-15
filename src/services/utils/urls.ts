@@ -7,7 +7,6 @@ export enum endPoints{
    varifyOtp="register/verify-otp",
    requestKycLink="register/request-kyc-link",
    requestKycData="register/request-kyc-data",
-   getFamilywisePortfolio="portfolio/get-familywise-portfolio",
    getFamilySnapshot="portfolio/get-family-snapshot",
    getAllFamily="user/get-all-family",
    userStatus="user/user-status",
@@ -16,5 +15,6 @@ export enum endPoints{
    getPortfolioTransactionDetail="portfolio/get-portfolio-transaction-detail",
    sipStpSwpReport="reports/sip-stp-swp-report",
    getSchemeDetails="product/get-scheme-details",
-   getNavHistory="product/get-nav-history"
+   getNavHistory="product/get-nav-history",
+   getMandateList="transact/get-mandate-list"
 }

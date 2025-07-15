@@ -38,3 +38,18 @@ export interface navHistoryKeys {
       date: string,
       nav: number
 }
+export interface bankMandateResponse {
+  success:boolean,
+  data:bankMandateKeys[]
+}
+export interface bankMandateKeys{
+    bank_name: string,
+      umrn_no: string,
+      acc_type: string,
+      bank_code: string,
+      account_no: string,
+      mandate_date: string,
+      amount: number,
+      from_date: string,
+      to_date:string
+}

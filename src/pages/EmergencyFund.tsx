@@ -17,19 +17,6 @@ const EmergencyFund = () => {
     <>
       <NavBar />
 
-      <div className="breadcum_area">
-        <div className="personal_form_container pt-3">
-          <Breadcrumb>
-            <Breadcrumb.Item href="#">Home</Breadcrumb.Item>
-            <ChevronRight className="fs14px" />
-            <Breadcrumb.Item href="#">
-              Library
-            </Breadcrumb.Item>
-            <ChevronRight className="fs14px" />
-            <Breadcrumb.Item active>Data</Breadcrumb.Item>
-          </Breadcrumb>
-        </div>
-      </div>
       <div className="container pt-2">
         <div className="personal_form_container">
         <div className="d-flex my-3">

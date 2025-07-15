@@ -5,17 +5,41 @@ import Card from 'react-bootstrap/Card';
 import { Calendar4, CurrencyRupee } from 'react-bootstrap-icons';
 import icici from "../assets/img/bank-logo/icici.png"
 import BankMandate from './BankMandate';
+import SipDates from './SipDate';
+import { amountHandler } from '../services/utils/calculatorsFs';
 interface investmetProps {
   show: boolean;
   setShow: (show: boolean) => void;
 }
+interface addAmountKeys{
+  first:number;
+  second:number;
+  third:number
+}
 
 const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow }) => {
   const [openBankMandate,setOpenBankMandate] = useState<boolean>(false)
+  const [sipDateShow,setSipDateShow] = useState<boolean>(false)
+  const [amount,setAmount] = useState<number>(0)
+  const [addAmountValues,setAddAmountValues] = useState<addAmountKeys>({
+  first:1000,
+  second:2000,
+  third:5000
+})
+ const [sipDate, setSipDate] = useState<number>(14)
+
+  const handleSipDate = (value: number) => {
+    setSipDate(value)
+    setSipDateShow(false)
+  }
 
   const handleBankMandate = ()=>{
     setOpenBankMandate(true)
     setShow(false)
+  }
+
+  const addAmount = (value:number)=>{
+    setAmount(amount+value)
   }
 
   return (
@@ -57,11 +81,11 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow }) => {
               </div>
             </div>
             <form>
-              <div className="d-flex justify-content-between mt-3">
+              <div className="d-flex justify-content-between mt-3" onClick={()=>setSipDateShow(true)}>
                 <div className="d-flex">
                   <div className="ms-2 prod_icon_heading">
                     <p>Day of SIP</p>
-                    <h4 className='my-2'>14th on every month</h4>
+                    <h4 className='my-2'>{sipDate}th on every month</h4>
                   </div>
                 </div>
                 <div className="prod_view_fund align-self-center">
@@ -71,12 +95,12 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow }) => {
               <hr className='mt-0' />
               <div className="form-group">
                 <label htmlFor="amountFor" className='fs12px'>INVESTMENT AMOUNT</label>
-                <input type="text" className="form-control" id="amountFor" aria-describedby="emailHelp" placeholder="Enter Amount" />
+                <input type="text" className="form-control" value={amount} onChange={(e)=>amountHandler(e,1000000,setAmount)}  id="amountFor" aria-describedby="emailHelp" placeholder="Enter Amount" />
                 <div className=" mt-2">
                   <button type="button" className="btn shortcutValue">Min.</button>
-                  <button type="button" className="btn shortcutValue mx-1"><CurrencyRupee className='mb-1' />1,000</button>
-                  <button type="button" className="btn shortcutValue mx-1"><CurrencyRupee className='mb-1' />2,000</button>
-                  <button type="button" className="btn shortcutValue mx-1"><CurrencyRupee className='mb-1' />5,000</button>
+                  <button type="button" className="btn shortcutValue mx-1" onClick={()=>addAmount(addAmountValues.first)}><CurrencyRupee className='mb-1' />1,000</button>
+                  <button type="button" className="btn shortcutValue mx-1" onClick={()=>addAmount(addAmountValues.second)}><CurrencyRupee className='mb-1' />2,000</button>
+                  <button type="button" className="btn shortcutValue mx-1" onClick={()=>addAmount(addAmountValues.third)}><CurrencyRupee className='mb-1' />5,000</button>
                 </div>
               </div>
             </form>
@@ -89,6 +113,7 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow }) => {
           <Button className='customButton buttunCenter' onClick={handleBankMandate}>Continue</Button>
         </Modal.Footer>
       </Modal>
+      <SipDates show={sipDateShow} setShow={setSipDateShow} sipDate={sipDate} handleSipDate={handleSipDate} />
       <BankMandate show={openBankMandate} setShow={setOpenBankMandate}/>
     </>
   );
