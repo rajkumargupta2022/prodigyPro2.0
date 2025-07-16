@@ -1393,6 +1393,8 @@ span.text-secondary.text-uppercase.fs-7 {
 
 .card .form-check-input[type=checkbox] {
   border-radius: 1.25em;
+  padding: 8px;
+  margin-right: 10px !important;
 }
 
 .form-check>label {
@@ -1412,7 +1414,7 @@ span.text-secondary.text-uppercase.fs-7 {
 
   .mutual-funds-searchbuttonprodgy12 {
     position: absolute;
-    top: 18px;
+    top: 14px;
     left: 20px;
   }
 }
@@ -1434,7 +1436,7 @@ span.text-secondary.text-uppercase.fs-7 {
 
   .mutual-funds-searchbuttonprodgy12 {
     position: absolute;
-    top: 18px;
+    top: 14px;
     left: 20px;
     width: 20px;
   }
@@ -1554,7 +1556,7 @@ span.text-secondary.text-uppercase.fs-7 {
   z-index: 1;
 }
 
-.portfolio_sticky_2025{
+.portfolio_sticky_2025 {
   position: sticky;
   top: 70px;
   z-index: 1;
@@ -1593,4 +1595,105 @@ span.text-secondary.text-uppercase.fs-7 {
 .select_sipdate{
   background: rgba(26, 53, 254, 1);
   color: #fff;
+}
+.fixed-scrolling-amc {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.exlore-search-box {
+  padding: 10px;
+  padding-left: 50px;
+  border: 1px solid #D0DBEA;
+}
+
+.exlore-search-box:focus {
+  outline: 1px solid #011EFE;
+}
+
+.exlore-search-box::placeholder {
+  font-size: 15px;
+}
+
+.exlore-search-box::-ms-input-placeholder {
+  font-size: 15px;
+}
+
+.Prodgymobile_filtering_dataa p {
+  margin-bottom: 0;
+  font-weight: 400;
+  font-size: 18px;
+}
+
+.Prodgymobile_filtering_dataa:hover {
+  background-color: #E6E8FF;
+}
+
+.Prodgymobile_filtering_dataa {
+  background-color: #E9E9E980;
+  width: fit-content;
+  padding: 2px 15px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.float_right_set {
+  float: right;
+}
+
+.Prodgymobile_filtering_dataa:hover svg {
+  transition: .5s ease-in-out;
+  transform: rotate(90deg);
+
+}
+
+.prody_position_relative {
+  position: relative;
+}
+
+.return_on_mobile {
+  display: none;
+  position: absolute;
+  top: 26px;
+  right: 8px;
+  z-index: 9;
+}
+.category_on_mobile {
+  display: none;
+  position: absolute;
+  top: 32px;
+  left: 8px;
+  z-index: 9;
+  width: 90%;
+  background-color: #fff;
+  border-radius: 15px;
+}
+
+.filters_on_mobile {
+  display: none;
+  position: absolute;
+  top: 32px;
+  left: 8px;
+  z-index: 9;
+  width: 90%;
+  background-color: #fff;
+  border-radius: 15px;
+}
+
+.category_on_mobile .card{
+  margin-top: 0px !important;
+  padding-top: 0px !important;
+}
+
+.float_right_set:hover .return_on_mobile {
+  display: block;
+  transition: .5s ease-in-out;
+}
+.category_show_data:hover .category_on_mobile {
+  display: block;
+  transition: .5s ease-in-out;
+}
+.filters_show_mobile:hover .filters_on_mobile{
+  display: block;
+  transition: .5s ease-in-out;
 }
