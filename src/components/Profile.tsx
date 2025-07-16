@@ -49,11 +49,7 @@ function Profile() {
                   </div>}
 
                   <h5> {item.name}</h5>
-                  <p> {item.jh1_name
-                    ? item.jh2_name
-                      ? `${item.jh1_name}, ${item.jh2_name}`
-                      : item.jh1_name
-                    : item.hold_n_code === "SI" && item.relation}</p>
+                  <p className="fs14px">    {item.hold_n_code==="SI" ? "Single Holder" : `AOS ( ${item.jh1_name} ${item.jh2_name && ","+item.jh2_name})` }</p>
                   <p className="logoBlueColor" onClick={() => switchProfile(item)}>Switch Profile</p>
                 </div>
               </div>

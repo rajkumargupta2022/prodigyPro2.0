@@ -16,5 +16,6 @@ export enum endPoints{
    sipStpSwpReport="reports/sip-stp-swp-report",
    getSchemeDetails="product/get-scheme-details",
    getNavHistory="product/get-nav-history",
-   getMandateList="transact/get-mandate-list"
+   getMandateList="transact/get-mandate-list",
+   getFilteredScheme="product-basket/get-filtered-scheme"
 }
