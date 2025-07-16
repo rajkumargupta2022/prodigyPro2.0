@@ -52,6 +52,7 @@
 }
 
 @media only screen and (max-width: 1000px) {
+  
   .back_absolute_btn {
     top: 5%;
   }
@@ -73,6 +74,17 @@
 }
 
 @media only screen and (max-width: 767px) {
+
+  .Prodgymobile_filtering_dataa {
+    padding: 2px 10px;
+  }
+
+  .Prodgymobile_filtering_dataa p {
+    font-size: 18px;
+  }
+  .Prodgymobile_filtering_dataa svg {
+    width:13px;
+  }
 
   .mutual-funds-searchbuttonprodgy12 {
     position: absolute;

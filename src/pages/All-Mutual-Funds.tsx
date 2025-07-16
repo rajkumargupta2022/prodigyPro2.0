@@ -4,6 +4,9 @@ import MyNavbar from "../components/Navbar";
 import AMCLOGO from "../assets/img/icons/AMC Logo.svg";
 import { useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
+import Category from "./explore/Category";
+import Returns from "./explore/Returns";
+import Filters from "./explore/Filters";
 
 const AllMutualFunds = () => {
   const navigate = useNavigate()
@@ -11,138 +14,23 @@ const AllMutualFunds = () => {
     <>
       <MyNavbar />
       <Container className="mt-4">
-        <h4 className="fw-bold">All Mutual Funds</h4>
-        <p>
-          Discover mutual funds across all categories using the all mutual funds
-          screener
-        </p>
-        <Row>
-          {/* Sidebar Filters */}
-          <Col md={4} className="border-end">
-            <div
-              className="card p-md-4 p-2"
-              style={{ border: "none", borderRadius: "16px" }}
-            >
-              <h5 className="font-size-16 mb-3">Sort By</h5>
-              <Form>
-                <Form.Check
-                  type="checkbox"
-                  label="Returns - High to Low"
-                  name="sortBy"
-                  defaultChecked
-                />
-                <Form.Check
-                  type="checkbox"
-                  label="Fund Size - High to Low"
-                  name="sortBy"
-                />
-                <Form.Check
-                  type="checkbox"
-                  label="Min. Investment - Low to High"
-                  name="sortBy"
-                />
-                <Form.Check
-                  type="checkbox"
-                  label="Fund Name - A to Z"
-                  name="sortBy"
-                />
-              </Form>
+        <div className="d-md-block d-none">
+          <h4 className="fw-bold">All Mutual Funds</h4>
+          <p>
+            Discover mutual funds across all categories using the all mutual funds
+            screener
+          </p>
+        </div>
+        <div className="row">
+          <div className="col-lg-4 border-end d-none d-lg-block">
+
+            <Returns />
+            <div className="">
+              <Category />
             </div>
-
-            <div
-              className="card p-md-4 p-2 mt-2"
-              style={{ border: "none", borderRadius: "16px" }}
-            >
-              <h5 className="mt-3 font-size-16 mb-3">Category</h5>
-
-              <div className="explore-categoryprodgy">
-                <p>Type</p>
-                <div className="d-flex justify-content-between gap-1">
-                  <button type="button" className="btn riskProfileBtn btn_colorfull w-50">Equity</button>
-                  <button type="button" className="btn riskProfileBtn w-50">Debt</button>
-                  <button type="button" className="btn riskProfileBtn w-50">Hybrid</button>
-                  <button type="button" className="btn riskProfileBtn w-75">Other Funds</button>
-                </div>
-                <p className="pt-3">Category</p>
-              </div>
-              <Form className="fixed-scrolling-amc">
-                <Form.Check type="checkbox" label="Aggressive Hybrid" name="category" defaultChecked />
-                <Form.Check type="checkbox" label="Dividend Yield Funds" name="category" />
-                <Form.Check type="checkbox" label="Flexi Cap Funds" name="category" />
-                <Form.Check type="checkbox" label="Index Funds" name="category" />
-                <Form.Check type="checkbox" label="Large & Mid Cap Funds" name="category" />
-                <Form.Check type="checkbox" label="Large Cap Funds" name="category" />
-              </Form>
-            </div>
-
-            <div
-              className="card p-2 mt-2"
-              style={{ border: "none", borderRadius: "16px" }}
-            >
-              <h5 className="mt-3 font-size-16 mb-3">Risk</h5>
-              <Form className="checkbox-grid-setprodgy">
-                <Form.Check type="checkbox" label="High" name="risk" defaultChecked />
-                <Form.Check type="checkbox" label="Moderate" name="risk" />
-                <Form.Check type="checkbox" label="Low" name="risk" />
-                <Form.Check type="checkbox" label="Moderate Low" name="risk" />
-                <Form.Check type="checkbox" label="Moderate High" name="risk" />
-                <Form.Check type="checkbox" label="Very High" name="risk" />
-              </Form>
-            </div>
-
-            <div
-              className="card p-md-4 p-2 mt-2"
-              style={{ border: "none", borderRadius: "16px" }}
-            >
-              <h5 className="font-size-16 mb-3">AMC</h5>
-              <Form className="fixed-scrolling-amc">
-                <Form.Check
-                  type="checkbox"
-                  label="360 ONE"
-                  name="sortBy"
-                  defaultChecked
-                />
-                <Form.Check
-                  type="checkbox"
-                  label="Aditya Birla SL MF"
-                  name="sortBy"
-                />
-                <Form.Check
-                  type="checkbox"
-                  label="Axis Mutual Fund"
-                  name="sortBy"
-                />
-                <Form.Check
-                  type="checkbox"
-                  label="DSP Mutual Fund"
-                  name="sortBy"
-                />
-                <Form.Check
-                  type="checkbox"
-                  label="Edelweiss Mutual Fund"
-                  name="sortBy"
-                />
-                <Form.Check
-                  type="checkbox"
-                  label="Groww Mutual Fund"
-                  name="sortBy"
-                />
-                <Form.Check
-                  type="checkbox"
-                  label="HDFC Mutual Fund"
-                  name="sortBy"
-                />
-                <Form.Check
-                  type="checkbox"
-                  label="ICICI Prudential Mutual Fund"
-                  name="sortBy"
-                />
-              </Form>
-            </div>
-          </Col>
-
-          {/* Mutual Funds List */}
-          <Col md={8}>
+            <Filters />
+          </div>
+          <div className="col-lg-8">
             <Row className="justify-content-between pb-4 pt-md-0 pt-4 align-items-center">
               <Col md={6} className="">
                 <h5 className="fw-bold mb-0">431 Mutual Funds</h5>
@@ -160,7 +48,37 @@ const AllMutualFunds = () => {
                   <input className="rounded-4 exlore-search-box w-100" type="text" placeholder="Search for mutual funds to invest..."></input>
                 </div>
               </Col>
+              <div className="col-12 pt-3 d-block d-lg-none">
+                <div className="row prody_position_relative">
+                  <div className="col-4">
+                    <div className="Prodgymobile_filtering_dataa category_show_data">
+                      <p>Category <span><ChevronRight className="" size={18} /></span></p>
+                      <div className="category_on_mobile">
+                        <Category />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-4">
+                    <div className="Prodgymobile_filtering_dataa filters_show_mobile">
+                      <p>Filter(2) <span><ChevronRight className="" size={18} /></span></p>
+                      <div className="filters_on_mobile">
+                        <Filters />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-4">
+                    <div className="Prodgymobile_filtering_dataa float_right_set">
+                      <p>Return <span><ChevronRight className="" size={18} /></span></p>
+                      <div className="return_on_mobile">
+                        <Returns />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </Row>
+
+
 
             {[...Array(8)].map((_, index) => (
               <Card
@@ -186,7 +104,7 @@ const AllMutualFunds = () => {
                     </div>
                     <div className="col-2 py-2 text-md-end text-start">
                       <div className="text-secondary" onClick={() => { navigate("/explore-fund-details") }}>
-                        <ChevronRight className="funds-rightsign-prodgy12" size={25} />
+                        <ChevronRight className="funds-rightsign-prodgy12" size={20} />
                       </div>
                     </div>
                   </div>
@@ -213,7 +131,7 @@ const AllMutualFunds = () => {
                     </div>
                   </div>
 
-                  
+
                   {/* <div className="row justify-content-between align-items-center border-bottom pb-3">
                     <div className="col-10">
                       <div className="d-flex align-items-center">
@@ -249,8 +167,9 @@ const AllMutualFunds = () => {
                 </Card.Body>
               </Card>
             ))}
-          </Col>
-        </Row>
+          </div>
+        </div>
+
       </Container>
       <Footer />
     </>
