@@ -1697,3 +1697,12 @@ span.text-secondary.text-uppercase.fs-7 {
   display: block;
   transition: .5s ease-in-out;
 }
+.radius16px{
+  border: none !important;
+  border-radius : 16px !important;
+}
+.radius16OverFlow{
+  border: none !important;
+  border-radius : 16px !important;
+  overflow: "hidden",
+}

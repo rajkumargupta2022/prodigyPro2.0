@@ -1,15 +1,108 @@
-import { Form, Card, Container, Row, Col, Image } from "react-bootstrap";
+import { Card, Container, Row, Col } from "react-bootstrap";
 import { ChevronRight, Search } from "react-bootstrap-icons";
 import MyNavbar from "../components/Navbar";
-import AMCLOGO from "../assets/img/icons/AMC Logo.svg";
-import { useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
 import Category from "./explore/Category";
-import Returns from "./explore/Returns";
-import Filters from "./explore/Filters";
+import Returns from "./explore/SortBy";
+import Filters from "./explore/Amcs";
+import { useEffect, useState } from "react";
+import { postRequest } from "../services/Api/HandleApi";
+import { endPoints, imageUrl } from "../services/utils/urls";
+import { filteredSchemeResponse, filteredSchemesKeys } from "./data-interfaces/explore";
+
 
 const AllMutualFunds = () => {
   const navigate = useNavigate()
+  const [amcCode, setAmcCode] = useState<number[]>([])
+  const [assetCode, setAssetCode] = useState<number[]>([1])
+  const [classCode, setClassCode] = useState<number[]>([])
+  const [page, setPage] = useState<number>(1)
+  const [retunrs, setretunrs] = useState<number>(3)
+  const [filteredSchemes, setFilteredSchemes] = useState<filteredSchemesKeys[]>([])
+
+  useEffect(() => {
+    fetchFilteredScheme(amcCode,assetCode,classCode)
+    setPage(1)
+    setretunrs(3)
+  }, [])
+
+  const fetchFilteredScheme = async (amc: number[] = amcCode, asset: number[] = assetCode, classArr: number[] = classCode) => {
+    const reBody = {
+      amc_code: amc,
+      asset_code: asset,
+      classcode: classArr
+    }
+    try {
+      const res = await postRequest<filteredSchemeResponse>(endPoints.getFilteredScheme + "?page=" + page + "&returns=" + retunrs, reBody)
+      if (res.data) {
+        setFilteredSchemes(res.data)
+      }else{
+        setFilteredSchemes([])
+      }
+    } catch (err) {
+      console.log(err);
+      setFilteredSchemes([])
+    }
+  }
+
+  const handleFilter = (value: number, filterType: string) => {
+    
+    let classArr: number[];
+    let amc: number[];
+    let asset: number[];
+    switch (filterType) {
+      case "category":
+        if (classCode.includes(value)) {
+          classArr = classCode.filter(item => item !== value)
+          setClassCode(classArr);
+          fetchFilteredScheme(amcCode, assetCode, classArr)
+        } else {
+          classArr = [...classCode, value]
+          setClassCode(classArr)
+          fetchFilteredScheme(amcCode, assetCode, classArr)
+        }
+        break;
+      case "asset":
+        asset = [value]
+        setAssetCode(asset)
+        fetchFilteredScheme(amcCode, asset, classCode)
+        break;
+      case "amc":
+        amc= amcCode.filter(item => item !== value)
+        if (amcCode.includes(value)) {
+          setAmcCode(amc);
+          fetchFilteredScheme(amc, assetCode, classCode)
+        } else {
+          amc =[...amcCode, value]
+          setAmcCode(amc)
+           fetchFilteredScheme(amc, assetCode, classCode)
+        }
+        break;
+      default:
+        return;
+    }
+
+  }
+  const isAvailable = (value: number, type: string): boolean => {
+    switch (type) {
+      case "category":
+        return classCode.includes(value)
+
+      case "asset":
+        return assetCode.includes(value)
+
+      case "amc":
+        return amcCode.includes(value)
+
+      default:
+        return false
+    }
+  }
+  const fundDetails = (item:filteredSchemesKeys)=>{
+     navigate("/fund-details",{state:{accordSchemeCode:item.Schemecode,fromPortfolio:false}})
+  }
+
   return (
     <>
       <MyNavbar />
@@ -24,11 +117,11 @@ const AllMutualFunds = () => {
         <div className="row">
           <div className="col-lg-4 border-end d-none d-lg-block">
 
-            <Returns />
-            <div className="">
-              <Category />
-            </div>
-            <Filters />
+            <Returns  />
+
+            <Category handleFilter={handleFilter} isAvailable={isAvailable} />
+
+            <Filters handleFilter={handleFilter} isAvailable={isAvailable} />
           </div>
           <div className="col-lg-8">
             <Row className="justify-content-between pb-4 pt-md-0 pt-4 align-items-center">
@@ -41,10 +134,7 @@ const AllMutualFunds = () => {
                     className="mutual-funds-searchbuttonprodgy12 text-secondary "
                     size={20}
                   />
-                  {/* <input
-                    type="text"
-                    className="form-control rounded-4 search_input exlore-search-box" placeholder="Search for mutual funds to invest..."
-                  /> */}
+
                   <input className="rounded-4 exlore-search-box w-100" type="text" placeholder="Search for mutual funds to invest..."></input>
                 </div>
               </Col>
@@ -54,7 +144,7 @@ const AllMutualFunds = () => {
                     <div className="Prodgymobile_filtering_dataa category_show_data">
                       <p>Category <span><ChevronRight className="" size={18} /></span></p>
                       <div className="category_on_mobile">
-                        <Category />
+                        <Category handleFilter={handleFilter} isAvailable={isAvailable} />
                       </div>
                     </div>
                   </div>
@@ -62,7 +152,7 @@ const AllMutualFunds = () => {
                     <div className="Prodgymobile_filtering_dataa filters_show_mobile">
                       <p>Filter(2) <span><ChevronRight className="" size={18} /></span></p>
                       <div className="filters_on_mobile">
-                        <Filters />
+                        <Filters handleFilter={handleFilter} isAvailable={isAvailable} />
                       </div>
                     </div>
                   </div>
@@ -78,23 +168,21 @@ const AllMutualFunds = () => {
               </div>
             </Row>
 
-
-
-            {[...Array(8)].map((_, index) => (
+            {filteredSchemes.length > 0 ? filteredSchemes.map((item, index) => (
               <Card
-                className="mb-3"
+                className="mb-3 radius16px"
                 key={index}
-                style={{ border: "none", borderRadius: "16px" }}
+
               >
                 <Card.Body>
 
                   <div className="row justify-content-between">
-                    <div className="col-8 py-2">
+                    <div className="col-8 py-2" onClick={()=>fundDetails(item)}>
                       <div className="d-flex">
-                        <img src={AMCLOGO} alt="Image not found" />
+                        <img src={`${imageUrl + item?.AMC_CODE}.png`} className="logoRadius" height={45} width={45} alt="Image not found" />
                         <div className="ms-2" style={{ flex: 4 }}>
                           <h6 style={{ margin: 0 }}>
-                            Nippon India Large Cap Fund
+                            {item.PRODUCT_LONG_NAME}
                           </h6>
                           <span className="text-secondary">
                             Equity - Large Cap
@@ -113,14 +201,14 @@ const AllMutualFunds = () => {
                     <div className="col-4">
                       <span className="text-secondary">Last 3Y</span>
                       <br />
-                      <span className="value-font2 text-success">29.35%</span>
+                      <span className="value-font2 text-success">{item.threeyearret}%</span>
                     </div>
 
                     <div className="col-4">
                       <span className="text-secondary">Min. SIP</span>
                       <br />
                       <span className="value-font2">
-                        ₹500
+                        ₹1000
                       </span>
                     </div>
 
@@ -130,43 +218,9 @@ const AllMutualFunds = () => {
                       <span className="value-font2">₹26,776.87 Cr</span>
                     </div>
                   </div>
-
-
-                  {/* <div className="row justify-content-between align-items-center border-bottom pb-3">
-                    <div className="col-10">
-                      <div className="d-flex align-items-center">
-                        <Image src={AMCLOGO} />
-                        <Card.Title className="ps-3 mb-0 funds-list-nameprodgy">
-                          <p>Nippon India Large Cap Fund</p>
-                          <Card.Subtitle className="text-muted funds-sublist-nameprodgy">
-                            Equity - Large Cap
-                          </Card.Subtitle>
-                        </Card.Title>
-                      </div>
-                    </div>
-                    <div className="col-2 text-md-end" onClick={() => { navigate("/explore-fund-details") }}>
-                      <ChevronRight className="funds-rightsign-prodgy12" size={25} />
-                    </div>
-                  </div>
-
-                  <div className="row pt-3">
-                    <div className="col-lg-4 col-6 py-1">
-                      <p className="mb-1">Last 3Y</p>
-                      <h5 className="text-success"> 29.35%</h5>
-                    </div>
-                    <div className="col-lg-4 col-6 py-1">
-                      <p className="mb-1">Min. SIP</p>
-                      <h5>₹500</h5>
-                    </div>
-                    <div className="col-lg-4 col-6 py-1">
-                      <p className="mb-1">Fund Size</p>
-                      <h5>₹26,776.87 Cr</h5>
-                    </div>
-                  </div> */}
-
                 </Card.Body>
               </Card>
-            ))}
+            )) : <p className="text-center mt-4">No schemes found</p>}
           </div>
         </div>
 

@@ -1,15 +1,13 @@
-import { useState } from 'react';
 import { Form } from 'react-bootstrap';
 
-function Returns() {
-  const [show, setShow] = useState(false);
 
-  const handleClose = () => setShow(false);
+function Returns() {
+
   return (
     
         <div
-              className="card p-md-4 p-2"
-              style={{ border: "none", borderRadius: "16px" }}
+              className="card p-md-4 p-2 radius16px"
+             
             >
               <h5 className="font-size-16 mb-3">Sort By</h5>
               <Form>

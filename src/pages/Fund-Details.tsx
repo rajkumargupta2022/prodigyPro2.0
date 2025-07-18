@@ -4,7 +4,7 @@ import MyStackBar from "../components/Stack-bar";
 import { useEffect, useState } from "react";
 import SelectFolioPopup from "../components/select-folio-popup";
 import { AiOutlineMore } from "react-icons/ai";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { postRequest } from "../services/Api/HandleApi";
 import { navHistoryResponse, schemeDeatilDataKeys, schemeDetailType } from "./data-interfaces/transact";
 import { endPoints, imageUrl } from "../services/utils/urls";
@@ -22,7 +22,6 @@ interface ChartState {
 
 const FundDetails = () => {
   const location = useLocation()
-  const navigate = useNavigate()
   const [openSelectFolio, setOpenSelectFolio] = useState(false)
   const [schemeDetailArray, setSchemeDetailArray] = useState<schemeDeatilDataKeys[]>([])
   const [navDate, setNavDate] = useState<string[]>([])
@@ -120,7 +119,7 @@ const FundDetails = () => {
       fetchSchemeDetail()
       fetchNavHistory(12)
     } else {
-      navigate("/portfolio")
+      // navigate("/portfolio")
     }
 
   }, [])
@@ -133,6 +132,7 @@ const FundDetails = () => {
 
     } catch (err) {
       console.log(err);
+      setSchemeDetailArray([])
 
     }
   }
@@ -144,11 +144,11 @@ const FundDetails = () => {
 
       setNavValue(res.history.map(item => parseFloat(Number(item.nav).toFixed(2))))
       setDuration(durationMonth)
-      console.log(res);
       yearInString(durationMonth)
 
     } catch (err) {
       console.log(err);
+      setNavDate([])
 
     }
   }
@@ -189,27 +189,26 @@ const FundDetails = () => {
       <Container className="mt-4">
 
         <div className="d-flex align-items-center">
-          <img src={`${imageUrl + location.state?.amcCode}.png`} className="logoRadius" alt="Image not found" width={60} height={60} />
+          <img src={`${imageUrl + schemeDetailArray[0]?.amcCode}.png`} className="logoRadius" alt="Image not found" width={60} height={60} />
           <div style={{ marginLeft: "2%", marginTop: "2%" }}>
-            <h4 className="fw-bold">{location.state?.scheme}</h4>
+            <h4 className="fw-bold">{schemeDetailArray[0]?.scheme}</h4>
             <p>Equity: Flexi Cap</p>
           </div>
         </div>
 
         <div className="row mt-4">
-          <div className="col-lg-8 col-md-8 col-12 border-end">
+          <div className="col-lg-8 col-md-8 col-12">
 
             <div className=" border-0">
               <div className="row px-4 pt-4" >
                 <div className="col-6" >
                   <p className="fs12px mb-0">NAV</p>
-                  <p className="fs16px">₹{location.state?.cnav.toFixed(2)}</p>
+                  <p className="fs16px">₹{schemeDetailArray[0]?.cnav?.toFixed(2)}</p>
                 </div>
                 <div className="col-6">
-                  <p className="fs12px mb-0">Last {durarinInYear} CAGR</p>
-                  <h5 className="sf12px congratesColor">{cagr}%</h5>
+                  <p className="fs12px mb-0"> Last {durarinInYear} CAGR</p>
+                  <h5 className={`sf12px  ${cagr > 0 ? "congratesColor" :"errorColor2"}`}>{cagr}%</h5>
                 </div>
-
               </div>
 
               <div className="">
@@ -273,9 +272,9 @@ const FundDetails = () => {
                 </div>
                 <div className="col-6 py-2">
                   <span className="text-secondary text-uppercase fs-7">Withdrawal Charges</span>
-                  <h4 className="fs-6"> {schemeDetailArray[0]?.exitLoad.split(',').map((line, index) => (
+                  <h4 className="fs-6"> {schemeDetailArray[0]?.exitLoad?.split(',')?.map((line, index) => (
                     <span key={index}>
-                      {line.trim() || "N/A"}
+                      {line?.trim() || "N/A"}
                       <br />
                     </span>
                   ))}</h4>
@@ -288,14 +287,11 @@ const FundDetails = () => {
           </div>
 
           {/* Mutual Funds List */}
+          {location?.state?.fromPortfolio &&
           <div className="col-md-4 col-12 position-relative" >
             <div
-              className="card mb-4"
-              style={{
-                border: "none",
-                borderRadius: "16px",
-                overflow: "hidden",
-              }}
+              className="card mb-4 radius16OverFlow"
+              
             >
               <div className="p-lg-3 p-4">
 
@@ -347,14 +343,9 @@ const FundDetails = () => {
             )}
 
             <div
-              className="card mb-4"
-              style={{
-                border: "none",
-                borderRadius: "20px",
-                overflow: "hidden",
-              }}
+              className="card mb-4 radius16OverFlow"
             >
-
+              
               <div className="p-lg-3 p-4">
 
                 <div className="mt-2">
@@ -397,7 +388,7 @@ const FundDetails = () => {
 
             </div>
 
-          </div>
+          </div>}
         </div>
 
       </Container>

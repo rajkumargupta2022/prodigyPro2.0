@@ -14,6 +14,7 @@ export interface schemeDeatilDataKeys {
   ISIN: string;
   cnav: number;
   expenseRatio: string;
+  amcCode:string;
   planType: string;
   planOption: string;
   risk: string;

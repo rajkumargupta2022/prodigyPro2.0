@@ -17,5 +17,8 @@ export enum endPoints{
    getSchemeDetails="product/get-scheme-details",
    getNavHistory="product/get-nav-history",
    getMandateList="transact/get-mandate-list",
-   getFilteredScheme="product-basket/get-filtered-scheme"
+   getFilteredScheme="product/get-filtered-scheme",
+   getAmcList="product/get-amc-list",
+   getAssetTypesList="product/get-assetTypes-list",
+   getCategoryTypesList="product/get-categoryTypes-list"
 }
