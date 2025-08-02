@@ -61,9 +61,9 @@ const Explore = () => {
               <img src={DebtFund} alt="" width={28} height={28} />
               <h6 className="fs14pxBlack">Debt Funds</h6>
             </div>
-            <div className="py-2 text-center" onClick={()=>{navigate("/all-mutual-funds")}}>
+            <div className="py-2 text-center crPointer" onClick={()=>{navigate("/all-mutual-funds")}}>
               <img src={DebtFund} alt="" width={28} height={28} />
-              <h6 className="fs14pxBlack">Explore All</h6>
+              <h6 className="fs14pxBlack ">Explore All</h6>
             </div>
 
           </div>

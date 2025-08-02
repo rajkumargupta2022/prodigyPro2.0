@@ -1,38 +1,61 @@
-import { Container } from "react-bootstrap";
+import { Card, Container } from "react-bootstrap";
 import MyNavbar from "../components/Navbar";
 import MyStackBar from "../components/Stack-bar";
 import { useEffect, useState } from "react";
-import SelectFolioPopup from "../components/select-folio-popup";
 import { AiOutlineMore } from "react-icons/ai";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { postRequest } from "../services/Api/HandleApi";
-import { navHistoryResponse, schemeDeatilDataKeys, schemeDetailType } from "./data-interfaces/transact";
+import { foliosResponse, navHistoryResponse, schemeDeatilDataKeys, schemeDetailType } from "./data-interfaces/transact";
 import { endPoints, imageUrl } from "../services/utils/urls";
 import { dateInStringNumber } from "../services/dates/dateFormater";
 import ReactApexChart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
 import Footer from "../components/Footer";
 import { getPercentageValue, getValueInSort } from "../services/calculation/percentageCalculate";
+import { Calendar4, CurrencyRupee } from "react-bootstrap-icons";
+import SipDates from "../components/SipDate";
+import InvetmentConfirmation from "../components/InvestmentConfirmation";
+import { fetchAdminUser } from "../services/user/adminUser";
+import SelectFolioPopup from "../components/select-folio-popup";
 
 interface ChartState {
   options: ApexOptions;
   series: { name: string; data: number[] }[];
 }
-
+interface addAmountKeys {
+  min: number,
+  first: number;
+  second: number;
+  third: number
+}
 
 const FundDetails = () => {
   const location = useLocation()
-  const [openSelectFolio, setOpenSelectFolio] = useState(false)
-  const [schemeDetailArray, setSchemeDetailArray] = useState<schemeDeatilDataKeys[]>([])
+  const navigate  = useNavigate()
+  const [openSelectFolio, setOpenSelectFolio] = useState<boolean>(false)
+  const [openInvestPopup, setOpenInvestPopup] = useState(false)
+  const [schemeList, setSchemeList] = useState<schemeDeatilDataKeys[]>([])
   const [navDate, setNavDate] = useState<string[]>([])
   const [navValue, setNavValue] = useState<number[]>([])
   const [duration, setDuration] = useState<number>(12)
   const [cagr, setCagr] = useState<number>(0)
   const [durarinInYear, setDurarinInYear] = useState<string>("")
   const schmeDetail = location.state
+  const [isSipTransaction, setIsSipTransaction] = useState<boolean>(true)
+  const [addAmountValues, setAddAmountValues] = useState<addAmountKeys>({
+    min: 1000,
+    first: 2000,
+    second: 3000,
+    third: 5000
+  })
+  const [sipDate, setSipDate] = useState<string>("14")
+  const [sipDateList, setSipDateList] = useState<string[]>([])
+  const [amount, setAmount] = useState<number>(0)
+  const [amountErrorMsg, setAmountErrorMsg] = useState<string>("")
+  const [sipDateShow, setSipDateShow] = useState<boolean>(false)
 
 
-  
+
   const state: ChartState = {
     series: [
       {
@@ -73,7 +96,7 @@ const FundDetails = () => {
           show: false, // ❌ Hide tick marks
         },// ✅ Custom X-axis labels
 
-        
+
       },
 
       yaxis: {
@@ -118,8 +141,14 @@ const FundDetails = () => {
     if (location?.state?.accordSchemeCode) {
       fetchSchemeDetail()
       fetchNavHistory(12)
+      handleMinAmount(true)
+      fetchFolios()
     } else {
-      // navigate("/portfolio")
+      if(location?.state?.fromPortfolio){
+        navigate("/portfolio")
+      }else {
+        navigate("/all-mutual-funds")
+      }
     }
 
   }, [])
@@ -127,12 +156,16 @@ const FundDetails = () => {
   const fetchSchemeDetail = async () => {
     try {
       const res = await postRequest<schemeDetailType>(endPoints.getSchemeDetails, { productcode: location.state.accordSchemeCode })
-      setSchemeDetailArray(res.data)
-      console.log(res);
+      setSchemeList(res.data)
+      setSipDateList([...res.data[0].sipDateList])
+      console.log("scheme detILS", res.data[0].sipDateList);
+      handleNearSipDate(res.data[0].sipDateList)
+      setAmount(res.data[0].minSIPAmt)
 
     } catch (err) {
+      setSipDateList([])
       console.log(err);
-      setSchemeDetailArray([])
+      setSchemeList([])
 
     }
   }
@@ -182,16 +215,154 @@ const FundDetails = () => {
   const handleClick = () => {
     setShow(!show);
   };
+  const addAmount = (value: number) => {
+    const updatedAmount = amount + value;
+    setAmount(updatedAmount);
+  }
+  const handleTransactionType = (type: boolean) => {
+    setIsSipTransaction(type)
+    if (type) {
+      setAddAmountValues({
+        min: 1000,
+        first: 2000,
+        second: 3000,
+        third: 5000
+      })
+      setAmount(1000)
+    } else {
+      setAddAmountValues({
+        min: 5000,
+        first: 10000,
+        second: 15000,
+        third: 25000
+      })
+      setAmount(5000)
+    }
+    handleMinAmount(type)
+  }
+  const handleSipDate = (value: string) => {
+    setSipDate(value)
+    setSipDateShow(false)
 
+    //only for making build
+    setAddAmountValues({
+      min: isSipTransaction ? 1000 : 5000,
+      first: isSipTransaction ? 2000 : 10000,
+      second: isSipTransaction ? 3000 : 15000,
+      third: isSipTransaction ? 5000 : 25000
+    })
+  }
+
+const fetchFolios = async () => {
+  const adminUser = fetchAdminUser();
+
+  if (!adminUser?.ucc || schemeList.length === 0) return;
+
+  const reqBody = {
+    ucc: adminUser.ucc,
+    product_code: schemeList[0].accordSchemeCode,
+  };
+
+  try {
+    const res = await postRequest<foliosResponse>(endPoints.getSchemeFolios, reqBody);
+
+    const updatedList = [
+      {
+        ...schemeList[0],
+        folioList: res.data || [],
+      },
+    ];
+
+    setSchemeList(updatedList);
+  } catch (error) {
+    console.error("Error fetching folio:", error);
+
+    const updatedList = [
+      {
+        ...schemeList[0],
+        folioList: [],
+      },
+    ];
+
+    setSchemeList(updatedList);
+  }
+
+  console.log("Folios updated in schemeList[0]");
+};
+
+
+  const handleNearSipDate = (dateList: string[]) => {
+    const today = new Date();
+    const currentDay = today.getDate();
+    const sipDateNumbers = dateList?.map(Number);
+    let nearestDate = sipDateNumbers?.find(date => date >= currentDay);
+    if (!nearestDate) {
+      nearestDate = sipDateNumbers[0];
+    }
+    console.log("nearestDate", dateList);
+
+    setSipDate(String(nearestDate).padStart(2, '0'))
+  }
+  const handleAmount = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    maxAmount: number,
+    setter: (value: number) => void
+  ): void => {
+    let value = Number(e.target.value.trim());
+    if (value <= 1000000000) {
+      setter(value);
+    } else if (value >= maxAmount) {
+      setter(maxAmount);
+
+    }
+  };
+  const handleMinAmount = (type: boolean = isSipTransaction) => {
+    if (schemeList?.length > 0) {
+      let total = 0;
+
+      const updatedSchemes = schemeList.map((scheme) => {
+        const minAmount = type ? scheme.minSIPAmt : scheme.minLumSumAmt;
+        total += minAmount;
+
+        return {
+          ...scheme,
+          amount: minAmount,
+        };
+      });
+
+      setSchemeList(updatedSchemes);
+
+    }
+  };
+
+  const handleFolioSelection = () => {
+    
+
+    const minTotal =isSipTransaction ? schemeList[0]?.minSIPAmt : schemeList[0]?.minLumSumAmt
+    
+
+    if (amount <= 0) {
+      setAmountErrorMsg("Enter investment amount")
+      return
+    }
+    setAmountErrorMsg("")
+    if (minTotal > amount) {
+      setAmountErrorMsg("Minimum investment amount is ₹" + minTotal)
+      return
+    }
+    setAmountErrorMsg("")
+    setOpenSelectFolio(true)
+
+  }
   return (
     <>
       <MyNavbar />
       <Container className="mt-4">
 
         <div className="d-flex align-items-center">
-          <img src={`${imageUrl + schemeDetailArray[0]?.amcCode}.png`} className="logoRadius" alt="Image not found" width={60} height={60} />
+          <img src={`${imageUrl + schemeList[0]?.amcCode}.png`} className="logoRadius" alt="Image not found" width={60} height={60} />
           <div style={{ marginLeft: "2%", marginTop: "2%" }}>
-            <h4 className="fw-bold">{schemeDetailArray[0]?.scheme}</h4>
+            <h4 className="fw-bold">{schemeList[0]?.scheme}</h4>
             <p>Equity: Flexi Cap</p>
           </div>
         </div>
@@ -203,11 +374,11 @@ const FundDetails = () => {
               <div className="row px-4 pt-4" >
                 <div className="col-6" >
                   <p className="fs12px mb-0">NAV</p>
-                  <p className="fs16px">₹{schemeDetailArray[0]?.cnav?.toFixed(2)}</p>
+                  <p className="fs16px">₹{schemeList[0]?.cnav?.toFixed(2)}</p>
                 </div>
                 <div className="col-6">
                   <p className="fs12px mb-0"> Last {durarinInYear} CAGR</p>
-                  <h5 className={`sf12px  ${cagr > 0 ? "congratesColor" :"errorColor2"}`}>{cagr}%</h5>
+                  <h5 className={`sf12px  ${cagr > 0 ? "congratesColor" : "errorColor2"}`}>{cagr}%</h5>
                 </div>
               </div>
 
@@ -240,23 +411,23 @@ const FundDetails = () => {
               <div className="row pt-4">
                 <div className="col-6 py-2">
                   <span className="text-secondary text-uppercase fs-7">Fund Size</span>
-                  <h4 className="fs-6">₹{getValueInSort(Number(schemeDetailArray[0]?.fundSize))} </h4>
+                  <h4 className="fs-6">₹{getValueInSort(Number(schemeList[0]?.fundSize))} </h4>
                 </div>
                 <div className="col-6 py-2">
                   <span className="text-secondary text-uppercase fs-7">Launched</span>
-                  <h4 className="fs-6">{dateInStringNumber(schemeDetailArray[0]?.launchDate)} </h4>
+                  <h4 className="fs-6">{dateInStringNumber(schemeList[0]?.launchDate)} </h4>
                 </div>
                 <div className="col-6 py-2">
                   <span className="text-secondary text-uppercase fs-7">Expense Ratio</span>
-                  <h4 className="fs-6">{schemeDetailArray[0]?.expenseRatio}%</h4>
+                  <h4 className="fs-6">{schemeList[0]?.expenseRatio}%</h4>
                 </div>
                 <div className="col-6 py-2">
                   <span className="text-secondary text-uppercase fs-7">Lock-in</span>
-                  <h4 className="fs-6">{schemeDetailArray[0]?.lockInPeriod} Yr</h4>
+                  <h4 className="fs-6">{schemeList[0]?.lockInPeriod} Yr</h4>
                 </div>
                 <div className="col-6 py-2">
                   <span className="text-secondary text-uppercase fs-7">Plan Type</span>
-                  <h4 className="fs-6">{schemeDetailArray[0]?.planType}</h4>
+                  <h4 className="fs-6">{schemeList[0]?.planType}</h4>
                 </div>
                 <div className="col-6 py-2">
                   <span className="text-secondary text-uppercase fs-7">Plan Option</span>
@@ -264,15 +435,15 @@ const FundDetails = () => {
                 </div>
                 <div className="col-6 py-2">
                   <span className="text-secondary text-uppercase fs-7">Risk</span>
-                  <h4 className="fs-6">{schemeDetailArray[0]?.risk}</h4>
+                  <h4 className="fs-6">{schemeList[0]?.risk}</h4>
                 </div>
                 <div className="col-6 py-2">
                   <span className="text-secondary text-uppercase fs-7">Min. Investment</span>
-                  <h4 className="fs-6">₹{schemeDetailArray[0]?.minSIPAmt}</h4>
+                  <h4 className="fs-6">₹{schemeList[0]?.minSIPAmt}</h4>
                 </div>
                 <div className="col-6 py-2">
                   <span className="text-secondary text-uppercase fs-7">Withdrawal Charges</span>
-                  <h4 className="fs-6"> {schemeDetailArray[0]?.exitLoad?.split(',')?.map((line, index) => (
+                  <h4 className="fs-6"> {schemeList[0]?.exitLoad?.split(',')?.map((line, index) => (
                     <span key={index}>
                       {line?.trim() || "N/A"}
                       <br />
@@ -282,117 +453,173 @@ const FundDetails = () => {
               </div>
             </div>
 
-            <MyStackBar schemeData={schemeDetailArray[0]} />
+            <MyStackBar schemeData={schemeList[0]} />
 
           </div>
 
           {/* Mutual Funds List */}
-          {location?.state?.fromPortfolio &&
-          <div className="col-md-4 col-12 position-relative" >
-            <div
-              className="card mb-4 radius16OverFlow"
-              
-            >
-              <div className="p-lg-3 p-4">
+          {location?.state?.fromPortfolio ?
+            <div className="col-md-4 col-12 position-relative" >
+              <div
+                className="card mb-4 radius16OverFlow"
 
-                <div className="d-flex gap-2 justify-content-around">
-                  <div>
-                    <label
-                      className="btn_colorfull rounded-3 declaration-button w-100 paddingLeftRight px-4 py-2 mobile-fontset"
-                      htmlFor="option3"
-                    >
-                      Invest More
-                    </label>
-                  </div>
+              >
+                <div className="p-lg-3 p-4">
 
-                  <div>
-                    <label
-                      className="btn_colorfull rounded-3 declaration-button w-100 paddingLeftRight px-4 py-2 mobile-fontset"
-                      htmlFor="option1"
-                    >
-                      Switch
-                    </label>
-                  </div>
-
-                  <div onClick={handleClick} className="">
-                    <label
-                      className="btn_colorfull dotted_sip_prodyg rounded-3 declaration-button w-100 paddingLeftRight px-4 py-2 mobile-fontset"
-                      htmlFor="option1"
-                    >
-                      <AiOutlineMore />
-                    </label>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-            {show && (
-
-              <div className="card mb-4 popup_card_steup_area">
-                <div className="p-3">
-                  <ul className="ps-0 style-unerline-prodgy mb-0">
-                    <li>Redeem Fund</li>
-                    <li>Systematic Transfer Plan (STP)</li>
-                    <li>Systematic Withdrawal Plan (SWP)</li>
-                    <li>Transaction History</li>
-
-                  </ul>
-                </div>
-              </div>
-
-            )}
-
-            <div
-              className="card mb-4 radius16OverFlow"
-            >
-              
-              <div className="p-lg-3 p-4">
-
-                <div className="mt-2">
-
-                  <div className="d-flex justify-content-between">
-                    <div className="port_holding_etails">
-                      <h1>Holding Details</h1>
+                  <div className="d-flex gap-2 justify-content-around">
+                    <div onClick={() => { setOpenInvestPopup(true) }} className="crPointer">
+                      <label
+                        className="btn_colorfull rounded-3 declaration-button w-100 paddingLeftRight px-4 py-2 mobile-fontset"
+                        htmlFor="option3"
+                      >
+                        Invest More
+                      </label>
                     </div>
 
-                  </div>
+                    <div>
+                      <label
+                        className="btn_colorfull rounded-3 declaration-button w-100 paddingLeftRight px-4 py-2 mobile-fontset"
+                        htmlFor="option1"
+                      >
+                        Switch
+                      </label>
+                    </div>
 
-                  <div className="row pt-4">
-                    <div className="col-6 py-2">
-                      <span className="text-secondary text-uppercase fs-7">Units</span>
-                      <h4 className="fs-6">{Math.round(schmeDetail?.unit * 100) / 100}</h4>
-                    </div>
-                    <div className="col-6 py-2">
-                      <span className="text-secondary text-uppercase fs-7">Folio</span>
-                      <h4 className="fs-6">{schmeDetail?.folio}</h4>
-                    </div>
-                    <div className="col-6 py-2">
-                      <span className="text-secondary text-uppercase fs-7">Total invested</span>
-                      <h4 className="fs-6">₹ {getValueInSort(schmeDetail?.purchase)}</h4>
-                    </div>
-                    <div className="col-6 py-2">
-                      <span className="text-secondary text-uppercase fs-7">Current Value</span>
-                      <h4 className="fs-6">₹ {getValueInSort(schmeDetail?.currentvalue)}</h4>
-                    </div>
-                    <div className="col-6 py-2">
-                      <span className="text-secondary text-uppercase fs-7">Gain/Loss</span>
-                      <h4 className="fs-6">{getPercentageValue(Number(schmeDetail?.purchase), schmeDetail?.gain)}%</h4>
-                    </div>
-                    <div className="col-6 py-2">
-                      <span className="text-secondary text-uppercase fs-7">Avg. Days</span>
-                      <h4 className="fs-6">{schmeDetail?.days}</h4>
+                    <div onClick={handleClick} className="">
+                      <label
+                        className="btn_colorfull dotted_sip_prodyg rounded-3 declaration-button w-100 paddingLeftRight px-4 py-2 mobile-fontset"
+                        htmlFor="option1"
+                      >
+                        <AiOutlineMore />
+                      </label>
                     </div>
                   </div>
                 </div>
+
+              </div>
+              {show && (
+
+                <div className="card mb-4 popup_card_steup_area">
+                  <div className="p-3">
+                    <ul className="ps-0 style-unerline-prodgy mb-0">
+                      <li>Redeem Fund</li>
+                      <li>Systematic Transfer Plan (STP)</li>
+                      <li>Systematic Withdrawal Plan (SWP)</li>
+                      <li>Transaction History</li>
+
+                    </ul>
+                  </div>
+                </div>
+
+              )}
+
+              <div
+                className="card mb-4 radius16OverFlow "
+              >
+
+                <div className="p-lg-3 p-4">
+
+                  <div className="mt-2">
+
+                    <div className="d-flex justify-content-between">
+                      <div className="port_holding_etails">
+                        <h1>Holding Details</h1>
+                      </div>
+
+                    </div>
+
+                    <div className="row pt-4">
+                      <div className="col-6 py-2">
+                        <span className="text-secondary text-uppercase fs-7">Units</span>
+                        <h4 className="fs-6">{Math.round(schmeDetail?.unit * 100) / 100}</h4>
+                      </div>
+                      <div className="col-6 py-2">
+                        <span className="text-secondary text-uppercase fs-7">Folio</span>
+                        <h4 className="fs-6">{schmeDetail?.folio}</h4>
+                      </div>
+                      <div className="col-6 py-2">
+                        <span className="text-secondary text-uppercase fs-7">Total invested</span>
+                        <h4 className="fs-6">₹ {getValueInSort(schmeDetail?.purchase)}</h4>
+                      </div>
+                      <div className="col-6 py-2">
+                        <span className="text-secondary text-uppercase fs-7">Current Value</span>
+                        <h4 className="fs-6">₹ {getValueInSort(schmeDetail?.currentvalue)}</h4>
+                      </div>
+                      <div className="col-6 py-2">
+                        <span className="text-secondary text-uppercase fs-7">Gain/Loss</span>
+                        <h4 className="fs-6">{getPercentageValue(Number(schmeDetail?.purchase), schmeDetail?.gain)}%</h4>
+                      </div>
+                      <div className="col-6 py-2">
+                        <span className="text-secondary text-uppercase fs-7">Avg. Days</span>
+                        <h4 className="fs-6">{schmeDetail?.days}</h4>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
               </div>
 
-            </div>
+            </div> : <>
+              <div className="col-md-4 col-12 position-relative">
 
-          </div>}
+                <div className="bg-white p-3 rounded">
+                  <h5>Invest Now</h5>
+                  <hr />
+                  <div className="row text-center mt-2 ">
+                    <div className="col-md-6 py-2 py-md-0">
+                      <div className={`${isSipTransaction ? "text-white logobg_color" : "logoBlueColor"} w-100 border  text-center monthly_btn crPointer`} onClick={() => { handleTransactionType(true) }}> Monthly SIP</div>
+                    </div>
+                    <div className="col-md-6 py-2 py-md-0">
+                      <div className={`${!isSipTransaction ? "text-white logobg_color" : "logoBlueColor"} w-100 border  text-center monthly_btn crPointer`} onClick={() => { handleTransactionType(false) }}> One-Time </div>
+                    </div>
+                  </div>
+
+                  {isSipTransaction && <>
+
+                    <div className="d-flex justify-content-between mt-3" onClick={() => setSipDateShow(true)}>
+                      <div className="d-flex">
+                        <div className="ms-2 prod_icon_heading">
+                          <p>Day of SIP</p>
+                          <h4 className='my-2'>{sipDate}th on every month</h4>
+                        </div>
+                      </div>
+                      <div className="prod_view_fund align-self-center">
+                        <div className="crPointer dateIcon"><Calendar4 className='' /></div>
+                      </div>
+                    </div> <hr className='mt-0' /> </>}
+
+                  <div className="form-group mt-1">
+                    <label htmlFor="amountFor" className='fs12px'>INVESTMENT AMOUNT</label>
+                    <input type="text" className="form-control" value={amount} onChange={(e) => handleAmount(e, 1000000, setAmount)} id="amountFor" aria-describedby="emailHelp" placeholder="Enter Amount" />
+                    <span className="errorColor"> {amount>= (isSipTransaction ? schemeList[0]?.minSIPAmt :schemeList[0]?.minLumSumAmt) ?"":amountErrorMsg }</span>
+                    <div className=" mt-2">
+                      <button type="button" className="btn shortcutValue" onClick={() => handleMinAmount(isSipTransaction)}>Min.</button>
+                      <button type="button" className="btn shortcutValue mx-1" onClick={() => addAmount(addAmountValues.first)}>+<CurrencyRupee className='mb-1' />{addAmountValues.first.toLocaleString("en-In")}</button>
+                      <button type="button" className="btn shortcutValue mx-1" onClick={() => addAmount(addAmountValues.second)}>+<CurrencyRupee className='mb-1' />{addAmountValues.second.toLocaleString("en-In")}</button>
+                      <button type="button" className="btn shortcutValue mx-1" onClick={() => addAmount(addAmountValues.third)}>+<CurrencyRupee className='mb-1' />{addAmountValues.third.toLocaleString("en-In")}</button>
+                    </div>
+                  </div>
+
+                </div>
+                <div className="text-white logobg_color  py-2 mb-2 mx-3 order  text-center monthly_btn crPointer" onClick={handleFolioSelection}> {isSipTransaction ? "Invest as SIP" : "Invest Now"}</div>
+
+                <Card.Header className='scheme-bg footerRadius px-3 py-2 fs12px'>NAV applicable once amount credited to AMC’s bank account</Card.Header>
+              </div>
+            </>}
         </div>
 
       </Container>
-      <SelectFolioPopup show={openSelectFolio} setShow={setOpenSelectFolio} />
+      <SipDates show={sipDateShow} setShow={setSipDateShow} sipDate={sipDate} sipDateList={sipDateList} handleSipDate={handleSipDate} />
+      <InvetmentConfirmation
+        show={openInvestPopup}
+        setShow={setOpenInvestPopup}
+        schemeList={schemeList}
+        setSchemeList={setSchemeList}
+        sipDateList={sipDateList}
+        from={"portfolio"}
+      />
+      <SelectFolioPopup show={openSelectFolio} setShow={setOpenSelectFolio} schemeList={schemeList} setSchemeList={setSchemeList} isSipTransaction={isSipTransaction} />
+
       <Footer />
     </>
   );

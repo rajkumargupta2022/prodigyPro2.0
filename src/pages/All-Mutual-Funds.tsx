@@ -191,7 +191,7 @@ const AllMutualFunds = () => {
                       </div>
                     </div>
                     <div className="col-2 py-2 text-md-end text-start">
-                      <div className="text-secondary" onClick={() => { navigate("/explore-fund-details") }}>
+                      <div className="text-secondary" onClick={()=>fundDetails(item)}>
                         <ChevronRight className="funds-rightsign-prodgy12" size={20} />
                       </div>
                     </div>

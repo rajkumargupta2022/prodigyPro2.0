@@ -1,7 +1,6 @@
 import NavBar from "../components/Navbar";
 import { ArrowDownCircleFill, ArrowDownUp, ArrowUpCircleFill, CurrencyRupee } from "react-bootstrap-icons";
 import { useEffect, useState } from "react";
-import SchemeDetails from "../components/SchemeDetails";
 import {  imageUrl } from "../services/utils/urls";
 import { currentDateInStringNumber } from "../services/dates/dateFormater";
 import { getPercentageValue, getValueInSort, percentageDetailFolio } from "../services/calculation/percentageCalculate";
@@ -12,18 +11,19 @@ import PortfolioEmpty from "./PortfolioEmpty";
 import emptyImg from "../assets/img/empty-img.svg"
 import Footer from "../components/Footer";
 import { detailPortfolioSchemeType } from "./data-interfaces/portfolio";
+import { schemeDeatilDataKeys } from "./data-interfaces/transact";
 
 
 const Portfolio = () => {
   const navigate = useNavigate()
   const { familyPortfolio, snapshotData,setPortfolioDetailData,portfolioDetailData,fetchDetailedPortfolio } = useAdminUser()
-  const [openSchemeDetail, setOpenSchemeDetail] = useState<boolean>(false)
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
   const title: string = "You Have No Investments Yet";
   const body: string = "Start investing today to build your portfolio and achieve your financial goals.";
   const btnName = "Explore Funds";
   const btnUrl = "/"
   const adminUser = fetchAdminUser()
+  const [schemeList, setSchemeList] = useState<schemeDeatilDataKeys[]>([])
 
 
 
@@ -48,7 +48,7 @@ const Portfolio = () => {
     setSortDirection(sortDirection === "asc" ? "desc" : "asc");
   };
   const fundDetails = (item:detailPortfolioSchemeType)=>{
-     navigate("/fund-details",{state:{...item,fromPortfolio:true}})
+     navigate("/fund-details",{state:{...item,fromPortfolio:true}}) 
   }
 
   return (
@@ -136,7 +136,7 @@ const Portfolio = () => {
       }) : ""}
 
 
-      <SchemeDetails show={openSchemeDetail} setShow={setOpenSchemeDetail} />
+        
 
         <Footer />
     </>

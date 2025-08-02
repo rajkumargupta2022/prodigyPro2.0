@@ -2,11 +2,12 @@ import Modal from "react-bootstrap/Modal";
 interface SipDatesProp {
   show: boolean;
   setShow: (show: boolean) => void;
-  sipDate:number;
-  handleSipDate:(value:number)=>void
+  sipDate:string;
+  sipDateList: string[];
+  handleSipDate:(value:string)=>void
 }
 
-const SipDates: React.FC<SipDatesProp> = ({ show, setShow,sipDate,handleSipDate }) => {
+const SipDates: React.FC<SipDatesProp> = ({ show, setShow,sipDate,sipDateList,handleSipDate }) => {
 
 
   return (
@@ -26,11 +27,14 @@ const SipDates: React.FC<SipDatesProp> = ({ show, setShow,sipDate,handleSipDate 
         <Modal.Body className="bg-white pt-0">
 
           <div className="sip_date_prodgy">
-            {Array.from({ length: 28 }, (_, i) => (
-              <div key={i + 1} onClick={() => handleSipDate(i + 1)} className={`circleNumber mx-1 ${(i + 1) === sipDate && "select_sipdate"}`}>
-                {i + 1}
+          
+            {sipDateList?.map((item)=>{
+              return <>
+               <div key={item} onClick={() => handleSipDate(item)} className={`circleNumber mx-1 ${(item) === sipDate && "select_sipdate"}`}>
+                {item}
               </div>
-            ))}
+              </>
+            })}
           </div>
         </Modal.Body>
 

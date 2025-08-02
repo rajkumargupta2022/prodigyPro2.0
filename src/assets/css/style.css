@@ -1706,3 +1706,34 @@ span.text-secondary.text-uppercase.fs-7 {
   border-radius : 16px !important;
   overflow: "hidden",
 }
+
+
+.prdogy-checkbox12 .form-check-input[type=checkbox]{
+    border-radius: 25px;
+}
+.prdogy-checkbox12 .form-check-input {
+    width: 1.2em;
+    height: 1.2em;
+}
+
+.sip_amount_breakup12{
+  font-size: 10px;
+  margin: 12px 0px;
+  color: #696c6e;
+  text-transform: uppercase;
+}
+
+.midpodgy_invest_conf p{
+font-size: 15px;
+color: #000;
+}
+
+.midpodgy_invest_conf input{
+  border: .5px solid #6c757d;
+  border-radius: 10px;
+  padding: 4px 10px;
+  width: 50%;
+}
+a{
+  color: #011EFE;
+}

@@ -75,7 +75,6 @@ import { registerLoaderCallbacks } from "./services/Loader/LoaderController";
 import React from "react";
 import StateFolioDetails from "./components/statement-folio-details";
 import NoFolioFounds from "./components/no-folio-found";
-import ExploreFundDetails from "./pages/Explore-fund-details";
 
 
 const LoaderHandler = () => {
@@ -103,7 +102,6 @@ function App() {
 
           <Route path="/" element={<Login />} />
           <Route path="/folio-details" element={<Account Component={StateFolioDetails} />}/>
-          <Route path="/explore-fund-details" element={<Account Component={ExploreFundDetails} />}/>
           <Route path="/no-folio-founs" element={<Account Component={NoFolioFounds} />}/>
           <Route path="/personal-details" element={<PersonalDetails />} />
           <Route path="/pan-varification" element={<PanVarification />} />
