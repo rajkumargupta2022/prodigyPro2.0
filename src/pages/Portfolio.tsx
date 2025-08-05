@@ -11,7 +11,6 @@ import PortfolioEmpty from "./PortfolioEmpty";
 import emptyImg from "../assets/img/empty-img.svg"
 import Footer from "../components/Footer";
 import { detailPortfolioSchemeType } from "./data-interfaces/portfolio";
-import { schemeDeatilDataKeys } from "./data-interfaces/transact";
 
 
 const Portfolio = () => {
@@ -23,7 +22,6 @@ const Portfolio = () => {
   const btnName = "Explore Funds";
   const btnUrl = "/"
   const adminUser = fetchAdminUser()
-  const [schemeList, setSchemeList] = useState<schemeDeatilDataKeys[]>([])
 
 
 

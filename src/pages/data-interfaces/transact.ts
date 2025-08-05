@@ -3,33 +3,45 @@ export interface schemeDetailType {
   data: schemeDeatilDataKeys[];
 }
 export interface schemeDeatilDataKeys {
-   scheme: string,
-      accordSchemeCode: number,
-      nseProductCode: string,
-      amcCode: string,
-      nseReinvestTag: string,
-      launchDate: string,
-      lockInPeriod: number,
-      ISIN: string,
-      cnav: number,
-      expenseRatio: number,
-      planType: string,
-      planOption: string,
-      equityType: string,
-      fundSize: number,
-      risk: string,
-      minSIPAmt: number,
-      minLumSumAmt: number,
-      exitLoadPeriod: number,
-      exitLoad: string,
-      sipDateList: string[],
-      oneYearCAGR: number,
-      threeYearCAGR: number,
-      fiveYearCAGR: number,
-      amount?:number,
-      folioList?:foliosKeys[],
-      selectedFolio?:foliosKeys,
-      umrn_no?:string
+  sipAllowed: boolean;
+  stpAllowed: boolean;
+  swpAllowed: boolean;
+  purchaseAllowed: boolean;
+  redemptionAllowed: boolean;
+  switchAllowed: boolean;
+  nseAMCCode: string;
+  scheme: string;
+  accordSchemeCode: number;
+  nseProductCode: string;
+  amcCode: string;
+  nseReinvestTag: string;
+  launchDate: string;
+  lockInPeriod: number;
+  ISIN: string;
+  cnav: number;
+  expenseRatio: number;
+  planType: string;
+  planOption: string;
+  equityType: string;
+  fundSize: number;
+  risk?: string;
+  minSIPAmt: number;
+  minLumSumAmt: number;
+  exitLoadPeriod: number;
+  exitLoad: string;
+  sipDateList: number[];
+  stpDateList: number[];
+  swpDateList: number[];
+  oneYearCAGR: number;
+  threeYearCAGR: number;
+  fiveYearCAGR: number;
+  amount?: number;
+  folioList?: foliosKeys[];
+  selectedFolio?: foliosKeys;
+  umrn_no?: string;
+  start_date?: string;
+  from_date?: string;
+  to_date?: string;
 }
 
 export interface navHistoryResponse {
@@ -72,4 +84,15 @@ export interface foliosKeys {
   is_recommended: boolean;
 }
 
-
+export interface sipPurchaseRedemptionKey {
+  folio_no: string;
+  amount: number;
+  reg_status: boolean;
+  reg_id: string;
+  reg_remark: string;
+  schemeName: string;
+}
+export interface sipPurchaseRedemptionResponse {
+  success: boolean;
+  data: sipPurchaseRedemptionKey[];
+}

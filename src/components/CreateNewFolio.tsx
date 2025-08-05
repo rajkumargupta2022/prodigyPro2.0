@@ -70,7 +70,7 @@ const CreateNewFolio: React.FC<CreateNewFolioProp> = ({
       centered
     >
       <Modal.Body className="bg-white">
-        {folioList.map((item) => {
+        {folioList?.map((item) => {
           const isChecked =
             !newFolioMap[selectedFolioIndex] &&
             (tempSelectedFolio[selectedFolioIndex]?.folio_number === item.folio_number ||

@@ -12,12 +12,13 @@ import { postRequest } from '../services/Api/HandleApi';
 import { fetchAdminUser } from '../services/user/adminUser';
 import { endPoints, imageUrl } from '../services/utils/urls';
 import BankMandate from './BankMandate';
+import { convertDayToFullDate } from '../services/dates/dateFormater';
 interface investmetProps {
   show: boolean;
   setShow: (show: boolean) => void;
   schemeList: schemeDeatilDataKeys[];
   setSchemeList: (date: any) => void;
-  sipDateList: string[],
+  sipDateList: number[],
   from: string
 }
 interface addAmountKeys {
@@ -27,7 +28,7 @@ interface addAmountKeys {
   third: number
 }
 
-const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, schemeList = [], setSchemeList, sipDateList = [], from }) => {
+const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, schemeList, setSchemeList, sipDateList, from }) => {
   const [openSelectFolio, setOpenSelectFolio] = useState(false)
   const [openBankMandate, setOpenBankMandate] = useState(false)
   const [isSipTransaction, setIsSipTransaction] = useState<boolean>(true)
@@ -41,39 +42,37 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
     second: 3000,
     third: 5000
   })
-  const [sipDate, setSipDate] = useState<string>("14")
+  const [sipDate, setSipDate] = useState<number>(1)
 
-  const handleSipDate = (value: string) => {
+  const handleSipDate = (value: number) => {
     setSipDate(value)
     setSipDateShow(false)
-
-    //only for making build
-    setAddAmountValues({
-      min: isSipTransaction ? 1000 : 5000,
-      first: isSipTransaction ? 2000 : 10000,
-      second: isSipTransaction ? 3000 : 15000,
-      third: isSipTransaction ? 5000 : 25000
-    })
+    setSchemeList(schemeList.map(obj => ({
+      ...obj,
+      start_date: convertDayToFullDate(Number(value))
+    })))
   }
 
-  useEffect(() => {
 
+  useEffect(() => {
     handleNearSipDate()
     fetchFolios()
   }, [show]);
+
   useEffect(() => {
     if (foliosFetched) {
       handleMinAmount(true);
       setFoliosFetched(false);
     }
-  }, [foliosFetched, schemeList]);
+  }, [foliosFetched,schemeList]);
 
   const fetchFolios = async () => {
     const adminUser = fetchAdminUser();
 
     if (!adminUser?.ucc) return;
 
-    const updatedSchemeList = await Promise.all(
+
+    Promise.all(
       schemeList.map(async (item) => {
         const reqBody = {
           ucc: adminUser.ucc,
@@ -82,9 +81,11 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
 
         try {
           const res = await postRequest<foliosResponse>(endPoints.getSchemeFolios, reqBody);
+          console.log("resssssss", res);
+
           return {
             ...item,
-            folioList: res.data || [], // default to [] if no data
+            folioList: res.data || [],
           };
         } catch (error) {
           console.error("Error fetching folio for", item.accordSchemeCode, error);
@@ -94,9 +95,13 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
           };
         }
       })
-    );
-    setSchemeList(updatedSchemeList);
-    setFoliosFetched(true);
+    ).then(updatedSchemeList => {
+      setSchemeList(updatedSchemeList);
+      setFoliosFetched(true);
+    }).catch(err=>{
+      console.log("This is error",err)
+    })
+
   };
 
   const handleNearSipDate = () => {
@@ -108,11 +113,15 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
       nearestDate = sipDateNumbers[0];
     }
 
-    setSipDate(String(nearestDate).padStart(2, '0'))
-
+    let day = String(nearestDate).padStart(2, '0')
+    setSipDate(Number(day))
+    setSchemeList(schemeList.map(obj => {
+      obj.start_date = convertDayToFullDate(Number(day));
+       return obj;
+    }))
   }
   const handleFolioSelection = () => {
-    
+
     const total = schemeList.reduce((acc, scheme) => {
       const minAmount = scheme.amount ?? 0; // use 0 if undefined
       return acc + minAmount;
@@ -130,10 +139,10 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
       setAmountErrorMsg("Minimum investment amount is ₹" + minTotal)
       return
     }
-    if(from==="portfolio"){
-       setOpenBankMandate(true)
-       setShow(false)
-       return
+    if (from === "portfolio") {
+      setOpenBankMandate(true)
+      setShow(false)
+      return
     }
     setOpenSelectFolio(true)
     setShow(false)
@@ -220,8 +229,6 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
   };
   const handleMinAmount = (type: boolean = isSipTransaction) => {
     if (schemeList?.length > 0) {
-
-
       let total = 0;
       const updatedSchemes = schemeList.map((scheme) => {
         const minAmount = type ? scheme.minSIPAmt : scheme.minLumSumAmt;
@@ -232,7 +239,6 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
           amount: minAmount,
         };
       });
-      console.log("======", updatedSchemes);
       setSchemeList(updatedSchemes);
       setAmount(total);
     }
@@ -328,7 +334,7 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
       </Modal>
       <SipDates show={sipDateShow} setShow={setSipDateShow} sipDate={sipDate} sipDateList={sipDateList} handleSipDate={handleSipDate} />
       <SelectFolioPopup show={openSelectFolio} setShow={setOpenSelectFolio} schemeList={schemeList} setSchemeList={setSchemeList} isSipTransaction={isSipTransaction} />
- <BankMandate show={openBankMandate} setShow={setOpenBankMandate} schemeList={schemeList}  setSchemeList={setSchemeList} />
+      <BankMandate show={openBankMandate} setShow={setOpenBankMandate} schemeList={schemeList} setSchemeList={setSchemeList} isSipTransaction={isSipTransaction} />
     </>
   );
 }

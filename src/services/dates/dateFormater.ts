@@ -27,3 +27,16 @@ export const dateInStringNumber = (data?: string | null): string => {
     year: "numeric",
   });
 };
+
+export function convertDayToFullDate(dayNumber:number) {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = today.getMonth(); // 0-based (January = 0)
+
+  const targetDate = new Date(year, month, dayNumber);
+
+  const formattedDate = `${targetDate.getFullYear()}-${String(targetDate.getMonth() + 1).padStart(2, '0')}-${String(targetDate.getDate()).padStart(2, '0')} 00:00:00.000`;
+
+  return formattedDate;
+}
+

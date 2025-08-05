@@ -1,4 +1,4 @@
-import { Card, Container } from "react-bootstrap";
+import {  Container } from "react-bootstrap";
 import MyNavbar from "../components/Navbar";
 import MyStackBar from "../components/Stack-bar";
 import { useEffect, useState } from "react";
@@ -12,21 +12,15 @@ import ReactApexChart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
 import Footer from "../components/Footer";
 import { getPercentageValue, getValueInSort } from "../services/calculation/percentageCalculate";
-import { Calendar4, CurrencyRupee } from "react-bootstrap-icons";
 import SipDates from "../components/SipDate";
 import InvetmentConfirmation from "../components/InvestmentConfirmation";
 import { fetchAdminUser } from "../services/user/adminUser";
 import SelectFolioPopup from "../components/select-folio-popup";
+import InvestmentForm from "../components/InvestmentForm";
 
 interface ChartState {
   options: ApexOptions;
   series: { name: string; data: number[] }[];
-}
-interface addAmountKeys {
-  min: number,
-  first: number;
-  second: number;
-  third: number
 }
 
 const FundDetails = () => {
@@ -41,17 +35,9 @@ const FundDetails = () => {
   const [cagr, setCagr] = useState<number>(0)
   const [durarinInYear, setDurarinInYear] = useState<string>("")
   const schmeDetail = location.state
-  const [isSipTransaction, setIsSipTransaction] = useState<boolean>(true)
-  const [addAmountValues, setAddAmountValues] = useState<addAmountKeys>({
-    min: 1000,
-    first: 2000,
-    second: 3000,
-    third: 5000
-  })
-  const [sipDate, setSipDate] = useState<string>("14")
-  const [sipDateList, setSipDateList] = useState<string[]>([])
-  const [amount, setAmount] = useState<number>(0)
-  const [amountErrorMsg, setAmountErrorMsg] = useState<string>("")
+  const [sipDate, setSipDate] = useState<number>(1)
+  const [sipDateList, setSipDateList] = useState<number[]>([])
+  // const [amount, setAmount] = useState<number>(0)
   const [sipDateShow, setSipDateShow] = useState<boolean>(false)
 
 
@@ -158,9 +144,8 @@ const FundDetails = () => {
       const res = await postRequest<schemeDetailType>(endPoints.getSchemeDetails, { productcode: location.state.accordSchemeCode })
       setSchemeList(res.data)
       setSipDateList([...res.data[0].sipDateList])
-      console.log("scheme detILS", res.data[0].sipDateList);
       handleNearSipDate(res.data[0].sipDateList)
-      setAmount(res.data[0].minSIPAmt)
+      // setAmount(res.data[0].minSIPAmt)
 
     } catch (err) {
       setSipDateList([])
@@ -215,42 +200,13 @@ const FundDetails = () => {
   const handleClick = () => {
     setShow(!show);
   };
-  const addAmount = (value: number) => {
-    const updatedAmount = amount + value;
-    setAmount(updatedAmount);
-  }
-  const handleTransactionType = (type: boolean) => {
-    setIsSipTransaction(type)
-    if (type) {
-      setAddAmountValues({
-        min: 1000,
-        first: 2000,
-        second: 3000,
-        third: 5000
-      })
-      setAmount(1000)
-    } else {
-      setAddAmountValues({
-        min: 5000,
-        first: 10000,
-        second: 15000,
-        third: 25000
-      })
-      setAmount(5000)
-    }
-    handleMinAmount(type)
-  }
-  const handleSipDate = (value: string) => {
+ 
+
+  const handleSipDate = (value: number) => {
     setSipDate(value)
     setSipDateShow(false)
 
-    //only for making build
-    setAddAmountValues({
-      min: isSipTransaction ? 1000 : 5000,
-      first: isSipTransaction ? 2000 : 10000,
-      second: isSipTransaction ? 3000 : 15000,
-      third: isSipTransaction ? 5000 : 25000
-    })
+   
   }
 
 const fetchFolios = async () => {
@@ -291,7 +247,7 @@ const fetchFolios = async () => {
 };
 
 
-  const handleNearSipDate = (dateList: string[]) => {
+  const handleNearSipDate = (dateList: number[]) => {
     const today = new Date();
     const currentDay = today.getDate();
     const sipDateNumbers = dateList?.map(Number);
@@ -300,23 +256,11 @@ const fetchFolios = async () => {
       nearestDate = sipDateNumbers[0];
     }
     console.log("nearestDate", dateList);
-
-    setSipDate(String(nearestDate).padStart(2, '0'))
+     let d= String(nearestDate).padStart(2, '0')
+    setSipDate(Number(d))
   }
-  const handleAmount = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    maxAmount: number,
-    setter: (value: number) => void
-  ): void => {
-    let value = Number(e.target.value.trim());
-    if (value <= 1000000000) {
-      setter(value);
-    } else if (value >= maxAmount) {
-      setter(maxAmount);
-
-    }
-  };
-  const handleMinAmount = (type: boolean = isSipTransaction) => {
+ 
+  const handleMinAmount = (type: boolean) => {
     if (schemeList?.length > 0) {
       let total = 0;
 
@@ -335,25 +279,12 @@ const fetchFolios = async () => {
     }
   };
 
-  const handleFolioSelection = () => {
-    
+  const handleInvestMore =()=>{
 
-    const minTotal =isSipTransaction ? schemeList[0]?.minSIPAmt : schemeList[0]?.minLumSumAmt
-    
-
-    if (amount <= 0) {
-      setAmountErrorMsg("Enter investment amount")
-      return
-    }
-    setAmountErrorMsg("")
-    if (minTotal > amount) {
-      setAmountErrorMsg("Minimum investment amount is ₹" + minTotal)
-      return
-    }
-    setAmountErrorMsg("")
-    setOpenSelectFolio(true)
-
+    setOpenInvestPopup(true)
   }
+
+ 
   return (
     <>
       <MyNavbar />
@@ -361,7 +292,7 @@ const fetchFolios = async () => {
 
         <div className="d-flex align-items-center">
           <img src={`${imageUrl + schemeList[0]?.amcCode}.png`} className="logoRadius" alt="Image not found" width={60} height={60} />
-          <div style={{ marginLeft: "2%", marginTop: "2%" }}>
+          <div style={{ marginLeft: "1%", marginTop: "1%" }}>
             <h4 className="fw-bold">{schemeList[0]?.scheme}</h4>
             <p>Equity: Flexi Cap</p>
           </div>
@@ -435,7 +366,7 @@ const fetchFolios = async () => {
                 </div>
                 <div className="col-6 py-2">
                   <span className="text-secondary text-uppercase fs-7">Risk</span>
-                  <h4 className="fs-6">{schemeList[0]?.risk}</h4>
+                  <h4 className="fs-6">{schemeList[0]?.risk|| "N/A"}</h4>
                 </div>
                 <div className="col-6 py-2">
                   <span className="text-secondary text-uppercase fs-7">Min. Investment</span>
@@ -467,9 +398,9 @@ const fetchFolios = async () => {
                 <div className="p-lg-3 p-4">
 
                   <div className="d-flex gap-2 justify-content-around">
-                    <div onClick={() => { setOpenInvestPopup(true) }} className="crPointer">
+                    <div onClick={handleInvestMore}>
                       <label
-                        className="btn_colorfull rounded-3 declaration-button w-100 paddingLeftRight px-4 py-2 mobile-fontset"
+                        className="btn_colorfull rounded-3 declaration-button w-100 paddingLeftRight px-4 py-2 mobile-fontset crPointer"
                         htmlFor="option3"
                       >
                         Invest More
@@ -478,7 +409,7 @@ const fetchFolios = async () => {
 
                     <div>
                       <label
-                        className="btn_colorfull rounded-3 declaration-button w-100 paddingLeftRight px-4 py-2 mobile-fontset"
+                        className="btn_colorfull rounded-3 declaration-button w-100 paddingLeftRight px-4 py-2 mobile-fontset crPointer"
                         htmlFor="option1"
                       >
                         Switch
@@ -487,7 +418,7 @@ const fetchFolios = async () => {
 
                     <div onClick={handleClick} className="">
                       <label
-                        className="btn_colorfull dotted_sip_prodyg rounded-3 declaration-button w-100 paddingLeftRight px-4 py-2 mobile-fontset"
+                        className="btn_colorfull dotted_sip_prodyg rounded-3 declaration-button w-100 paddingLeftRight px-4 py-2 mobile-fontset crPointer"
                         htmlFor="option1"
                       >
                         <AiOutlineMore />
@@ -559,53 +490,7 @@ const fetchFolios = async () => {
 
               </div>
 
-            </div> : <>
-              <div className="col-md-4 col-12 position-relative">
-
-                <div className="bg-white p-3 rounded">
-                  <h5>Invest Now</h5>
-                  <hr />
-                  <div className="row text-center mt-2 ">
-                    <div className="col-md-6 py-2 py-md-0">
-                      <div className={`${isSipTransaction ? "text-white logobg_color" : "logoBlueColor"} w-100 border  text-center monthly_btn crPointer`} onClick={() => { handleTransactionType(true) }}> Monthly SIP</div>
-                    </div>
-                    <div className="col-md-6 py-2 py-md-0">
-                      <div className={`${!isSipTransaction ? "text-white logobg_color" : "logoBlueColor"} w-100 border  text-center monthly_btn crPointer`} onClick={() => { handleTransactionType(false) }}> One-Time </div>
-                    </div>
-                  </div>
-
-                  {isSipTransaction && <>
-
-                    <div className="d-flex justify-content-between mt-3" onClick={() => setSipDateShow(true)}>
-                      <div className="d-flex">
-                        <div className="ms-2 prod_icon_heading">
-                          <p>Day of SIP</p>
-                          <h4 className='my-2'>{sipDate}th on every month</h4>
-                        </div>
-                      </div>
-                      <div className="prod_view_fund align-self-center">
-                        <div className="crPointer dateIcon"><Calendar4 className='' /></div>
-                      </div>
-                    </div> <hr className='mt-0' /> </>}
-
-                  <div className="form-group mt-1">
-                    <label htmlFor="amountFor" className='fs12px'>INVESTMENT AMOUNT</label>
-                    <input type="text" className="form-control" value={amount} onChange={(e) => handleAmount(e, 1000000, setAmount)} id="amountFor" aria-describedby="emailHelp" placeholder="Enter Amount" />
-                    <span className="errorColor"> {amount>= (isSipTransaction ? schemeList[0]?.minSIPAmt :schemeList[0]?.minLumSumAmt) ?"":amountErrorMsg }</span>
-                    <div className=" mt-2">
-                      <button type="button" className="btn shortcutValue" onClick={() => handleMinAmount(isSipTransaction)}>Min.</button>
-                      <button type="button" className="btn shortcutValue mx-1" onClick={() => addAmount(addAmountValues.first)}>+<CurrencyRupee className='mb-1' />{addAmountValues.first.toLocaleString("en-In")}</button>
-                      <button type="button" className="btn shortcutValue mx-1" onClick={() => addAmount(addAmountValues.second)}>+<CurrencyRupee className='mb-1' />{addAmountValues.second.toLocaleString("en-In")}</button>
-                      <button type="button" className="btn shortcutValue mx-1" onClick={() => addAmount(addAmountValues.third)}>+<CurrencyRupee className='mb-1' />{addAmountValues.third.toLocaleString("en-In")}</button>
-                    </div>
-                  </div>
-
-                </div>
-                <div className="text-white logobg_color  py-2 mb-2 mx-3 order  text-center monthly_btn crPointer" onClick={handleFolioSelection}> {isSipTransaction ? "Invest as SIP" : "Invest Now"}</div>
-
-                <Card.Header className='scheme-bg footerRadius px-3 py-2 fs12px'>NAV applicable once amount credited to AMC’s bank account</Card.Header>
-              </div>
-            </>}
+            </div> :<InvestmentForm schemeList={schemeList} setSchemeList={setSchemeList}/>}
         </div>
 
       </Container>
@@ -618,7 +503,7 @@ const fetchFolios = async () => {
         sipDateList={sipDateList}
         from={"portfolio"}
       />
-      <SelectFolioPopup show={openSelectFolio} setShow={setOpenSelectFolio} schemeList={schemeList} setSchemeList={setSchemeList} isSipTransaction={isSipTransaction} />
+      <SelectFolioPopup show={openSelectFolio} setShow={setOpenSelectFolio} schemeList={schemeList} setSchemeList={setSchemeList} isSipTransaction={true} />
 
       <Footer />
     </>

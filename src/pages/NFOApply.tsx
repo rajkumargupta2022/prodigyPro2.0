@@ -4,9 +4,174 @@ import { Calendar4, ChevronRight, CurrencyRupee } from "react-bootstrap-icons";
 import { useState } from "react";
 import { Card } from "react-bootstrap";
 import BankMandate from "../components/BankMandate";
+import InvestmentForm from "../components/InvestmentForm";
 
 const NFOApply = () => {
   const [openBankMandate, setOpenBankMandate] = useState<boolean>(false)
+  const [schemeList,setSchemeList] =useState([
+    {
+      "scheme": "SBI Midcap Fund-Reg(G)",
+      "accordSchemeCode": 2789,
+      "nseProductCode": "091G",
+      "amcCode": "L",
+      "nseReinvestTag": "Z",
+      "launchDate": "2005-03-28T18:30:00.000Z",
+      "lockInPeriod": 0,
+      "ISIN": "INF200K01560",
+      "cnav": 231.49,
+      "expenseRatio": 1.66,
+      "planType": "REGULAR",
+      "planOption": "REGULAR",
+      "equityType": "Mid Cap Fund",
+      "fundSize": 208902580000,
+      "risk": "REGULAR",
+      "minSIPAmt": 1000,
+      "minLumSumAmt": 5000,
+      "exitLoadPeriod": 1,
+      "exitLoad": "",
+      "sipDateList": [
+        "01",
+        "02",
+        "03",
+        "04",
+        "05",
+        "06",
+        "07",
+        "08",
+        "09",
+        "10",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
+        "16",
+        "17",
+        "18",
+        "19",
+        "20",
+        "21",
+        "22",
+        "23",
+        "24",
+        "25",
+        "26",
+        "27",
+        "28"
+      ],
+      "oneYearCAGR": -2.65,
+      "threeYearCAGR": 17.81,
+      "fiveYearCAGR": 27.42,
+      "amount": 0
+    },
+    {
+      "scheme": "SBI Small Cap Fund-Reg(G)",
+      "accordSchemeCode": 7885,
+      "nseProductCode": "346G",
+      "amcCode": "L",
+      "nseReinvestTag": "Z",
+      "launchDate": "2009-09-08T18:30:00.000Z",
+      "lockInPeriod": 0,
+      "ISIN": "INF200K01T28",
+      "cnav": 172.82,
+      "expenseRatio": 1.57,
+      "planType": "REGULAR",
+      "planOption": "REGULAR",
+      "equityType": "Small cap Fund",
+      "fundSize": 308287873000,
+      "risk": "REGULAR",
+      "minSIPAmt": 500,
+      "minLumSumAmt": 2000,
+      "exitLoadPeriod": 1,
+      "exitLoad": "",
+      "sipDateList": [
+        "01",
+        "02",
+        "03",
+        "04",
+        "05",
+        "06",
+        "09",
+        "10",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
+        "16",
+        "17",
+        "18",
+        "19",
+        "20",
+        "21",
+        "22",
+        "23",
+        "24",
+        "25",
+        "26",
+        "27",
+        "28"
+      ],
+      "oneYearCAGR": -5.84,
+      "threeYearCAGR": 18.36,
+      "fiveYearCAGR": 27.82,
+      "amount": 0
+    }, {
+      "scheme": "Nippon India Power & Infra Fund(B)",
+      "accordSchemeCode": 2450,
+      "nseProductCode": "PSBPGR",
+      "amcCode": "RMF",
+      "nseReinvestTag": "Z",
+      "launchDate": "2004-05-08T00:00:00.000Z",
+      "lockInPeriod": 0,
+      "ISIN": "INF204K01AD2",
+      "cnav": 342.2,
+      "expenseRatio": 1.82,
+      "planType": "REGULAR",
+      "planOption": "REGULAR",
+      "equityType": "Sector Funds",
+      "fundSize": 0,
+      "risk": "REGULAR",
+      "minSIPAmt": 1000,
+      "minLumSumAmt": 5000,
+      "exitLoadPeriod": 1,
+      "exitLoad": "1% on or before 1M, Nil after 1M",
+      "sipDateList": [
+        "01",
+        "02",
+        "03",
+        "04",
+        "05",
+        "06",
+        "07",
+        "08",
+        "09",
+        "10",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
+        "16",
+        "17",
+        "18",
+        "19",
+        "20",
+        "21",
+        "22",
+        "23",
+        "24",
+        "25",
+        "26",
+        "27",
+        "28"
+      ],
+      "oneYearCAGR": -9.76,
+      "threeYearCAGR": 31.49,
+      "fiveYearCAGR": 31.04,
+      "amount": 0
+    }
+  ])
 
   const handleBankMandate = () => {
     setOpenBankMandate(true)
@@ -75,45 +240,12 @@ const NFOApply = () => {
 
             </div>
           </div>
-          <div className="col-4 bg-white rounded-2 p-2 px-2 mt-4">
-            <div className="row px-3 my-3">
-              <h6>INVEST NOW</h6>
-              <hr />
-              <div className="col-6">
-                <button className="activeBtn"> Monthly SIP</button>
-              </div>
-              <div className="col-6">
-                <button className="deActiveBtn"> One-Time</button>
-              </div>
-              <div className="col-11 mt-4">
-                <small className="fs12px">DAY OF SIP</small><br />
-                <small className="fs14px text-dark">17th of every month</small>
-              </div>
-              <div className="col-1 mt-5 px-2">
-                <small className="crPointer dateIcon"><Calendar4 className='' /></small>
-              </div>
-
-              <hr />
-              <div className="col-12 form-group">
-                <label htmlFor="exampleInputEmail1" className="fs12px">INVESTMENT AMOUNT</label>
-                <input type="email" className="form-control" placeholder="1000" />
-              </div>
-              <div className=" mt-2">
-                <button type="button" className="btn shortcutValue">Min.</button>
-                <button type="button" className="btn shortcutValue mx-1"><CurrencyRupee className='mb-1' />1,000</button>
-                <button type="button" className="btn shortcutValue mx-1"><CurrencyRupee className='mb-1' />2,000</button>
-                <button type="button" className="btn shortcutValue mx-1"><CurrencyRupee className='mb-1' />5,000</button>
-              </div>
-
-            </div>
-            <Card.Header className='scheme-bg footerRadius px-3 py-2 fs12px'>NAV applicable once amount credited to AMC’s bank account</Card.Header>
-              <button className="customButton buttunCenter my-2 px-3"  onClick={handleBankMandate}>Continue</button>
-          </div>
+         <InvestmentForm schemeList={schemeList} setSchemeList={setSchemeList}/>
         </div>
       </div>
 
 
-      <BankMandate show={openBankMandate} setShow={setOpenBankMandate} />
+      <BankMandate show={openBankMandate} setShow={setOpenBankMandate}schemeList={schemeList}  setSchemeList={setSchemeList} isSipTransaction={false}/>
     </>
   );
 };

@@ -1,22 +1,21 @@
-import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Card from "react-bootstrap/Card";
 import { CurrencyRupee } from "react-bootstrap-icons";
-import CreateNewFolio from "./CreateNewFolio";
-import InvetmentConfirmation from "./InvestmentConfirmation";
+// import CreateNewFolio from "./CreateNewFolio";
+// import InvetmentConfirmation from "./InvestmentConfirmation";
 interface SchemeDetailsProps {
   show: boolean;
   setShow: (show: boolean) => void;
 }
 
 const SchemeDetails: React.FC<SchemeDetailsProps> = ({ show, setShow }) => {
-  const [openCreateFolio, setOpenCreateFolio] = useState<boolean>(false);
-  const [openInvestmentConfirmation, setOpenInvestmentConfirmation] =
-    useState<boolean>(false);
+  // const [openCreateFolio, setOpenCreateFolio] = useState<boolean>(false);
+  // const [openInvestmentConfirmation, setOpenInvestmentConfirmation] =
+  //   useState<boolean>(false);
 
   const handleConfirmation = () => {
-    setOpenInvestmentConfirmation(true);
+    // setOpenInvestmentConfirmation(true);
     setShow(false);
   };
 
@@ -71,7 +70,7 @@ const SchemeDetails: React.FC<SchemeDetailsProps> = ({ show, setShow }) => {
               </div>
               <div
                 className="col p-0 fs12px logoBlueColor crPointer fw-bold"
-                onClick={() => setOpenCreateFolio(true)}
+                // onClick={() => setOpenCreateFolio(true)}
               >
                 Change Folio
               </div>
@@ -115,7 +114,7 @@ const SchemeDetails: React.FC<SchemeDetailsProps> = ({ show, setShow }) => {
               </div>
               <div
                 className="col p-0 fs12px logoBlueColor crPointer fw-bold"
-                onClick={() => setOpenCreateFolio(true)}
+                // onClick={() => setOpenCreateFolio(true)}
               >
                 Change Folio
               </div>
@@ -129,11 +128,11 @@ const SchemeDetails: React.FC<SchemeDetailsProps> = ({ show, setShow }) => {
           </Button>
         </Modal.Footer>
       </Modal>
-      <CreateNewFolio show={openCreateFolio} setShow={setOpenCreateFolio} />
-      <InvetmentConfirmation
+      {/* <CreateNewFolio show={openCreateFolio} setShow={setOpenCreateFolio} /> */}
+      {/* <InvetmentConfirmation
         show={openInvestmentConfirmation}
         setShow={setOpenInvestmentConfirmation}
-      />
+      /> */}
     </>
   );
 };

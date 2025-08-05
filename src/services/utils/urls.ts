@@ -18,6 +18,7 @@ export enum endPoints{
    getNavHistory="product/get-nav-history",
    getSchemeFolios = "transact/get-scheme-folios",
    getMandateList="transact/get-mandate-list",
+   sipPurchaseRedemption="transact/sip-purchase-redemption",
    getFilteredScheme="product/get-filtered-scheme",
    getAmcList="product/get-amc-list",
    getAssetTypesList="product/get-assetTypes-list",

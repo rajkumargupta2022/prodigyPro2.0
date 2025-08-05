@@ -2,9 +2,9 @@ import Modal from "react-bootstrap/Modal";
 interface SipDatesProp {
   show: boolean;
   setShow: (show: boolean) => void;
-  sipDate:string;
-  sipDateList: string[];
-  handleSipDate:(value:string)=>void
+  sipDate:number;
+  sipDateList: number[];
+  handleSipDate:(value:number)=>void
 }
 
 const SipDates: React.FC<SipDatesProp> = ({ show, setShow,sipDate,sipDateList,handleSipDate }) => {

@@ -4,8 +4,9 @@ import Card from "react-bootstrap/Card";
 import { CurrencyRupee } from "react-bootstrap-icons";
 import CreateNewFolio from "./CreateNewFolio";
 import BankMandate from "../components/BankMandate";
-import { foliosKeys, schemeDeatilDataKeys } from "../pages/data-interfaces/transact";
+import { foliosKeys, schemeDeatilDataKeys, sipPurchaseRedemptionKey } from "../pages/data-interfaces/transact";
 import OrderPlaces from "./order-places";
+import { finalTransaction } from "../services/utils/transactionApi";
 
 interface SchemeDetailsProps {
   show: boolean;
@@ -21,6 +22,7 @@ const SelectFolioPopup: React.FC<SchemeDetailsProps> = ({ show, setShow, schemeL
   const [folioList, setFolioList] = useState<foliosKeys[]>([])
   const [openSuccess, setOpenSuccess] = useState(false)
   const [selectedFolioIndex,setSelectedFolioIndex] = useState<number>(0)
+   const [successData,setSuccessData] = useState<sipPurchaseRedemptionKey[]>([])
 
   useEffect(() => {
     defaultSelectFolio()
@@ -38,6 +40,10 @@ const SelectFolioPopup: React.FC<SchemeDetailsProps> = ({ show, setShow, schemeL
       setOpenBankMandate(true);
       setShow(false);
     } else {
+      finalTransaction(schemeList,"purchase",setSuccessData).then((res)=>{
+        console.log(res);
+        
+      })
       setOpenSuccess(true)
       setShow(false);
     }
@@ -62,7 +68,7 @@ const SelectFolioPopup: React.FC<SchemeDetailsProps> = ({ show, setShow, schemeL
           <Modal.Title>Select Folio</Modal.Title>
         </Modal.Header>
         <Modal.Body className="modal-bg">
-          {schemeList.map((item, index) => {
+          {schemeList?.map((item, index) => {
             return <Card className="rounded-4 shadow-lg border-0 mb-2" key={index}>
               <Card.Body>
                 <div className="row container-fluid">
@@ -126,7 +132,7 @@ const SelectFolioPopup: React.FC<SchemeDetailsProps> = ({ show, setShow, schemeL
       </Modal>
       <CreateNewFolio show={openCreateFolio} setShow={setOpenCreateFolio} schemeList={schemeList}  setSchemeList={setSchemeList}  folioList={folioList} selectedFolioIndex={selectedFolioIndex}  />
 
-      <BankMandate show={openBankMandate} setShow={setOpenBankMandate} schemeList={schemeList}  setSchemeList={setSchemeList} />
+      <BankMandate show={openBankMandate} setShow={setOpenBankMandate} schemeList={schemeList}  setSchemeList={setSchemeList} isSipTransaction={isSipTransaction} />
       <OrderPlaces show={openSuccess} setShow={setOpenSuccess} />
 
 
