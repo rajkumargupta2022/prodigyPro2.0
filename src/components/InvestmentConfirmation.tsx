@@ -13,6 +13,8 @@ import { fetchAdminUser } from '../services/user/adminUser';
 import { endPoints, imageUrl } from '../services/utils/urls';
 import BankMandate from './BankMandate';
 import { convertDayToFullDate } from '../services/dates/dateFormater';
+import { keys } from '../services/utils/keys';
+import { checkTransactionAllowed } from '../services/utils/services';
 interface investmetProps {
   show: boolean;
   setShow: (show: boolean) => void;
@@ -55,6 +57,8 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
 
 
   useEffect(() => {
+    console.log("schemeLsittt",schemeList);
+    
     handleNearSipDate()
     fetchFolios()
   }, [show]);
@@ -243,6 +247,8 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
       setAmount(total);
     }
   };
+
+
   return (
     <>
 
@@ -272,12 +278,14 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
             </div>
             <hr />
             <div className="row text-center mt-2">
+             {checkTransactionAllowed(schemeList,keys.sip) && 
               <div className="col-md-6 py-2 py-md-0">
                 <div className={`${isSipTransaction ? "text-white logobg_color" : "logoBlueColor"} w-100 border  text-center monthly_btn crPointer`} onClick={() => { handleTransactionType(true) }}> Monthly SIP</div>
-              </div>
+              </div>}
+              {checkTransactionAllowed(schemeList,keys.purchase) &&
               <div className="col-md-6 py-2 py-md-0">
                 <div className={`${!isSipTransaction ? "text-white logobg_color" : "logoBlueColor"} w-100 border  text-center monthly_btn crPointer`} onClick={() => { handleTransactionType(false) }}> One-Time </div>
-              </div>
+              </div>}
             </div>
 
             {isSipTransaction && <>

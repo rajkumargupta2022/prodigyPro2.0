@@ -7,6 +7,8 @@ import { Calendar4, CurrencyRupee } from "react-bootstrap-icons";
 import { Card } from "react-bootstrap";
 import SipDates from "./SipDate";
 import SelectFolioPopup from "./select-folio-popup";
+import { checkTransactionAllowed } from "../services/utils/services";
+import { keys } from "../services/utils/keys";
 
 interface addAmountKeys {
   min: number,
@@ -219,12 +221,14 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
         <h5>Invest Now</h5>
         <hr />
         <div className="row text-center mt-2 ">
+          {checkTransactionAllowed(schemeList,keys.sip) &&
           <div className="col-md-6 py-2 py-md-0">
             <div className={`${isSipTransaction ? "text-white logobg_color" : "logoBlueColor"} w-100 border  text-center monthly_btn crPointer`} onClick={() => { handleTransactionType(true) }}> Monthly SIP</div>
-          </div>
+          </div>}
+          {checkTransactionAllowed(schemeList,keys.purchase) &&
           <div className="col-md-6 py-2 py-md-0">
             <div className={`${!isSipTransaction ? "text-white logobg_color" : "logoBlueColor"} w-100 border  text-center monthly_btn crPointer`} onClick={() => { handleTransactionType(false) }}> One-Time </div>
-          </div>
+          </div>}
         </div>
 
         {isSipTransaction && <>

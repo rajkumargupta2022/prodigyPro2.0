@@ -63,6 +63,8 @@ const BankMandate: React.FC<bankMandate> = ({ show, setShow, schemeList, setSche
         console.log("rraaa",res);
         
       })
+      setOpenSuccess(true)
+      setShow(false)
 
   }
 

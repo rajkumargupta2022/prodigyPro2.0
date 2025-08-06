@@ -1,4 +1,4 @@
-import {  Container } from "react-bootstrap";
+import { Container } from "react-bootstrap";
 import MyNavbar from "../components/Navbar";
 import MyStackBar from "../components/Stack-bar";
 import { useEffect, useState } from "react";
@@ -17,6 +17,8 @@ import InvetmentConfirmation from "../components/InvestmentConfirmation";
 import { fetchAdminUser } from "../services/user/adminUser";
 import SelectFolioPopup from "../components/select-folio-popup";
 import InvestmentForm from "../components/InvestmentForm";
+import SwitchConfirmation from "../components/SwitchConfirmation";
+import SwitchSchemeModel from "../components/SwitchSchemeModel";
 
 interface ChartState {
   options: ApexOptions;
@@ -25,7 +27,7 @@ interface ChartState {
 
 const FundDetails = () => {
   const location = useLocation()
-  const navigate  = useNavigate()
+  const navigate = useNavigate()
   const [openSelectFolio, setOpenSelectFolio] = useState<boolean>(false)
   const [openInvestPopup, setOpenInvestPopup] = useState(false)
   const [schemeList, setSchemeList] = useState<schemeDeatilDataKeys[]>([])
@@ -39,6 +41,7 @@ const FundDetails = () => {
   const [sipDateList, setSipDateList] = useState<number[]>([])
   // const [amount, setAmount] = useState<number>(0)
   const [sipDateShow, setSipDateShow] = useState<boolean>(false)
+  const [openSwitchSchemeModel, setOpenSwitchSchemeModel] = useState<boolean>(false)
 
 
 
@@ -130,9 +133,9 @@ const FundDetails = () => {
       handleMinAmount(true)
       fetchFolios()
     } else {
-      if(location?.state?.fromPortfolio){
+      if (location?.state?.fromPortfolio) {
         navigate("/portfolio")
-      }else {
+      } else {
         navigate("/all-mutual-funds")
       }
     }
@@ -200,51 +203,51 @@ const FundDetails = () => {
   const handleClick = () => {
     setShow(!show);
   };
- 
+
 
   const handleSipDate = (value: number) => {
     setSipDate(value)
     setSipDateShow(false)
 
-   
+
   }
 
-const fetchFolios = async () => {
-  const adminUser = fetchAdminUser();
+  const fetchFolios = async () => {
+    const adminUser = fetchAdminUser();
 
-  if (!adminUser?.ucc || schemeList.length === 0) return;
+    if (!adminUser?.ucc || schemeList.length === 0) return;
 
-  const reqBody = {
-    ucc: adminUser.ucc,
-    product_code: schemeList[0].accordSchemeCode,
+    const reqBody = {
+      ucc: adminUser.ucc,
+      product_code: schemeList[0].accordSchemeCode,
+    };
+
+    try {
+      const res = await postRequest<foliosResponse>(endPoints.getSchemeFolios, reqBody);
+
+      const updatedList = [
+        {
+          ...schemeList[0],
+          folioList: res.data || [],
+        },
+      ];
+
+      setSchemeList(updatedList);
+    } catch (error) {
+      console.error("Error fetching folio:", error);
+
+      const updatedList = [
+        {
+          ...schemeList[0],
+          folioList: [],
+        },
+      ];
+
+      setSchemeList(updatedList);
+    }
+
+    console.log("Folios updated in schemeList[0]");
   };
-
-  try {
-    const res = await postRequest<foliosResponse>(endPoints.getSchemeFolios, reqBody);
-
-    const updatedList = [
-      {
-        ...schemeList[0],
-        folioList: res.data || [],
-      },
-    ];
-
-    setSchemeList(updatedList);
-  } catch (error) {
-    console.error("Error fetching folio:", error);
-
-    const updatedList = [
-      {
-        ...schemeList[0],
-        folioList: [],
-      },
-    ];
-
-    setSchemeList(updatedList);
-  }
-
-  console.log("Folios updated in schemeList[0]");
-};
 
 
   const handleNearSipDate = (dateList: number[]) => {
@@ -256,10 +259,10 @@ const fetchFolios = async () => {
       nearestDate = sipDateNumbers[0];
     }
     console.log("nearestDate", dateList);
-     let d= String(nearestDate).padStart(2, '0')
+    let d = String(nearestDate).padStart(2, '0')
     setSipDate(Number(d))
   }
- 
+
   const handleMinAmount = (type: boolean) => {
     if (schemeList?.length > 0) {
       let total = 0;
@@ -279,12 +282,14 @@ const fetchFolios = async () => {
     }
   };
 
-  const handleInvestMore =()=>{
+  const handleInvestMore = () => {
 
     setOpenInvestPopup(true)
   }
 
- 
+  const handleSwitch = () => {
+    setOpenSwitchSchemeModel(true)
+  }
   return (
     <>
       <MyNavbar />
@@ -366,7 +371,7 @@ const fetchFolios = async () => {
                 </div>
                 <div className="col-6 py-2">
                   <span className="text-secondary text-uppercase fs-7">Risk</span>
-                  <h4 className="fs-6">{schemeList[0]?.risk|| "N/A"}</h4>
+                  <h4 className="fs-6">{schemeList[0]?.risk || "N/A"}</h4>
                 </div>
                 <div className="col-6 py-2">
                   <span className="text-secondary text-uppercase fs-7">Min. Investment</span>
@@ -407,7 +412,7 @@ const fetchFolios = async () => {
                       </label>
                     </div>
 
-                    <div>
+                    <div onClick={handleSwitch}>
                       <label
                         className="btn_colorfull rounded-3 declaration-button w-100 paddingLeftRight px-4 py-2 mobile-fontset crPointer"
                         htmlFor="option1"
@@ -490,7 +495,7 @@ const fetchFolios = async () => {
 
               </div>
 
-            </div> :<InvestmentForm schemeList={schemeList} setSchemeList={setSchemeList}/>}
+            </div> : <InvestmentForm schemeList={schemeList} setSchemeList={setSchemeList} />}
         </div>
 
       </Container>
@@ -504,7 +509,7 @@ const fetchFolios = async () => {
         from={"portfolio"}
       />
       <SelectFolioPopup show={openSelectFolio} setShow={setOpenSelectFolio} schemeList={schemeList} setSchemeList={setSchemeList} isSipTransaction={true} />
-
+      <SwitchSchemeModel show={openSwitchSchemeModel} setShow={setOpenSwitchSchemeModel} />
       <Footer />
     </>
   );

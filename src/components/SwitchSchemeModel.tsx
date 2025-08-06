@@ -5,13 +5,14 @@ import Card from 'react-bootstrap/Card';
 import { useState } from 'react';
 import OrderPlaces from './order-places';
 import SwitchForm from './SwitchForm';
+import SwitchSchemes from './SwitchSchemes';
 interface investmetProps {
   show: boolean;
   setShow: (show: boolean) => void;
 }
 
 
-const SwitchConfirmation: React.FC<investmetProps> = ({ show, setShow }) => {
+const SwitchSchemeModel: React.FC<investmetProps> = ({ show, setShow }) => {
   const [openSuccess,setOpenSuccess] = useState(false)
 
   const handleSwitch = ()=>{
@@ -30,10 +31,10 @@ const SwitchConfirmation: React.FC<investmetProps> = ({ show, setShow }) => {
 
       >
         <Modal.Header closeButton className='modal-bg'>
-          <Modal.Title>Switch Confirmation</Modal.Title>
+          <Modal.Title >Select a New Fund to Switch</Modal.Title>
         </Modal.Header>
         <Modal.Body className='modal-bg'>
-            <SwitchForm/>
+            <SwitchSchemes/>
           <Card.Header className='scheme-bg footerRadius px-3 py-2 fs12px'>Switch orders once placed cannot be cancelled.</Card.Header>
 
         </Modal.Body>
@@ -47,4 +48,4 @@ const SwitchConfirmation: React.FC<investmetProps> = ({ show, setShow }) => {
   );
 }
 
-export default SwitchConfirmation;
+export default SwitchSchemeModel;

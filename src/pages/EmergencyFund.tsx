@@ -260,7 +260,7 @@ const EmergencyFund = () => {
                       id={"checkbox" + index}
                       checked={isChecked}
                       onClick={() => handleSelectedScheme(item)}
-                    />
+                  />
                     <label htmlFor={"checkbox" + index}></label>
                     <img
                       src={`${imageUrl + item?.amcCode}.png`}
