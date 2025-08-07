@@ -19,6 +19,7 @@ import SelectFolioPopup from "../components/select-folio-popup";
 import InvestmentForm from "../components/InvestmentForm";
 import SwitchConfirmation from "../components/SwitchConfirmation";
 import SwitchSchemeModel from "../components/SwitchSchemeModel";
+import RedumptionConfirmation from "../components/RedumptionConfirmation";
 
 interface ChartState {
   options: ApexOptions;
@@ -42,6 +43,7 @@ const FundDetails = () => {
   // const [amount, setAmount] = useState<number>(0)
   const [sipDateShow, setSipDateShow] = useState<boolean>(false)
   const [openSwitchSchemeModel, setOpenSwitchSchemeModel] = useState<boolean>(false)
+  const [openRedumptionModel, setOpenRedumptionModel] = useState<boolean>(false)
 
 
 
@@ -246,7 +248,6 @@ const FundDetails = () => {
       setSchemeList(updatedList);
     }
 
-    console.log("Folios updated in schemeList[0]");
   };
 
 
@@ -258,7 +259,6 @@ const FundDetails = () => {
     if (!nearestDate) {
       nearestDate = sipDateNumbers[0];
     }
-    console.log("nearestDate", dateList);
     let d = String(nearestDate).padStart(2, '0')
     setSipDate(Number(d))
   }
@@ -276,9 +276,7 @@ const FundDetails = () => {
           amount: minAmount,
         };
       });
-
       setSchemeList(updatedSchemes);
-
     }
   };
 
@@ -289,6 +287,9 @@ const FundDetails = () => {
 
   const handleSwitch = () => {
     setOpenSwitchSchemeModel(true)
+  }
+  const handleRedmptionModel = ()=>{
+    setOpenRedumptionModel(true)
   }
   return (
     <>
@@ -438,7 +439,7 @@ const FundDetails = () => {
                 <div className="card mb-4 popup_card_steup_area">
                   <div className="p-3">
                     <ul className="ps-0 style-unerline-prodgy mb-0">
-                      <li>Redeem Fund</li>
+                      <li onClick={()=>handleRedmptionModel()}>Redeem Fund</li>
                       <li>Systematic Transfer Plan (STP)</li>
                       <li>Systematic Withdrawal Plan (SWP)</li>
                       <li>Transaction History</li>
@@ -510,6 +511,7 @@ const FundDetails = () => {
       />
       <SelectFolioPopup show={openSelectFolio} setShow={setOpenSelectFolio} schemeList={schemeList} setSchemeList={setSchemeList} isSipTransaction={true} />
       <SwitchSchemeModel show={openSwitchSchemeModel} setShow={setOpenSwitchSchemeModel} />
+      <RedumptionConfirmation show={openRedumptionModel} setShow={setOpenRedumptionModel} schemeList={schemeList} setSchemeList={setSchemeList}/>
       <Footer />
     </>
   );
