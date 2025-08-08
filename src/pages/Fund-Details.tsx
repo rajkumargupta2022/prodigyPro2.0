@@ -17,7 +17,6 @@ import InvetmentConfirmation from "../components/InvestmentConfirmation";
 import { fetchAdminUser } from "../services/user/adminUser";
 import SelectFolioPopup from "../components/select-folio-popup";
 import InvestmentForm from "../components/InvestmentForm";
-import SwitchConfirmation from "../components/SwitchConfirmation";
 import SwitchSchemeModel from "../components/SwitchSchemeModel";
 import RedumptionConfirmation from "../components/RedumptionConfirmation";
 

@@ -156,7 +156,11 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
     setter: (value: number) => void
   ): void => {
     let value = Number(e.target.value.trim());
+    console.log("value",value);
+    
     if (value <= 1000000000) {
+      console.log("gggg");
+      
       const updatedList = [
         {
           ...schemeList[0],
@@ -165,7 +169,8 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
       ];
       setter(value);
       setSchemeList(updatedList)
-    } else if (1000000000 >= maxAmount) {
+    } else if (1000000000 >= maxAmount && value > 0) {
+        console.log("ggggrrr");
       const updatedList = [
         {
           ...schemeList[0],

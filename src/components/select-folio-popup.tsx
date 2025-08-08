@@ -26,6 +26,8 @@ const SelectFolioPopup: React.FC<SchemeDetailsProps> = ({ show, setShow, schemeL
 
   useEffect(() => {
     defaultSelectFolio()
+    console.log(successData);
+    
   }, [show])
   const defaultSelectFolio = () => {
     schemeList?.forEach((scheme: any) => {

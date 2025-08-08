@@ -1,20 +1,17 @@
-import { Card, Container, Row, Col } from "react-bootstrap";
-import { ChevronRight, Search } from "react-bootstrap-icons";
+import {  Container } from "react-bootstrap";
 import MyNavbar from "../components/Navbar";
-import { useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
 import Category from "./explore/Category";
 import Returns from "./explore/SortBy";
 import Filters from "./explore/Amcs";
 import { useEffect, useState } from "react";
 import { postRequest } from "../services/Api/HandleApi";
-import { endPoints, imageUrl } from "../services/utils/urls";
+import { endPoints } from "../services/utils/urls";
 import { filteredSchemeResponse, filteredSchemesKeys } from "./data-interfaces/explore";
 import SwitchSchemes from "../components/SwitchSchemes";
 
 
 const AllMutualFunds = () => {
-  const navigate = useNavigate()
   const [amcCode, setAmcCode] = useState<number[]>([])
   const [assetCode, setAssetCode] = useState<number[]>([1])
   const [classCode, setClassCode] = useState<number[]>([])
@@ -26,6 +23,8 @@ const AllMutualFunds = () => {
     fetchFilteredScheme(amcCode, assetCode, classCode)
     setPage(1)
     setretunrs(3)
+    console.log(filteredSchemes);
+    
   }, [])
 
   const fetchFilteredScheme = async (amc: number[] = amcCode, asset: number[] = assetCode, classArr: number[] = classCode) => {
@@ -100,9 +99,9 @@ const AllMutualFunds = () => {
         return false
     }
   }
-  const fundDetails = (item: filteredSchemesKeys) => {
-    navigate("/fund-details", { state: { accordSchemeCode: item.Schemecode, fromPortfolio: false } })
-  }
+  // const fundDetails = (item: filteredSchemesKeys) => {
+  //   navigate("/fund-details", { state: { accordSchemeCode: item.Schemecode, fromPortfolio: false } })
+  // }
 
   return (
     <>

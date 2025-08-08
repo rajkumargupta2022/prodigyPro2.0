@@ -57,8 +57,8 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
 
 
   useEffect(() => {
-    console.log("schemeLsittt",schemeList);
-    
+    console.log("schemeLsittt", schemeList);
+
     handleNearSipDate()
     fetchFolios()
   }, [show]);
@@ -68,7 +68,7 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
       handleMinAmount(true);
       setFoliosFetched(false);
     }
-  }, [foliosFetched,schemeList]);
+  }, [foliosFetched, schemeList]);
 
   const fetchFolios = async () => {
     const adminUser = fetchAdminUser();
@@ -102,8 +102,8 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
     ).then(updatedSchemeList => {
       setSchemeList(updatedSchemeList);
       setFoliosFetched(true);
-    }).catch(err=>{
-      console.log("This is error",err)
+    }).catch(err => {
+      console.log("This is error", err)
     })
 
   };
@@ -121,7 +121,7 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
     setSipDate(Number(day))
     setSchemeList(schemeList.map(obj => {
       obj.start_date = convertDayToFullDate(Number(day));
-       return obj;
+      return obj;
     }))
   }
   const handleFolioSelection = () => {
@@ -130,6 +130,7 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
       const minAmount = scheme.amount ?? 0; // use 0 if undefined
       return acc + minAmount;
     }, 0);
+   
 
     const minTotal = schemeList.reduce((acc, scheme) => {
       const minAmount = isSipTransaction ? scheme.minSIPAmt : scheme.minLumSumAmt;
@@ -278,14 +279,14 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
             </div>
             <hr />
             <div className="row text-center mt-2">
-             {checkTransactionAllowed(schemeList,keys.sip) && 
-              <div className="col-md-6 py-2 py-md-0">
-                <div className={`${isSipTransaction ? "text-white logobg_color" : "logoBlueColor"} w-100 border  text-center monthly_btn crPointer`} onClick={() => { handleTransactionType(true) }}> Monthly SIP</div>
-              </div>}
-              {checkTransactionAllowed(schemeList,keys.purchase) &&
-              <div className="col-md-6 py-2 py-md-0">
-                <div className={`${!isSipTransaction ? "text-white logobg_color" : "logoBlueColor"} w-100 border  text-center monthly_btn crPointer`} onClick={() => { handleTransactionType(false) }}> One-Time </div>
-              </div>}
+              {checkTransactionAllowed(schemeList, keys.sip) &&
+                <div className="col-md-6 py-2 py-md-0">
+                  <div className={`${isSipTransaction ? "text-white logobg_color" : "logoBlueColor"} w-100 border  text-center monthly_btn crPointer`} onClick={() => { handleTransactionType(true) }}> Monthly SIP</div>
+                </div>}
+              {checkTransactionAllowed(schemeList, keys.purchase) &&
+                <div className="col-md-6 py-2 py-md-0">
+                  <div className={`${!isSipTransaction ? "text-white logobg_color" : "logoBlueColor"} w-100 border  text-center monthly_btn crPointer`} onClick={() => { handleTransactionType(false) }}> One-Time </div>
+                </div>}
             </div>
 
             {isSipTransaction && <>
@@ -322,7 +323,17 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
                     <span>{item?.scheme}</span>
                   </div>
                   <div>
-                    <input className='' type="text" placeholder='0' value={item?.amount} onChange={(e) => handleMultipleAmount(e, index)} />
+                    <input className='' type="text" placeholder='0' value={item?.amount} onChange={(e) => handleMultipleAmount(e, index)} /><br />
+                    <span className="errorColor">
+                      {isSipTransaction
+                        ? ((item?.amount ?? 0) < item.minSIPAmt
+                          ? "Min amount " + item.minSIPAmt
+                          : "")
+                        : ((item?.amount ?? 0) < item.minLumSumAmt
+                          ? "Min amount " + item.minLumSumAmt
+                          : "")
+                      }
+                    </span>
                   </div>
                 </div>
               })}

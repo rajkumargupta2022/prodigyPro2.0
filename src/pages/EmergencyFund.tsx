@@ -79,7 +79,7 @@ const EmergencyFund = () => {
       "sipAllowed": true,
       "stpAllowed": false,
       "swpAllowed": false,
-      "purchaseAllowed": false,
+      "purchaseAllowed": true,
       "redemptionAllowed": false,
       "switchAllowed": false,
       "scheme": "SBI Small Cap Fund-Reg(G)",

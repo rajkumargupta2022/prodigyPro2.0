@@ -4,7 +4,6 @@ import Card from 'react-bootstrap/Card';
 
 import { useState } from 'react';
 import OrderPlaces from './order-places';
-import SwitchForm from './SwitchForm';
 import SwitchSchemes from './SwitchSchemes';
 interface investmetProps {
   show: boolean;

@@ -18,6 +18,8 @@ const RedumptionForm = ()=>{
   };
  const handleRedemptionType = (value:string)=>{
     setRedeemType(value)
+    console.log(amount);
+    
  }
   
   return(

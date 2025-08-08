@@ -5,10 +5,8 @@ import icici from "../assets/img/bank-logo/icici.png";
 import { useEffect, useState } from "react";
 import OrderPlaces from "./order-places";
 import { postRequest } from "../services/Api/HandleApi";
-import { bankMandateKeys, bankMandateResponse, schemeDeatilDataKeys, sipPurchaseRedemptionKey, sipPurchaseRedemptionResponse } from "../pages/data-interfaces/transact";
+import { bankMandateKeys, bankMandateResponse, schemeDeatilDataKeys, sipPurchaseRedemptionKey } from "../pages/data-interfaces/transact";
 import { endPoints } from "../services/utils/urls";
-import { fetchAdminUser } from "../services/user/adminUser";
-import { sipFilterBody } from "../services/utils/transactionBody";
 import { finalTransaction } from "../services/utils/transactionApi";
 interface bankMandate {
   show: boolean;
@@ -18,7 +16,7 @@ interface bankMandate {
   isSipTransaction: boolean
 }
 
-const BankMandate: React.FC<bankMandate> = ({ show, setShow, schemeList, setSchemeList, isSipTransaction }) => {
+const BankMandate: React.FC<bankMandate> = ({ show, setShow, schemeList, setSchemeList }) => {
   // const [openCreateFolio,setOpenCreateFolio] = useState<boolean>(false)
   const [openSuccess, setOpenSuccess] = useState(false)
   const [mandateList, setMandateList] = useState<bankMandateKeys[]>([])
@@ -27,6 +25,8 @@ const BankMandate: React.FC<bankMandate> = ({ show, setShow, schemeList, setSche
 
   useEffect(() => {
     fetchMandateList()
+    console.log(successData);
+    
   }, [show])
 
   const fetchMandateList = async () => {
