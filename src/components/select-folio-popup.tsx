@@ -135,7 +135,7 @@ const SelectFolioPopup: React.FC<SchemeDetailsProps> = ({ show, setShow, schemeL
       <CreateNewFolio show={openCreateFolio} setShow={setOpenCreateFolio} schemeList={schemeList}  setSchemeList={setSchemeList}  folioList={folioList} selectedFolioIndex={selectedFolioIndex}  />
 
       <BankMandate show={openBankMandate} setShow={setOpenBankMandate} schemeList={schemeList}  setSchemeList={setSchemeList} isSipTransaction={isSipTransaction} />
-      <OrderPlaces show={openSuccess} setShow={setOpenSuccess} />
+      <OrderPlaces show={openSuccess} setShow={setOpenSuccess} successData={successData}/>
 
 
     </>

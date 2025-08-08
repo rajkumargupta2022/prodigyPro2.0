@@ -20,7 +20,7 @@ const BankMandate: React.FC<bankMandate> = ({ show, setShow, schemeList, setSche
   // const [openCreateFolio,setOpenCreateFolio] = useState<boolean>(false)
   const [openSuccess, setOpenSuccess] = useState(false)
   const [mandateList, setMandateList] = useState<bankMandateKeys[]>([])
-  const [successData,setSuccessData] = useState<sipPurchaseRedemptionKey[]>([])
+  const [successData,setSuccessData] = useState<any[]>([])
 
 
   useEffect(() => {
@@ -129,7 +129,7 @@ const BankMandate: React.FC<bankMandate> = ({ show, setShow, schemeList, setSche
           <Button className="customButton buttunCenter" onClick={handleTransaction}>Continue</Button>
         </Modal.Footer>
       </Modal>
-      <OrderPlaces show={openSuccess} setShow={setOpenSuccess} />
+      <OrderPlaces show={openSuccess} setShow={setOpenSuccess} successData={successData} />
     </>
   );
 };

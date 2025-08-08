@@ -85,14 +85,12 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
 
         try {
           const res = await postRequest<foliosResponse>(endPoints.getSchemeFolios, reqBody);
-          console.log("resssssss", res);
 
           return {
             ...item,
             folioList: res.data || [],
           };
         } catch (error) {
-          console.error("Error fetching folio for", item.accordSchemeCode, error);
           return {
             ...item,
             folioList: [],
@@ -220,7 +218,6 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
     const count = schemeList?.length;
 
     if (count === 0) return;
-    console.log("total==", total);
 
     const perScheme = Math.floor(total / count);
     const remainder = total % count;

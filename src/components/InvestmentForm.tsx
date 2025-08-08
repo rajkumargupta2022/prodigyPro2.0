@@ -89,13 +89,7 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
     setSipDate(value)
     setSipDateShow(false)
 
-    //only for making build
-    setAddAmountValues({
-      min: isSipTransaction ? 1000 : 5000,
-      first: isSipTransaction ? 2000 : 10000,
-      second: isSipTransaction ? 3000 : 15000,
-      third: isSipTransaction ? 5000 : 25000
-    })
+    
   }
 
   const fetchFolios = async () => {
@@ -146,7 +140,6 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
     if (!nearestDate) {
       nearestDate = sipDateNumbers[0];
     }
-    console.log("nearestDate", dateList);
    
     setSipDate(Number(String(nearestDate).padStart(2, '0')))
   }

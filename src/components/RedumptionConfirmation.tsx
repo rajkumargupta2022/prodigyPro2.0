@@ -6,21 +6,25 @@ import { useState } from 'react';
 import OrderPlaces from './order-places';
 import RedumptionForm from './RedumptionForm';
 import { schemeDeatilDataKeys } from '../pages/data-interfaces/transact';
+import { detailPortfolioSchemeType } from '../pages/data-interfaces/portfolio';
 interface investmetProps {
   show: boolean;
   setShow: (show: boolean) => void;
   schemeList: schemeDeatilDataKeys[];
     setSchemeList: (date: any) => void;
+    redeemList:detailPortfolioSchemeType[]
 }
 
 
-const RedumptionConfirmation: React.FC<investmetProps> = ({ show, setShow }) => {
+const RedumptionConfirmation: React.FC<investmetProps> = ({ show, setShow,schemeList,setSchemeList,redeemList }) => {
   const [openSuccess,setOpenSuccess] = useState(false)
 
   const handleSwitch = ()=>{
     setOpenSuccess(true)
     setShow(false)
   }
+  console.log("schemelsit redumption",schemeList);
+  
 
   return (
     <>
@@ -36,7 +40,7 @@ const RedumptionConfirmation: React.FC<investmetProps> = ({ show, setShow }) => 
           <Modal.Title>Redemption Confirmation</Modal.Title>
         </Modal.Header>
         <Modal.Body className='modal-bg'>
-            <RedumptionForm />
+            <RedumptionForm redeemList={redeemList} />
           <Card.Header className='scheme-bg footerRadius px-3 py-2 fs12px'>Redemption orders once placed cannot be cancelled.</Card.Header>
 
         </Modal.Body>
@@ -45,7 +49,7 @@ const RedumptionConfirmation: React.FC<investmetProps> = ({ show, setShow }) => 
           <Button className='customButton buttunCenter' onClick={handleSwitch}>Redeem</Button>
         </Modal.Footer>
       </Modal>
-      <OrderPlaces show={openSuccess} setShow={setOpenSuccess}/>
+      <OrderPlaces show={openSuccess} setShow={setOpenSuccess} successData={[]}/>
     </>
   );
 }

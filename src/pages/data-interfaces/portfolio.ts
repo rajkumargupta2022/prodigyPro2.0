@@ -44,7 +44,13 @@ export interface detailPortfolioSchemeType {
   currentNavDiff: number;
   updated: string;
   gain: string;
-  amcCode:string
+  amcCode:string;
+   schemeName?: string,
+  accordProductCode?: number,
+  amount?: number,
+  folioNumber?: string,
+  redemption_units?: number,
+  all_units?: boolean
 }
 export interface detailPortfolioTotalTransactionType {
   TotalMarketValue: number;

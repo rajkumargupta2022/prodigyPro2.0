@@ -9,7 +9,6 @@ export const currentDateInStringNumber = (data?: string | null): string => {
   return date.toLocaleDateString("en-GB", {
     day: "2-digit",
     month: "short",
-    year: "numeric",
   });
 };
 

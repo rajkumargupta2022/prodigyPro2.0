@@ -3,7 +3,7 @@ import {
   sipPurchaseRedemptionResponse,
 } from "../../pages/data-interfaces/transact";
 import { postRequest } from "../Api/HandleApi";
-import { fetchAdminUser } from "../user/adminUser";
+// import { fetchAdminUser } from "../user/adminUser";
 import { purchaseFilterBody, sipFilterBody } from "./transactionBody";
 import { endPoints } from "./urls";
 
@@ -12,9 +12,9 @@ export const finalTransaction = async (
   transactionType: string,
   datasetter: (vlaue: any) => void
 ) => {
-  const adminUser = fetchAdminUser();
+  // const adminUser = fetchAdminUser();
   let transactionBody = {
-    ucc: adminUser.ucc,
+    ucc: "BFC00002",
     transactionType: transactionType,
     cartItems:transactionType==="sip" ? sipFilterBody(schemeList):transactionType==="purchase" ? purchaseFilterBody(schemeList):"",
   };

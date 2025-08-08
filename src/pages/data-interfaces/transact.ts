@@ -96,3 +96,16 @@ export interface sipPurchaseRedemptionResponse {
   success: boolean;
   data: sipPurchaseRedemptionKey[];
 }
+export interface redeemBody {
+  ucc: string,
+  transactionType: string,
+  cartItems: redeemBodyKeys[]
+}
+export interface redeemBodyKeys {
+  schemeName: string,
+  accordProductCode: number,
+  amount: number,
+  folioNumber: string,
+  redemption_units: number,
+  all_units: boolean
+}

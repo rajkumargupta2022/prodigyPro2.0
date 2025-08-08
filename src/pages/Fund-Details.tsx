@@ -19,6 +19,8 @@ import SelectFolioPopup from "../components/select-folio-popup";
 import InvestmentForm from "../components/InvestmentForm";
 import SwitchSchemeModel from "../components/SwitchSchemeModel";
 import RedumptionConfirmation from "../components/RedumptionConfirmation";
+import { checkTransactionAllowed } from "../services/utils/services";
+import { keys } from "../services/utils/keys";
 
 interface ChartState {
   options: ApexOptions;
@@ -153,7 +155,6 @@ const FundDetails = () => {
 
     } catch (err) {
       setSipDateList([])
-      console.log(err);
       setSchemeList([])
 
     }
@@ -169,7 +170,6 @@ const FundDetails = () => {
       yearInString(durationMonth)
 
     } catch (err) {
-      console.log(err);
       setNavDate([])
 
     }
@@ -287,7 +287,7 @@ const FundDetails = () => {
   const handleSwitch = () => {
     setOpenSwitchSchemeModel(true)
   }
-  const handleRedmptionModel = ()=>{
+  const handleRedmptionModel = () => {
     setOpenRedumptionModel(true)
   }
   return (
@@ -403,23 +403,24 @@ const FundDetails = () => {
                 <div className="p-lg-3 p-4">
 
                   <div className="d-flex gap-2 justify-content-around">
-                    <div onClick={handleInvestMore}>
-                      <label
-                        className="btn_colorfull rounded-3 declaration-button w-100 paddingLeftRight px-4 py-2 mobile-fontset crPointer"
-                        htmlFor="option3"
-                      >
-                        Invest More
-                      </label>
-                    </div>
-
-                    <div onClick={handleSwitch}>
-                      <label
-                        className="btn_colorfull rounded-3 declaration-button w-100 paddingLeftRight px-4 py-2 mobile-fontset crPointer"
-                        htmlFor="option1"
-                      >
-                        Switch
-                      </label>
-                    </div>
+                    {(checkTransactionAllowed(schemeList, keys.sip) && checkTransactionAllowed(schemeList, keys.sip))&&
+                      <div onClick={handleInvestMore}>
+                        <label
+                          className="btn_colorfull rounded-3 declaration-button w-100 paddingLeftRight px-4 py-2 mobile-fontset crPointer"
+                          htmlFor="option3"
+                        >
+                          Invest More
+                        </label>
+                      </div>}
+                    {checkTransactionAllowed(schemeList, keys.switch) &&
+                      <div onClick={handleSwitch}>
+                        <label
+                          className="btn_colorfull rounded-3 declaration-button w-100 paddingLeftRight px-4 py-2 mobile-fontset crPointer"
+                          htmlFor="option1"
+                        >
+                          Switch
+                        </label>
+                      </div>}
 
                     <div onClick={handleClick} className="">
                       <label
@@ -437,10 +438,10 @@ const FundDetails = () => {
 
                 <div className="card mb-4 popup_card_steup_area">
                   <div className="p-3">
-                    <ul className="ps-0 style-unerline-prodgy mb-0">
-                      <li onClick={()=>handleRedmptionModel()}>Redeem Fund</li>
-                      <li>Systematic Transfer Plan (STP)</li>
-                      <li>Systematic Withdrawal Plan (SWP)</li>
+                    <ul className="ps-0 style-unerline-prodgy mb-0 crPointer">
+                    { checkTransactionAllowed(schemeList, keys.redumption) &&  <li onClick={() => handleRedmptionModel()}>Redeem Fund</li>}
+                      { checkTransactionAllowed(schemeList, keys.stp) &&  <li>Systematic Transfer Plan (STP)</li>}
+                       { checkTransactionAllowed(schemeList, keys.swp) && <li>Systematic Withdrawal Plan (SWP)</li>}
                       <li>Transaction History</li>
 
                     </ul>
@@ -510,7 +511,7 @@ const FundDetails = () => {
       />
       <SelectFolioPopup show={openSelectFolio} setShow={setOpenSelectFolio} schemeList={schemeList} setSchemeList={setSchemeList} isSipTransaction={true} />
       <SwitchSchemeModel show={openSwitchSchemeModel} setShow={setOpenSwitchSchemeModel} />
-      <RedumptionConfirmation show={openRedumptionModel} setShow={setOpenRedumptionModel} schemeList={schemeList} setSchemeList={setSchemeList}/>
+      <RedumptionConfirmation show={openRedumptionModel} setShow={setOpenRedumptionModel} schemeList={schemeList} setSchemeList={setSchemeList} redeemList={[schmeDetail]}/>
       <Footer />
     </>
   );
