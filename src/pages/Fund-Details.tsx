@@ -21,6 +21,8 @@ import SwitchSchemeModel from "../components/SwitchSchemeModel";
 import RedumptionConfirmation from "../components/RedumptionConfirmation";
 import { checkTransactionAllowed } from "../services/utils/services";
 import { keys } from "../services/utils/keys";
+import { detailPortfolioSchemeType } from "./data-interfaces/portfolio";
+import SwpConfirmation from "../components/Swp-confirmation";
 
 interface ChartState {
   options: ApexOptions;
@@ -31,6 +33,7 @@ const FundDetails = () => {
   const location = useLocation()
   const navigate = useNavigate()
   const [openSelectFolio, setOpenSelectFolio] = useState<boolean>(false)
+  const [openSwpModel, setOpenSwpModel] = useState<boolean>(false)
   const [openInvestPopup, setOpenInvestPopup] = useState(false)
   const [schemeList, setSchemeList] = useState<schemeDeatilDataKeys[]>([])
   const [navDate, setNavDate] = useState<string[]>([])
@@ -38,7 +41,8 @@ const FundDetails = () => {
   const [duration, setDuration] = useState<number>(12)
   const [cagr, setCagr] = useState<number>(0)
   const [durarinInYear, setDurarinInYear] = useState<string>("")
-  const schmeDetail = location.state
+  // const schmeDetail = location.state
+  const [schmeDetail,setSchmeDetail] = useState<detailPortfolioSchemeType[]>([location.state])
   const [sipDate, setSipDate] = useState<number>(1)
   const [sipDateList, setSipDateList] = useState<number[]>([])
   // const [amount, setAmount] = useState<number>(0)
@@ -290,6 +294,9 @@ const FundDetails = () => {
   const handleRedmptionModel = () => {
     setOpenRedumptionModel(true)
   }
+  const handleSwp = ()=>{
+    setOpenSwpModel(true)
+  }
   return (
     <>
       <MyNavbar />
@@ -400,11 +407,11 @@ const FundDetails = () => {
                 className="card mb-4 radius16OverFlow"
 
               >
-                <div className="p-lg-3 p-4">
+                <div className="p-lg-3 p-4 row">
 
                   <div className="d-flex gap-2 justify-content-around">
-                    {(checkTransactionAllowed(schemeList, keys.sip) && checkTransactionAllowed(schemeList, keys.sip))&&
-                      <div onClick={handleInvestMore}>
+                    {(checkTransactionAllowed(schemeList, keys.sip) || checkTransactionAllowed(schemeList, keys.purchase))&&
+                      <div onClick={handleInvestMore} >
                         <label
                           className="btn_colorfull rounded-3 declaration-button w-100 paddingLeftRight px-4 py-2 mobile-fontset crPointer"
                           htmlFor="option3"
@@ -413,7 +420,7 @@ const FundDetails = () => {
                         </label>
                       </div>}
                     {checkTransactionAllowed(schemeList, keys.switch) &&
-                      <div onClick={handleSwitch}>
+                      <div onClick={handleSwitch} >
                         <label
                           className="btn_colorfull rounded-3 declaration-button w-100 paddingLeftRight px-4 py-2 mobile-fontset crPointer"
                           htmlFor="option1"
@@ -422,7 +429,7 @@ const FundDetails = () => {
                         </label>
                       </div>}
 
-                    <div onClick={handleClick} className="">
+                    <div onClick={handleClick} >
                       <label
                         className="btn_colorfull dotted_sip_prodyg rounded-3 declaration-button w-100 paddingLeftRight px-4 py-2 mobile-fontset crPointer"
                         htmlFor="option1"
@@ -440,8 +447,8 @@ const FundDetails = () => {
                   <div className="p-3">
                     <ul className="ps-0 style-unerline-prodgy mb-0 crPointer">
                     { checkTransactionAllowed(schemeList, keys.redumption) &&  <li onClick={() => handleRedmptionModel()}>Redeem Fund</li>}
-                      { checkTransactionAllowed(schemeList, keys.stp) &&  <li>Systematic Transfer Plan (STP)</li>}
-                       { checkTransactionAllowed(schemeList, keys.swp) && <li>Systematic Withdrawal Plan (SWP)</li>}
+                      { checkTransactionAllowed(schemeList, keys.stp) &&  <li >Systematic Transfer Plan (STP)</li>}
+                        <li onClick={() => handleSwp()}>Systematic Withdrawal Plan (SWP)</li>
                       <li>Transaction History</li>
 
                     </ul>
@@ -468,27 +475,27 @@ const FundDetails = () => {
                     <div className="row pt-4">
                       <div className="col-6 py-2">
                         <span className="text-secondary text-uppercase fs-7">Units</span>
-                        <h4 className="fs-6">{Math.round(schmeDetail?.unit * 100) / 100}</h4>
+                        <h4 className="fs-6">{Math.round(location.state?.unit * 100) / 100}</h4>
                       </div>
                       <div className="col-6 py-2">
                         <span className="text-secondary text-uppercase fs-7">Folio</span>
-                        <h4 className="fs-6">{schmeDetail?.folio}</h4>
+                        <h4 className="fs-6">{location.state?.folio}</h4>
                       </div>
                       <div className="col-6 py-2">
                         <span className="text-secondary text-uppercase fs-7">Total invested</span>
-                        <h4 className="fs-6">₹ {getValueInSort(schmeDetail?.purchase)}</h4>
+                        <h4 className="fs-6">₹ {getValueInSort(location.state?.purchase)}</h4>
                       </div>
                       <div className="col-6 py-2">
                         <span className="text-secondary text-uppercase fs-7">Current Value</span>
-                        <h4 className="fs-6">₹ {getValueInSort(schmeDetail?.currentvalue)}</h4>
+                        <h4 className="fs-6">₹ {getValueInSort(location.state?.currentvalue)}</h4>
                       </div>
                       <div className="col-6 py-2">
                         <span className="text-secondary text-uppercase fs-7">Gain/Loss</span>
-                        <h4 className="fs-6">{getPercentageValue(Number(schmeDetail?.purchase), schmeDetail?.gain)}%</h4>
+                        <h4 className="fs-6">{getPercentageValue(Number(location.state?.purchase), location.state?.gain)}%</h4>
                       </div>
                       <div className="col-6 py-2">
                         <span className="text-secondary text-uppercase fs-7">Avg. Days</span>
-                        <h4 className="fs-6">{schmeDetail?.days}</h4>
+                        <h4 className="fs-6">{location.state?.days}</h4>
                       </div>
                     </div>
                   </div>
@@ -511,7 +518,8 @@ const FundDetails = () => {
       />
       <SelectFolioPopup show={openSelectFolio} setShow={setOpenSelectFolio} schemeList={schemeList} setSchemeList={setSchemeList} isSipTransaction={true} />
       <SwitchSchemeModel show={openSwitchSchemeModel} setShow={setOpenSwitchSchemeModel} />
-      <RedumptionConfirmation show={openRedumptionModel} setShow={setOpenRedumptionModel} schemeList={schemeList} setSchemeList={setSchemeList} redeemList={[schmeDetail]}/>
+      <SwpConfirmation show={openSwpModel} setShow={setOpenSwpModel} swpList={schmeDetail} setSwpList={setSchmeDetail}/>
+      <RedumptionConfirmation show={openRedumptionModel} setShow={setOpenRedumptionModel}  redeemList={schmeDetail} setRedeemList={setSchmeDetail}/>
       <Footer />
     </>
   );

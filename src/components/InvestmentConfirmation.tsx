@@ -15,6 +15,8 @@ import BankMandate from './BankMandate';
 import { convertDayToFullDate } from '../services/dates/dateFormater';
 import { keys } from '../services/utils/keys';
 import { checkTransactionAllowed } from '../services/utils/services';
+import { finalTransaction } from '../services/utils/transactionApi';
+import OrderPlaces from './order-places';
 interface investmetProps {
   show: boolean;
   setShow: (show: boolean) => void;
@@ -33,6 +35,8 @@ interface addAmountKeys {
 const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, schemeList, setSchemeList, sipDateList, from }) => {
   const [openSelectFolio, setOpenSelectFolio] = useState(false)
   const [openBankMandate, setOpenBankMandate] = useState(false)
+  const [openSuccess, setOpenSuccess] = useState(false)
+  const [successData, setSuccessData] = useState<any[]>([])
   const [isSipTransaction, setIsSipTransaction] = useState<boolean>(true)
   const [sipDateShow, setSipDateShow] = useState<boolean>(false)
   const [amount, setAmount] = useState<number>(0)
@@ -57,10 +61,10 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
 
 
   useEffect(() => {
-    console.log("schemeLsittt", schemeList);
-
     handleNearSipDate()
     fetchFolios()
+   
+    defaultTransactionType()
   }, [show]);
 
   useEffect(() => {
@@ -69,6 +73,10 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
       setFoliosFetched(false);
     }
   }, [foliosFetched, schemeList]);
+
+  const defaultTransactionType =()=>{
+   setIsSipTransaction(checkTransactionAllowed(schemeList,keys.sip)?true:false)
+  }
 
   const fetchFolios = async () => {
     const adminUser = fetchAdminUser();
@@ -128,7 +136,7 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
       const minAmount = scheme.amount ?? 0; // use 0 if undefined
       return acc + minAmount;
     }, 0);
-   
+
 
     const minTotal = schemeList.reduce((acc, scheme) => {
       const minAmount = isSipTransaction ? scheme.minSIPAmt : scheme.minLumSumAmt;
@@ -142,13 +150,24 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
       setAmountErrorMsg("Minimum investment amount is ₹" + minTotal)
       return
     }
-    if (from === "portfolio") {
+    if (from === "portfolio" && isSipTransaction) {
       setOpenBankMandate(true)
       setShow(false)
       return
-    }
+    } else if (from === "portfolio") {
+      finalTransaction(schemeList, isSipTransaction ? keys.sip : keys.purchase, setSuccessData).then((res) => {
+        console.log("ress",res);
+        
+        setOpenSuccess(true)
+        setShow(false)
+      return
+      })
+
+    }else{
     setOpenSelectFolio(true)
     setShow(false)
+    }
+
   }
 
   const addAmount = (value: number) => {
@@ -277,11 +296,11 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
             <hr />
             <div className="row text-center mt-2">
               {checkTransactionAllowed(schemeList, keys.sip) &&
-                <div className="col-md-6 py-2 py-md-0">
+                <div className="col py-2 py-md-0">
                   <div className={`${isSipTransaction ? "text-white logobg_color" : "logoBlueColor"} w-100 border  text-center monthly_btn crPointer`} onClick={() => { handleTransactionType(true) }}> Monthly SIP</div>
                 </div>}
               {checkTransactionAllowed(schemeList, keys.purchase) &&
-                <div className="col-md-6 py-2 py-md-0">
+                <div className="col py-2 py-md-0">
                   <div className={`${!isSipTransaction ? "text-white logobg_color" : "logoBlueColor"} w-100 border  text-center monthly_btn crPointer`} onClick={() => { handleTransactionType(false) }}> One-Time </div>
                 </div>}
             </div>
@@ -351,6 +370,7 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
       <SipDates show={sipDateShow} setShow={setSipDateShow} sipDate={sipDate} sipDateList={sipDateList} handleSipDate={handleSipDate} />
       <SelectFolioPopup show={openSelectFolio} setShow={setOpenSelectFolio} schemeList={schemeList} setSchemeList={setSchemeList} isSipTransaction={isSipTransaction} />
       <BankMandate show={openBankMandate} setShow={setOpenBankMandate} schemeList={schemeList} setSchemeList={setSchemeList} isSipTransaction={isSipTransaction} />
+      <OrderPlaces show={openSuccess} setShow={setOpenSuccess} successData={successData} />
     </>
   );
 }

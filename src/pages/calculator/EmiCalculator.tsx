@@ -15,7 +15,7 @@ interface ChartState {
 const EmiCalculator = () => {
   const [investmentPeriod, setInvestmentPeriod] = useState<number>(10);
   const [loanAmount, setLoanAmount] = useState<number>(1000000);
-  const [interest, setInterest] = useState<number>(10);
+  const [interest, setInterest] = useState<number>(9.8);
   const [monthyEmi, setMonthyEmi] = useState<number>(13214.85);
   const [principal, setPrincipal] = useState<number>(1000000);
   const [totalinterest, setTotalInterest] = useState<number>(585782);
@@ -23,7 +23,7 @@ const EmiCalculator = () => {
   const [resultLoanAmount, setResultLoanAmount] = useState<number>(1000000);
 
   const loanAmountRef = useRef<{
-    validate: (value: number) => boolean; 
+    validate: (value: number) => boolean;
   }>(null);
 
   const interestRef = useRef<{
@@ -39,7 +39,7 @@ const EmiCalculator = () => {
       tooltip: {
         enabled: false, // Disable hover tooltip
       },
-      labels: [ `Total Interest (${totalinterest.toLocaleString("en-IN")})`,`Principal Amount (${principal.toLocaleString("en-IN")})`,], 
+      labels: [`Total Interest (${totalinterest.toLocaleString("en-IN")})`, `Principal Amount (${principal.toLocaleString("en-IN")})`,],
       legend: {
         show: true,
         position: 'bottom', // ✅ Legend at bottom
@@ -65,9 +65,9 @@ const EmiCalculator = () => {
           },
         },
       },
-      
+
     },
-    series: [ resultLoanAmount,totalinterest,],
+    series: [resultLoanAmount, totalinterest,],
     colors: ["#fff", "#FF4560"],
   };
 
@@ -80,20 +80,20 @@ const EmiCalculator = () => {
     ].every((value) => value === true);
 
     if (isValidated) {
-      let totalMonths:number = investmentPeriod * 12;
+      let totalMonths: number = investmentPeriod * 12;
       let monthlyRate = (interest / 12) / 100;
-  
-      let monthlyEmiAmount:number =
-          (loanAmount * monthlyRate * Math.pow(1 + monthlyRate, totalMonths)) /
-              (Math.pow(1 + monthlyRate, totalMonths) - 1);
-  
-      let totalAmount:number = monthlyEmiAmount * totalMonths;
-      let totalInterest:number = totalAmount - loanAmount;
+
+      let monthlyEmiAmount: number =
+        (loanAmount * monthlyRate * Math.pow(1 + monthlyRate, totalMonths)) /
+        (Math.pow(1 + monthlyRate, totalMonths) - 1);
+
+      let totalAmount: number = monthlyEmiAmount * totalMonths;
+      let totalInterest: number = totalAmount - loanAmount;
       setMonthyEmi(Math.trunc(monthlyEmiAmount))
       setPrincipal(loanAmount)
       setTotalInterest(Math.trunc(totalInterest))
       setTotalAmount(Math.trunc(totalAmount))
-    setResultLoanAmount(loanAmount)
+      setResultLoanAmount(loanAmount)
     }
   };
 

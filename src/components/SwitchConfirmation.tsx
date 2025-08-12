@@ -42,7 +42,7 @@ const SwitchConfirmation: React.FC<investmetProps> = ({ show, setShow }) => {
           <Button className='customButton buttunCenter' onClick={handleSwitch}>Switch</Button>
         </Modal.Footer>
       </Modal>
-      <OrderPlaces show={openSuccess} setShow={setOpenSuccess}/>
+      <OrderPlaces show={openSuccess} setShow={setOpenSuccess} successData={[]}/>
     </>
   );
 }

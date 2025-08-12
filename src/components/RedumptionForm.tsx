@@ -1,45 +1,80 @@
 import { useState } from "react";
-import { useLocation } from "react-router-dom";
 import { detailPortfolioSchemeType } from "../pages/data-interfaces/portfolio";
 import { imageUrl } from "../services/utils/urls";
 import { currentDateInStringNumber } from "../services/dates/dateFormater";
-import { redeemBody, redeemBodyKeys } from "../pages/data-interfaces/transact";
 
 interface investmetProps {
-  redeemList: detailPortfolioSchemeType[]
+  redeemList: detailPortfolioSchemeType[],
+  setRedeemList: (date: any) => void;
 }
 
 
-const RedumptionForm: React.FC<investmetProps> = ({ redeemList }) => {
+const RedumptionForm: React.FC<investmetProps> = ({ redeemList, setRedeemList }) => {
 
-  const [amount, setAmount] = useState<number>(0)
-  const [isRedeemAmount, setIsRedeemAmount] = useState<boolean>(false)
+  const [isRedeemAmount, setIsRedeemAmount] = useState<boolean>(true)
+  const [isAllUnit, setIsAllUnit] = useState<string>("false")
 
 
 
-  const handleAmount = (e: React.ChangeEvent<HTMLInputElement>, maxAmount: number, setter: (value: number) => void, index: number
+  const handleAmount = (e: React.ChangeEvent<HTMLInputElement>, index: number, item2: detailPortfolioSchemeType
   ): void => {
     let value = Number(e.target.value.trim());
-    console.log("value", value);
+    let chechMax = isRedeemAmount ? item2.currentvalue : item2.unit;
 
-    if (value <= 1000000000) {
-      console.log("gggg");
+    setRedeemList((prev: any) =>
+      prev.map((item: detailPortfolioSchemeType, i: number) => {
+        if (i !== index) return item;
+
+        // If current is already max & new value is also max → no update
+        if (item.all_units && value === Number(chechMax)) {
+          return item;
+        }
+
+        // Less than max → update normally
+        if (value < Number(chechMax)) {
+          return {
+            ...item,
+            amount: isRedeemAmount ? value : 0,
+            redemption_units: isRedeemAmount ? 0 : value,
+            all_units: false,
+          };
+        }
+
+        // Equal to or more than max → set to max
+        if (value >= Number(chechMax)) {
+          return {
+            ...item,
+            amount: isRedeemAmount ? item2.currentvalue : 0,
+            redemption_units: isRedeemAmount ? 0 : item2.unit,
+            all_units: true,
+          };
+        }
+
+        return item;
+      })
+    );
 
 
-      setter(value);
-    } else if (1000000000 >= maxAmount && value > 0) {
-      console.log("ggggrrr");
-
-      setter(value);
-
-    }
   };
-
-  const handleRedemptionType = (value: boolean) => {
+  const handleRedemptionType = (value: boolean, allUnit: number, index: number) => {
     setIsRedeemAmount(value)
-    console.log(amount);
+    setRedeemList((prev: any) =>
+      prev.map((item: detailPortfolioSchemeType, i: number) =>
+        i === index ? { ...item, redemption_units: !value ? allUnit : 0, all_units: !value, amount: 0 } : item
+      )
+    );
   }
+  const handleAllUnit = (e: React.ChangeEvent<HTMLInputElement>, allUnit: number, index: number) => {
+    console.log(e.target.value);
+    let value = e.target.value
+    setIsAllUnit(value === "true" ? "false" : "true")
+    setRedeemList((prev: any) =>
+      prev.map((item: detailPortfolioSchemeType, i: number) =>
+        i === index ? { ...item, amount: value === "true" && 0, redemption_units: value === "true" ? allUnit : 0, all_units: value === "true" ? true : false } : item
+      )
+    );
 
+  }
 
   return (
     <>
@@ -61,10 +96,10 @@ const RedumptionForm: React.FC<investmetProps> = ({ redeemList }) => {
 
             <hr />
             <div className="row text-center my-3">
-              <div className="col-md-6 py-2 py-md-0" onClick={() => handleRedemptionType(true)}>
+              <div className="col-md-6 py-2 py-md-0" onClick={() => handleRedemptionType(true, Number(item.unit), index)}>
                 <div className={`${isRedeemAmount ? "unitBtnActive" : "unitDeActiveBtn"}`}> Amount</div>
               </div>
-              <div className="col-md-6 py-2 py-md-0" onClick={() => handleRedemptionType(false)}>
+              <div className="col-md-6 py-2 py-md-0" onClick={() => handleRedemptionType(false, Number(item.unit), index)}>
                 <div className={`${isRedeemAmount ? "unitDeActiveBtn" : "unitBtnActive"}`}> Units </div>
               </div>
             </div>
@@ -80,13 +115,13 @@ const RedumptionForm: React.FC<investmetProps> = ({ redeemList }) => {
             </div>
             <div className="form-group">
               <label htmlFor="amountFor" className='fs12px'>REDUMPTION {isRedeemAmount ? "AMOUNT" : "UNIT"}</label>
-              <input type="text" className="form-control" id="amountFor" aria-describedby="emailHelp" placeholder={`${isRedeemAmount ? "Enter Amount" : "Enter Unit"}`} onChange={(e) => handleAmount(e, 10000000, setAmount, index)} />
+              <input type="text" className="form-control" value={isRedeemAmount ? item.amount : item.redemption_units} id="amountFor" aria-describedby="emailHelp" placeholder={`${isRedeemAmount ? "Enter Amount" : "Enter Unit"}`} onChange={(e) => handleAmount(e, index, item)} />
 
             </div>
-            {isRedeemAmount &&
+            {!isRedeemAmount &&
               <div className=" mt-2 form-check form-switch d-flex justify-content-center ps-0" >
                 <div className="form-check-label greyColor">Redeem All Units</div>
-                &nbsp;&emsp;&emsp;&emsp;<input className="form-check-input"  type="checkbox"  role="switch" id="flexSwitchCheckDefault" />
+                &nbsp;&emsp;&emsp;&emsp;<input className="form-check-input" type="checkbox" value={isAllUnit} checked={item.all_units} onChange={(e) => handleAllUnit(e, Number(item.unit), index)} role="switch" id="flexSwitchCheckDefault" />
 
               </div>}
           </div>

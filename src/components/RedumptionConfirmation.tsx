@@ -5,25 +5,28 @@ import Card from 'react-bootstrap/Card';
 import { useState } from 'react';
 import OrderPlaces from './order-places';
 import RedumptionForm from './RedumptionForm';
-import { schemeDeatilDataKeys } from '../pages/data-interfaces/transact';
 import { detailPortfolioSchemeType } from '../pages/data-interfaces/portfolio';
+import {  redeemTransaction } from '../services/utils/transactionApi';
 interface investmetProps {
   show: boolean;
   setShow: (show: boolean) => void;
-  schemeList: schemeDeatilDataKeys[];
-    setSchemeList: (date: any) => void;
-    redeemList:detailPortfolioSchemeType[]
+    redeemList:detailPortfolioSchemeType[],
+    setRedeemList: (date: any) => void;
 }
 
 
-const RedumptionConfirmation: React.FC<investmetProps> = ({ show, setShow,schemeList,setSchemeList,redeemList }) => {
+const RedumptionConfirmation: React.FC<investmetProps> = ({ show, setShow,redeemList,setRedeemList }) => {
   const [openSuccess,setOpenSuccess] = useState(false)
+  const [successData,setSuccessData] = useState<any[]>([])
 
   const handleSwitch = ()=>{
+    redeemTransaction(redeemList,"redemption",setSuccessData).then((res)=>{
+     console.log(res);
+     
+    })
     setOpenSuccess(true)
     setShow(false)
   }
-  console.log("schemelsit redumption",schemeList);
   
 
   return (
@@ -40,7 +43,7 @@ const RedumptionConfirmation: React.FC<investmetProps> = ({ show, setShow,scheme
           <Modal.Title>Redemption Confirmation</Modal.Title>
         </Modal.Header>
         <Modal.Body className='modal-bg'>
-            <RedumptionForm redeemList={redeemList} />
+            <RedumptionForm redeemList={redeemList} setRedeemList={setRedeemList}/>
           <Card.Header className='scheme-bg footerRadius px-3 py-2 fs12px'>Redemption orders once placed cannot be cancelled.</Card.Header>
 
         </Modal.Body>
@@ -49,7 +52,7 @@ const RedumptionConfirmation: React.FC<investmetProps> = ({ show, setShow,scheme
           <Button className='customButton buttunCenter' onClick={handleSwitch}>Redeem</Button>
         </Modal.Footer>
       </Modal>
-      <OrderPlaces show={openSuccess} setShow={setOpenSuccess} successData={[]}/>
+      <OrderPlaces show={openSuccess} setShow={setOpenSuccess} successData={successData}/>
     </>
   );
 }

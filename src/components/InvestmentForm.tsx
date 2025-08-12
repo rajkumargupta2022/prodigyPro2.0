@@ -126,12 +126,10 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
       setSchemeList(updatedList);
     }
 
-    console.log("Folios updated in schemeList[0]");
   };
 
 
   const handleNearSipDate = (dateList: number[]) => {
-    console.log("dateList===", dateList);
 
     const today = new Date();
     const currentDay = today.getDate();
@@ -149,10 +147,8 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
     setter: (value: number) => void
   ): void => {
     let value = Number(e.target.value.trim());
-    console.log("value",value);
     
     if (value <= 1000000000) {
-      console.log("gggg");
       
       const updatedList = [
         {
@@ -163,7 +159,6 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
       setter(value);
       setSchemeList(updatedList)
     } else if (1000000000 >= maxAmount && value > 0) {
-        console.log("ggggrrr");
       const updatedList = [
         {
           ...schemeList[0],
@@ -206,8 +201,6 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
       setAmountErrorMsg("Minimum investment amount is ₹" + minTotal)
       return
     }
-    console.log("schemelist", schemeList);
-
     setAmountErrorMsg("")
     setOpenSelectFolio(true)
 

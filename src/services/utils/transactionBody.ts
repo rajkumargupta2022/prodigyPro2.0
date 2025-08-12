@@ -1,3 +1,4 @@
+import { detailPortfolioSchemeType } from "../../pages/data-interfaces/portfolio";
 import { schemeDeatilDataKeys } from "../../pages/data-interfaces/transact";
 
 export const sipFilterBody = (schemeList: schemeDeatilDataKeys[]) => {
@@ -33,4 +34,17 @@ export const purchaseFilterBody = (schemeList: schemeDeatilDataKeys[]) => {
     return data;
   }
 };
-
+export const redeemFilterBody = (redeemList: detailPortfolioSchemeType[]) => {
+  if (redeemList?.length > 0) {
+    const data = redeemList.map((item: detailPortfolioSchemeType) => ({
+      accordProductCode: item.accordSchemeCode,
+      amount: item.amount??0,
+      redemption_units:item.redemption_units??0,
+      all_units: item.redemption_units??0===Number(item.unit) ? true:false,
+      folioNumber: item?.folio,
+      schemeName: item?.scheme,
+    }));
+    
+    return data;
+  }
+};

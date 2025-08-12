@@ -85,6 +85,8 @@ const AllMutualFunds = () => {
 
   }
   const isAvailable = (value: number, type: string): boolean => {
+    console.log(value,type);
+    
     switch (type) {
       case "category":
         return classCode.includes(value)
@@ -123,7 +125,7 @@ const AllMutualFunds = () => {
 
             <Filters handleFilter={handleFilter} isAvailable={isAvailable} />
           </div>
-        <SwitchSchemes/>
+        <SwitchSchemes handleFilter={handleFilter} isAvailable={isAvailable} filteredSchemes={filteredSchemes}/>
         </div>
 
       </Container>

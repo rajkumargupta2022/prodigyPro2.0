@@ -5,9 +5,10 @@ import icici from "../assets/img/bank-logo/icici.png";
 import { useEffect, useState } from "react";
 import OrderPlaces from "./order-places";
 import { postRequest } from "../services/Api/HandleApi";
-import { bankMandateKeys, bankMandateResponse, schemeDeatilDataKeys, sipPurchaseRedemptionKey } from "../pages/data-interfaces/transact";
+import { bankMandateKeys, bankMandateResponse, schemeDeatilDataKeys } from "../pages/data-interfaces/transact";
 import { endPoints } from "../services/utils/urls";
 import { finalTransaction } from "../services/utils/transactionApi";
+import { keys } from "../services/utils/keys";
 interface bankMandate {
   show: boolean;
   setShow: (show: boolean) => void;
@@ -16,7 +17,7 @@ interface bankMandate {
   isSipTransaction: boolean
 }
 
-const BankMandate: React.FC<bankMandate> = ({ show, setShow, schemeList, setSchemeList }) => {
+const BankMandate: React.FC<bankMandate> = ({ show, setShow, schemeList, setSchemeList,isSipTransaction }) => {
   // const [openCreateFolio,setOpenCreateFolio] = useState<boolean>(false)
   const [openSuccess, setOpenSuccess] = useState(false)
   const [mandateList, setMandateList] = useState<bankMandateKeys[]>([])
@@ -59,7 +60,7 @@ const BankMandate: React.FC<bankMandate> = ({ show, setShow, schemeList, setSche
 
 
   const handleTransaction =  () => {
-      finalTransaction(schemeList,"sip",setSuccessData).then((res)=>{
+      finalTransaction(schemeList,isSipTransaction?keys.sip:keys.purchase,setSuccessData).then((res)=>{
         console.log("rraaa",res);
         
       })

@@ -4,7 +4,6 @@ import Card from 'react-bootstrap/Card';
 
 import { useState } from 'react';
 import OrderPlaces from './order-places';
-import SwitchSchemes from './SwitchSchemes';
 interface investmetProps {
   show: boolean;
   setShow: (show: boolean) => void;
@@ -33,7 +32,7 @@ const SwitchSchemeModel: React.FC<investmetProps> = ({ show, setShow }) => {
           <Modal.Title >Select a New Fund to Switch</Modal.Title>
         </Modal.Header>
         <Modal.Body className='modal-bg'>
-            <SwitchSchemes/>
+            {/* <SwitchSchemes filteredSchemes={[]}/> */}
           <Card.Header className='scheme-bg footerRadius px-3 py-2 fs12px'>Switch orders once placed cannot be cancelled.</Card.Header>
 
         </Modal.Body>
@@ -42,7 +41,7 @@ const SwitchSchemeModel: React.FC<investmetProps> = ({ show, setShow }) => {
           <Button className='customButton buttunCenter' onClick={handleSwitch}>Switch</Button>
         </Modal.Footer>
       </Modal>
-      <OrderPlaces show={openSuccess} setShow={setOpenSuccess} />
+      <OrderPlaces show={openSuccess} setShow={setOpenSuccess} successData={[]} />
     </>
   );
 }
