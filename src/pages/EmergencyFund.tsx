@@ -215,7 +215,6 @@ const EmergencyFund = () => {
 
 
   const handleSelectedScheme = (item: schemeDeatilDataKeys) => {
-    console.log("item", item);
 
     setSelectedSchemeList(prev => {
       const alreadySelected = prev.find(scheme => scheme.accordSchemeCode === item.accordSchemeCode);

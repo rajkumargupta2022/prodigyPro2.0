@@ -9,6 +9,7 @@ import SipDates from "./SipDate";
 import SelectFolioPopup from "./select-folio-popup";
 import { checkTransactionAllowed } from "../services/utils/services";
 import { keys } from "../services/utils/keys";
+import { dayToUTCFormat } from "../services/dates/dateFormater";
 
 interface addAmountKeys {
   min: number,
@@ -87,9 +88,15 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
   }
   const handleSipDate = (value: number) => {
     setSipDate(value)
-    setSipDateShow(false)
+    const updatedList = [
+      {
+        ...schemeList[0],
+        start_date: dayToUTCFormat(value),
+      },
+    ];
 
-    
+    setSchemeList(updatedList);
+    setSipDateShow(false)
   }
 
   const fetchFolios = async () => {
@@ -114,7 +121,7 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
 
       setSchemeList(updatedList);
     } catch (error) {
-      console.error("Error fetching folio:", error);
+      // console.error("Error fetching folio:", error);
 
       const updatedList = [
         {
@@ -138,7 +145,7 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
     if (!nearestDate) {
       nearestDate = sipDateNumbers[0];
     }
-   
+     handleSipDate(Number(String(nearestDate).padStart(2, '0')))
     setSipDate(Number(String(nearestDate).padStart(2, '0')))
   }
   const handleAmount = (
@@ -147,9 +154,9 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
     setter: (value: number) => void
   ): void => {
     let value = Number(e.target.value.trim());
-    
+
     if (value <= 1000000000) {
-      
+
       const updatedList = [
         {
           ...schemeList[0],
@@ -212,14 +219,14 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
         <h5>Invest Now</h5>
         <hr />
         <div className="row text-center mt-2 ">
-          {checkTransactionAllowed(schemeList,keys.sip) &&
-          <div className="col-md-6 py-2 py-md-0">
-            <div className={`${isSipTransaction ? "text-white logobg_color" : "logoBlueColor"} w-100 border  text-center monthly_btn crPointer`} onClick={() => { handleTransactionType(true) }}> Monthly SIP</div>
-          </div>}
-          {checkTransactionAllowed(schemeList,keys.purchase) &&
-          <div className="col-md-6 py-2 py-md-0">
-            <div className={`${!isSipTransaction ? "text-white logobg_color" : "logoBlueColor"} w-100 border  text-center monthly_btn crPointer`} onClick={() => { handleTransactionType(false) }}> One-Time </div>
-          </div>}
+          {checkTransactionAllowed(schemeList, keys.sip) &&
+            <div className="col-md-6 py-2 py-md-0">
+              <div className={`${isSipTransaction ? "text-white logobg_color" : "logoBlueColor"} w-100 border  text-center monthly_btn crPointer`} onClick={() => { handleTransactionType(true) }}> Monthly SIP</div>
+            </div>}
+          {checkTransactionAllowed(schemeList, keys.purchase) &&
+            <div className="col-md-6 py-2 py-md-0">
+              <div className={`${!isSipTransaction ? "text-white logobg_color" : "logoBlueColor"} w-100 border  text-center monthly_btn crPointer`} onClick={() => { handleTransactionType(false) }}> One-Time </div>
+            </div>}
         </div>
 
         {isSipTransaction && <>

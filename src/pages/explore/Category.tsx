@@ -25,7 +25,6 @@ const [assetTypeListData, setAssetTypeListData] = useState<assetTypeListKeys[]>(
         setCategoryList(res.data)
       }
     } catch (err) {
-      console.log(err);
     }
 
   }
@@ -36,7 +35,7 @@ const [assetTypeListData, setAssetTypeListData] = useState<assetTypeListKeys[]>(
         setAssetTypeListData(res.data)
       }
     } catch (err) {
-      console.log(err);
+      // console.log(err);
     }
 
   }

@@ -38,4 +38,14 @@ export function convertDayToFullDate(dayNumber:number) {
 
   return formattedDate;
 }
+export function dayToUTCFormat(day: number): string {
+  const year = new Date().getUTCFullYear(); // current year
+  const month = new Date().getUTCMonth();   // current month (0-indexed)
+  
+  const date = new Date(Date.UTC(year, month, day, 0, 0, 0, 0));
+  
+  return date.toISOString().replace("T", " ");
+}
+
+
 

@@ -65,7 +65,6 @@ const RedumptionForm: React.FC<investmetProps> = ({ redeemList, setRedeemList })
     );
   }
   const handleAllUnit = (e: React.ChangeEvent<HTMLInputElement>, allUnit: number, index: number) => {
-    console.log(e.target.value);
     let value = e.target.value
     setIsAllUnit(value === "true" ? "false" : "true")
     setRedeemList((prev: any) =>

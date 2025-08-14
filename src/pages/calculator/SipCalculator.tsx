@@ -44,7 +44,6 @@ const SipCalculator = () => {
       if(totalYear%2 ===0){
         xAxisArray.push(totalYear+"Y")
       }
-      console.log("===",xAxisArray);
       
     }else{
       for (let i = 1; i <= totalYear; i++) {
@@ -63,7 +62,6 @@ const SipCalculator = () => {
       if(totalYear%2 ===0){
         graphValue.push(Math.round(data))
       }
-      console.log("===",graphValue);
     }else {
       for (let i = totalYear; i > 0; i--) {
         graphValue.push(Math.round(data / i));

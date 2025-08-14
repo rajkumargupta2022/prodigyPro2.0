@@ -4,7 +4,6 @@ export const amountHandler = (
   setter: (value: number) => void
 ): void => {
   let value = Number(e.target.value.trim());
-  console.log(value);
   
   // setter(value);
   if (value <= 1000000000) {
@@ -20,7 +19,6 @@ export const percentageHandler = (
   maxAmount: number,
   setter: (value: number) => void
 ): void => {
-  console.log("===",e.target.value);
   // return
 
       let value = parseFloat(e.target.value);

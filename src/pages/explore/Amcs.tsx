@@ -23,7 +23,7 @@ function Filters({ handleFilter ,isAvailable}: FiltersProps) {
         setAmcListData(res.data)
       }
     } catch (err) {
-      console.log(err);
+      // console.log(err);
     }
 
   }

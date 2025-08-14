@@ -52,7 +52,6 @@ const FutureValueCalculator = () => {
     for (let i = resultPeriod; i > 0; i--) {
       graphValue.push(Math.round(data / i));
     }
-    console.log("graphValue", graphValue);
 
     return graphValue;
   };

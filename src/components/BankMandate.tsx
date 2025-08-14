@@ -26,7 +26,6 @@ const BankMandate: React.FC<bankMandate> = ({ show, setShow, schemeList, setSche
 
   useEffect(() => {
     fetchMandateList()
-    console.log(successData);
     
   }, [show])
 
@@ -48,8 +47,8 @@ const BankMandate: React.FC<bankMandate> = ({ show, setShow, schemeList, setSche
     const updatedSchemes = schemeList.map((scheme) => ({
       ...scheme,
       urn_no: urn,
-      from_date: from_date,
-      to_date: to_date
+      from_date: from_date.replace("T", " "),
+      to_date: to_date.replace("T", " ")
       // ✅ only update urn_no
     }));
 
@@ -61,8 +60,7 @@ const BankMandate: React.FC<bankMandate> = ({ show, setShow, schemeList, setSche
 
   const handleTransaction =  () => {
       finalTransaction(schemeList,isSipTransaction?keys.sip:keys.purchase,setSuccessData).then((res)=>{
-        console.log("rraaa",res);
-        
+         console.log("result", res)
       })
       setOpenSuccess(true)
       setShow(false)

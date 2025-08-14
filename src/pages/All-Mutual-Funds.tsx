@@ -23,7 +23,6 @@ const AllMutualFunds = () => {
     fetchFilteredScheme(amcCode, assetCode, classCode)
     setPage(1)
     setretunrs(3)
-    console.log(filteredSchemes);
     
   }, [])
 
@@ -41,7 +40,6 @@ const AllMutualFunds = () => {
         setFilteredSchemes([])
       }
     } catch (err) {
-      console.log(err);
       setFilteredSchemes([])
     }
   }
@@ -85,7 +83,6 @@ const AllMutualFunds = () => {
 
   }
   const isAvailable = (value: number, type: string): boolean => {
-    console.log(value,type);
     
     switch (type) {
       case "category":

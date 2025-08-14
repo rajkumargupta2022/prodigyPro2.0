@@ -45,6 +45,7 @@ export interface detailPortfolioSchemeType {
   updated: string;
   gain: string;
   amcCode:string;
+ 
    schemeName?: string,
   // accordProductCode?: number,
   amount?: number,

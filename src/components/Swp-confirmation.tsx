@@ -2,27 +2,100 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Card from 'react-bootstrap/Card';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import OrderPlaces from './order-places';
-import icici from "../assets/img/bank-logo/icici.png"
 import { Form } from 'react-bootstrap';
 import { detailPortfolioSchemeType } from '../pages/data-interfaces/portfolio';
+import { endPoints, imageUrl } from '../services/utils/urls';
+import { currentDateInStringNumber } from '../services/dates/dateFormater';
+import { amountHandler } from '../services/utils/calculatorsFs';
+import { schemeDeatilDataKeys, swpResponse } from '../pages/data-interfaces/transact';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { errorToast } from '../services/utils/toast';
+import { postRequest } from '../services/Api/HandleApi';
 interface investmetProps {
   show: boolean;
   setShow: (show: boolean) => void;
-   swpList:detailPortfolioSchemeType[],
-      setSwpList: (date: any) => void;
+  swpList: detailPortfolioSchemeType[],
+  schemeList: schemeDeatilDataKeys[];
 }
 
 
-const SwpConfirmation: React.FC<investmetProps> = ({ show, setShow,swpList,setSwpList }) => {
+const SwpConfirmation: React.FC<investmetProps> = ({ show, setShow, swpList, schemeList }) => {
   const [openSuccess, setOpenSuccess] = useState(false)
+  const [amount, setAmount] = useState<number>()
+  const [frequency, setFrequency] = useState<string>("MONTHLY")
+  const [fromDate, setFromDate] = useState<Date>(new Date())
+  const [toDate, setToDate] = useState<Date>()
+  const [successDate, setSuccessDate] = useState<any[]>([])
 
-  const handleSwpTransaction = () => {
-    setOpenSuccess(true)
-    setShow(false)
+
+  useEffect(() => {
+    getTomorrow(new Date())
+  }, [])
+  const getTomorrow = (date: Date) => {
+    setFromDate(date);
+
+    let d2 = new Date(date);
+      d2.setDate(d2.getDate() + 1);
+      
+    
+
+    setToDate(d2);
+
+  };
+
+
+  const handleSwpTransaction = async () => {
+    if (!amount || !frequency || !fromDate || !toDate) {
+      errorToast("All fields required..")
+      return
+    }
+    const body = {
+      ucc: "BFC00002",
+      cartItems: [
+        {
+          schemeName: swpList[0]?.scheme,
+          NSEProductCode: swpList[0]?.accordSchemeCode,
+          amount: amount,
+          folioNumber: swpList[0]?.folioNumber,
+          from_date: fromDate,
+          to_date: toDate
+        }
+      ]
+    }
+
+
+    try {
+      const res = await postRequest<swpResponse>(endPoints.swp, body)
+      if (res.data) {
+        setOpenSuccess(true)
+        setSuccessDate(res.data)
+        setShow(false)
+      } else {
+        setSuccessDate([])
+      }
+    } catch (err) {
+      errorToast(err)
+    }
   }
 
+  const handleFromDate = (e: any) => {
+    setFromDate(e)
+    getTomorrow(e)
+
+  }
+  const handleToDate = (e: any) => {
+    setToDate(e)
+  }
+
+  // Function to check if date is allowed
+  const isAllowedDay = (date: Date): boolean => {
+    const allowedDays: number[] = schemeList[0]?.swpDateList.length > 0 ? [] : schemeList[0]?.swpDateList;
+    const dayOfMonth = date.getDate();
+    return allowedDays?.includes(dayOfMonth);
+  };
   return (
     <>
 
@@ -41,11 +114,11 @@ const SwpConfirmation: React.FC<investmetProps> = ({ show, setShow,swpList,setSw
             <div className="d-flex justify-content-between">
               <div className="d-flex">
                 <div className="prod_icon_img">
-                  <img src={icici} height={35} width={35} alt="" />
+                  <img src={imageUrl + swpList[0]?.amcCode + ".png"} height={35} width={35} alt="" className="rounded" />
                 </div>
                 <div className="ms-2 prod_icon_heading">
-                  <h4>ICICI Prudential bluechip Funds</h4>
-                  <p>Selected fund 2</p>
+                  <h4>{swpList[0]?.scheme}</h4>
+                  <p>Selected fund 1</p>
                 </div>
               </div>
 
@@ -55,43 +128,54 @@ const SwpConfirmation: React.FC<investmetProps> = ({ show, setShow,swpList,setSw
             <hr />
             <div className="row text-start my-2">
               <div className="col-md-6">
-                <p className='mb-0 fs12px'> Current Value (As on 14 Jan)</p>
-                <small className='fs16px'>₹56,304.16</small>
+                <p className='mb-0 fs12px'> Current Value (As on {currentDateInStringNumber()})</p>
+                <small className='fs16px'>₹{swpList[0]?.currentvalue}</small>
               </div>
               <div className="col-md-6">
                 <p className='mb-0 fs12px'> Total Units</p>
-                <small className='fs16px'>56,304.16</small>
+                <small className='fs16px'>{swpList[0]?.unit}</small>
               </div>
             </div>
 
 
             <div className="form-group">
               <label htmlFor="amountFor" className='fs12px'>SWP AMOUNT</label>
-              <input type="text" className="form-control" id="amountFor" aria-describedby="emailHelp" placeholder="Enter Amount" />
+              <input type="text" className="form-control" value={amount} id="amountFor" aria-describedby="emailHelp" onChange={(e) => amountHandler(e, 10000000, setAmount)} placeholder="Enter Amount" />
             </div>
             <div className="row">
-              <div className="form-group col-6">
+              <div className="form-group col-md-6 col-sm-12">
                 <label htmlFor="amountFor" className='fs12px'>FREQUENCY</label>
-                <Form.Select >
-                  <option>Monthly</option>
-                  <option>Quarterly </option>
-                  <option>Half Yearly</option>
-                  <option>Yearly</option>
+                <Form.Select value={frequency} onChange={(e) => setFrequency(e.target.value)}>
+                  {schemeList[0]?.swpFrequency?.map((item) => {
+                    return <option value={item}>{item}</option>
+                  })}
+
+
                 </Form.Select>
               </div>
-              <div className="form-group col-6">
-                <label htmlFor="amountFor" className='fs12px'>SWP DAY</label>
-                 <Form.Select >
-                  <option>14th of every month</option>
-                </Form.Select>
+              <div className="form-group col-md-6 col-sm-12">
+                <label htmlFor="amountFor" className='fs12px'>FROM</label><br />
+                <DatePicker
+                  selected={fromDate}
+                  onChange={handleFromDate}
+                  filterDate={isAllowedDay}
+                  placeholderText="Select a date"
+                  dateFormat="dd/MM/yyyy"
+                  minDate={new Date()}
+                  className="form-control"
+                />
               </div>
-              <div className="form-group col-6">
-                <label htmlFor="amountFor" className='fs12px'>FROM</label>
-                <input type="date" className="form-control" id="amountFor" aria-describedby="emailHelp" placeholder="Enter Amount" />
-              </div>
-              <div className="form-group col-6 ">
-                <label htmlFor="amountFor" className='fs12px'>TO</label>
-                <input type="date" className="form-control" id="amountFor" aria-describedby="emailHelp" placeholder="Enter Amount" />
+              <div className="form-group col-md-6 col-sm-12 ">
+                <label htmlFor="amountFor" className='fs12px'>TO</label><br />
+                <DatePicker
+                  selected={toDate}
+                  onChange={handleToDate}
+                  filterDate={isAllowedDay}
+                  placeholderText="Select a date"
+                  dateFormat="dd/MM/yyyy"
+                  minDate={new Date()}
+                  className="form-control"
+                />
               </div>
             </div>
 
@@ -102,10 +186,10 @@ const SwpConfirmation: React.FC<investmetProps> = ({ show, setShow,swpList,setSw
         </Modal.Body>
         <small className='fs12px modal-bg text-center mx-2'>According to SEBI guidelines, redemption payouts are processed only to the bank account registered in the folio statement.</small>
         <Modal.Footer className='modal-bg '>
-          <Button className='customButton buttunCenter' onClick={handleSwpTransaction}>Trnsfer</Button>
+          <Button className='customButton buttunCenter' onClick={handleSwpTransaction}>Transfer</Button>
         </Modal.Footer>
       </Modal>
-      <OrderPlaces show={openSuccess} setShow={setOpenSuccess} successData={[]} />
+      <OrderPlaces show={openSuccess} setShow={setOpenSuccess} successData={successDate} />
     </>
   );
 }

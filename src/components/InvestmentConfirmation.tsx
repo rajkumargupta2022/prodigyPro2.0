@@ -156,7 +156,7 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
       return
     } else if (from === "portfolio") {
       finalTransaction(schemeList, isSipTransaction ? keys.sip : keys.purchase, setSuccessData).then((res) => {
-        console.log("ress",res);
+        console.log(res);
         
         setOpenSuccess(true)
         setShow(false)

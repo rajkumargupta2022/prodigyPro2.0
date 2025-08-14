@@ -5,7 +5,7 @@ export const sipFilterBody = (schemeList: schemeDeatilDataKeys[]) => {
   if (schemeList?.length > 0) {
     const data = schemeList.map((item: schemeDeatilDataKeys) => ({
       NSEProductCode: item.nseProductCode,
-      NSEAmcCode: "HDFCMUTUALFUND_MF", // make sure this is a string or a defined constant
+      NSEAmcCode: item.nseAMCCode, // make sure this is a string or a defined constant
       start_date: item.start_date,
       from_date: item.from_date,
       to_date: item.to_date,
@@ -15,7 +15,6 @@ export const sipFilterBody = (schemeList: schemeDeatilDataKeys[]) => {
       mandateId: item?.umrn_no,
       schemeName: item?.scheme,
     }));
-    console.log("data", data);
 
     return data;
   }

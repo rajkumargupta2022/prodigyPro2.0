@@ -32,6 +32,7 @@ export interface schemeDeatilDataKeys {
   sipDateList: number[];
   stpDateList: number[];
   swpDateList: number[];
+  swpFrequency?: string[];
   oneYearCAGR: number;
   threeYearCAGR: number;
   fiveYearCAGR: number;
@@ -97,15 +98,28 @@ export interface sipPurchaseRedemptionResponse {
   data: sipPurchaseRedemptionKey[];
 }
 export interface redeemBody {
-  ucc: string,
-  transactionType: string,
-  cartItems: redeemBodyKeys[]
+  ucc: string;
+  transactionType: string;
+  cartItems: redeemBodyKeys[];
 }
 export interface redeemBodyKeys {
-  schemeName: string,
-  accordProductCode: number,
-  amount: number,
-  folioNumber: string,
-  redemption_units: number,
-  all_units: boolean
+  schemeName: string;
+  accordProductCode: number;
+  amount: number;
+  folioNumber: string;
+  redemption_units: number;
+  all_units: boolean;
+}
+export interface swpKey {
+  folio_no: string;
+  amount: number;
+  reg_status: boolean;
+  reg_id: string;
+  reg_remark: string;
+  schemeName: string;
+}
+
+export interface swpResponse{
+  success:boolean,
+  data:swpKey[]
 }

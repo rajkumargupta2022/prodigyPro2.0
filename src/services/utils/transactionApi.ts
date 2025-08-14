@@ -32,7 +32,7 @@ export const finalTransaction = async (
       datasetter([]);
     }
   } catch (err) {
-    console.log("error from transactio api", err);
+    // console.log("error from transactio api", err);
     return err
   }
 };
@@ -62,7 +62,7 @@ export const redeemTransaction = async (
       datasetter([]);
     }
   } catch (err) {
-    console.log("error from transactio api", err);
+    // console.log("error from transactio api", err);
     return err
   }
 };

@@ -133,7 +133,7 @@ const FundDetails = () => {
 
 
   useEffect(() => {
-
+   
     if (location?.state?.accordSchemeCode) {
       fetchSchemeDetail()
       fetchNavHistory(12)
@@ -239,7 +239,6 @@ const FundDetails = () => {
 
       setSchemeList(updatedList);
     } catch (error) {
-      console.error("Error fetching folio:", error);
 
       const updatedList = [
         {
@@ -518,7 +517,7 @@ const FundDetails = () => {
       />
       <SelectFolioPopup show={openSelectFolio} setShow={setOpenSelectFolio} schemeList={schemeList} setSchemeList={setSchemeList} isSipTransaction={true} />
       <SwitchSchemeModel show={openSwitchSchemeModel} setShow={setOpenSwitchSchemeModel} />
-      <SwpConfirmation show={openSwpModel} setShow={setOpenSwpModel} swpList={schmeDetail} setSwpList={setSchmeDetail}/>
+      <SwpConfirmation show={openSwpModel} setShow={setOpenSwpModel} swpList={schmeDetail} schemeList={schemeList}/>
       <RedumptionConfirmation show={openRedumptionModel} setShow={setOpenRedumptionModel}  redeemList={schmeDetail} setRedeemList={setSchmeDetail}/>
       <Footer />
     </>

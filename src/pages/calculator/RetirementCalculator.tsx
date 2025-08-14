@@ -79,7 +79,6 @@ const RetirementCalculator = () => {
     let onePlusinflationR:number = 1 + inflationR
     let onePluspostRetirementReturn:number = 1 + postRetirementReturn
     let inflationAdjust = (onePluspostRetirementReturn / onePlusinflationR) - 1
-    console.log("value2=", inflationAdjust, onePlusinflationR, onePluspostRetirementReturn);
     let inflationAdjustReturn:number = inflationAdjust / 12
     inflationAdjustReturn = inflationAdjustReturn
     let lifeExpectancy_yr:number = lifeExpectancy * 12

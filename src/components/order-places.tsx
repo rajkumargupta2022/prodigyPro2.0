@@ -14,7 +14,7 @@ interface OrderPlaces {
 }
 
 const OrderPlaces: React.FC<OrderPlaces> = ({ show, setShow,successData }) => {
-  console.log("ss",successData);
+  console.log("succesdata",successData);
   
   return (
     <>
@@ -57,10 +57,10 @@ const OrderPlaces: React.FC<OrderPlaces> = ({ show, setShow,successData }) => {
                         <p className="order-Placed-modal text-start">UNIQUE NUMBER:</p>
                         <p className="fs16">{item.reg_id}</p>
                       </div>
-                      <div className="d-flex text-start fs12pxWhite">
+                      {/* <div className="d-flex text-start fs12pxWhite">
                         <p className="order-Placed-modal">TRXN NUMBER:</p>
                         <p className="fs16">265498989</p>
-                      </div>
+                      </div> */}
                       <div className="d-flex text-start fs12pxWhite">
                         <p className="order-Placed-modal">FUND:</p>
                         <p className="fs16">{item.schemeName}</p>
@@ -76,6 +76,10 @@ const OrderPlaces: React.FC<OrderPlaces> = ({ show, setShow,successData }) => {
                       <div className="d-flex text-start fs12pxWhite">
                         <p className="order-Placed-modal">STATUS:</p>
                         <p className="fs16">{item.reg_status ? "Successful" :"Failed"}</p>
+                      </div>
+                        <div className="d-flex text-start fs12pxWhite">
+                        <p className="order-Placed-modal">REMARK:</p>
+                        <p className="fs16">{item.reg_remark}</p>
                       </div>
                     </div>
 

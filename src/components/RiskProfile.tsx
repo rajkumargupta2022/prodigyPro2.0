@@ -21,7 +21,6 @@ const RiskProfile = () => {
        setOption3("")
      }else{
       if(question===3){
-        console.log(option);
         
       }
       // navigate("/risk-result")
@@ -29,7 +28,6 @@ const RiskProfile = () => {
   }
 
   const selectOption = (selectedValue:number)=>{
-      console.log(option);
       
       if(selectedValue===1){
         setOption1("selectedOption")

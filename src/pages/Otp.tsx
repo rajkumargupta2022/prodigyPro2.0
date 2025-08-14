@@ -59,12 +59,10 @@ const Otp = () => {
         }
         successToast(res);
       } else {
-        console.log("elseError", res);
 
         errorToast(res);
       }
     } catch (err) {
-      console.log("catch erooor ", err);
       errorToast(err)
     }
 

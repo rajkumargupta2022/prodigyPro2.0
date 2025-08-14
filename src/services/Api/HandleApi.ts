@@ -6,7 +6,6 @@ export const postRequest = async <T>(endPoint: string, body: any): Promise<T> =>
     const response: AxiosResponse<T> = await AxiosInstance.post(endPoint, body);
     return response.data;
   } catch (error: any) {
-    console.error('POST request error from main:', error);
     throw error;
   }
 };
@@ -16,7 +15,6 @@ export const getRequest = async <T>(endPoint: string): Promise<T> => {
     const response: AxiosResponse<T> = await AxiosInstance.get(endPoint);
     return response.data;
   } catch (error: any) {
-    console.error('GET request error:', error);
     throw error;
   }
 };
