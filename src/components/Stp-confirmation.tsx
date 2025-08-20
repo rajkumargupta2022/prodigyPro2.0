@@ -18,7 +18,7 @@ interface investmetProps {
 }
 
 
-const SwitchConfirmation: React.FC<investmetProps> = ({ show, setShow, cartItem, setCartItem }) => {
+const StpConfiramtion: React.FC<investmetProps> = ({ show, setShow, cartItem, setCartItem }) => {
   const [openSuccess, setOpenSuccess] = useState(false)
   const [successData, setSuccessData] = useState<switchKeys[]>([])
   const [isSwitchAmount, setIsSwitchAmount] = useState<boolean>(false)
@@ -122,7 +122,7 @@ const SwitchConfirmation: React.FC<investmetProps> = ({ show, setShow, cartItem,
 
       >
         <Modal.Header closeButton className='modal-bg'>
-          <Modal.Title>Switch Confirmation</Modal.Title>
+          <Modal.Title>STP Confirmation</Modal.Title>
         </Modal.Header>
         <Modal.Body className='modal-bg'>
           {cartItem?.map((item, index) => {
@@ -141,7 +141,7 @@ const SwitchConfirmation: React.FC<investmetProps> = ({ show, setShow, cartItem,
               </div>
               <div className="d-flex align-items-center my-2">
                 <hr className="flex-grow-1" />
-                <div className='rounded-4 lightTrxBtn p-1'><ArrowDown /> SWITCH</div>
+                <div className='rounded-4 lightTrxBtn p-1'><ArrowDown /> STP</div>
                 <hr className="flex-grow-1" />
               </div>
               <div className="d-flex justify-content-between">
@@ -195,7 +195,7 @@ const SwitchConfirmation: React.FC<investmetProps> = ({ show, setShow, cartItem,
         </Modal.Body>
         <small className='fs12px modal-bg text-center'>According to SEBI guidelines, redemption payouts are processed only to the bank account registered in the folio statement.</small>
         <Modal.Footer className='modal-bg '>
-          <Button className='customButton buttunCenter' onClick={finalSwitch}>Switch</Button>
+          <Button className='customButton buttunCenter' onClick={finalSwitch}>STP</Button>
         </Modal.Footer>
       </Modal>
       <OrderPlaces show={openSuccess} setShow={setOpenSuccess} successData={successData} />
@@ -203,4 +203,4 @@ const SwitchConfirmation: React.FC<investmetProps> = ({ show, setShow, cartItem,
   );
 }
 
-export default SwitchConfirmation;
+export default StpConfiramtion;

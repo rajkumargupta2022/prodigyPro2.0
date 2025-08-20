@@ -42,9 +42,10 @@ export interface filteredSchemeResponse {
   data: filteredSchemesKeys[];
 }
 export interface filteredSchemesKeys {
-  s_name: string;
-  ISIN: string;
-  Schemecode: number;
+  // s_name: string;
+  accordAMCCode:number;
+  // ISIN: string;
+  // Schemecode: number;
   PURCHASE_ALLOWED: string;
   SIP_ALLOWED: string;
   AMC_CODE: string;
@@ -56,10 +57,12 @@ export interface filteredSchemesKeys {
   REINVEST_TAG: string;
   oneyrret: number;
   twoyearret: number;
-  threeyearret: number;
-  fouryearret: number;
-  fiveyearret: number;
-  sevenyearret: number;
-  tenyearret: number;
-  fifteenyearret: number;
+  threeyearret: number|null;
+  fouryearret: number|null;
+  fiveyearret: number|null;
+  sevenyearret: number|null;
+  tenyearret: number|null;
+  fifteenyearret: number|null;
+ 
+
 }

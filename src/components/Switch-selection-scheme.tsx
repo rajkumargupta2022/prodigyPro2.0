@@ -1,35 +1,25 @@
 import { ChevronRight, Search } from "react-bootstrap-icons";
 import {  imageUrl } from "../services/utils/urls";
-import { Card, Col, Row } from "react-bootstrap";
-import Returns from "../pages/explore/SortBy";
-import Category from "../pages/explore/Category";
-import Filter from "../pages/explore/Amcs";
-import { useNavigate } from "react-router-dom";
-import {  filteredSchemesKeys } from "../pages/data-interfaces/explore";
+import { Card, Col, Form, Row } from "react-bootstrap";
+import { filteredSchemesKeys } from "../pages/data-interfaces/explore";
 
-interface SchemesProps {
-  handleFilter: (value: number, type: string) => void;
-  isAvailable: (value: number, type: string) => boolean;
-  filteredSchemes: filteredSchemesKeys[]
+interface SwitchSelectionProps {
+  filteredSchemes:filteredSchemesKeys[]
+  handleSchemeSelection:(data:filteredSchemesKeys)=>void;
+  checkIsSelected:(data:filteredSchemesKeys)=>boolean
 }
 
-const SwitchSchemes: React.FC<SchemesProps> = ({ handleFilter, isAvailable, filteredSchemes }) => {
-  const navigate = useNavigate()
  
-
-  const fundDetails = (item: filteredSchemesKeys) => {
-    navigate("/fund-details", { state: { accordSchemeCode: item.accordAMCCode, fromPortfolio: false } })
-  }
+const SwitchSelectionScheme: React.FC<SwitchSelectionProps> = ({ filteredSchemes ,handleSchemeSelection,checkIsSelected}) => {
+ 
 
   return (
     <>
 
       <div className="col">
         <Row className="justify-content-between pb-4 pt-md-0 pt-4 align-items-center">
-          <Col md={6} className="">
-            <h5 className="fw-bold mb-0">431 Mutual Funds</h5>
-          </Col>
-          <Col md={6}>
+
+          <Col md={11}>
             <div className="position-relative pt-md-0 pt-3">
               <Search
                 className="mutual-funds-searchbuttonprodgy12 text-secondary "
@@ -39,34 +29,7 @@ const SwitchSchemes: React.FC<SchemesProps> = ({ handleFilter, isAvailable, filt
               <input className="rounded-4 exlore-search-box w-100" type="text" placeholder="Search for mutual funds to invest..."></input>
             </div>
           </Col>
-          <div className="col-12 pt-3 d-block d-lg-none">
-            <div className="row prody_position_relative">
-              <div className="col-4">
-                <div className="Prodgymobile_filtering_dataa category_show_data">
-                  <span>Category <span><ChevronRight className="" size={18} /></span></span>
-                  <div className="category_on_mobile">
-                    <Category handleFilter={handleFilter} isAvailable={isAvailable} />
-                  </div>
-                </div>
-              </div>
-              <div className="col-4">
-                <div className="Prodgymobile_filtering_dataa filters_show_mobile">
-                  <span>Filter(2) <span><ChevronRight className="" size={18} /></span></span>
-                  <div className="filters_on_mobile">
-                    <Filter handleFilter={handleFilter} isAvailable={isAvailable} />
-                  </div>
-                </div>
-              </div>
-              <div className="col-4">
-                <div className="Prodgymobile_filtering_dataa float_right_set">
-                  <span className="">Return <span><ChevronRight className="" size={18} /></span></span>
-                  <div className="return_on_mobile">
-                    <Returns />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+
         </Row>
 
         {filteredSchemes.length > 0 ? filteredSchemes.map((item, index) => (
@@ -75,10 +38,11 @@ const SwitchSchemes: React.FC<SchemesProps> = ({ handleFilter, isAvailable, filt
             key={index}
 
           >
-            <Card.Body>
+            <Card.Body onClick={() => handleSchemeSelection(item)}>
 
               <div className="row justify-content-between">
-                <div className="col-8 py-2" onClick={() => fundDetails(item)}>
+                <div className="col-8 py-2" >
+                  <Form.Check type="checkbox" checked={checkIsSelected(item)} key={index} value={item.PRODUCT_CODE}  />
                   <div className="d-flex">
                     <img src={`${imageUrl + item?.AMC_CODE}.png`} className="logoRadius" height={45} width={45} alt="Image not found" />
                     <div className="ms-2" style={{ flex: 4 }}>
@@ -92,7 +56,7 @@ const SwitchSchemes: React.FC<SchemesProps> = ({ handleFilter, isAvailable, filt
                   </div>
                 </div>
                 <div className="col-2 py-2 text-md-end text-start">
-                  <div className="text-secondary" onClick={() => fundDetails(item)}>
+                  <div className="text-secondary" >
                     <ChevronRight className="funds-rightsign-prodgy12" size={20} />
                   </div>
                 </div>
@@ -127,4 +91,4 @@ const SwitchSchemes: React.FC<SchemesProps> = ({ handleFilter, isAvailable, filt
   );
 }
 
-export default SwitchSchemes;
+export default SwitchSelectionScheme;

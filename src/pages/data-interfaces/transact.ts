@@ -3,6 +3,7 @@ export interface schemeDetailType {
   data: schemeDeatilDataKeys[];
 }
 export interface schemeDeatilDataKeys {
+  accordAMCCode: number;
   sipAllowed: boolean;
   stpAllowed: boolean;
   swpAllowed: boolean;
@@ -119,7 +120,32 @@ export interface swpKey {
   schemeName: string;
 }
 
-export interface swpResponse{
+export interface swpResponse {
+  success: boolean;
+  data: swpKey[];
+}
+export interface cartItemKey {
+  fromAccordProductCode: string;
+  toAccordProductCode: string;
+  amount: number;
+  folioNumber: string;
+  installment_units: number;
+  all_units: boolean;
+  toScheme?: string;
+  fromScheme?: string;
+    fromValue?:number,
+      fromUnit?:number,
+}
+export interface switchResponse{
   success:boolean,
-  data:swpKey[]
+  data:switchKeys[]
+}
+export interface switchKeys{
+  folio_no: string,
+            units?:string|number,
+            amount?:string|number
+            reg_status: boolean,
+            reg_id: string,
+            reg_remark: string,
+            schemeName: string
 }

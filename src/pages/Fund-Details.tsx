@@ -17,7 +17,7 @@ import InvetmentConfirmation from "../components/InvestmentConfirmation";
 import { fetchAdminUser } from "../services/user/adminUser";
 import SelectFolioPopup from "../components/select-folio-popup";
 import InvestmentForm from "../components/InvestmentForm";
-import SwitchSchemeModel from "../components/SwitchSchemeModel";
+import SwitchSchemeModel from "../components/SwitchStpSchemeModel";
 import RedumptionConfirmation from "../components/RedumptionConfirmation";
 import { checkTransactionAllowed } from "../services/utils/services";
 import { keys } from "../services/utils/keys";
@@ -33,6 +33,7 @@ const FundDetails = () => {
   const location = useLocation()
   const navigate = useNavigate()
   const [openSelectFolio, setOpenSelectFolio] = useState<boolean>(false)
+  const [transactionType, setTransactionType] = useState<string>("Switch")
   const [openSwpModel, setOpenSwpModel] = useState<boolean>(false)
   const [openInvestPopup, setOpenInvestPopup] = useState(false)
   const [schemeList, setSchemeList] = useState<schemeDeatilDataKeys[]>([])
@@ -153,6 +154,7 @@ const FundDetails = () => {
     try {
       const res = await postRequest<schemeDetailType>(endPoints.getSchemeDetails, { productcode: location.state.accordSchemeCode })
       setSchemeList(res.data)
+      
       setSipDateList([...res.data[0].sipDateList])
       handleNearSipDate(res.data[0].sipDateList)
       // setAmount(res.data[0].minSIPAmt)
@@ -287,7 +289,8 @@ const FundDetails = () => {
     setOpenInvestPopup(true)
   }
 
-  const handleSwitch = () => {
+  const handleSwitch = (type:string) => {
+    setTransactionType(type)
     setOpenSwitchSchemeModel(true)
   }
   const handleRedmptionModel = () => {
@@ -296,6 +299,7 @@ const FundDetails = () => {
   const handleSwp = ()=>{
     setOpenSwpModel(true)
   }
+
   return (
     <>
       <MyNavbar />
@@ -419,7 +423,7 @@ const FundDetails = () => {
                         </label>
                       </div>}
                     {checkTransactionAllowed(schemeList, keys.switch) &&
-                      <div onClick={handleSwitch} >
+                      <div onClick={()=>handleSwitch("Switch")} >
                         <label
                           className="btn_colorfull rounded-3 declaration-button w-100 paddingLeftRight px-4 py-2 mobile-fontset crPointer"
                           htmlFor="option1"
@@ -446,7 +450,7 @@ const FundDetails = () => {
                   <div className="p-3">
                     <ul className="ps-0 style-unerline-prodgy mb-0 crPointer">
                     { checkTransactionAllowed(schemeList, keys.redumption) &&  <li onClick={() => handleRedmptionModel()}>Redeem Fund</li>}
-                      { checkTransactionAllowed(schemeList, keys.stp) &&  <li >Systematic Transfer Plan (STP)</li>}
+                      { checkTransactionAllowed(schemeList, keys.stp) &&  <li onClick={()=>handleSwitch("STP")}>Systematic Transfer Plan (STP)</li>}
                         <li onClick={() => handleSwp()}>Systematic Withdrawal Plan (SWP)</li>
                       <li>Transaction History</li>
 
@@ -516,7 +520,7 @@ const FundDetails = () => {
         from={"portfolio"}
       />
       <SelectFolioPopup show={openSelectFolio} setShow={setOpenSelectFolio} schemeList={schemeList} setSchemeList={setSchemeList} isSipTransaction={true} />
-      <SwitchSchemeModel show={openSwitchSchemeModel} setShow={setOpenSwitchSchemeModel} />
+      <SwitchSchemeModel show={openSwitchSchemeModel} setShow={setOpenSwitchSchemeModel} selectedAmcCode={[schemeList[0]?.accordAMCCode]} schemeList={location.state} transactionType={transactionType}/>
       <SwpConfirmation show={openSwpModel} setShow={setOpenSwpModel} swpList={schmeDetail} schemeList={schemeList}/>
       <RedumptionConfirmation show={openRedumptionModel} setShow={setOpenRedumptionModel}  redeemList={schmeDetail} setRedeemList={setSchmeDetail}/>
       <Footer />

@@ -11,8 +11,8 @@ interface investmetProps {
 
 const RedumptionForm: React.FC<investmetProps> = ({ redeemList, setRedeemList }) => {
 
-  const [isRedeemAmount, setIsRedeemAmount] = useState<boolean>(true)
-  const [isAllUnit, setIsAllUnit] = useState<string>("false")
+  const [isRedeemAmount, setIsRedeemAmount] = useState<boolean>(false)
+  const [isAllUnit, setIsAllUnit] = useState<string>("true")
 
 
 
@@ -66,6 +66,8 @@ const RedumptionForm: React.FC<investmetProps> = ({ redeemList, setRedeemList })
   }
   const handleAllUnit = (e: React.ChangeEvent<HTMLInputElement>, allUnit: number, index: number) => {
     let value = e.target.value
+    console.log(value,"ddd");
+    
     setIsAllUnit(value === "true" ? "false" : "true")
     setRedeemList((prev: any) =>
       prev.map((item: detailPortfolioSchemeType, i: number) =>
