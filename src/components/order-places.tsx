@@ -14,7 +14,6 @@ interface OrderPlaces {
 }
 
 const OrderPlaces: React.FC<OrderPlaces> = ({ show, setShow,successData }) => {
-  console.log("succesdata",successData);
   
   return (
     <>

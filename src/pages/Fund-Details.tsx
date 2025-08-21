@@ -306,7 +306,7 @@ const FundDetails = () => {
       <Container className="mt-4">
 
         <div className="d-flex align-items-center">
-          <img src={`${imageUrl + schemeList[0]?.amcCode}.png`} className="logoRadius" alt="Image not found" width={60} height={60} />
+          <img src={`${imageUrl + schemeList[0]?.accordAMCCode}.png`} className="logoRadius" alt="Image not found" width={60} height={60} />
           <div style={{ marginLeft: "1%", marginTop: "1%" }}>
             <h4 className="fw-bold">{schemeList[0]?.scheme}</h4>
             <p>Equity: Flexi Cap</p>

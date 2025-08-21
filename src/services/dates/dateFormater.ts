@@ -46,6 +46,26 @@ export function dayToUTCFormat(day: number): string {
   
   return date.toISOString().replace("T", " ");
 }
+export const sevenDaysAdded  = ()=>{
+  return new Date(new Date().setDate(new Date().getDate() + 7))
+}
+export const daysAdded  = (days:number)=>{
+  return new Date(new Date().setDate(new Date().getDate() + days))
+  
+}
 
+export const dateForApi =(date: Date): string => {
+  const pad = (n: number) => n.toString().padStart(2, "0");
+
+  const year = date.getFullYear();
+  const month = pad(date.getMonth() + 1); // months are 0-indexed
+  const day = pad(date.getDate());
+
+  const hours = pad(date.getHours());
+  const minutes = pad(date.getMinutes());
+  const seconds = pad(date.getSeconds());
+
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}.000`;
+}
 
 

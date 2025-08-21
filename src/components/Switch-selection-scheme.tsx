@@ -7,6 +7,7 @@ interface SwitchSelectionProps {
   filteredSchemes:filteredSchemesKeys[]
   handleSchemeSelection:(data:filteredSchemesKeys)=>void;
   checkIsSelected:(data:filteredSchemesKeys)=>boolean
+  
 }
 
  
@@ -44,7 +45,7 @@ const SwitchSelectionScheme: React.FC<SwitchSelectionProps> = ({ filteredSchemes
                 <div className="col-8 py-2" >
                   <Form.Check type="checkbox" checked={checkIsSelected(item)} key={index} value={item.PRODUCT_CODE}  />
                   <div className="d-flex">
-                    <img src={`${imageUrl + item?.AMC_CODE}.png`} className="logoRadius" height={45} width={45} alt="Image not found" />
+                    <img src={`${imageUrl + item?.accordAMCCode}.png`} className="logoRadius" height={45} width={45} alt="Image not found" />
                     <div className="ms-2" style={{ flex: 4 }}>
                       <h6 style={{ margin: 0 }}>
                         {item.PRODUCT_LONG_NAME}
@@ -55,7 +56,7 @@ const SwitchSelectionScheme: React.FC<SwitchSelectionProps> = ({ filteredSchemes
                     </div>
                   </div>
                 </div>
-                <div className="col-2 py-2 text-md-end text-start">
+                <div className="col-2 py-2 text-md-end text-start" >
                   <div className="text-secondary" >
                     <ChevronRight className="funds-rightsign-prodgy12" size={20} />
                   </div>

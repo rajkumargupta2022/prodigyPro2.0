@@ -12,11 +12,13 @@ import { postRequest } from '../services/Api/HandleApi';
 import { fetchAdminUser } from '../services/user/adminUser';
 import { endPoints, imageUrl } from '../services/utils/urls';
 import BankMandate from './BankMandate';
-import { convertDayToFullDate } from '../services/dates/dateFormater';
+import { convertDayToFullDate, daysAdded } from '../services/dates/dateFormater';
 import { keys } from '../services/utils/keys';
 import { checkTransactionAllowed } from '../services/utils/services';
 import { finalTransaction } from '../services/utils/transactionApi';
 import OrderPlaces from './order-places';
+import DatePicker from 'react-datepicker';
+
 interface investmetProps {
   show: boolean;
   setShow: (show: boolean) => void;
@@ -59,13 +61,37 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
     })))
   }
 
-
+ 
   useEffect(() => {
-    handleNearSipDate()
     fetchFolios()
-   
     defaultTransactionType()
+    const newDate = daysAdded(7);
+    
+  setSchemeList((prev: any) =>
+  prev.map((obj: any) => {
+    return {
+      ...obj,
+      start_date: newDate,
+    };
+  })
+);
   }, [show]);
+
+  const dateHandle = (e:Date|null) => {
+   
+    setSchemeList((prev: any) =>
+      prev.map((obj: any) => ({
+        ...obj,
+        start_date: e,
+      })))
+
+
+  }
+  const isAllowedDay = (date: Date): boolean => {
+    const allowedDays: number[] = schemeList[0]?.sipDateList.length > 0 ? schemeList[0]?.sipDateList : [];
+    const dayOfMonth = date.getDate();
+    return allowedDays?.includes(dayOfMonth);
+  };
 
   useEffect(() => {
     if (foliosFetched) {
@@ -74,8 +100,8 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
     }
   }, [foliosFetched, schemeList]);
 
-  const defaultTransactionType =()=>{
-   setIsSipTransaction(checkTransactionAllowed(schemeList,keys.sip)?true:false)
+  const defaultTransactionType = () => {
+    setIsSipTransaction(checkTransactionAllowed(schemeList, keys.sip) ? true : false)
   }
 
   const fetchFolios = async () => {
@@ -114,22 +140,7 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
 
   };
 
-  const handleNearSipDate = () => {
-    const today = new Date();
-    const currentDay = today.getDate();
-    const sipDateNumbers = sipDateList?.map(Number);
-    let nearestDate = sipDateNumbers?.find(date => date >= currentDay);
-    if (!nearestDate) {
-      nearestDate = sipDateNumbers[0];
-    }
 
-    let day = String(nearestDate).padStart(2, '0')
-    setSipDate(Number(day))
-    setSchemeList(schemeList.map(obj => {
-      obj.start_date = convertDayToFullDate(Number(day));
-      return obj;
-    }))
-  }
   const handleFolioSelection = () => {
 
     const total = schemeList.reduce((acc, scheme) => {
@@ -157,15 +168,15 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
     } else if (from === "portfolio") {
       finalTransaction(schemeList, isSipTransaction ? keys.sip : keys.purchase, setSuccessData).then((res) => {
         console.log(res);
-        
+
         setOpenSuccess(true)
         setShow(false)
-      return
+        return
       })
 
-    }else{
-    setOpenSelectFolio(true)
-    setShow(false)
+    } else {
+      setOpenSelectFolio(true)
+      setShow(false)
     }
 
   }
@@ -284,7 +295,7 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
             <div className="d-flex justify-content-between">
               <div className="d-flex">
                 <div className="prod_icon_img">
-                  <img src={from === "portfolio" ? imageUrl + schemeList[0]?.amcCode + ".png" : money} height={35} width={35} alt="" className='rounded-2' />
+                  <img src={from === "portfolio" ? imageUrl + schemeList[0]?.accordAMCCode + ".png" : money} height={35} width={35} alt="" className='rounded-2' />
                 </div>
                 <div className="ms-2 prod_icon_heading">
                   <h4>{from === "portfolio" ? schemeList[0]?.scheme : "Emergency Fund"}</h4>
@@ -307,11 +318,19 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
 
             {isSipTransaction && <>
 
-              <div className="d-flex justify-content-between mt-3" onClick={() => setSipDateShow(true)}>
+              <div className="d-flex justify-content-between mt-3">
                 <div className="d-flex">
                   <div className="ms-2 prod_icon_heading">
                     <p>Day of SIP</p>
-                    <h4 className='my-2'>{sipDate}th on every month</h4>
+                    <DatePicker
+                      selected={schemeList[0]?.start_date}
+                      onChange={(e)=>dateHandle(e)}
+                      filterDate={isAllowedDay}
+                      placeholderText="DD/MM/YYYY"
+                      dateFormat="dd/MM/yyyy"
+                      minDate={daysAdded(7)}
+                      className="form-control border-0 focus_datepickers121"
+                    />
                   </div>
                 </div>
                 <div className="prod_view_fund align-self-center">

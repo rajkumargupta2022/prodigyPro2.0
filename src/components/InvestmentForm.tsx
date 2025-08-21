@@ -10,6 +10,7 @@ import SelectFolioPopup from "./select-folio-popup";
 import { checkTransactionAllowed } from "../services/utils/services";
 import { keys } from "../services/utils/keys";
 import { dayToUTCFormat } from "../services/dates/dateFormater";
+import DatePicker from "react-datepicker";
 
 interface addAmountKeys {
   min: number,
@@ -231,11 +232,11 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
 
         {isSipTransaction && <>
 
-          <div className="d-flex justify-content-between mt-3" onClick={() => setSipDateShow(true)}>
+          <div className="d-flex justify-content-between mt-3" >
             <div className="d-flex">
               <div className="ms-2 prod_icon_heading">
                 <p>Day of SIP</p>
-                <h4 className='my-2'>{sipDate}th on every month</h4>
+                <DatePicker  />
               </div>
             </div>
             <div className="prod_view_fund align-self-center">

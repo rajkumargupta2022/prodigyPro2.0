@@ -215,7 +215,7 @@ const RecomendedSchemes: React.FC<pageProps>  = ({from}) => {
   }
 
 
-  const handleSelectedScheme = (item: schemeDeatilDataKeys) => {
+  const handleSelectedScheme = (item: any) => {
 
     setSelectedSchemeList(prev => {
       const alreadySelected = prev.find(scheme => scheme.accordSchemeCode === item.accordSchemeCode);

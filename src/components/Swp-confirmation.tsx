@@ -7,7 +7,7 @@ import OrderPlaces from './order-places';
 import { Form } from 'react-bootstrap';
 import { detailPortfolioSchemeType } from '../pages/data-interfaces/portfolio';
 import { endPoints, imageUrl } from '../services/utils/urls';
-import { currentDateInStringNumber } from '../services/dates/dateFormater';
+import { currentDateInStringNumber, daysAdded, sevenDaysAdded } from '../services/dates/dateFormater';
 import { amountHandler } from '../services/utils/calculatorsFs';
 import { schemeDeatilDataKeys, swpResponse } from '../pages/data-interfaces/transact';
 import DatePicker from "react-datepicker";
@@ -32,19 +32,12 @@ const SwpConfirmation: React.FC<investmetProps> = ({ show, setShow, swpList, sch
 
 
   useEffect(() => {
-    getTomorrow(new Date())
+    addDays(new Date(), 8)
+    let result = new Date(); // clone so original isn't changed
+    result.setDate(result.getDate() + 7);
+    setFromDate(result)
   }, [])
-  const getTomorrow = (date: Date) => {
-    setFromDate(date);
 
-    let d2 = new Date(date);
-      d2.setDate(d2.getDate() + 1);
-      
-    
-
-    setToDate(d2);
-
-  };
 
 
   const handleSwpTransaction = async () => {
@@ -80,11 +73,14 @@ const SwpConfirmation: React.FC<investmetProps> = ({ show, setShow, swpList, sch
       errorToast(err)
     }
   }
-
+  function addDays(date: Date, days: number) {
+    let result = new Date(date); // clone so original isn't changed
+    result.setDate(result.getDate() + days);
+    setToDate(result)
+  }
   const handleFromDate = (e: any) => {
     setFromDate(e)
-    getTomorrow(e)
-
+    addDays(e, 1)
   }
   const handleToDate = (e: any) => {
     setToDate(e)
@@ -92,8 +88,10 @@ const SwpConfirmation: React.FC<investmetProps> = ({ show, setShow, swpList, sch
 
   // Function to check if date is allowed
   const isAllowedDay = (date: Date): boolean => {
-    const allowedDays: number[] = schemeList[0]?.swpDateList.length > 0 ? [] : schemeList[0]?.swpDateList;
+    const allowedDays: number[] = schemeList[0]?.swpDateList.length > 0 ? schemeList[0]?.swpDateList : [];
     const dayOfMonth = date.getDate();
+    console.log("allowedDays?.includes(dayOfMonth)", allowedDays?.includes(dayOfMonth));
+
     return allowedDays?.includes(dayOfMonth);
   };
   return (
@@ -143,7 +141,7 @@ const SwpConfirmation: React.FC<investmetProps> = ({ show, setShow, swpList, sch
               <input type="text" className="form-control" value={amount} id="amountFor" aria-describedby="emailHelp" onChange={(e) => amountHandler(e, 10000000, setAmount)} placeholder="Enter Amount" />
             </div>
             <div className="row">
-              <div className="form-group col-md-6 col-sm-12">
+              <div className="form-group col-md-12 col-sm-12">
                 <label htmlFor="amountFor" className='fs12px'>FREQUENCY</label>
                 <Form.Select value={frequency} onChange={(e) => setFrequency(e.target.value)}>
                   {schemeList[0]?.swpFrequency?.map((item) => {
@@ -161,7 +159,7 @@ const SwpConfirmation: React.FC<investmetProps> = ({ show, setShow, swpList, sch
                   filterDate={isAllowedDay}
                   placeholderText="Select a date"
                   dateFormat="dd/MM/yyyy"
-                  minDate={new Date()}
+                  minDate={daysAdded(7)}
                   className="form-control"
                 />
               </div>
@@ -173,7 +171,7 @@ const SwpConfirmation: React.FC<investmetProps> = ({ show, setShow, swpList, sch
                   filterDate={isAllowedDay}
                   placeholderText="Select a date"
                   dateFormat="dd/MM/yyyy"
-                  minDate={new Date()}
+                  minDate={daysAdded(8)}
                   className="form-control"
                 />
               </div>

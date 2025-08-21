@@ -41,9 +41,9 @@ export interface schemeDeatilDataKeys {
   folioList?: foliosKeys[];
   selectedFolio?: foliosKeys;
   umrn_no?: string;
-  start_date?: string;
-  from_date?: string;
-  to_date?: string;
+  start_date?: any;
+  from_date?: any;
+  to_date?: any;
 }
 
 export interface navHistoryResponse {
