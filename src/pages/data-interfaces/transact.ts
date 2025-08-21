@@ -123,3 +123,10 @@ export interface swpResponse{
   success:boolean,
   data:swpKey[]
 }
+
+export interface HelpandSupport{
+  phoneSupport: string;
+  emailSupport: string;
+  whatsappSupport: string;
+  rmSupport: string;
+}

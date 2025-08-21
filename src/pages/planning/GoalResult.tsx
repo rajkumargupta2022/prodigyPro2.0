@@ -98,7 +98,7 @@ const GoalResult = () => {
   const sipData: number[] = [];
   const gainData: number[] = [];
   const categories: string[] = [];
-    const lumpGainData: number[] = [];
+  const lumpGainData: number[] = [];
 
   const rate = ir / 100;
   const monthlyRate = rate / 12;
@@ -120,19 +120,19 @@ const GoalResult = () => {
 
 
     let yearlyGain: number;
-  if (year === 1) {
-    yearlyGain = lumpFV - amount; // first year: compare against initial
-  } else {
-    const prevFV = amount * Math.pow(1 + rate, year - 1);
-    yearlyGain = lumpFV - prevFV; // later years: compare with previous FV
-  }
+    if (year === 1) {
+      yearlyGain = lumpFV - amount; // first year: compare against initial
+    } else {
+      const prevFV = amount * Math.pow(1 + rate, year - 1);
+      yearlyGain = lumpFV - prevFV; // later years: compare with previous FV
+    }
 
     // Push into arrays (kept intact)
     currentValue.push(Math.round(lumpFV));
     sipData.push(Math.round(sipFV));
     gainData.push(Math.round(yearlyGain));
-   lumpGainData.push(Math.round(yearlyGain));
-  
+    lumpGainData.push(Math.round(yearlyGain));
+
   }
 
 
@@ -208,15 +208,34 @@ const GoalResult = () => {
         },
       },
       tooltip: {
-        y: {
-          formatter: (val: number) => {
-            if (val >= 10000000) return `₹${(val / 10000000).toFixed(2)}Cr`;
-            if (val >= 100000) return `₹${(val / 100000).toFixed(2)}L`;
-            return `₹${val.toLocaleString()}`;
-          }
-        }
+        shared: true,
+        intersect: false, // 🔹 Add this
+        custom: function ({ series, dataPointIndex, w }: { series: number[][]; dataPointIndex: number; w: any }) {
+          const current = series[0][dataPointIndex];
+          const gain = series[1][dataPointIndex];
+          const invested =
+            dataPointIndex === 0
+              ? current - gain // ✅ first bar: Current - Gain
+              : series[0][dataPointIndex - 1]; // ✅ other bars: prev Current Value
+          const year = w.globals.labels[dataPointIndex];
 
-      },
+          const formatValue = (v: number) => {
+            if (v >= 10000000) return `₹${(v / 10000000).toFixed(2)}Cr`;
+            if (v >= 100000) return `₹${(v / 100000).toFixed(2)}L`;
+            return `₹${v.toLocaleString()}`;
+          };
+
+          return `
+      <div style="padding:5px;">
+      <div><b>Year: ${year}</b></div>
+      <div>Current Value: ${formatValue(current)}</div>
+      <div>Invested Value: ${formatValue(invested)}</div>
+        <div>Gain: <span style="color:green;">${formatValue(gain)}</span></div>
+      </div>
+    `;
+        }
+      }
+      ,
       title: {
         text: `Investment Performance @${ir}% `
       },

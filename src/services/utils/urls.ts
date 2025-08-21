@@ -23,5 +23,6 @@ export enum endPoints{
    getAmcList="product/get-amc-list",
    getAssetTypesList="product/get-assetTypes-list",
    getCategoryTypesList="product/get-categoryTypes-list",
-   swp="transact/swp"
+   swp="transact/swp",
+   getHelpandSupport ="content/get-help-support"
 }
