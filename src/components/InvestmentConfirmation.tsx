@@ -283,11 +283,12 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
       <Modal
         show={show}
         onHide={() => setShow(false)}
-        backdrop="static"
+        backdrop={true}
         keyboard={false}
 
       >
         <Modal.Header closeButton className='modal-bg'>
+         
           <Modal.Title>Investment Confirmation</Modal.Title>
         </Modal.Header>
         <Modal.Body className='modal-bg'>

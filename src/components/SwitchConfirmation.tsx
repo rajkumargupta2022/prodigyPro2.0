@@ -10,6 +10,10 @@ import { cartItemKey, switchKeys, switchResponse } from '../pages/data-interface
 import { currentDateInStringNumber } from '../services/dates/dateFormater';
 import { postRequest } from '../services/Api/HandleApi';
 import { endPoints } from '../services/utils/urls';
+import { fetchAdminUser } from '../services/user/adminUser';
+import { errorToast } from '../services/utils/toast';
+// import { FaArrowLeftLong } from "react-icons/fa6";
+
 interface investmetProps {
   show: boolean;
   setShow: (show: boolean) => void;
@@ -24,8 +28,13 @@ const SwitchConfirmation: React.FC<investmetProps> = ({ show, setShow, cartItem,
   const [isSwitchAmount, setIsSwitchAmount] = useState<boolean>(false)
 
   const finalSwitch = async () => {
+    const adminUser = fetchAdminUser()
+    if(!adminUser){
+      errorToast("Something went wrong..")
+      return
+    }
     const reqBody = {
-      ucc: "BFC00002",
+      ucc: adminUser?.ucc,
       cartItems: cartItem
     }
     try {
@@ -46,8 +55,6 @@ const SwitchConfirmation: React.FC<investmetProps> = ({ show, setShow, cartItem,
   }
   const handleSwitchAllUnit = (e: React.ChangeEvent<HTMLInputElement>, allUnit: number, index: number) => {
     const checked = e.target.checked; // <-- boolean, correct way
-
-
     setCartItem((prev: any) =>
       prev.map((item: cartItemKey, i: number) =>
         i === index
@@ -117,11 +124,12 @@ const SwitchConfirmation: React.FC<investmetProps> = ({ show, setShow, cartItem,
       <Modal
         show={show}
         onHide={() => setShow(false)}
-        backdrop="static"
-        keyboard={false}
+        backdrop={true}
+        keyboard={true}
 
       >
         <Modal.Header closeButton className='modal-bg'>
+           {/* <FaArrowLeftLong onClick={()=>{setShow(false)}}/> */}
           <Modal.Title>Switch Confirmation</Modal.Title>
         </Modal.Header>
         <Modal.Body className='modal-bg'>

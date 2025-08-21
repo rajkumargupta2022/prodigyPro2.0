@@ -12,6 +12,7 @@ import { cartItemKey } from '../pages/data-interfaces/transact';
 import { detailPortfolioSchemeType } from '../pages/data-interfaces/portfolio';
 import { keys } from '../services/utils/keys';
 import StpConfiramtion from './Stp-confirmation';
+import { errorToast } from '../services/utils/toast';
 interface investmetProps {
   show: boolean;
   setShow: (show: boolean) => void;
@@ -34,8 +35,8 @@ const SwitchSchemeModel: React.FC<investmetProps> = ({ show, setShow, selectedAm
   }, [show])
 
   const handleSwitch = () => {
-
-    mergeSchemes()
+if(selectedSchemes.length>0){
+ mergeSchemes()
     if (transactionType === keys.Switch) {
       setOpenSwitchConfirmationModel(true)
       setShow(false)
@@ -43,6 +44,10 @@ const SwitchSchemeModel: React.FC<investmetProps> = ({ show, setShow, selectedAm
       setOpenStpConfirmation(true)
       setShow(false)
     }
+}else{
+  errorToast("Please select scheme...")
+}
+   
 
 
   }
@@ -107,7 +112,7 @@ const SwitchSchemeModel: React.FC<investmetProps> = ({ show, setShow, selectedAm
         </Modal.Body>
         <small className='fs12px modal-bg text-center'>According to SEBI guidelines, redemption payouts are processed only to the bank account registered in the folio statement.</small>
         <Modal.Footer className='modal-bg '>
-          <Button className='customButton buttunCenter' onClick={handleSwitch}>{transactionType}</Button>
+          <Button className='customButton buttunCenter' onClick={handleSwitch}>Confirm Fund</Button>
         </Modal.Footer>
       </Modal>
       <SwitchConfirmation show={openSwitchConfirmationModel} setShow={setOpenSwitchConfirmationModel} cartItem={cartItem} setCartItem={setCartItem} />

@@ -3,6 +3,7 @@ import {  imageUrl } from "../services/utils/urls";
 import { Card, Col, Form, Row } from "react-bootstrap";
 import { filteredSchemesKeys } from "../pages/data-interfaces/explore";
 
+
 interface SwitchSelectionProps {
   filteredSchemes:filteredSchemesKeys[]
   handleSchemeSelection:(data:filteredSchemesKeys)=>void;
