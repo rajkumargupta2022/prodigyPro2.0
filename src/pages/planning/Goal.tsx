@@ -7,16 +7,101 @@ const Goal = () => {
   const [investmentPeriod, setInvestmentPeriod] = useState<Number>(10)
   const navigate = useNavigate()
   const location = useLocation()
-    
-  
 
-const calculateResult = ()=>{
-    navigate("/goal-result", {state:location.state});
+
+  const [amount, setAmount] = useState("")
+  const [error, setError] = useState("")
+
+  const calculateResult = async () => {
+
+    if (amount.trim() === "") {
+      setError("Amount cannot be left blank"); // 🔹 show error below input
+      return;
+    }
+
+
+    const { newsipamt, lumpsumRequired ,ir} = await goalCalculater(Number(amount), Number(investmentPeriod));
+
+
+    if (!amount) {
+      alert("Amount cannot be left blank");
+      return;
+    }
+    navigate("/goal-result", {
+      state: {
+        newsipamt, lumpsumRequired, investmentPeriod,amount, ir,  title: location.state?.title,
+        paragraph: location.state?.paragraph
+      }
+    });
+  };
+
+
+  const handleAmount = (e: any) => {
+    if (!isNaN(Number(e.target.value))) {
+      setAmount(e.target.value)
+    }
   }
 
+  const interestRates: { [key: number]: number } = {
+    1: 5,
+    2: 6,
+    3: 7,
+    4: 7,
+    5: 10,
+    6: 11,
+    7: 12,
+    8: 14,
+    9: 14,
+    10: 16
+  };
+
+  const pmtvalue = async (ir: number, np: number, pv: number, fv: number, type: number = 0) => {
+
+    if (!fv) fv = 0;
+    if (!type) type = 0;
+
+    if (Number(ir) == 0) return -(Number(pv) + Number(fv)) / Number(np);
+
+    let pvif = Math.pow(1 + Number(ir), Number(np));
+    let pmt = - Number(ir) * (Number(pv) * Number(pvif) + Number(fv)) / (Number(pvif) - 1);
+
+    if (type == 1) {
+      pmt /= (1 + Number(ir));
+    };
+
+    return Number(pmt.toFixed(2));
+  }
+  const FV = async (PV: number, i: number, n: number) => {
+    var x = (1 + i / 100)
+    var FV = PV * (Math.pow(x, n))
+    return FV;
+  }
+
+  const goalCalculater = async (amount: number, tenure: number) => {
+    let ir = Number(tenure) > 10 ? 16 : interestRates[tenure];
+    let irpercent = ir / 100 / 12;
+    let totmonth = tenure * 12;
+    let futurevalue = await FV(amount, 6, tenure);
+    let lumpsumRequired = Math.round(futurevalue);
+
+    let newsipamt = await pmtvalue(irpercent, totmonth, 0, -Math.round(futurevalue), 1);
+    newsipamt = Math.round(newsipamt);
+
+    return { newsipamt, lumpsumRequired ,ir };
+  };
   return (
     <>
       <NavBar />
+      <style>
+      {`
+        #exampleInputEmail1::placeholder {
+          color: lightgrey;
+          font-size: 14px;
+          font-style: italic;
+        }
+      `}
+    </style>
+    
       <div className="container px-4 mt-3" >
         <div className="row">
           <div className="col-12 align-items-start mb-3">
@@ -30,15 +115,16 @@ const calculateResult = ()=>{
                 <div className="card-body">
                   <p className=" fs18px fw-normal">How much money will you need to achieve this goal?</p>
                   <label htmlFor="exampleInputEmail1" className="form-label fs12px">Amount (In today’s term)</label>
-                  <input type="text" className="form-control" placeholder="₹ 25,00,000" id="exampleInputEmail1" aria-describedby="emailHelp" />
-                  <RangeBar label={"INVESTMENT PERIOD"} maxLimit={30} value={investmentPeriod} setValue={setInvestmentPeriod}/>
+                  <input type="text" className={`form-control ${error ? "is-invalid" : ""}`} placeholder="₹ 25,00,000" id="exampleInputEmail1" aria-describedby="emailHelp" value={amount} onChange={handleAmount} />
+                  {error && <div className="invalid-feedback">{error}</div>}
+                  <RangeBar label={"INVESTMENT PERIOD"} maxLimit={30} value={investmentPeriod} setValue={setInvestmentPeriod} />
                 </div>
               </div>
             </div>
             <div className="col-lg-12 mt-4">
-            <button className='customButton buttunCenter px-3' onClick={calculateResult}>Calculate</button>
+              <button className='customButton buttunCenter px-3' onClick={calculateResult}>Calculate</button>
             </div>
-          
+
           </div>
         </div>
       </div>
