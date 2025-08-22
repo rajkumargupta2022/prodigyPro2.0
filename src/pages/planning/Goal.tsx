@@ -2,6 +2,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import NavBar from "../../components/Navbar";
 import RangeBar from "../calculator/RangeBar";
 import { useState } from "react";
+import { FV, pmtvalue } from "../../services/utils/calculatorsFs";
 
 const Goal = () => {
   const [investmentPeriod, setInvestmentPeriod] = useState<Number>(10)
@@ -15,7 +16,7 @@ const Goal = () => {
   const calculateResult = async () => {
 
     if (amount.trim() === "") {
-      setError("Amount cannot be left blank"); // 🔹 show error below input
+      setError("Plaese enter amount..."); // 🔹 show error below input
       return;
     }
 
@@ -24,7 +25,7 @@ const Goal = () => {
 
 
     if (!amount) {
-      alert("Amount cannot be left blank");
+      alert("Plaese enter amount...");
       return;
     }
     navigate("/goal-result", {
@@ -55,27 +56,7 @@ const Goal = () => {
     10: 16
   };
 
-  const pmtvalue = async (ir: number, np: number, pv: number, fv: number, type: number = 0) => {
 
-    if (!fv) fv = 0;
-    if (!type) type = 0;
-
-    if (Number(ir) == 0) return -(Number(pv) + Number(fv)) / Number(np);
-
-    let pvif = Math.pow(1 + Number(ir), Number(np));
-    let pmt = - Number(ir) * (Number(pv) * Number(pvif) + Number(fv)) / (Number(pvif) - 1);
-
-    if (type == 1) {
-      pmt /= (1 + Number(ir));
-    };
-
-    return Number(pmt.toFixed(2));
-  }
-  const FV = async (PV: number, i: number, n: number) => {
-    var x = (1 + i / 100)
-    var FV = PV * (Math.pow(x, n))
-    return FV;
-  }
 
   const goalCalculater = async (amount: number, tenure: number) => {
     let ir = Number(tenure) > 10 ? 16 : interestRates[tenure];
