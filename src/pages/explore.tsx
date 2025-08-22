@@ -1,7 +1,4 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import Rupee from "../assets/img/icons/rupee 1.svg";
-import Star from "../assets/img/icons/star-1.svg";
-import Award from "../assets/img/icons/award 1.svg";
 import Tax from "../assets/img/icons/tax.svg";
 import EquityFund from "../assets/img/icons/equity fund.svg";
 import DebtFund from "../assets/img/icons/debt.svg";
@@ -16,6 +13,10 @@ import Footer from "../components/Footer";
 
 const Explore = () => {
   const navigate = useNavigate()
+
+  const goToFundPage = (name:string)=>{
+    navigate("/all-mutual-funds",{state:name})
+  }
   return (
     <>
       <MyNavbar />
@@ -37,7 +38,7 @@ const Explore = () => {
           <h4 className="mb-4 fw-bold fs16px">Discover Funds</h4>
           <div className="grid-exploreprodgy justify-content-between">
 
-            <div className="py-2 text-center">
+            {/* <div className="py-2 text-center">
               <img src={Rupee} alt="" width={28} height={28} />
               <h6 className="fs14pxBlack">Start with ₹100</h6>
             </div>
@@ -48,16 +49,16 @@ const Explore = () => {
             <div className="py-2 text-center">
               <img src={Award} alt="" width={28} height={28} />
               <h6 className="fs14pxBlack">Top Rated Funds</h6>
-            </div>
-            <div className="py-2 text-center">
+            </div>*/}
+            <div className="py-2 text-center" onClick={()=>goToFundPage("Tax Saver")}>
               <img src={Tax} alt="" width={28} height={28} />
               <h6 className="fs14pxBlack">Tax Saver</h6>
-            </div>
-            <div className="py-2 text-center">
+            </div> 
+            <div className="py-2 text-center" onClick={()=>goToFundPage("Equity Funds")}>
               <img src={EquityFund} alt="" width={28} height={28} />
               <h6 className="fs14pxBlack">Equity Funds</h6>
             </div>
-            <div className="py-2 text-center">
+            <div className="py-2 text-center" onClick={()=>goToFundPage("Debt Funds")}>
               <img src={DebtFund} alt="" width={28} height={28} />
               <h6 className="fs14pxBlack">Debt Funds</h6>
             </div>

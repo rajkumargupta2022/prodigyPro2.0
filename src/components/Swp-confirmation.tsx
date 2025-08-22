@@ -2,12 +2,12 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Card from 'react-bootstrap/Card';
 
-import { useEffect, useState } from 'react';
+import {  useState } from 'react';
 import OrderPlaces from './order-places';
 import { Form } from 'react-bootstrap';
 import { detailPortfolioSchemeType } from '../pages/data-interfaces/portfolio';
 import { endPoints, imageUrl } from '../services/utils/urls';
-import { currentDateInStringNumber, daysAdded, sevenDaysAdded } from '../services/dates/dateFormater';
+import { currentDateInStringNumber, daysAdded } from '../services/dates/dateFormater';
 import { amountHandler } from '../services/utils/calculatorsFs';
 import { schemeDeatilDataKeys, swpResponse } from '../pages/data-interfaces/transact';
 import DatePicker from "react-datepicker";

@@ -1,24 +1,19 @@
-import Star from "../../assets/img/icons/star-1.svg"
-import topRated from "../../assets/img/icons/award 1.svg"
-import taxSaver from "../../assets/img/icons/tax.svg"
-import equityFund from "../../assets/img/icons/equity fund.svg"
-import debrFund from "../../assets/img/icons/debt.svg"
-import money from "../../assets/img/icons/rupee 1.svg"
+
 
 import Card from 'react-bootstrap/Card';
-import { Link, useNavigate} from "react-router-dom"
-import { ChevronRight,CurrencyRupee} from "react-bootstrap-icons";
+import { Link} from "react-router-dom"
+import { ChevronRight} from "react-bootstrap-icons";
 
 
 const DiscoverFUnds = ()=>{
-  const navigate = useNavigate()
-  const goToFundPage = (name:string)=>{
-    navigate("/all-mutual-funds",{state:name})
-  }
+  // const navigate = useNavigate()
+  // const goToFundPage = (name:string)=>{
+  //   navigate("/all-mutual-funds",{state:name})
+  // }
  
   return(
         <div className="col-lg-3 col-sm-12">
-              <Card border="light" className="my-3 cardRadius">
+              {/* <Card border="light" className="my-3 cardRadius">
                 <Card.Body>
                   <div className="row crPointer">
                     <h6 className="fw-semibold mb-4">Discover Funds</h6>
@@ -31,7 +26,7 @@ const DiscoverFUnds = ()=>{
 
                   </div>
                 </Card.Body>
-              </Card>
+              </Card> */}
               <Card border="light" className="my-3 cardRadius">
                 <Card.Body>
                   <div className="row px-2">

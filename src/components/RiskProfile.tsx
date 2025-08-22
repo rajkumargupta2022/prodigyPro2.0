@@ -1,11 +1,12 @@
 import MyNavbar from "./Navbar"
 import rislBg from "../assets/img/bg-image/risk-profile.png"
-import {  ChevronRight } from "react-bootstrap-icons"
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 
 
 
 const RiskProfile = () => {
+  const navigate = useNavigate()
   const profileQuestion: string[]  =["I seek above average returns from my investments","I’m patient with my investments & can bear short term volatility in my portfolio","I have a regular & stable source of income","My outstanding debt/loan is low or that has been provisioned for" ]
   const [question,setQuestion] =useState<number>(0)
   const [option,setOption] =useState<number>(0)
@@ -21,14 +22,14 @@ const RiskProfile = () => {
        setOption3("")
      }else{
       if(question===3){
-        
+         navigate("/risk-result")
       }
-      // navigate("/risk-result")
+     
      }
   }
 
   const selectOption = (selectedValue:number)=>{
-      
+      nextQuestion()
       if(selectedValue===1){
         setOption1("selectedOption")
         setOption2("")
@@ -76,9 +77,7 @@ const RiskProfile = () => {
                   <button className={`btn btn-light border-0 bgOption 100vh ${option2}`}onClick={()=>selectOption(2)}>Somewhat Agree 🤔</button>
                   <button className={`btn btn-light border-0 bgOption 100vh ${option1}`}onClick={()=>selectOption(1)}>Disagree ❌</button>
                 </div>   
-                <div className="text-center mb-4">
-                <button className="btn btn-light border-0 arrowRadius" onClick={nextQuestion}> <ChevronRight/></button>
-                </div>
+                
               </div>
             </div>
           </div>

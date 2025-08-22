@@ -1,10 +1,14 @@
 import { Link } from "react-router-dom";
 import { useAdminUser } from "../context/AdminContext"
+import { useEffect } from "react";
 
 
 function Profile() {
   const { switchProfile, adminUser, familyMemberList } = useAdminUser()
-
+   useEffect(()=>{
+ console.log("familyMemberList",familyMemberList);
+ 
+   },[])
   return (
     <main className="col-md-9 ms-sm-auto col-lg-9 px-md-4 py-4">
       <h3>

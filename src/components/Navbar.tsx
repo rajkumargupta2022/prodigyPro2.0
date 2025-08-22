@@ -4,7 +4,6 @@ import Navbar from "react-bootstrap/Navbar";
 import logo from "../assets/img/logo/logo.png";
 import {
   QuestionCircle,
-  Bell,
   CurrencyRupee,
   ChevronDown,
   HouseDoorFill,

@@ -9,9 +9,11 @@ import { postRequest } from "../services/Api/HandleApi";
 import { endPoints } from "../services/utils/urls";
 import { filteredSchemeResponse, filteredSchemesKeys } from "./data-interfaces/explore";
 import SwitchSchemes from "../components/SwitchSchemes";
+import { useLocation } from "react-router-dom";
 
 
 const AllMutualFunds = () => {
+  const location = useLocation()
   const [amcCode, setAmcCode] = useState<number[]>([])
   const [assetCode, setAssetCode] = useState<number[]>([1])
   const [classCode, setClassCode] = useState<number[]>([])
@@ -107,7 +109,7 @@ const AllMutualFunds = () => {
       <MyNavbar />
       <Container className="mt-4">
         <div className="d-md-block d-none">
-          <h4 className="fw-bold">All Mutual Funds</h4>
+          <h4 className="fw-bold">{location.state ? location.state:"All Mutual Funds"}</h4>
           <p>
             Discover mutual funds across all categories using the all mutual funds
             screener

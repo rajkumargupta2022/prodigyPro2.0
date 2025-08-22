@@ -9,6 +9,8 @@ import { bankMandateKeys, bankMandateResponse, schemeDeatilDataKeys } from "../p
 import { endPoints } from "../services/utils/urls";
 import { finalTransaction } from "../services/utils/transactionApi";
 import { keys } from "../services/utils/keys";
+import { fetchAdminUser } from "../services/user/adminUser";
+import { errorToast } from "../services/utils/toast";
 interface bankMandate {
   show: boolean;
   setShow: (show: boolean) => void;
@@ -30,8 +32,13 @@ const BankMandate: React.FC<bankMandate> = ({ show, setShow, schemeList, setSche
   }, [show])
 
   const fetchMandateList = async () => {
+    const adminUser = fetchAdminUser()
+    if(!adminUser){
+      errorToast("Something went wrong")
+      return
+    }
     try {
-      const res = await postRequest<bankMandateResponse>(endPoints.getMandateList, { ucc: 109780 })
+      const res = await postRequest<bankMandateResponse>(endPoints.getMandateList, { ucc: adminUser?.ucc })
       setMandateList(res.mandates)
      await handleMandate(res.mandates[0]?.umrn_no, res?.mandates[0]?.from_date, res.mandates[0]?.to_date)
 

@@ -19,10 +19,10 @@ const Login = () => {
   const [mobileError, setMobileError] = useState<string>("");
 
   useEffect(() => {
-    // const token = localStorage.getItem("token")
-    let token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ3cTgxc2xpNGZ4Y2pnIiwibW9iaWxlIjo4OTYwMDA2NjAxLCJpYXQiOjE3NTI4MTg5OTB9.O86tGRwc_ublWfFTc-mhofwURc7z-MaB2M9qI4wKFCg"
-    localStorage.setItem("token",token)
-    localStorage.setItem("pan","AHNPG8965C")
+    const token = localStorage.getItem("token")
+    // let token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ3cTgxc2xpNGZ4Y2pnIiwibW9iaWxlIjo4OTYwMDA2NjAxLCJpYXQiOjE3NTI4MTg5OTB9.O86tGRwc_ublWfFTc-mhofwURc7z-MaB2M9qI4wKFCg"
+    // localStorage.setItem("token",token)
+    // localStorage.setItem("pan","AHNPG8965C")
     if (token) {
       navigate("/dashboard")
     }

@@ -1,4 +1,4 @@
-import { ChevronRight, Search } from "react-bootstrap-icons";
+import {  Search } from "react-bootstrap-icons";
 import { imageUrl } from "../services/utils/urls";
 import { Card, Col, Form, Row } from "react-bootstrap";
 import { filteredSchemesKeys } from "../pages/data-interfaces/explore";
@@ -58,11 +58,11 @@ const SwitchSelectionScheme: React.FC<SwitchSelectionProps> = ({ filteredSchemes
                       </div>
                     </div>
                   </div>
-                  <div className="col-2 py-2 text-md-end text-start" >
+                  {/* <div className="col-2 py-2 text-md-end text-start" >
                     <div className="text-secondary" >
                       <ChevronRight className="funds-rightsign-prodgy12" size={20} />
                     </div>
-                  </div>
+                  </div> */}
                 </div>
                 <hr className="fw-light text-secondary my-1" />
                 <div className="row">

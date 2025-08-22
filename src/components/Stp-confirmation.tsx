@@ -2,11 +2,11 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Card from 'react-bootstrap/Card';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import OrderPlaces from './order-places';
 import { ArrowDown } from 'react-bootstrap-icons';
 import { cartItemKey, switchKeys } from '../pages/data-interfaces/transact';
-import { currentDateInStringNumber, daysAdded } from '../services/dates/dateFormater';
+import { currentDateInStringNumber, dateForApi, daysAdded } from '../services/dates/dateFormater';
 import { postRequest } from '../services/Api/HandleApi';
 import { endPoints, imageUrl } from '../services/utils/urls';
 import DatePicker from 'react-datepicker';
@@ -26,23 +26,24 @@ const StpConfiramtion: React.FC<investmetProps> = ({ show, setShow, cartItem, se
   const [successData, setSuccessData] = useState<switchKeys[]>([])
   const [isSwitchAmount, setIsSwitchAmount] = useState<boolean>(true)
   const [frequency, setFrequency] = useState<string>(cartItem[0]?.stpFrequency[0])
-  const [fromDate, setFromDate] = useState<Date>(new Date())
+  const [fromDate, setFromDate] = useState<Date>()
   const [toDate, setToDate] = useState<Date>()
 
-  const finalSwitch = async () => {  
-    if(!cartItem[0]?.amount && cartItem[0]?.installment_units){
+  const finalSwitch = async () => {
+   
+    if (!cartItem[0]?.amount && cartItem[0]?.installment_units) {
       errorToast("Plaese enter amount or units...")
       return
     }
-     if(!frequency){
+    if (!frequency) {
       errorToast("Plaese select frequency...")
       return
     }
-     if(!fromDate){
+    if (!fromDate) {
       errorToast("Plaese select from date...")
       return
     }
-    if(!toDate){
+    if (!toDate) {
       errorToast("Plaese select from date...")
       return
     }
@@ -53,7 +54,7 @@ const StpConfiramtion: React.FC<investmetProps> = ({ show, setShow, cartItem, se
     }
     const reqBody = {
       ucc: adminUser.ucc,
-      cartItems: cartItem
+      cartItems: bodyData()
     }
     try {
       const res = await postRequest<any>(endPoints.stp, reqBody)
@@ -69,8 +70,23 @@ const StpConfiramtion: React.FC<investmetProps> = ({ show, setShow, cartItem, se
 
     }
   }
-  
-  
+
+  const bodyData = () => {
+    const data = cartItem.map((item: cartItemKey) => {
+      return {
+        schemeName: item.toScheme,
+        fromNSEProductCode: item.fromAccordProductCode,
+        toNSEProductCode: item.toAccordProductCode,
+        amount: item.amount || 0,
+        folioNumber: item.folioNumber,
+        installment_units: item.installment_units || 0,
+        from_date: dateForApi(fromDate),
+        to_date: dateForApi(toDate)
+
+      }
+    })
+    return data
+  }
   // useEffect(()=>{
   //  setFromDate(daysAdded(7,cartItem[0]?.stpDateList));
   //  setToDate(daysAdded(8,cartItem[0]?.stpDateList))
@@ -162,7 +178,7 @@ const StpConfiramtion: React.FC<investmetProps> = ({ show, setShow, cartItem, se
               <div className="d-flex justify-content-between">
                 <div className="d-flex">
                   <div className="prod_icon_img">
-                    <img src={imageUrl+item.fromAccordAMCCode+".png"} height={35} width={35} className='rounded' alt="" />
+                    <img src={imageUrl + item.fromAccordAMCCode + ".png"} height={35} width={35} className='rounded' alt="" />
                   </div>
                   <div className="ms-2 prod_icon_heading">
                     <h4>{item.toScheme}</h4>
@@ -179,7 +195,7 @@ const StpConfiramtion: React.FC<investmetProps> = ({ show, setShow, cartItem, se
               <div className="d-flex justify-content-between">
                 <div className="d-flex">
                   <div className="prod_icon_img">
-                    <img src={imageUrl+item.toAccordAMCCode+".png"} height={35} width={35} className='rounded' alt="" />
+                    <img src={imageUrl + item.toAccordAMCCode + ".png"} height={35} width={35} className='rounded' alt="" />
                   </div>
                   <div className="ms-2 prod_icon_heading">
                     <h4>{item.fromScheme}</h4>
@@ -210,13 +226,13 @@ const StpConfiramtion: React.FC<investmetProps> = ({ show, setShow, cartItem, se
               <div className="form-group">
                 <label htmlFor="amountFor" className='fs12px'>SWITCH {isSwitchAmount ? "AMOUNT" : "UNIT"}</label>
                 <input type="text" value={isSwitchAmount ? item.amount : item.installment_units} className="form-control" id="amountFor" aria-describedby="emailHelp" placeholder={`${isSwitchAmount ? "Enter Amount" : "Enter Unit"}`} onChange={(e) => handleAmount(e, index, item)} />
-               
+
               </div>
               <div className="row">
                 <div className="form-group col-md-12 col-sm-12">
                   <label htmlFor="amountFor" className='fs12px'>FREQUENCY</label>
                   <Form.Select value={frequency} onChange={(e) => setFrequency(e.target.value)}>
-                    {cartItem[0]?.stpFrequency?.map((item:any) => {
+                    {cartItem[0]?.stpFrequency?.map((item: any) => {
                       return <option value={item}>{item}</option>
                     })}
 
@@ -231,7 +247,7 @@ const StpConfiramtion: React.FC<investmetProps> = ({ show, setShow, cartItem, se
                     filterDate={isAllowedDay}
                     placeholderText="Select a date"
                     dateFormat="dd/MM/yyyy"
-                    minDate={daysAdded(7,cartItem[0].stpDateList)}
+                    minDate={daysAdded(7, cartItem[0].stpDateList)}
                     className="form-control"
                   />
                 </div>
@@ -243,13 +259,12 @@ const StpConfiramtion: React.FC<investmetProps> = ({ show, setShow, cartItem, se
                     filterDate={isAllowedDay}
                     placeholderText="Select a date"
                     dateFormat="dd/MM/yyyy"
-                    minDate={daysAdded(8,cartItem[0].stpDateList)}
-
+                    minDate={daysAdded(8, cartItem[0].stpDateList)}
                     className="form-control"
                   />
                 </div>
               </div>
-              
+
             </div>
           })}
 

@@ -24,10 +24,7 @@ export enum endPoints{
    getAssetTypesList="product/get-assetTypes-list",
    getCategoryTypesList="product/get-categoryTypes-list",
    swp="transact/swp",
-<<<<<<< HEAD
    switch="transact/switch",
-   stp="transact/stp"
-=======
+   stp="transact/stp",
    getHelpandSupport ="content/get-help-support"
->>>>>>> 02ce62f9dd964a5e4106a4bfae05b2bb12a0ee3b
 }

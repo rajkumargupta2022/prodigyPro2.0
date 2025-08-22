@@ -1,6 +1,4 @@
 import NavBar from "../components/Navbar";
-import icici from "../assets/img/bank-logo/icici.png"
-import sbi from "../assets/img/bank-logo/sbi.png"
 import { ChevronRight } from "react-bootstrap-icons";
 import { useState } from "react";
 import SchemeDetails from "../components/SchemeDetails";
@@ -10,9 +8,9 @@ import RecomendedSchemes from "../components/Recomended-schemes";
 const RecommendedFunds = () => {
   const navigate = useNavigate()
   const [openSchemeDetail, setOpenSchemeDetail] = useState<boolean>(false)
-  const handleSchemeDetail = () => {
-    setOpenSchemeDetail(true)
-  }
+  // const handleSchemeDetail = () => {
+  //   setOpenSchemeDetail(true)
+  // }
   return (
     <>
       <NavBar />

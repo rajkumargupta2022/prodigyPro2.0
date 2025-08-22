@@ -24,7 +24,7 @@ const SwitchPortfolio: React.FC<investmetProps> = ({ show, setShow, target, refD
    const portfolioType = localStorage.getItem("portfolioType")
    if(portfolioType==="family"){
      setSelected(portfolioType)
-     handleCheckboxChange(portfolioType)
+     handleCheckboxChange(portfolioType)  
    }else{
      setSelected("my")
      handleCheckboxChange("my")
@@ -58,15 +58,15 @@ const SwitchPortfolio: React.FC<investmetProps> = ({ show, setShow, target, refD
       >
         <Popover id="popover-contained">
           <Popover.Body>
-            <div className="my-portfolio-area25 border-bottom">
-              <div className="check-box-area25">
+            <div className="my-portfolio-area25 border-bottom crPointer" onClick={() => handleCheckboxChange("my")}>
+                    
+              <div className="check-box-area25 " >
                 <div className="round">
                   <input
                     type="checkbox"
                     className="roundCheckbox"
                     id="myPortfolio"
                     checked={selected === "my"}
-                    onChange={() => handleCheckboxChange("my")}
                   />
                   <label className="mt-0" htmlFor="myPortfolio"></label>
                   <div className="ms-2 my-port-paragraph">
@@ -74,7 +74,7 @@ const SwitchPortfolio: React.FC<investmetProps> = ({ show, setShow, target, refD
                   </div>
                 </div>
               </div>
-              <div className="amount-area25">
+              <div className="amount-area25 ">
                 <p>
                   <CurrencyRupee className="mb-1" />{familySnapShotData[0]?.Totalmarketvalue?.toLocaleString("en-In")}
                 </p>
@@ -82,15 +82,15 @@ const SwitchPortfolio: React.FC<investmetProps> = ({ show, setShow, target, refD
             </div>
 
             {/* Family Portfolio */}
-            <div className="my-portfolio-area25 pt-2">
-              <div className="check-box-area25">
+            <div className="my-portfolio-area25 pt-2 crPointer" onClick={() => handleCheckboxChange("family")}>
+              <div className="check-box-area25 " >
                 <div className="round">
                   <input
                     type="checkbox"
                     className="roundCheckbox"
                     id="familyPortfolio"
                     checked={selected === "family"}
-                    onChange={() => handleCheckboxChange("family")}
+                    
                   />
                   <label className="mt-0" htmlFor="familyPortfolio"></label>
                   <div className="ms-2 my-port-paragraph">

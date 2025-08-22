@@ -101,7 +101,27 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
   }, [foliosFetched, schemeList]);
 
   const defaultTransactionType = () => {
-    setIsSipTransaction(checkTransactionAllowed(schemeList, keys.sip) ? true : false)
+    let data = checkTransactionAllowed(schemeList, keys.sip) ? true : false
+    setIsSipTransaction(data)
+      if(!data){
+        setAddAmountValues({
+        min: 5000,
+        first: 10000,
+        second: 15000,
+        third: 25000
+      })
+        setAmount(5000);
+    distributeAmount(5000);
+      }else{
+         setAddAmountValues({
+        min: 1000,
+        first: 2000,
+        second: 3000,
+        third: 5000
+      })
+        setAmount(1000);
+    distributeAmount(1000);
+      }
   }
 
   const fetchFolios = async () => {

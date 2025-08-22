@@ -5,7 +5,6 @@ import Card from 'react-bootstrap/Card';
 import { useState } from 'react';
 import OrderPlaces from './order-places';
 import { ArrowDown } from 'react-bootstrap-icons';
-import icici from "../assets/img/bank-logo/icici.png"
 import { cartItemKey, switchKeys, switchResponse } from '../pages/data-interfaces/transact';
 import { currentDateInStringNumber } from '../services/dates/dateFormater';
 import { postRequest } from '../services/Api/HandleApi';
@@ -211,7 +210,7 @@ const SwitchConfirmation: React.FC<investmetProps> = ({ show, setShow, cartItem,
         </Modal.Body>
         <small className='fs12px modal-bg text-center'>According to SEBI guidelines, redemption payouts are processed only to the bank account registered in the folio statement.</small>
         <Modal.Footer className='modal-bg '>
-          <Button className='customButton buttunCenter' onClick={finalSwitch}>Switch</Button>
+          <Button className='customButton buttunCenter' onClick={finalSwitch}>Transafer</Button>
         </Modal.Footer>
       </Modal>
       <OrderPlaces show={openSuccess} setShow={setOpenSuccess} successData={successData} />

@@ -10,6 +10,7 @@ import { checkTransactionAllowed } from "../services/utils/services";
 import { keys } from "../services/utils/keys";
 import { daysAdded } from "../services/dates/dateFormater";
 import DatePicker from "react-datepicker";
+import { errorToast } from "../services/utils/toast";
 
 interface addAmountKeys {
   min: number,
@@ -42,16 +43,15 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
     ) {
       handleMinAmount(true);
       fetchFolios();
-   const newDate = daysAdded(7);
-    
-  setSchemeList((prev: any) =>
-  prev.map((obj: any) => {
-    return {
-      ...obj,
-      start_date: newDate,
-    };
-  })
-);
+
+      setSchemeList((prev: any) =>
+        prev.map((obj: any) => {
+          return {
+            ...obj,
+            start_date: null,
+          };
+        })
+      );
       setAmount(schemeList[0].minSIPAmt ?? 1000);
     }
   }, [schemeList]);
@@ -93,8 +93,8 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
     }
     handleMinAmount(type)
   }
-  const dateHandle = (e:Date|null) => {
-   
+  const dateHandle = (e: Date | null) => {
+
     setSchemeList((prev: any) =>
       prev.map((obj: any) => ({
         ...obj,
@@ -196,7 +196,10 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
 
   const handleFolioSelection = () => {
     const minTotal = isSipTransaction ? schemeList[0]?.minSIPAmt : schemeList[0]?.minLumSumAmt
-
+    if(!schemeList[0]?.start_date && isSipTransaction){
+      errorToast("Plaese select day of sip..")
+      return
+    }
     if (amount <= 0) {
       setAmountErrorMsg("Enter investment amount")
       return
@@ -233,15 +236,15 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
             <div className="d-flex">
               <div className="ms-2 prod_icon_heading">
                 <p>Day of SIP</p>
-                 <DatePicker
-                                      selected={schemeList[0]?.start_date}
-                                      onChange={(e)=>dateHandle(e)}
-                                      filterDate={isAllowedDay}
-                                      placeholderText="DD/MM/YYYY"
-                                      dateFormat="dd/MM/yyyy"
-                                      minDate={daysAdded(7)}
-                                      className="form-control border-0 focus_datepickers121"
-                                    />
+                <DatePicker
+                  selected={schemeList[0]?.start_date}
+                  onChange={(e) => dateHandle(e)}
+                  filterDate={isAllowedDay}
+                  placeholderText="DD/MM/YYYY"
+                  dateFormat="dd/MM/yyyy"
+                  minDate={daysAdded(7,schemeList[0]?.sipDateList)}
+                  className="form-control border-0 focus_datepickers121"
+                />
               </div>
             </div>
             <div className="prod_view_fund align-self-center">

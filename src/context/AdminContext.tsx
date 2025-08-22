@@ -61,59 +61,68 @@ export const AdminUserProvider = ({ children }: { children: ReactNode }) => {
         localStorage.setItem("familyList", JSON.stringify(res.data))
         filterAdmin(res.data)
       }
-    } else if (adminData[0]?.ucc) {
+    } else if (adminData && adminData.length > 0 && adminData[0]?.ucc) {
       filterAdmin(adminData)
-
     }
   }
 
   const filterAdmin = (data: allFamilyListKeys[]) => {
-
     let familyMember: allFamilyListKeys[] = []
     let adminData: any = localStorage.getItem("adminUser")
-    adminData = JSON.parse(adminData)
+    adminData = adminData ? JSON.parse(adminData) : null
+    
     if (!adminData?.ucc) {
+      // First time setup - find Self and set as admin
       for (const item of data) {
+        const formattedItem = {
+          ...item,
+          name: nameFormatter(item.name || ''),
+          relation: nameFormatter(item.relation || ''),
+          jh1_name: nameFormatter(item.jh1_name || ''),
+          jh2_name: nameFormatter(item.jh2_name || '')
+        }
+        
         if (item.relation === "Self") {
-          item.name = nameFormatter(item.name)
-          localStorage.setItem("adminUser", JSON.stringify(item))
-          item.relation = nameFormatter(item.relation)
-          item.jh1_name = nameFormatter(item.jh1_name)
-          item.jh2_name = nameFormatter(item.jh2_name)
-          setAdminUser(item)
-          familyPortfolio(item)
+          localStorage.setItem("adminUser", JSON.stringify(formattedItem))
+          setAdminUser(formattedItem)
+          familyPortfolio(formattedItem)
         } else {
-          item.name = nameFormatter(item.name)
-          item.relation = nameFormatter(item.relation)
-          item.jh1_name = nameFormatter(item.jh1_name)
-          item.jh2_name = nameFormatter(item.jh2_name)
-          familyMember.push(item)
+          familyMember.push(formattedItem)
         }
       }
       setFamilyMemberList(familyMember)
     } else {
+      // Admin already exists - separate admin from family members
+      let currentAdmin: allFamilyListKeys | null = null
+      
       for (const item of data) {
+        const formattedItem = {
+          ...item,
+          name: nameFormatter(item.name || ''),
+          relation: nameFormatter(item.relation || ''),
+          jh1_name: nameFormatter(item.jh1_name || ''),
+          jh2_name: nameFormatter(item.jh2_name || '')
+        }
+        
         if (item.ucc === adminData.ucc) {
-          item.name = nameFormatter(item.name)
-          item.relation = nameFormatter(item.relation)
-          item.jh1_name = nameFormatter(item.jh1_name)
-          item.jh2_name = nameFormatter(item.jh2_name)
-          localStorage.setItem("adminUser", JSON.stringify(item))
-          setAdminUser(item)
+          currentAdmin = formattedItem
+          localStorage.setItem("adminUser", JSON.stringify(formattedItem))
+          setAdminUser(formattedItem)
         } else {
-          item.name = nameFormatter(item.name)
-          item.relation = nameFormatter(item.relation)
-          item.jh1_name = nameFormatter(item.jh1_name)
-          item.jh2_name = nameFormatter(item.jh2_name)
-          familyMember.push(item)
-
+          familyMember.push(formattedItem)
         }
       }
       setFamilyMemberList(familyMember)
+      
+      // If current admin is found, fetch their portfolio
+      if (currentAdmin) {
+        familyPortfolio(currentAdmin)
+      }
     }
-
   }
+  
   const nameFormatter = (name: string): string => {
+    if (!name) return '';
     return name
       .toLowerCase()
       .replace(/\b\w/g, (char: string) => char.toUpperCase());
@@ -123,7 +132,15 @@ export const AdminUserProvider = ({ children }: { children: ReactNode }) => {
     adminData: allFamilyListKeys, setShow?: (show: boolean) => void
   ) => {
     localStorage.setItem("adminUser", JSON.stringify(adminData));
-    fetchFamilyPortfoloData();
+    setAdminUser(adminData);
+    
+    // Re-filter the family data to update family member list
+    let familyListData: any = localStorage.getItem("familyList")
+    if (familyListData) {
+      familyListData = JSON.parse(familyListData)
+      filterAdmin(familyListData)
+    }
+    
     familyPortfolio(adminData)
     fetchDetailedPortfolio(adminData?.ucc)
     if (setShow) setShow(false);
@@ -136,12 +153,15 @@ export const AdminUserProvider = ({ children }: { children: ReactNode }) => {
       });
       if (res) {
         setFamilySnapShotData(res.finalArray)
-        if (res?.finalArray?.length > 1 ) {
+        if (res?.finalArray?.length > 1) {
           const portfolioType = localStorage.getItem("portfolioType")
           if (res.finalArray[0]?.myPortfolio && portfolioType === "my") {
             setSnapshotData(res.finalArray[0])
           } else if (!res.finalArray[1]?.myPortfolio && portfolioType === "family") {
             setSnapshotData(res.finalArray[1])
+          } else {
+            // Default to first available portfolio if portfolioType doesn't match
+            setSnapshotData(res.finalArray[0])
           }
         } else if (res?.finalArray?.length === 1) {
           localStorage.setItem("portfolioType", "my")
@@ -160,9 +180,7 @@ export const AdminUserProvider = ({ children }: { children: ReactNode }) => {
             equityPercentFinal: "",
             myPortfolio: false,
           })
-
         }
-
       }
     } else {
       fetchFamilyPortfoloData();
@@ -180,8 +198,6 @@ export const AdminUserProvider = ({ children }: { children: ReactNode }) => {
         myPortfolio: false,
       })
     }
-
-
   }
 
   const fetchDetailedPortfolio = async (ucc: string) => {
@@ -197,17 +213,29 @@ export const AdminUserProvider = ({ children }: { children: ReactNode }) => {
       setPortfolioDetailData([])
     }
   }
-    return (
-      <AdminUserContext.Provider value={{ adminUser, familyMemberList, switchProfile, familySnapShotData, snapshotData, familyPortfolio, setSnapshotData, fetchDetailedPortfolio, setPortfolioDetailData, portfolioDetailData }}>
-        {children}
-      </AdminUserContext.Provider>
-    );
-  };
 
-  export const useAdminUser = () => {
-    const context = useContext(AdminUserContext);
-    if (!context) {
-      throw new Error("Error during export  admin user from context");
-    }
-    return context;
-  };
+  return (
+    <AdminUserContext.Provider value={{ 
+      adminUser, 
+      familyMemberList, 
+      switchProfile, 
+      familySnapShotData, 
+      snapshotData, 
+      familyPortfolio, 
+      setSnapshotData, 
+      fetchDetailedPortfolio, 
+      setPortfolioDetailData, 
+      portfolioDetailData 
+    }}>
+      {children}
+    </AdminUserContext.Provider>
+  );
+};
+
+export const useAdminUser = () => {
+  const context = useContext(AdminUserContext);
+  if (!context) {
+    throw new Error("Error during export admin user from context");
+  }
+  return context;
+};

@@ -42,7 +42,7 @@ const PopularFunds = () => {
   }
    const fundDetails = (item: filteredSchemesKeys) => {
     
-    navigate("/fund-details", { state: { accordSchemeCode: item.Schemecode, fromPortfolio: false } })
+    navigate("/fund-details", { state: { accordSchemeCode: item.accordSchemeCode, fromPortfolio: false } })
   }
 
 

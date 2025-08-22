@@ -1,7 +1,4 @@
 import NavBar from "../../components/Navbar";
-import Breadcrumb from "react-bootstrap/Breadcrumb";
-import icici from "../../assets/img/bank-logo/icici.png"
-import { ChevronRight } from "react-bootstrap-icons";
 import { useLocation } from "react-router-dom";
 import { useState } from "react";
 import SchemeDetails from "../../components/SchemeDetails";
@@ -10,9 +7,7 @@ import RecomendedSchemes from "../../components/Recomended-schemes";
 const RecommendedSchemeGoal = () => {
   const location = useLocation()
   const [openSchemeDetail,setOpenSchemeDetail] = useState<boolean>(false)
-  const handleSchemeDetail = ()=>{
-    setOpenSchemeDetail(true)
-  }
+
   return (
     <>
       <NavBar />

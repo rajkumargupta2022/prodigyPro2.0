@@ -6,7 +6,7 @@ import {
   Star,
 } from "react-bootstrap-icons";
 import RateYourRM from "../components/Rate-Your-RM";
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 // import axios from "axios";
 
 function HelpSupport({ backButton }: { backButton: any; activeInactive: any }) {

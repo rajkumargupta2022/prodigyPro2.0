@@ -49,7 +49,7 @@ export function dayToUTCFormat(day: number): string {
 export const sevenDaysAdded  = ()=>{
   return new Date(new Date().setDate(new Date().getDate() + 7))
 }
-export const daysAdded = (
+export  const daysAdded = (
   days: number,
   validDates: number[] = [],
   toDate: boolean = false
@@ -60,26 +60,29 @@ export const daysAdded = (
   const newDate = new Date(today);
   newDate.setDate(today.getDate() + days);
 
+  // ✅ If no validDates given → just return calculated date
+  if (validDates.length === 0) {
+    return newDate;
+  }
+
   const newDay = newDate.getDate();
 
-  // Step 2: If exact date is valid and toDate=false
+  // Step 2: If exact date is valid and toDate = false
   if (!toDate && validDates.includes(newDay)) {
     return newDate;
   }
 
   // Step 3: Collect all future valid dates in the same month
-  const futureDates = validDates.filter(d => d >= newDay);
+  const futureDates = validDates.filter((d) => d >= newDay).sort((a, b) => a - b);
 
   if (futureDates.length > 0) {
     const pickedDay = toDate
-      ? futureDates[1] ?? null // second nearest
-      : futureDates[0];        // first nearest
+      ? (futureDates[1] ?? futureDates[0]) // 2nd nearest if exists, else 1st
+      : futureDates[0];
 
-    if (pickedDay) {
-      const adjusted = new Date(newDate);
-      adjusted.setDate(pickedDay);
-      return adjusted;
-    }
+    const adjusted = new Date(newDate);
+    adjusted.setDate(pickedDay);
+    return adjusted;
   }
 
   // Step 4: If no valid future date in this month → pick next month
@@ -87,7 +90,7 @@ export const daysAdded = (
   nextMonthDate.setMonth(nextMonthDate.getMonth() + 1);
 
   const pickedDay = toDate
-    ? validDates[1] ?? validDates[0] // 2nd valid if exists, otherwise 1st
+    ? (validDates[1] ?? validDates[0]) // 2nd valid if exists, else 1st
     : validDates[0];
 
   nextMonthDate.setDate(pickedDay);
@@ -96,18 +99,16 @@ export const daysAdded = (
 
 
 
-export const dateForApi =(date: Date): string => {
+
+
+export const dateForApi =(date: Date=new Date()): string => {
   const pad = (n: number) => n.toString().padStart(2, "0");
 
   const year = date.getFullYear();
   const month = pad(date.getMonth() + 1); // months are 0-indexed
   const day = pad(date.getDate());
 
-  const hours = pad(date.getHours());
-  const minutes = pad(date.getMinutes());
-  const seconds = pad(date.getSeconds());
-
-  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}.000`;
+  return `${year}-${month}-${day} ${"00"}:${"00"}:${"00.000"}`;
 }
 
 

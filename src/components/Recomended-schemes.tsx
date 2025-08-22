@@ -12,35 +12,43 @@ interface pageProps{
 
 const RecomendedSchemes: React.FC<pageProps>  = ({from}) => {
   const [sipDateList, setSipDateList] = useState<number[]>([])
-  const [selectedSchemeList, setSelectedSchemeList] = useState<schemeDeatilDataKeys[]>([])
   const schemeList = [
-     {
+    {
       "sipAllowed": true,
-      "stpAllowed": false,
-      "swpAllowed": false,
-      "purchaseAllowed": false,
-      "redemptionAllowed": true,
-      "switchAllowed": true,
-      "scheme": "Nippon India Power & Infra Fund(B)",
-      "accordSchemeCode": 2450,
-      "nseProductCode": "PSBP",
-      "nseAMCCode": "NIPPONINDIAMUTUALFUND_MF",
-      "amcCode": "RMF",
+      "stpAllowed": true,
+      "swpAllowed": true,
+      "purchaseAllowed": true,
+      "redemptionAllowed": false,
+      "switchAllowed": false,
+      "scheme": "HDFC Flexi Cap Fund(G)",
+      "accordSchemeCode": 1131,
+      "nseProductCode": "02-L1",
+      "nseAMCCode": "HDFCMUTUALFUND_MF",
+      "accordAMCCode": 400013,
+      "amcName": "HDFC",
       "nseReinvestTag": "Z",
-      "launchDate": "2004-05-08T00:00:00.000Z",
+      "launchDate": "1995-01-01 00:00:00.000",
       "lockInPeriod": 0,
-      "ISIN": "INF204K01AD2",
-      "cnav": 341.44,
-      "expenseRatio": 1.82,
+      "ISIN": "INF179K01608",
+      "cnav": 2011.85,
+      "expenseRatio": 1.38,
       "planType": "NORMAL",
-      "planOption": "Bonus",
-      "equityType": "Sector Funds",
-      "fundSize": 0,
+      "planOption": "Growth",
+      "equityType": "Flexi Cap Fund",
+      "fundSize": 696390491000,
       "minSIPAmt": 1000,
       "minLumSumAmt": 5000,
       "exitLoadPeriod": 1,
-      "exitLoad": "1% on or before 1M, Nil after 1M",
-      "sipDateList": [
+      "exitLoad": "",
+      "sipDateList": [],
+      "stpDateList": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "swpDateList": [
         1,
         2,
         3,
@@ -70,16 +78,25 @@ const RecomendedSchemes: React.FC<pageProps>  = ({from}) => {
         27,
         28
       ],
-      "stpDateList": [],
-      "swpDateList": [],
-      "oneYearCAGR": -8.41,
-      "threeYearCAGR": 30.57,
-      "fiveYearCAGR": 31.48
+      "swpFrequency": [
+        "ANNUAL",
+        "SEMI-ANNUAL",
+        "MONTHLY",
+        "QUARTERLY"
+      ],
+      "stpFrequency": [
+        "WEEKLY",
+        "MONTHLY",
+        "QUARTERLY"
+      ],
+      "oneYearCAGR": 8.62,
+      "threeYearCAGR": 22.71,
+      "fiveYearCAGR": 27.59
     },
-    {
+        {
       "sipAllowed": true,
-      "stpAllowed": false,
-      "swpAllowed": false,
+      "stpAllowed": true,
+      "swpAllowed": true,
       "purchaseAllowed": true,
       "redemptionAllowed": false,
       "switchAllowed": false,
@@ -87,12 +104,13 @@ const RecomendedSchemes: React.FC<pageProps>  = ({from}) => {
       "accordSchemeCode": 7885,
       "nseProductCode": "SB346G-GR-L1",
       "nseAMCCode": "SBIMUTUALFUND_MF",
-      "amcCode": "L",
+      "accordAMCCode": 400027,
+      "amcName": "SBI",
       "nseReinvestTag": "Z",
       "launchDate": "2009-09-08T18:30:00.000Z",
       "lockInPeriod": 0,
       "ISIN": "INF200K01T28",
-      "cnav": 170.91,
+      "cnav": 174.68,
       "expenseRatio": 1.57,
       "planType": "NORMAL",
       "planOption": "Growth",
@@ -107,30 +125,7 @@ const RecomendedSchemes: React.FC<pageProps>  = ({from}) => {
         2,
         3,
         4,
-        5,
-        6,
-        7,
-        8,
-        9,
-        10,
-        11,
-        12,
-        13,
-        14,
-        15,
-        16,
-        17,
-        18,
-        19,
-        20,
-        21,
-        22,
-        23,
-        24,
-        25,
-        26,
-        27,
-        28
+        5
       ],
       "stpDateList": [
         1,
@@ -192,15 +187,32 @@ const RecomendedSchemes: React.FC<pageProps>  = ({from}) => {
         27,
         28
       ],
-      "oneYearCAGR": -7.02,
-      "threeYearCAGR": 16.92,
-      "fiveYearCAGR": 27.35
+      "swpFrequency": [
+        "MONTHLY",
+        "QUARTERLY"
+      ],
+      "stpFrequency": [
+        "WEEKLY",
+        "QUARTERLY",
+        "MONTHLY"
+      ],
+      "oneYearCAGR": -3.58,
+      "threeYearCAGR": 16.77,
+      "fiveYearCAGR": 24.66
     }
   ]
+  const [selectedSchemeList, setSelectedSchemeList] = useState<schemeDeatilDataKeys[]>(schemeList)
+
   const [openInvestmentConfirmation, setOpenInvestmentConfirmation] =
     useState<boolean>(false);
 
+
+   
+
+
   const handleInvestmentConfirmation = () => {
+    console.log("selectedddd",selectedSchemeList);
+    
     if (selectedSchemeList.length <= 0) {
       errorToast("Plaese select schemes..")
       return
@@ -249,7 +261,7 @@ const RecomendedSchemes: React.FC<pageProps>  = ({from}) => {
                   />
                     <label htmlFor={"checkbox" + index}></label>
                     <img
-                      src={`${imageUrl + item?.amcCode}.png`}
+                      src={`${imageUrl + item?.accordAMCCode}.png`}
                       className="rounded"
                       height={30}
                       width={30}

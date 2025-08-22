@@ -7,7 +7,6 @@ import ring from "../../assets/img/icons/engagement-ring 1.svg"
 import Card from 'react-bootstrap/Card';
 import { Link, useNavigate } from "react-router-dom"
 import { goalContent, GoalContentInterface } from "../data/goal"
-import { PlusCircle } from "react-bootstrap-icons";
 
 const GoalPlanning = () => {
   const navigate = useNavigate()
