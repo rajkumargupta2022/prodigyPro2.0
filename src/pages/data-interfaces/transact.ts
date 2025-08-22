@@ -121,6 +121,7 @@ export interface swpKey {
   schemeName: string;
 }
 
+<<<<<<< HEAD
 export interface swpResponse {
   success: boolean;
   data: swpKey[];
@@ -154,3 +155,16 @@ export interface switchKeys {
   reg_remark: string,
   schemeName: string
 }
+=======
+export interface swpResponse{
+  success:boolean,
+  data:swpKey[]
+}
+
+export interface HelpandSupport{
+  phoneSupport: string;
+  emailSupport: string;
+  whatsappSupport: string;
+  rmSupport: string;
+}
+>>>>>>> 02ce62f9dd964a5e4106a4bfae05b2bb12a0ee3b

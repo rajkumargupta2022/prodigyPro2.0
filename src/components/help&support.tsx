@@ -6,10 +6,29 @@ import {
   Star,
 } from "react-bootstrap-icons";
 import RateYourRM from "../components/Rate-Your-RM";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+// import axios from "axios";
 
 function HelpSupport({ backButton }: { backButton: any; activeInactive: any }) {
   const [show, setShow] = useState(false);
+
+
+//   const [phoneSupport, setPhoneSupport] = useState("");
+
+// useEffect(() => {
+//   const fetchHelpandSupport = async () => {
+//     try {
+//       const response = await axios.get<{ data: HelpandSupport }>(getHelpandSupport);
+
+//       const { phoneSupport } = response.data.data;
+//       setPhoneSupport(phoneSupport);
+//     } catch (error) {
+//       console.error("Error fetching support data:", error);
+//     }
+//   };
+
+//   fetchHelpandSupport();
+// }, []);
 
   return (
     <main className="col-md-9 ms-sm-auto col-lg-9 px-md-4 py-4">
@@ -21,8 +40,9 @@ function HelpSupport({ backButton }: { backButton: any; activeInactive: any }) {
       <hr className="fw-light text-secondary" />
 
       <div className="p-4 shadow-sm bg-white border-0 rounded-4 mb-2 mt-2">
+        
         <span>
-          Phone Support: <span className="link">(+91) 9876789156</span>
+          Phone Support: <span className="link">phoneSupport</span>
         </span>
         <br />
         <span className="note">
