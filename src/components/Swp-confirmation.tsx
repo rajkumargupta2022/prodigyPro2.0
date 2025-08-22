@@ -14,6 +14,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { errorToast } from '../services/utils/toast';
 import { postRequest } from '../services/Api/HandleApi';
+import { fetchAdminUser } from '../services/user/adminUser';
 interface investmetProps {
   show: boolean;
   setShow: (show: boolean) => void;
@@ -26,27 +27,39 @@ const SwpConfirmation: React.FC<investmetProps> = ({ show, setShow, swpList, sch
   const [openSuccess, setOpenSuccess] = useState(false)
   const [amount, setAmount] = useState<number>()
   const [frequency, setFrequency] = useState<string>("MONTHLY")
-  const [fromDate, setFromDate] = useState<Date>(new Date())
+  const [fromDate, setFromDate] = useState<Date>()
   const [toDate, setToDate] = useState<Date>()
   const [successDate, setSuccessDate] = useState<any[]>([])
 
 
-  useEffect(() => {
-    addDays(new Date(), 8)
-    let result = new Date(); // clone so original isn't changed
-    result.setDate(result.getDate() + 7);
-    setFromDate(result)
-  }, [])
+ 
 
 
 
   const handleSwpTransaction = async () => {
-    if (!amount || !frequency || !fromDate || !toDate) {
-      errorToast("All fields required..")
+    if (!amount) {
+      errorToast("Please enter amount...")
+      return
+    }
+    if (!frequency) {
+      errorToast("Please select frequency...")
+      return
+    }
+    if (!fromDate) {
+      errorToast("Please select from date...")
+      return
+    }
+    if (!toDate) {
+      errorToast("Please select to date...")
+      return
+    }
+    const adminUser = fetchAdminUser()
+    if(!adminUser){
+      errorToast("Something went wrong..")
       return
     }
     const body = {
-      ucc: "BFC00002",
+      ucc: adminUser.ucc,
       cartItems: [
         {
           schemeName: swpList[0]?.scheme,
@@ -90,8 +103,6 @@ const SwpConfirmation: React.FC<investmetProps> = ({ show, setShow, swpList, sch
   const isAllowedDay = (date: Date): boolean => {
     const allowedDays: number[] = schemeList[0]?.swpDateList.length > 0 ? schemeList[0]?.swpDateList : [];
     const dayOfMonth = date.getDate();
-    console.log("allowedDays?.includes(dayOfMonth)", allowedDays?.includes(dayOfMonth));
-
     return allowedDays?.includes(dayOfMonth);
   };
   return (
@@ -157,9 +168,9 @@ const SwpConfirmation: React.FC<investmetProps> = ({ show, setShow, swpList, sch
                   selected={fromDate}
                   onChange={handleFromDate}
                   filterDate={isAllowedDay}
-                  placeholderText="Select a date"
+                  placeholderText="DD/MM/YYYY"
                   dateFormat="dd/MM/yyyy"
-                  minDate={daysAdded(7)}
+                  minDate={daysAdded(7,schemeList[0]?.swpDateList)}
                   className="form-control"
                 />
               </div>
@@ -169,9 +180,9 @@ const SwpConfirmation: React.FC<investmetProps> = ({ show, setShow, swpList, sch
                   selected={toDate}
                   onChange={handleToDate}
                   filterDate={isAllowedDay}
-                  placeholderText="Select a date"
+                  placeholderText="DD/MM/YYYY"
                   dateFormat="dd/MM/yyyy"
-                  minDate={daysAdded(8)}
+                  minDate={daysAdded(8,schemeList[0]?.swpDateList)}
                   className="form-control"
                 />
               </div>

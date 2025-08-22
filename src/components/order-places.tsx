@@ -20,7 +20,7 @@ const OrderPlaces: React.FC<OrderPlaces> = ({ show, setShow,successData }) => {
       <Modal
         show={show}
         onHide={() => setShow(false)}
-        backdrop="static"
+        backdrop={true}
         keyboard={false}
       >
         <Modal.Body style={{ padding: 0 }}>

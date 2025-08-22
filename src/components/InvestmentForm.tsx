@@ -5,11 +5,10 @@ import { postRequest } from "../services/Api/HandleApi";
 import { endPoints } from "../services/utils/urls";
 import { Calendar4, CurrencyRupee } from "react-bootstrap-icons";
 import { Card } from "react-bootstrap";
-import SipDates from "./SipDate";
 import SelectFolioPopup from "./select-folio-popup";
 import { checkTransactionAllowed } from "../services/utils/services";
 import { keys } from "../services/utils/keys";
-import { dayToUTCFormat } from "../services/dates/dateFormater";
+import { daysAdded } from "../services/dates/dateFormater";
 import DatePicker from "react-datepicker";
 
 interface addAmountKeys {
@@ -32,10 +31,8 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
     third: 5000
   })
   const [openSelectFolio, setOpenSelectFolio] = useState<boolean>(false)
-  const [sipDate, setSipDate] = useState<number>(1)
   const [amount, setAmount] = useState<number>(0)
   const [amountErrorMsg, setAmountErrorMsg] = useState<string>("")
-  const [sipDateShow, setSipDateShow] = useState<boolean>(false)
 
   useEffect(() => {
     if (
@@ -45,7 +42,16 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
     ) {
       handleMinAmount(true);
       fetchFolios();
-      handleNearSipDate(schemeList[0].sipDateList);
+   const newDate = daysAdded(7);
+    
+  setSchemeList((prev: any) =>
+  prev.map((obj: any) => {
+    return {
+      ...obj,
+      start_date: newDate,
+    };
+  })
+);
       setAmount(schemeList[0].minSIPAmt ?? 1000);
     }
   }, [schemeList]);
@@ -87,18 +93,21 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
     }
     handleMinAmount(type)
   }
-  const handleSipDate = (value: number) => {
-    setSipDate(value)
-    const updatedList = [
-      {
-        ...schemeList[0],
-        start_date: dayToUTCFormat(value),
-      },
-    ];
+  const dateHandle = (e:Date|null) => {
+   
+    setSchemeList((prev: any) =>
+      prev.map((obj: any) => ({
+        ...obj,
+        start_date: e,
+      })))
 
-    setSchemeList(updatedList);
-    setSipDateShow(false)
+
   }
+  const isAllowedDay = (date: Date): boolean => {
+    const allowedDays: number[] = schemeList[0]?.sipDateList.length > 0 ? schemeList[0]?.sipDateList : [];
+    const dayOfMonth = date.getDate();
+    return allowedDays?.includes(dayOfMonth);
+  };
 
   const fetchFolios = async () => {
     const adminUser = fetchAdminUser();
@@ -122,7 +131,6 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
 
       setSchemeList(updatedList);
     } catch (error) {
-      // console.error("Error fetching folio:", error);
 
       const updatedList = [
         {
@@ -137,18 +145,7 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
   };
 
 
-  const handleNearSipDate = (dateList: number[]) => {
 
-    const today = new Date();
-    const currentDay = today.getDate();
-    const sipDateNumbers = dateList?.map(Number);
-    let nearestDate = sipDateNumbers?.find(date => date >= currentDay);
-    if (!nearestDate) {
-      nearestDate = sipDateNumbers[0];
-    }
-     handleSipDate(Number(String(nearestDate).padStart(2, '0')))
-    setSipDate(Number(String(nearestDate).padStart(2, '0')))
-  }
   const handleAmount = (
     e: React.ChangeEvent<HTMLInputElement>,
     maxAmount: number,
@@ -236,7 +233,15 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
             <div className="d-flex">
               <div className="ms-2 prod_icon_heading">
                 <p>Day of SIP</p>
-                <DatePicker  />
+                 <DatePicker
+                                      selected={schemeList[0]?.start_date}
+                                      onChange={(e)=>dateHandle(e)}
+                                      filterDate={isAllowedDay}
+                                      placeholderText="DD/MM/YYYY"
+                                      dateFormat="dd/MM/yyyy"
+                                      minDate={daysAdded(7)}
+                                      className="form-control border-0 focus_datepickers121"
+                                    />
               </div>
             </div>
             <div className="prod_view_fund align-self-center">
@@ -261,7 +266,6 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
 
       <Card.Header className='scheme-bg footerRadius px-3 py-2 fs12px'>NAV applicable once amount credited to AMC’s bank account</Card.Header>
     </div>
-    <SipDates show={sipDateShow} setShow={setSipDateShow} sipDate={sipDate} sipDateList={schemeList[0]?.sipDateList} handleSipDate={handleSipDate} />
     <SelectFolioPopup show={openSelectFolio} setShow={setOpenSelectFolio} schemeList={schemeList} setSchemeList={setSchemeList} isSipTransaction={isSipTransaction} />
   </>)
 }

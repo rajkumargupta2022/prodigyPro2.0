@@ -34,6 +34,7 @@ export interface schemeDeatilDataKeys {
   stpDateList: number[];
   swpDateList: number[];
   swpFrequency?: string[];
+  stpFrequency?: string[];
   oneYearCAGR: number;
   threeYearCAGR: number;
   fiveYearCAGR: number;
@@ -126,26 +127,30 @@ export interface swpResponse {
 }
 export interface cartItemKey {
   fromAccordProductCode: string;
-  toAccordProductCode: string;
+  toAccordProductCode: string | number;
   amount: number;
+  stpDateList: number[];
   folioNumber: string;
   installment_units: number;
+  stpFrequency?: any;
   all_units: boolean;
   toScheme?: string;
   fromScheme?: string;
-    fromValue?:number,
-      fromUnit?:number,
+  fromValue?: number,
+  fromUnit?: number,
+  fromAccordAMCCode?: number,
+  toAccordAMCCode?: number
 }
-export interface switchResponse{
-  success:boolean,
-  data:switchKeys[]
+export interface switchResponse {
+  success: boolean,
+  data: switchKeys[]
 }
-export interface switchKeys{
+export interface switchKeys {
   folio_no: string,
-            units?:string|number,
-            amount?:string|number
-            reg_status: boolean,
-            reg_id: string,
-            reg_remark: string,
-            schemeName: string
+  units?: string | number,
+  amount?: string | number
+  reg_status: boolean,
+  reg_id: string,
+  reg_remark: string,
+  schemeName: string
 }

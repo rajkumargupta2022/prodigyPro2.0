@@ -4,7 +4,7 @@ import { CurrencyRupee, ArrowUpCircleFill, ArrowDownCircleFill, ChevronDown } fr
 import { useEffect, useRef, useState } from "react";
 
 import AreYouSure from "../components/Are-You-sure";
-import OurServices from "./dashboard/Our-services";
+// import OurServices from "./dashboard/Our-services";
 import GoalPlanning from "./dashboard/Goal-planning";
 import PopularFunds from "./dashboard/Popular-funds";
 import DiscoverFUnds from "./dashboard/Discover-Funds";
@@ -75,7 +75,7 @@ const Dashboard = () => {
                   </div>
                 </Card.Body>
               </Card>
-              <OurServices />
+              {/* <OurServices /> */}
               <GoalPlanning />
               <PopularFunds />
             </div>

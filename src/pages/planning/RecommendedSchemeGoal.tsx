@@ -5,6 +5,7 @@ import { ChevronRight } from "react-bootstrap-icons";
 import { useLocation } from "react-router-dom";
 import { useState } from "react";
 import SchemeDetails from "../../components/SchemeDetails";
+import RecomendedSchemes from "../../components/Recomended-schemes";
 
 const RecommendedSchemeGoal = () => {
   const location = useLocation()
@@ -16,17 +17,7 @@ const RecommendedSchemeGoal = () => {
     <>
       <NavBar />
 
-      <div className="breadcum_area" style={{ backgroundColor: "#F2F4FB" }}>
-        <div className="personal_form_container p-3">
-          <Breadcrumb>
-            <Breadcrumb.Item href="#">Home</Breadcrumb.Item>
-            <Breadcrumb.Item href="https://getbootstrap.com/docs/4.0/components/breadcrumb/">
-              Library
-            </Breadcrumb.Item>
-            <Breadcrumb.Item active>Data</Breadcrumb.Item>
-          </Breadcrumb>
-        </div>
-      </div>
+     
       <div className="container pt-2">
         <div className="personal_form_container">
           <div className="row">
@@ -38,50 +29,7 @@ const RecommendedSchemeGoal = () => {
         </div>
       </div>
       <div className="container pt-2">
-        <div className="personal_form_container">
-          <p className="mb-2 ">Recommended Schemes</p>
-          <div className="bg-white px-4 rounded form_shadow">
-            <div className="row borderColor py-2">
-              <div className="round col-11">
-                <input type="checkbox" id="checkbox" />
-                <label htmlFor="checkbox"></label>
-                <img src={icici} height={30} width={30} alt="" />
-                <small className="mx-2">ICICI Prudential bluechip Funds</small>
-              </div>
-              <div className="col-1 adjustText  pb-2 crPointer  text-end">
-                <ChevronRight />
-              </div>
-            </div>
-          </div>
-          <div className="bg-white px-4  my-2 rounded form_shadow">
-            <div className="row borderColor py-2">
-              <div className="round col-11">
-                <input type="checkbox" id="checkbox" />
-                <label htmlFor="checkbox"></label>
-                <img src={icici} height={30} width={30} alt="" />
-                <small className="mx-2">ICICI Prudential bluechip Funds</small>
-              </div>
-              <div className="col-1 adjustText  pb-2 crPointer  text-end">
-                <ChevronRight />
-              </div>
-            </div>
-          </div>
-          <div className="bg-white px-4 my-2 rounded form_shadow">
-            <div className="row borderColor py-2">
-              <div className="round col-11">
-                <input type="checkbox" id="checkbox" />
-                <label htmlFor="checkbox"></label>
-                <img src={icici} height={30} width={30} alt="" />
-                <small className="mx-2">ICICI Prudential bluechip Funds</small>
-              </div>
-              <div className="col-1 adjustText  pb-2 crPointer  text-end">
-                <ChevronRight />
-              </div>
-            </div>
-          </div>
-          <div className="logoBlueColor text-decoration-none crPointer" >+ Add New Fund</div><br/>
-          <button type="button"  className="customButton px-2" onClick={handleSchemeDetail}>Continue</button>
-        </div>
+        <RecomendedSchemes  from={location?.state?.title}/>
       </div>
       <SchemeDetails show={openSchemeDetail} setShow={setOpenSchemeDetail}/>
     </>

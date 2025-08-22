@@ -1,22 +1,21 @@
-import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Card from 'react-bootstrap/Card';
 import { ArrowDown } from 'react-bootstrap-icons';
 import sbi from "../assets/img/bank-logo/sbi.png"
-import SwitchConfirmation from './SwitchConfirmation';
+// import SwitchConfirmation from './SwitchConfirmation';
 interface SwitchFundProp {
   show: boolean;
   setShow: (show: boolean) => void;
 }
 
 const SwitchFund: React.FC<SwitchFundProp> = ({ show, setShow }) => {
-  const [openInvestmentConfirmation, setOpenInvestmentConfirmation] = useState<boolean>(false)
+  // const [openInvestmentConfirmation, setOpenInvestmentConfirmation] = useState<boolean>(false)
 
-  const handleInvestmentConfirmation = () => {
-    setOpenInvestmentConfirmation(true)
-    setShow(false)
-  }
+  // const handleInvestmentConfirmation = () => {
+  //   setOpenInvestmentConfirmation(true)
+  //   setShow(false)
+  // }
 
   return (
     <>
@@ -153,10 +152,10 @@ const SwitchFund: React.FC<SwitchFundProp> = ({ show, setShow }) => {
 
         </Modal.Body>
         <Modal.Footer className='modal-bg'>
-          <Button className='customButton ' onClick={handleInvestmentConfirmation}>Switch</Button>
+          <Button className='customButton '>Switch</Button>
         </Modal.Footer>
       </Modal>
-      <SwitchConfirmation show={openInvestmentConfirmation} setShow={setOpenInvestmentConfirmation}/>
+      {/* <SwitchConfirmation show={openInvestmentConfirmation} setShow={setOpenInvestmentConfirmation} /> */}
     </>
   );
 }

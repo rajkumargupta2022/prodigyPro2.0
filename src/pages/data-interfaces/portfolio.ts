@@ -45,9 +45,9 @@ export interface detailPortfolioSchemeType {
   updated: string;
   gain: string;
   amcCode:string;
- 
+ stpDateList?:number[]
    schemeName?: string,
-  // accordProductCode?: number,
+  accordAMCCode: number,
   amount?: number,
   folioNumber?: string,
   redemption_units?: number,

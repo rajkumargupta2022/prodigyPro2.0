@@ -18,6 +18,7 @@ import { checkTransactionAllowed } from '../services/utils/services';
 import { finalTransaction } from '../services/utils/transactionApi';
 import OrderPlaces from './order-places';
 import DatePicker from 'react-datepicker';
+import { errorToast } from '../services/utils/toast';
 
 interface investmetProps {
   show: boolean;
@@ -65,13 +66,12 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
   useEffect(() => {
     fetchFolios()
     defaultTransactionType()
-    const newDate = daysAdded(7);
     
   setSchemeList((prev: any) =>
   prev.map((obj: any) => {
     return {
       ...obj,
-      start_date: newDate,
+      start_date: daysAdded(7,sipDateList),
     };
   })
 );
@@ -153,6 +153,10 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
       const minAmount = isSipTransaction ? scheme.minSIPAmt : scheme.minLumSumAmt;
       return acc + minAmount;
     }, 0);
+      if (!schemeList[0].start_date && isSipTransaction) {
+      errorToast("Please select sip day...")
+      return
+    }
     if (total <= 0) {
       setAmountErrorMsg("Enter investment amount")
       return
@@ -329,7 +333,7 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
                       filterDate={isAllowedDay}
                       placeholderText="DD/MM/YYYY"
                       dateFormat="dd/MM/yyyy"
-                      minDate={daysAdded(7)}
+                      minDate={daysAdded(7,sipDateList)}
                       className="form-control border-0 focus_datepickers121"
                     />
                   </div>

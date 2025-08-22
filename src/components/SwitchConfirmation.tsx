@@ -9,7 +9,7 @@ import icici from "../assets/img/bank-logo/icici.png"
 import { cartItemKey, switchKeys, switchResponse } from '../pages/data-interfaces/transact';
 import { currentDateInStringNumber } from '../services/dates/dateFormater';
 import { postRequest } from '../services/Api/HandleApi';
-import { endPoints } from '../services/utils/urls';
+import { endPoints, imageUrl } from '../services/utils/urls';
 import { fetchAdminUser } from '../services/user/adminUser';
 import { errorToast } from '../services/utils/toast';
 // import { FaArrowLeftLong } from "react-icons/fa6";
@@ -32,6 +32,14 @@ const SwitchConfirmation: React.FC<investmetProps> = ({ show, setShow, cartItem,
     if(!adminUser){
       errorToast("Something went wrong..")
       return
+    }
+    if(!cartItem[0]?.amount && isSwitchAmount){
+     errorToast("Plaese enter amount...")
+     return
+    }
+    if(!cartItem[0]?.installment_units && (!isSwitchAmount) ){
+     errorToast("Plaese enter units...")
+     return
     }
     const reqBody = {
       ucc: adminUser?.ucc,
@@ -138,7 +146,7 @@ const SwitchConfirmation: React.FC<investmetProps> = ({ show, setShow, cartItem,
               <div className="d-flex justify-content-between">
                 <div className="d-flex">
                   <div className="prod_icon_img">
-                    <img src={icici} height={35} width={35} alt="" />
+                    <img src={imageUrl+item.fromAccordAMCCode+".png"} className='rounded' height={35} width={35} alt="" />
                   </div>
                   <div className="ms-2 prod_icon_heading">
                     <h4>{item.toScheme}</h4>
@@ -155,7 +163,7 @@ const SwitchConfirmation: React.FC<investmetProps> = ({ show, setShow, cartItem,
               <div className="d-flex justify-content-between">
                 <div className="d-flex">
                   <div className="prod_icon_img">
-                    <img src={icici} height={35} width={35} alt="" />
+                    <img src={imageUrl+item.toAccordAMCCode+".png"} className='rounded' height={35} width={35} alt="" />
                   </div>
                   <div className="ms-2 prod_icon_heading">
                     <h4>{item.fromScheme}</h4>

@@ -87,12 +87,10 @@ const MyNavbar = () => {
             <Link to="#" className="prodgy_menu">
               <QuestionCircle size={24} />
             </Link>
-            <Link to="#" className="prodgy_menu">
+            {/* <Link to="#" className="prodgy_menu">
               <Bell size={24} />
-            </Link>
-            {/* <Nav.Link href="#">
-              <Person size={24} />
-            </Nav.Link> */}
+            </Link> */}
+        
             <Link to="#" className="profileNameSize prodgy_menu">
               <div className="d-flex gap-2" onClick={handleProfileModel}>
                 {adminUser?.profilePic?

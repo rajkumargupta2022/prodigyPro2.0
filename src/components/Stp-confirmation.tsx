@@ -2,14 +2,17 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Card from 'react-bootstrap/Card';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import OrderPlaces from './order-places';
 import { ArrowDown } from 'react-bootstrap-icons';
-import icici from "../assets/img/bank-logo/icici.png"
-import { cartItemKey, switchKeys, switchResponse } from '../pages/data-interfaces/transact';
-import { currentDateInStringNumber } from '../services/dates/dateFormater';
+import { cartItemKey, switchKeys } from '../pages/data-interfaces/transact';
+import { currentDateInStringNumber, daysAdded } from '../services/dates/dateFormater';
 import { postRequest } from '../services/Api/HandleApi';
-import { endPoints } from '../services/utils/urls';
+import { endPoints, imageUrl } from '../services/utils/urls';
+import DatePicker from 'react-datepicker';
+import { fetchAdminUser } from '../services/user/adminUser';
+import { errorToast } from '../services/utils/toast';
+import { Form } from 'react-bootstrap';
 interface investmetProps {
   show: boolean;
   setShow: (show: boolean) => void;
@@ -21,15 +24,39 @@ interface investmetProps {
 const StpConfiramtion: React.FC<investmetProps> = ({ show, setShow, cartItem, setCartItem }) => {
   const [openSuccess, setOpenSuccess] = useState(false)
   const [successData, setSuccessData] = useState<switchKeys[]>([])
-  const [isSwitchAmount, setIsSwitchAmount] = useState<boolean>(false)
+  const [isSwitchAmount, setIsSwitchAmount] = useState<boolean>(true)
+  const [frequency, setFrequency] = useState<string>(cartItem[0]?.stpFrequency[0])
+  const [fromDate, setFromDate] = useState<Date>(new Date())
+  const [toDate, setToDate] = useState<Date>()
 
-  const finalSwitch = async () => {
+  const finalSwitch = async () => {  
+    if(!cartItem[0]?.amount && cartItem[0]?.installment_units){
+      errorToast("Plaese enter amount or units...")
+      return
+    }
+     if(!frequency){
+      errorToast("Plaese select frequency...")
+      return
+    }
+     if(!fromDate){
+      errorToast("Plaese select from date...")
+      return
+    }
+    if(!toDate){
+      errorToast("Plaese select from date...")
+      return
+    }
+    const adminUser = fetchAdminUser()
+    if (!adminUser) {
+      errorToast("Something went wrong..")
+      return
+    }
     const reqBody = {
-      ucc: "BFC00002",
+      ucc: adminUser.ucc,
       cartItems: cartItem
     }
     try {
-      const res = await postRequest<switchResponse>(endPoints.switch, reqBody)
+      const res = await postRequest<any>(endPoints.stp, reqBody)
       console.log(res);
       if (res.data) {
 
@@ -41,26 +68,14 @@ const StpConfiramtion: React.FC<investmetProps> = ({ show, setShow, cartItem, se
       console.log(err);
 
     }
-
-
   }
-  const handleSwitchAllUnit = (e: React.ChangeEvent<HTMLInputElement>, allUnit: number, index: number) => {
-    const checked = e.target.checked; // <-- boolean, correct way
+  
+  
+  // useEffect(()=>{
+  //  setFromDate(daysAdded(7,cartItem[0]?.stpDateList));
+  //  setToDate(daysAdded(8,cartItem[0]?.stpDateList))
 
-
-    setCartItem((prev: any) =>
-      prev.map((item: cartItemKey, i: number) =>
-        i === index
-          ? {
-            ...item,
-            amount: checked ? 0 : item.amount, // reset amount if all_units true
-            installment_units: checked ? allUnit : 0,
-            all_units: checked,
-          }
-          : item
-      )
-    );
-  };
+  // },[show])
 
   const handleSwitchType = (value: boolean, allUnit: number, index: number) => {
     setIsSwitchAmount(value)
@@ -108,8 +123,25 @@ const StpConfiramtion: React.FC<investmetProps> = ({ show, setShow, cartItem, se
         return item;
       })
     );
+  };
+  function addDays(date: Date, days: number) {
+    let result = new Date(date); // clone so original isn't changed
+    result.setDate(result.getDate() + days);
+    setToDate(result)
+  }
+  const handleFromDate = (e: any) => {
+    setFromDate(e)
+    addDays(e, 1)
+  }
+  const handleToDate = (e: any) => {
+    setToDate(e)
+  }
 
-
+  // Function to check if date is allowed
+  const isAllowedDay = (date: Date): boolean => {
+    const allowedDays: number[] = cartItem[0]?.stpDateList.length > 0 ? cartItem[0]?.stpDateList : [];
+    const dayOfMonth = date.getDate();
+    return allowedDays?.includes(dayOfMonth);
   };
   return (
     <>
@@ -130,7 +162,7 @@ const StpConfiramtion: React.FC<investmetProps> = ({ show, setShow, cartItem, se
               <div className="d-flex justify-content-between">
                 <div className="d-flex">
                   <div className="prod_icon_img">
-                    <img src={icici} height={35} width={35} alt="" />
+                    <img src={imageUrl+item.fromAccordAMCCode+".png"} height={35} width={35} className='rounded' alt="" />
                   </div>
                   <div className="ms-2 prod_icon_heading">
                     <h4>{item.toScheme}</h4>
@@ -147,7 +179,7 @@ const StpConfiramtion: React.FC<investmetProps> = ({ show, setShow, cartItem, se
               <div className="d-flex justify-content-between">
                 <div className="d-flex">
                   <div className="prod_icon_img">
-                    <img src={icici} height={35} width={35} alt="" />
+                    <img src={imageUrl+item.toAccordAMCCode+".png"} height={35} width={35} className='rounded' alt="" />
                   </div>
                   <div className="ms-2 prod_icon_heading">
                     <h4>{item.fromScheme}</h4>
@@ -178,15 +210,46 @@ const StpConfiramtion: React.FC<investmetProps> = ({ show, setShow, cartItem, se
               <div className="form-group">
                 <label htmlFor="amountFor" className='fs12px'>SWITCH {isSwitchAmount ? "AMOUNT" : "UNIT"}</label>
                 <input type="text" value={isSwitchAmount ? item.amount : item.installment_units} className="form-control" id="amountFor" aria-describedby="emailHelp" placeholder={`${isSwitchAmount ? "Enter Amount" : "Enter Unit"}`} onChange={(e) => handleAmount(e, index, item)} />
-                {!isSwitchAmount &&
-                  <div className=" mt-2 form-check form-switch">
-                    <label className="form-check-label " htmlFor="flexSwitchCheckDefault">Switch All Units</label>
-                    <input className="form-check-input"
-                      type="checkbox"
-                      checked={item.all_units}
-                      onChange={(e) => handleSwitchAllUnit(e, Number(item.fromUnit), index)} id={`switch-${index}`} />
-                  </div>}
+               
               </div>
+              <div className="row">
+                <div className="form-group col-md-12 col-sm-12">
+                  <label htmlFor="amountFor" className='fs12px'>FREQUENCY</label>
+                  <Form.Select value={frequency} onChange={(e) => setFrequency(e.target.value)}>
+                    {cartItem[0]?.stpFrequency?.map((item:any) => {
+                      return <option value={item}>{item}</option>
+                    })}
+
+
+                  </Form.Select>
+                </div>
+                <div className="form-group col-md-6 col-sm-12">
+                  <label htmlFor="amountFor" className='fs12px'>FROM</label><br />
+                  <DatePicker
+                    selected={fromDate}
+                    onChange={handleFromDate}
+                    filterDate={isAllowedDay}
+                    placeholderText="Select a date"
+                    dateFormat="dd/MM/yyyy"
+                    minDate={daysAdded(7,cartItem[0].stpDateList)}
+                    className="form-control"
+                  />
+                </div>
+                <div className="form-group col-md-6 col-sm-12 ">
+                  <label htmlFor="amountFor" className='fs12px'>TO</label><br />
+                  <DatePicker
+                    selected={toDate}
+                    onChange={handleToDate}
+                    filterDate={isAllowedDay}
+                    placeholderText="Select a date"
+                    dateFormat="dd/MM/yyyy"
+                    minDate={daysAdded(8,cartItem[0].stpDateList)}
+
+                    className="form-control"
+                  />
+                </div>
+              </div>
+              
             </div>
           })}
 
@@ -195,7 +258,7 @@ const StpConfiramtion: React.FC<investmetProps> = ({ show, setShow, cartItem, se
         </Modal.Body>
         <small className='fs12px modal-bg text-center'>According to SEBI guidelines, redemption payouts are processed only to the bank account registered in the folio statement.</small>
         <Modal.Footer className='modal-bg '>
-          <Button className='customButton buttunCenter' onClick={finalSwitch}>STP</Button>
+          <Button className='customButton buttunCenter' onClick={finalSwitch}>Transafer</Button>
         </Modal.Footer>
       </Modal>
       <OrderPlaces show={openSuccess} setShow={setOpenSuccess} successData={successData} />

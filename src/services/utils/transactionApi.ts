@@ -4,7 +4,9 @@ import {
   sipPurchaseRedemptionResponse,
 } from "../../pages/data-interfaces/transact";
 import { postRequest } from "../Api/HandleApi";
+import { fetchAdminUser } from "../user/adminUser";
 import { keys } from "./keys";
+import { errorToast } from "./toast";
 // import { fetchAdminUser } from "../user/adminUser";
 import { purchaseFilterBody, redeemFilterBody, sipFilterBody } from "./transactionBody";
 import { endPoints } from "./urls";
@@ -14,9 +16,13 @@ export const finalTransaction = async (
   transactionType: string,
   datasetter: (vlaue: any) => void
 ) => {
-  // const adminUser = fetchAdminUser();
+  const adminUser = fetchAdminUser();
+  if(!adminUser){
+    errorToast("Something went wrong..")
+    return
+  }
   let transactionBody = {
-    ucc: "BFC00002",
+    ucc: adminUser?.ucc,
     transactionType: transactionType,
     cartItems:transactionType===keys.sip ? sipFilterBody(schemeList):transactionType===keys.purchase ? purchaseFilterBody(schemeList):"",
   };
@@ -44,9 +50,13 @@ export const redeemTransaction = async (
   transactionType: string,
   datasetter: (vlaue: any) => void
 ) => {
-  // const adminUser = fetchAdminUser();
+  const adminUser = fetchAdminUser();
+  if(!adminUser){
+    errorToast("Something went wrong...")
+    return
+  }
   let transactionBody = {
-    ucc: "BFC00002",
+    ucc: adminUser?.ucc,
     transactionType: transactionType,
     cartItems:redeemFilterBody(redeemList),
   };

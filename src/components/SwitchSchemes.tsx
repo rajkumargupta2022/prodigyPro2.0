@@ -18,7 +18,8 @@ const SwitchSchemes: React.FC<SchemesProps> = ({ handleFilter, isAvailable, filt
  
 
   const fundDetails = (item: filteredSchemesKeys) => {
-    navigate("/fund-details", { state: { accordSchemeCode: item.accordAMCCode, fromPortfolio: false } })
+    
+    navigate("/fund-details", { state: { accordSchemeCode: item.accordSchemeCode, fromPortfolio: false } })
   }
 
   return (
@@ -80,7 +81,7 @@ const SwitchSchemes: React.FC<SchemesProps> = ({ handleFilter, isAvailable, filt
               <div className="row justify-content-between">
                 <div className="col-8 py-2" onClick={() => fundDetails(item)}>
                   <div className="d-flex">
-                    <img src={`${imageUrl + item?.AMC_CODE}.png`} className="logoRadius" height={45} width={45} alt="Image not found" />
+                    <img src={`${imageUrl + item?.accordAMCCode}.png`} className="logoRadius" height={45} width={45} alt="Image not found" />
                     <div className="ms-2" style={{ flex: 4 }}>
                       <h6 style={{ margin: 0 }}>
                         {item.PRODUCT_LONG_NAME}

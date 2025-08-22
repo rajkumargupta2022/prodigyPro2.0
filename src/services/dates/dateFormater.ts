@@ -49,10 +49,52 @@ export function dayToUTCFormat(day: number): string {
 export const sevenDaysAdded  = ()=>{
   return new Date(new Date().setDate(new Date().getDate() + 7))
 }
-export const daysAdded  = (days:number)=>{
-  return new Date(new Date().setDate(new Date().getDate() + days))
-  
-}
+export const daysAdded = (
+  days: number,
+  validDates: number[] = [],
+  toDate: boolean = false
+): Date => {
+  const today = new Date();
+
+  // Step 1: Add given days to current date
+  const newDate = new Date(today);
+  newDate.setDate(today.getDate() + days);
+
+  const newDay = newDate.getDate();
+
+  // Step 2: If exact date is valid and toDate=false
+  if (!toDate && validDates.includes(newDay)) {
+    return newDate;
+  }
+
+  // Step 3: Collect all future valid dates in the same month
+  const futureDates = validDates.filter(d => d >= newDay);
+
+  if (futureDates.length > 0) {
+    const pickedDay = toDate
+      ? futureDates[1] ?? null // second nearest
+      : futureDates[0];        // first nearest
+
+    if (pickedDay) {
+      const adjusted = new Date(newDate);
+      adjusted.setDate(pickedDay);
+      return adjusted;
+    }
+  }
+
+  // Step 4: If no valid future date in this month → pick next month
+  const nextMonthDate = new Date(newDate);
+  nextMonthDate.setMonth(nextMonthDate.getMonth() + 1);
+
+  const pickedDay = toDate
+    ? validDates[1] ?? validDates[0] // 2nd valid if exists, otherwise 1st
+    : validDates[0];
+
+  nextMonthDate.setDate(pickedDay);
+  return nextMonthDate;
+};
+
+
 
 export const dateForApi =(date: Date): string => {
   const pad = (n: number) => n.toString().padStart(2, "0");

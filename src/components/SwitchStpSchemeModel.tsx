@@ -8,7 +8,7 @@ import { filteredSchemeResponse, filteredSchemesKeys } from '../pages/data-inter
 import { postRequest } from '../services/Api/HandleApi';
 import { endPoints } from '../services/utils/urls';
 import SwitchConfirmation from './SwitchConfirmation';
-import { cartItemKey } from '../pages/data-interfaces/transact';
+import { cartItemKey, schemeDeatilDataKeys, schemeDetailType } from '../pages/data-interfaces/transact';
 import { detailPortfolioSchemeType } from '../pages/data-interfaces/portfolio';
 import { keys } from '../services/utils/keys';
 import StpConfiramtion from './Stp-confirmation';
@@ -25,7 +25,7 @@ interface investmetProps {
 const SwitchSchemeModel: React.FC<investmetProps> = ({ show, setShow, selectedAmcCode, schemeList, transactionType }) => {
   const [openSwitchConfirmationModel, setOpenSwitchConfirmationModel] = useState<boolean>(false)
   const [openStpConfirmation, setOpenStpConfirmation] = useState<boolean>(false)
-  const [selectedSchemes, setSelectedSchemes] = useState<filteredSchemesKeys[]>([])
+  const [selectedSchemes, setSelectedSchemes] = useState<schemeDeatilDataKeys[]>([])
   const [cartItem, setCartItem] = useState<cartItemKey[]>([])
   const [filteredSchemes, setFilteredSchemes] = useState<filteredSchemesKeys[]>([])
 
@@ -52,17 +52,25 @@ if(selectedSchemes.length>0){
 
   }
   const mergeSchemes = () => {
+    
+    
     let cartData = [
       {
         fromScheme: schemeList.scheme,
-        toScheme: selectedSchemes[0]?.PRODUCT_LONG_NAME,
+        toScheme: selectedSchemes[0]?.scheme,
         fromAccordProductCode: schemeList.accordSchemeCode.toString(),
-        toAccordProductCode: selectedSchemes[0]?.PRODUCT_CODE,
+        stpDateList:selectedSchemes[0]?.stpDateList,
+        stpFrequency:selectedSchemes[0].stpFrequency,
+        fromAccordAMCCode:schemeList.accordAMCCode,
+        toAccordAMCCode:selectedSchemes[0].accordAMCCode,
+        frequency:"",
+        toAccordProductCode: selectedSchemes[0]?.accordSchemeCode,
         amount: 0,
         fromValue: Number(schemeList.currentvalue),
         fromUnit: Number(schemeList.unit),
         folioNumber: schemeList.folio,
         installment_units: Number(schemeList.unit),
+        from_date:"",
         all_units: true
       }
     ]
@@ -86,11 +94,22 @@ if(selectedSchemes.length>0){
     }
   }
   const handleSchemeSelection = (item: filteredSchemesKeys) => {
-    setSelectedSchemes([item])
+   
     checkIsSelected(item)
+    fetchSchemeDetail(item.accordSchemeCode)
   }
+  const fetchSchemeDetail = async (data:number|string="") => {
+      try {
+        const res = await postRequest<schemeDetailType>(endPoints.getSchemeDetails, { productcode: data })
+        setSelectedSchemes(res.data)
+    
+      } catch (err) {
+        setSelectedSchemes([])
+  
+      }
+    }
   const checkIsSelected = (item: filteredSchemesKeys) => {
-    return selectedSchemes.some(data => data.PRODUCT_CODE === item.PRODUCT_CODE)
+    return selectedSchemes.some(data => data.accordSchemeCode === item.accordSchemeCode)
   }
   return (
     <>
@@ -110,7 +129,7 @@ if(selectedSchemes.length>0){
           <Card.Header className='scheme-bg footerRadius px-3 py-2 fs12px'>{transactionType} orders once placed cannot be cancelled.</Card.Header>
 
         </Modal.Body>
-        <small className='fs12px modal-bg text-center'>According to SEBI guidelines, redemption payouts are processed only to the bank account registered in the folio statement.</small>
+        <small className='fs12px modal-bg text-center px-4'>According to SEBI guidelines, redemption payouts are processed only to the bank account registered in the folio statement.</small>
         <Modal.Footer className='modal-bg '>
           <Button className='customButton buttunCenter' onClick={handleSwitch}>Confirm Fund</Button>
         </Modal.Footer>

@@ -5,7 +5,7 @@ export const checkTransactionAllowed = (
   schemeList: schemeDeatilDataKeys[],
   checkType: string
 ) => {
-  for (let i = 0; i < schemeList.length; i++) {
+  for (let i = 0; i < schemeList?.length; i++) {
     if (checkType === keys.sip && (schemeList[i].sipDateList.length > 0) ) {
       return schemeList[i].sipAllowed;
     } else if (checkType === keys.purchase) {

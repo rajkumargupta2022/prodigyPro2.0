@@ -33,7 +33,7 @@ const BankMandate: React.FC<bankMandate> = ({ show, setShow, schemeList, setSche
     try {
       const res = await postRequest<bankMandateResponse>(endPoints.getMandateList, { ucc: 109780 })
       setMandateList(res.mandates)
-      handleMandate(res.mandates[0].umrn_no, res.mandates[0].from_date, res.mandates[0].to_date)
+     await handleMandate(res.mandates[0]?.umrn_no, res?.mandates[0]?.from_date, res.mandates[0]?.to_date)
 
     } catch (err) {
       setMandateList([])
@@ -41,7 +41,7 @@ const BankMandate: React.FC<bankMandate> = ({ show, setShow, schemeList, setSche
   }
   const [selectedUrn, setSelectedUrn] = useState<string | null>(null);
 
-  const handleMandate = (urn: string, from_date: string, to_date: string) => {
+  const handleMandate =async (urn: string, from_date: string, to_date: string) => {
     setSelectedUrn(urn);
 
     const updatedSchemes = schemeList.map((scheme) => ({
@@ -60,10 +60,12 @@ const BankMandate: React.FC<bankMandate> = ({ show, setShow, schemeList, setSche
 
   const handleTransaction =  () => {
       finalTransaction(schemeList,isSipTransaction?keys.sip:keys.purchase,setSuccessData).then((res)=>{
-         console.log("result", res)
-      })
-      setOpenSuccess(true)
+     console.log(res);
+     
+    setOpenSuccess(true)
       setShow(false)
+      })
+  
 
   }
 

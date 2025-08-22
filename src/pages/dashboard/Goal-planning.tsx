@@ -24,12 +24,15 @@ const GoalPlanning = () => {
           </div>
         </div>
         <div className="row">
-          <div className="col-6 col-md-3 col-lg-2 py-1 text-center crPointer" onClick={() => handleGoal(goalContent.retirement)} ><img src={retirment} alt="" className="" height={24} /><small className="d-block adjustTextGrey">Retirment </small><PlusCircle color="blue" /></div>
-          <div className="col-6 col-md-3 col-lg-2 py-1 text-center crPointer" onClick={() => handleGoal(goalContent.education)}><img src={education} alt="" className="" height={24} /><small className="d-block adjustTextGrey">Education</small> <PlusCircle color="blue" /></div>
-          <div className="col-6 col-md-3 col-lg-2 py-1 text-center crPointer" onClick={() => handleGoal(goalContent.housePurchase)}><img src={house} alt="" className="" height={24} /><small className="d-block adjustTextGrey">House</small> <PlusCircle color="blue" /></div>
-          <div className="col-6 col-md-3 col-lg-2 py-1 text-center crPointer" onClick={() => handleGoal(goalContent.carPurchase)}><img src={car} alt="" className="" height={24} /><small className="d-block adjustTextGrey">Car</small> <PlusCircle color="blue" /></div>
-          <div className="col-6 col-md-3 col-lg-2 py-1 text-center crPointer" onClick={() => handleGoal(goalContent.vacation)}><img src={vacation} alt="" className="" height={24} /><small className="d-block adjustTextGrey">Vacation</small> <PlusCircle color="blue" /></div>
-          <div className="col-6 col-md-3 col-lg-2 py-1 text-center crPointer" onClick={() => handleGoal(goalContent.childMarriage)}><img src={ring} alt="" className="" height={24} /><small className="d-block adjustTextGrey">Marriage</small> <PlusCircle color="blue" /></div>
+        {/*  THIS ICON USE WHEN ADDED TASK COMPLETE
+           <PlusCircle color="blue" /> */}
+
+          <div className="col-6 col-md-3 col-lg-2 py-1 text-center crPointer" onClick={() => handleGoal(goalContent.retirement)} ><img src={retirment} alt="" className="" height={24} /><small className="d-block adjustTextGrey">Retirment </small></div>
+          <div className="col-6 col-md-3 col-lg-2 py-1 text-center crPointer" onClick={() => handleGoal(goalContent.education)}><img src={education} alt="" className="" height={24} /><small className="d-block adjustTextGrey">Education</small> </div>
+          <div className="col-6 col-md-3 col-lg-2 py-1 text-center crPointer" onClick={() => handleGoal(goalContent.housePurchase)}><img src={house} alt="" className="" height={24} /><small className="d-block adjustTextGrey">House</small> </div>
+          <div className="col-6 col-md-3 col-lg-2 py-1 text-center crPointer" onClick={() => handleGoal(goalContent.carPurchase)}><img src={car} alt="" className="" height={24} /><small className="d-block adjustTextGrey">Car</small> </div>
+          <div className="col-6 col-md-3 col-lg-2 py-1 text-center crPointer" onClick={() => handleGoal(goalContent.vacation)}><img src={vacation} alt="" className="" height={24} /><small className="d-block adjustTextGrey">Vacation</small> </div>
+          <div className="col-6 col-md-3 col-lg-2 py-1 text-center crPointer" onClick={() => handleGoal(goalContent.childMarriage)}><img src={ring} alt="" className="" height={24} /><small className="d-block adjustTextGrey">Marriage</small> </div>
 
         </div>
       </Card.Body>
