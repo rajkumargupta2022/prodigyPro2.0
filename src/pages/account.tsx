@@ -26,7 +26,7 @@ const Account = ({ Component }: { Component: any }) => {
     { name: "Help & Support", url: "/help&support" },
     { name: "About Us", url: "/about-us" },
     { name: "Locate Us", url: "/locate-us" },
-    { name: "Privacy Policy", url: "https://bfccapital.com/privacy-policy" },
+    { name: "Privacy Policy", url: "/privacyPolicy " },
   ];
 
   const [isActive, setIsActive] = useState(false);

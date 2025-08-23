@@ -1,46 +1,133 @@
-
+// AboutUs.tsx - Simplified version
+import { useState, useEffect } from "react";
+import { getRequest } from "../services/Api/HandleApi";
+import { endPoints } from "../services/utils/urls";
 
 function AboutUs() {
+  const [htmlContent, setHtmlContent] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetchAboutUs();
+  }, []);
+
+  const fetchAboutUs = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const response = await getRequest<any>(endPoints.getAboutUs);
+
+      // Handle response based on type
+      if (typeof response === 'string') {
+        setHtmlContent(response);
+      } else if (response?.success && response?.data) {
+        setHtmlContent(response.data);
+      } else if (response?.data) {
+        setHtmlContent(response.data);
+      } else {
+        setError("No content available");
+      }
+    } catch (error) {
+      console.error("Error fetching About Us:", error);
+      setError("Failed to fetch About Us data");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const renderContent = () => {
+    if (!htmlContent) return null;
+
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(htmlContent, 'text/html');
+
+    // Parse sections
+    const aboutSection = doc.querySelector('#about-prodigy-pro');
+    const keyFeaturesSection = doc.querySelector('#key-features');
+    const whoIsItForSection = doc.querySelector('#who-is-it-for');
+
+    return (
+      <>
+        {/* About Section */}
+        {aboutSection && (
+          <div className="p-4 shadow-sm bg-white border-0 rounded-4 mb-4">
+            <h6>{aboutSection.querySelector('h2')?.textContent}</h6>
+            {Array.from(aboutSection.querySelectorAll('p')).map((para, idx) => (
+              <p key={idx} className="fs14px">
+                {para.textContent}
+              </p>
+            ))}
+          </div>
+        )}
+
+        {/* Key Features Section */}
+        {keyFeaturesSection && (
+          <div className="p-4 shadow-sm bg-white border-0 rounded-4 mb-4">
+            <h6>{keyFeaturesSection.querySelector('h2')?.textContent}</h6>
+            <ul>
+              {Array.from(keyFeaturesSection.querySelectorAll('li')).map((feature, idx) => (
+                <li key={idx} className="fs14px" dangerouslySetInnerHTML={{ __html: feature.innerHTML }}>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {/* Who Is It For Section */}
+        {whoIsItForSection && (
+          <div className="p-4 shadow-sm bg-white border-0 rounded-4 mb-4">
+            <h6>{whoIsItForSection.querySelector('h2')?.textContent}</h6>
+            {/* First paragraph (before ul) */}
+            {whoIsItForSection.querySelector('p') && (
+              <p className="fs14px">
+                {whoIsItForSection.querySelector('p')?.textContent}
+              </p>
+            )}
+            <ul>
+              {Array.from(whoIsItForSection.querySelectorAll('ul li')).map((item, idx) => (
+                <li key={idx} className="fs14px">
+                  {item.textContent}
+                </li>
+              ))}
+            </ul>
+            {/* Remaining paragraphs (excluding the first one) */}
+            {Array.from(whoIsItForSection.querySelectorAll('p'))
+              .slice(1)
+              .map((para, idx) => (
+                <p key={idx} className="fs14px">
+                  {para.textContent}
+                </p>
+              ))}
+          </div>
+        )}
+      </>
+    );
+  };
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
+  if (error) {
+    return (
+      <main className="col-md-9 ms-sm-auto col-lg-9 px-md-4 py-4">
+        <h2>About Us</h2>
+        <hr className="fw-light text-secondary" />
+        <div className="alert alert-danger">
+          <p>Error: {error}</p>
+          <button className="btn btn-danger" onClick={fetchAboutUs}>Try Again</button>
+        </div>
+      </main>
+    );
+  }
+
   return (
     <main className="col-md-9 ms-sm-auto col-lg-9 px-md-4 py-4">
-      <h2>
-       About
-        Us
-      </h2>
+      <h2>About Us</h2>
       <hr className="fw-light text-secondary" />
-      <div className="p-4 shadow-sm bg-white border-0 rounded-4">
-        <h6>About Us</h6>
-        <p className="fs14px">
-          BFC Capital is a company promoted by young professionals with a vision
-          to place the organization among the best Financial Service Providers.
-          Our main endeavor is to provide solutions to our clients, after
-          assessing the requirements of the client, by understanding his profile
-          for risk, return, liquidity and tax liability. Our orientation is
-          towards enhancing our customer service standards at all times.
-        </p>
-        <p className="fs14px">
-          BFC Capital is committed to its independence and works exclusively for
-          the benefit of its clients without any conflicting interests. It
-          provides Client centric services with full transparency and
-          dedication.
-        </p>
-        <p className="fs14px">
-          BFC Capital strives to provide consistent superior risk-adjusted
-          returns to its clients and a unique wealth management experience in
-          the industry.
-        </p>
-      </div>
-      <div className="p-4 shadow-sm bg-white border-0 rounded-4 mt-4">
-        <h6>Our Team</h6>
-        <p className="fs14px">
-          Team BC Capital comprises of top investment professionals with
-          outstanding academic and professional backgrounds. Each Employee has
-          extensive experience at leading financial institutions and maintains a
-          specific expertise in trading portfolio management, risk analysis
-          compliances and taxes Consequently, BFC Capital is able to provide its
-          cients with comprehensive and specialized investment solutions.
-        </p>
-      </div>
+      {renderContent()}
     </main>
   );
 }
