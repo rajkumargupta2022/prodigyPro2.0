@@ -16,48 +16,67 @@ interface bankMandate {
   setShow: (show: boolean) => void;
   schemeList: schemeDeatilDataKeys[];
   setSchemeList: (date: any) => void,
-  isSipTransaction: boolean
+  isSipTransaction: boolean,
+  additionalPurchase:boolean
 }
 
-const BankMandate: React.FC<bankMandate> = ({ show, setShow, schemeList, setSchemeList,isSipTransaction }) => {
+const BankMandate: React.FC<bankMandate> = ({ show, setShow, schemeList, setSchemeList, isSipTransaction,additionalPurchase }) => {
   // const [openCreateFolio,setOpenCreateFolio] = useState<boolean>(false)
   const [openSuccess, setOpenSuccess] = useState(false)
   const [mandateList, setMandateList] = useState<bankMandateKeys[]>([])
-  const [successData,setSuccessData] = useState<any[]>([])
+  const [successData, setSuccessData] = useState<any[]>([])
 
 
   useEffect(() => {
-    fetchMandateList()
-    
+    fetchMandateList()     
   }, [show])
 
   const fetchMandateList = async () => {
     const adminUser = fetchAdminUser()
-    if(!adminUser){
+    if (!adminUser) {
       errorToast("Something went wrong")
       return
     }
     try {
-      const res = await postRequest<bankMandateResponse>(endPoints.getMandateList, { ucc: adminUser?.ucc })
-      setMandateList(res.mandates)
-     await handleMandate(res.mandates[0]?.umrn_no, res?.mandates[0]?.from_date, res.mandates[0]?.to_date)
+      const res = await postRequest<bankMandateResponse>(
+        endPoints.getMandateList,
+        { ucc: adminUser?.ucc }
+      );
 
+      setMandateList(res.mandates);
+      setSelectedUrn(res.mandates[0]?.umrn_no);
+      
+      setSchemeList((prev: any[]) =>
+        
+        prev.map((scheme: any) => ({
+          ...scheme,
+          urn_no: res.mandates[0]?.umrn_no,
+          from_date: res.mandates[0]?.from_date
+            ? res.mandates[0].from_date.replace("T", " ")
+            : "",
+          to_date: res.mandates[0]?.to_date
+            ? res.mandates[0].to_date.replace("T", " ")
+            : ""
+        }))
+      );
     } catch (err) {
       setMandateList([])
     }
   }
   const [selectedUrn, setSelectedUrn] = useState<string | null>(null);
 
-  const handleMandate =async (urn: string, from_date: string, to_date: string) => {
+  const handleMandate = async (urn: string, from_date: string, to_date: string) => {
     setSelectedUrn(urn);
 
-    const updatedSchemes = schemeList.map((scheme) => ({
-      ...scheme,
-      urn_no: urn,
-      from_date: from_date.replace("T", " "),
-      to_date: to_date.replace("T", " ")
-      // ✅ only update urn_no
-    }));
+    const updatedSchemes = schemeList.map((scheme) => (
+      {
+
+        ...scheme,
+        urn_no: urn,
+        from_date: from_date.replace("T", " "),
+        to_date: to_date.replace("T", " ")
+        // ✅ only update urn_no
+      }));
 
     setSchemeList(updatedSchemes);
   };
@@ -65,14 +84,15 @@ const BankMandate: React.FC<bankMandate> = ({ show, setShow, schemeList, setSche
 
 
 
-  const handleTransaction =  () => {
-      finalTransaction(schemeList,isSipTransaction?keys.sip:keys.purchase,setSuccessData).then((res)=>{
-     console.log(res);
-     
-    setOpenSuccess(true)
+  const handleTransaction = () => {
+
+    finalTransaction(schemeList, isSipTransaction ? keys.sip : keys.purchase, setSuccessData,additionalPurchase).then((res) => {
+      console.log(res);
+
+      setOpenSuccess(true)
       setShow(false)
-      })
-  
+    })
+
 
   }
 
@@ -94,7 +114,7 @@ const BankMandate: React.FC<bankMandate> = ({ show, setShow, schemeList, setSche
               <div className="d-flex justify-content-between" onClick={() => handleMandate(item.umrn_no, item.from_date, item.to_date)}>
                 <div className="d-flex">
                   <div className="prod_icon_img">
-                    <img src={icici} height={35} width={35} alt="bank-logo" />
+                    <img src={"https://bankamcimagesv2.s3.ap-southeast-1.amazonaws.com/demo-bank.png"} height={40} width={40} className="rounded" alt="bank-logo" />
                   </div>
                   <div className="ms-2 prod_icon_heading">
                     <h4>{item.bank_name}</h4>

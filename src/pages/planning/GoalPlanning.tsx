@@ -29,9 +29,9 @@ const GoalPlanning = () => {
           <div className="col-6 align-items-start mb-3">
             <h4>Goal Planning</h4>
           </div>
-          <div className="col-6 alignEnd" onClick={addGoal}>
+          {/* <div className="col-6 alignEnd" onClick={addGoal}>
             <button type="button" className="customButton align-items-end px-2 mb-3" >+ Add Custom Goal</button>
-          </div>
+          </div> */}
         </div>
         <div className="row">
           <div className="col-6 col-md-4 col-lg-3 text-center rounded-2 alignCenter px-2 mb-3" onClick={() => handleGoal(goalContent.retirement)}>
@@ -111,7 +111,7 @@ const GoalPlanning = () => {
               </div>
             </div>
           </div>
-          <div className="col-6 col-md-4 col-lg-3 text-center rounded-2 alignCenter px-2 mb-3" onClick={() => { navigate("/custom-goal") }}>
+          {/* <div className="col-6 col-md-4 col-lg-3 text-center rounded-2 alignCenter px-2 mb-3" onClick={() => { navigate("/custom-goal") }}>
             <div className="card border-0 shadow">
               <div className="card-header border-0 bg-transparent pb-0 pt-3">
                 <img src={customGoal} className="card-img-top" alt="..." height={44} />
@@ -154,7 +154,7 @@ const GoalPlanning = () => {
                 <small><CurrencyRupee className="mb-1" />2.25Cr</small>
               </div>
             </div>
-          </div>
+          </div> */}
 
         </div>
       </div>

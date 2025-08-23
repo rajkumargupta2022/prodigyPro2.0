@@ -162,7 +162,7 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
 
 
   const handleFolioSelection = () => {
-
+  
     const total = schemeList.reduce((acc, scheme) => {
       const minAmount = scheme.amount ?? 0; // use 0 if undefined
       return acc + minAmount;
@@ -185,14 +185,13 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
       setAmountErrorMsg("Minimum investment amount is ₹" + minTotal)
       return
     }
+  
     if (from === "portfolio" && isSipTransaction) {
       setOpenBankMandate(true)
       setShow(false)
       return
     } else if (from === "portfolio") {
-      finalTransaction(schemeList, isSipTransaction ? keys.sip : keys.purchase, setSuccessData).then((res) => {
-        console.log(res);
-
+      finalTransaction(schemeList, isSipTransaction ? keys.sip : keys.purchase, setSuccessData,true).then((res) => {
         setOpenSuccess(true)
         setShow(false)
         return
@@ -413,7 +412,7 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
       </Modal>
       <SipDates show={sipDateShow} setShow={setSipDateShow} sipDate={sipDate} sipDateList={sipDateList} handleSipDate={handleSipDate} />
       <SelectFolioPopup show={openSelectFolio} setShow={setOpenSelectFolio} schemeList={schemeList} setSchemeList={setSchemeList} isSipTransaction={isSipTransaction} />
-      <BankMandate show={openBankMandate} setShow={setOpenBankMandate} schemeList={schemeList} setSchemeList={setSchemeList} isSipTransaction={isSipTransaction} />
+      <BankMandate show={openBankMandate} setShow={setOpenBankMandate} schemeList={schemeList} setSchemeList={setSchemeList} isSipTransaction={isSipTransaction} additionalPurchase={true}/>
       <OrderPlaces show={openSuccess} setShow={setOpenSuccess} successData={successData} />
     </>
   );

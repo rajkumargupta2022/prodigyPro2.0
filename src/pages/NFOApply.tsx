@@ -268,7 +268,7 @@ const NFOApply = () => {
       </div>
 
 
-      <BankMandate show={openBankMandate} setShow={setOpenBankMandate}schemeList={schemeList}  setSchemeList={setSchemeList} isSipTransaction={false}/>
+      <BankMandate show={openBankMandate} setShow={setOpenBankMandate}schemeList={schemeList}  setSchemeList={setSchemeList} isSipTransaction={false} additionalPurchase={false}/>
     </>
   );
 };

@@ -57,6 +57,8 @@ export interface filteredSchemesKeys {
   REINVEST_TAG: string;
   oneyrret: number;
   twoyearret: number;
+  minSIPAmt:string;
+  threeYearCAGR:number;
   threeyearret: number|null;
   fouryearret: number|null;
   fiveyearret: number|null;

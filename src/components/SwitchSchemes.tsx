@@ -122,7 +122,7 @@ const SwitchSchemes: React.FC<SchemesProps> = ({ handleFilter, isAvailable, filt
               </div>
             </Card.Body>
           </Card>
-        )) : <p className="text-center mt-4">No schemes found</p>}
+        )) : ""}
       </div>
     </>
   );

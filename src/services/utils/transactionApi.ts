@@ -14,7 +14,8 @@ import { endPoints } from "./urls";
 export const finalTransaction = async (
   schemeList: schemeDeatilDataKeys[],
   transactionType: string,
-  datasetter: (vlaue: any) => void
+  datasetter: (vlaue: any) => void,
+  additionalPurchase:boolean
 ) => {
   const adminUser = fetchAdminUser();
   if(!adminUser){
@@ -24,7 +25,7 @@ export const finalTransaction = async (
   let transactionBody = {
     ucc: adminUser?.ucc,
     transactionType: transactionType,
-    cartItems:transactionType===keys.sip ? sipFilterBody(schemeList):transactionType===keys.purchase ? purchaseFilterBody(schemeList):"",
+    cartItems:transactionType===keys.sip ? sipFilterBody(schemeList,additionalPurchase):transactionType===keys.purchase ? purchaseFilterBody(schemeList):"",
   };
   try {
     const res = await postRequest<sipPurchaseRedemptionResponse>(

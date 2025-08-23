@@ -214,6 +214,7 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
 
   }
   return (<>
+  
     <div className="col-md-4 col-12 position-relative">
 
       <div className="bg-white p-3 rounded">

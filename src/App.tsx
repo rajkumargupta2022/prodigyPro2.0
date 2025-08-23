@@ -1,5 +1,5 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
 import PersonalDetails from "./pages/Personal-details";
 import Declaration from "./pages/Declaration";
@@ -72,26 +72,29 @@ import MyProfile from "./components/Profile-details";
 import Loader from "./services/Loader/Loader";
 import { LoaderProvider, useLoader } from "./context/LoaderContext";
 import { registerLoaderCallbacks } from "./services/Loader/LoaderController";
-import React from "react";
+import { useEffect } from "react";
 import StateFolioDetails from "./components/statement-folio-details";
 import NoFolioFounds from "./components/no-folio-found";
+import useAuthRedirect from "./services/user/useAuthRedirect";
 
 
 const LoaderHandler = () => {
   const { showLoader, hideLoader } = useLoader();
 
-  React.useEffect(() => {
+  useAuthRedirect()
+ useEffect(() => {
     registerLoaderCallbacks(showLoader, hideLoader);
   }, [showLoader, hideLoader]);
 
   return null;
 };
 
+
 function App() {
 
   return (
     <>
-      <BrowserRouter>
+
         <ToastContainer />
         <LoaderProvider>
           <LoaderHandler />
@@ -253,8 +256,9 @@ function App() {
           <Route path="/risk-result" element={<RiskResult />} />
 
           <Route path="/custom-goal" element={<CustomGoal />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
-      </BrowserRouter>
+    
     </>
   );
 }

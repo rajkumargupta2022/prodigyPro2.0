@@ -12,7 +12,6 @@ import ReactApexChart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
 import Footer from "../components/Footer";
 import { getPercentageValue, getValueInSort } from "../services/calculation/percentageCalculate";
-import SipDates from "../components/SipDate";
 import InvetmentConfirmation from "../components/InvestmentConfirmation";
 import { fetchAdminUser } from "../services/user/adminUser";
 import SelectFolioPopup from "../components/select-folio-popup";
@@ -44,10 +43,10 @@ const FundDetails = () => {
   const [durarinInYear, setDurarinInYear] = useState<string>("")
   // const schmeDetail = location.state
   const [schmeDetail,setSchmeDetail] = useState<detailPortfolioSchemeType[]>([location.state])
-  const [sipDate, setSipDate] = useState<number>(1)
+
   const [sipDateList, setSipDateList] = useState<number[]>([])
   // const [amount, setAmount] = useState<number>(0)
-  const [sipDateShow, setSipDateShow] = useState<boolean>(false)
+
   const [openSwitchSchemeModel, setOpenSwitchSchemeModel] = useState<boolean>(false)
   const [openRedumptionModel, setOpenRedumptionModel] = useState<boolean>(false)
 
@@ -212,12 +211,7 @@ const FundDetails = () => {
   };
 
 
-  const handleSipDate = (value: number) => {
-    setSipDate(value)
-    setSipDateShow(false)
-
-
-  }
+ 
 
   const fetchFolios = async () => {
     const adminUser = fetchAdminUser();
@@ -263,8 +257,8 @@ const FundDetails = () => {
     if (!nearestDate) {
       nearestDate = sipDateNumbers[0];
     }
-    let d = String(nearestDate).padStart(2, '0')
-    setSipDate(Number(d))
+  
+  
   }
 
   const handleMinAmount = (type: boolean) => {
@@ -404,7 +398,7 @@ const FundDetails = () => {
           </div>
 
           {/* Mutual Funds List */}
-          {location?.state?.fromPortfolio ?
+          {location?.state?.fromPortfolio  ?
             <div className="col-md-4 col-12 position-relative" >
               <div
                 className="card mb-4 radius16OverFlow"
@@ -506,11 +500,10 @@ const FundDetails = () => {
 
               </div>
 
-            </div> : <InvestmentForm schemeList={schemeList} setSchemeList={setSchemeList} />}
+            </div> :(schemeList[0]?.sipAllowed || schemeList[0]?.purchaseAllowed) &&<InvestmentForm schemeList={schemeList} setSchemeList={setSchemeList} />}
         </div>
 
       </Container>
-      <SipDates show={sipDateShow} setShow={setSipDateShow} sipDate={sipDate} sipDateList={sipDateList} handleSipDate={handleSipDate} />
       <InvetmentConfirmation
         show={openInvestPopup}
         setShow={setOpenInvestPopup}
