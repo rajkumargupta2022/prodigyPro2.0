@@ -54,6 +54,7 @@ import RiskResult from "./components/Risk-result";
 import Profile from "./components/Profile";
 import LocateUs from "./components/Locate-us";
 import AboutUs from "./components/About-Us";
+import PrivacyPolicyComponent from "./components/privacyPolicy";
 import AddFamilyMemberC from "./components/Add-family-member";
 import AllOrders from "./components/All-orders";
 import OrderDetails from "./components/Order-details";
@@ -104,8 +105,8 @@ function App() {
         <Routes>
 
           <Route path="/" element={<Login />} />
-          <Route path="/folio-details" element={<Account Component={StateFolioDetails} />}/>
-          <Route path="/no-folio-founs" element={<Account Component={NoFolioFounds} />}/>
+          <Route path="/folio-details" element={<Account Component={StateFolioDetails} />} />
+          <Route path="/no-folio-founs" element={<Account Component={NoFolioFounds} />} />
           <Route path="/personal-details" element={<PersonalDetails />} />
           <Route path="/pan-varification" element={<PanVarification />} />
           <Route path="/dashboard" element={<Dashboard />} />
@@ -217,6 +218,12 @@ function App() {
             path="/help&support"
             element={<Account Component={HelpSupport} />}
           />
+
+          <Route
+            path="/privacyPolicy"
+            element={<Account Component={PrivacyPolicyComponent} />}
+          />
+
 
           <Route
             path="/statements"

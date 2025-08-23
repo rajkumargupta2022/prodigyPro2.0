@@ -6,29 +6,31 @@ import {
   Star,
 } from "react-bootstrap-icons";
 import RateYourRM from "../components/Rate-Your-RM";
-import {  useState } from "react";
-// import axios from "axios";
+import {  useEffect, useState } from "react";
+import { helpAndSupportKey, helpAndSupportResponse } from "../pages/data-interfaces/accounts";
+import { postRequest } from "../services/Api/HandleApi";
+import { endPoints } from "../services/utils/urls";
+
 
 function HelpSupport({ backButton }: { backButton: any; activeInactive: any }) {
   const [show, setShow] = useState(false);
+  const [helpAndSupportData,setHelpAndSupportData] = useState<helpAndSupportKey>()
 
+useEffect(()=>{
+    fetchSupportData()
+},[])
 
-//   const [phoneSupport, setPhoneSupport] = useState("");
+const fetchSupportData =async ()=>{
+  const pan:string|null = localStorage.getItem("pan")
+    if(pan){
 
-// useEffect(() => {
-//   const fetchHelpandSupport = async () => {
-//     try {
-//       const response = await axios.get<{ data: HelpandSupport }>(getHelpandSupport);
+      const res= await postRequest<helpAndSupportResponse>(endPoints.getHelpandSupport,{pan})
+      if(res.data){
+        setHelpAndSupportData(res.data)
+      }
+    }
+}
 
-//       const { phoneSupport } = response.data.data;
-//       setPhoneSupport(phoneSupport);
-//     } catch (error) {
-//       console.error("Error fetching support data:", error);
-//     }
-//   };
-
-//   fetchHelpandSupport();
-// }, []);
 
   return (
     <main className="col-md-9 ms-sm-auto col-lg-9 px-md-4 py-4">
@@ -42,11 +44,11 @@ function HelpSupport({ backButton }: { backButton: any; activeInactive: any }) {
       <div className="p-4 shadow-sm bg-white border-0 rounded-4 mb-2 mt-2">
         
         <span>
-          Phone Support: <span className="link">phoneSupport</span>
+          Phone Support: <span className="link">{helpAndSupportData?.phoneSupport}</span>
         </span>
         <br />
         <span className="note">
-          Time: 9:00 AM to 6:00 PM on market Trading days. Standard calling
+          Time: 9:30 AM to 6:30 PM on market Trading days. Standard calling
           rates apply.
         </span>
         <br />
@@ -58,7 +60,7 @@ function HelpSupport({ backButton }: { backButton: any; activeInactive: any }) {
 
       <div className="p-4 shadow-sm bg-white border-0 rounded-4 mb-2 mt-2">
         <span>
-          Email Support: <span className="link">support@bfccapital.com</span>
+          Email Support: <span className="link">{helpAndSupportData?.emailSupport}</span>
         </span>
         <br />
         <span className="note">Available 24x7 for users</span>
@@ -71,11 +73,11 @@ function HelpSupport({ backButton }: { backButton: any; activeInactive: any }) {
 
       <div className="p-4 shadow-sm bg-white border-0 rounded-4 mb-2 mt-2">
         <span>
-          Phone Support: <span className="link">(+91) 9876789156</span>
+          Phone Support: <span className="link"> {helpAndSupportData?.whatsappSupport}</span>
         </span>
         <br />
         <span className="note">
-          Time: 9:00 AM to 6:00 PM on market Trading days. Standard calling
+          Time: 9:30 AM to 6:30 PM on market Trading days. Standard calling
           rates apply.
         </span>
         <br />
@@ -86,11 +88,11 @@ function HelpSupport({ backButton }: { backButton: any; activeInactive: any }) {
 
       <div className="p-4 shadow-sm bg-white border-0 rounded-4 mb-2 mt-2">
         <span>
-          Relationship Manager: <span className="link">(+91) 9876789156</span>
+          Relationship Manager: <span className="link">{helpAndSupportData?.rmSupport}</span>
         </span>
         <br />
         <span className="note">
-          Time: 9:00 AM to 6:00 PM on market Trading days. Standard calling
+          Time: 9:30 AM to 6:30 PM on market Trading days. Standard calling
           rates apply.
         </span>
         <br />

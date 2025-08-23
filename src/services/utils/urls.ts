@@ -26,5 +26,7 @@ export enum endPoints{
    swp="transact/swp",
    switch="transact/switch",
    stp="transact/stp",
-   getHelpandSupport ="content/get-help-support"
+   getHelpandSupport ="content/get-help-support",
+   getAboutUs = "content/get-about-us",
+   getPrivacyPolicy = "content/get-privacy-policy"
 }
