@@ -6,6 +6,7 @@ import Category from "../pages/explore/Category";
 import Filter from "../pages/explore/Amcs";
 import { useNavigate } from "react-router-dom";
 import {  filteredSchemesKeys } from "../pages/data-interfaces/explore";
+import { getValueInSort } from "../services/calculation/percentageCalculate";
 
 interface SchemesProps {
   handleFilter: (value: number, type: string) => void;
@@ -78,7 +79,7 @@ const SwitchSchemes: React.FC<SchemesProps> = ({ handleFilter, isAvailable, filt
           >
             <Card.Body>
 
-              <div className="row justify-content-between">
+              <div className="row justify-content-between crPointer">
                 <div className="col-8 py-2" onClick={() => fundDetails(item)}>
                   <div className="d-flex">
                     <img src={`${imageUrl + item?.accordAMCCode}.png`} className="logoRadius" height={45} width={45} alt="Image not found" />
@@ -103,21 +104,21 @@ const SwitchSchemes: React.FC<SchemesProps> = ({ handleFilter, isAvailable, filt
                 <div className="col-4">
                   <span className="text-secondary">Last 3Y</span>
                   <br />
-                  <span className="value-font2 text-success">{item.threeyearret}%</span>
+                  <span className="value-font2 text-success">{item.threeYearCAGR}%</span>
                 </div>
 
                 <div className="col-4">
                   <span className="text-secondary">Min. SIP</span>
                   <br />
                   <span className="value-font2">
-                    ₹1000
+                    ₹{item.minSIPAmt}
                   </span>
                 </div>
 
                 <div className="col-4">
                   <span className="text-secondary">Fund Size</span>
                   <br />
-                  <span className="value-font2">₹26,776.87 Cr</span>
+                  <span className="value-font2">₹{getValueInSort(item.fundSize)}</span>
                 </div>
               </div>
             </Card.Body>

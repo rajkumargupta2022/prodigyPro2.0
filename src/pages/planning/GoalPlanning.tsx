@@ -6,7 +6,7 @@ import car from "../../assets/img/icons/car 1.svg"
 import vacation from "../../assets/img/icons/vacation.svg"
 import wealth from "../../assets/img/icons/wealth creation.svg"
 import ring from "../../assets/img/icons/engagement-ring 1.svg"
-import customGoal from "../../assets/img/icons/goal.svg"
+// import customGoal from "../../assets/img/icons/goal.svg"
 import { CurrencyRupee } from "react-bootstrap-icons";
 import { useNavigate } from "react-router-dom";
 import { goalContent, GoalContentInterface } from "../data/goal";
@@ -17,9 +17,7 @@ const GoalPlanning = () => {
   const handleGoal = (data: GoalContentInterface) => {
     navigate("/goal", { state: data });
   }
-  const addGoal = () => {
-
-  }
+ 
 
   return (
     <>

@@ -1,7 +1,6 @@
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { CurrencyRupee } from "react-bootstrap-icons";
-import icici from "../assets/img/bank-logo/icici.png";
 import { useEffect, useState } from "react";
 import OrderPlaces from "./order-places";
 import { postRequest } from "../services/Api/HandleApi";
@@ -29,6 +28,8 @@ const BankMandate: React.FC<bankMandate> = ({ show, setShow, schemeList, setSche
 
   useEffect(() => {
     fetchMandateList()     
+  
+    
   }, [show])
 
   const fetchMandateList = async () => {
@@ -37,6 +38,8 @@ const BankMandate: React.FC<bankMandate> = ({ show, setShow, schemeList, setSche
       errorToast("Something went wrong")
       return
     }
+         console.log("schemlistt",schemeList);
+
     try {
       const res = await postRequest<bankMandateResponse>(
         endPoints.getMandateList,
@@ -46,19 +49,20 @@ const BankMandate: React.FC<bankMandate> = ({ show, setShow, schemeList, setSche
       setMandateList(res.mandates);
       setSelectedUrn(res.mandates[0]?.umrn_no);
       
-      setSchemeList((prev: any[]) =>
+      // setSchemeList((prev: any[]) =>
         
-        prev.map((scheme: any) => ({
-          ...scheme,
-          urn_no: res.mandates[0]?.umrn_no,
-          from_date: res.mandates[0]?.from_date
-            ? res.mandates[0].from_date.replace("T", " ")
-            : "",
-          to_date: res.mandates[0]?.to_date
-            ? res.mandates[0].to_date.replace("T", " ")
-            : ""
-        }))
-      );
+      //   prev.map((scheme: any) => ({
+      //     ...scheme,
+      //     amount:schemeList[0]?.amount,
+      //     urn_no: res.mandates[0]?.umrn_no,
+      //     from_date: res.mandates[0]?.from_date
+      //       ? res.mandates[0].from_date.replace("T", " ")
+      //       : "",
+      //     to_date: res.mandates[0]?.to_date
+      //       ? res.mandates[0].to_date.replace("T", " ")
+      //       : ""
+      //   }))
+      // );
     } catch (err) {
       setMandateList([])
     }
@@ -67,7 +71,6 @@ const BankMandate: React.FC<bankMandate> = ({ show, setShow, schemeList, setSche
 
   const handleMandate = async (urn: string, from_date: string, to_date: string) => {
     setSelectedUrn(urn);
-
     const updatedSchemes = schemeList.map((scheme) => (
       {
 
@@ -85,7 +88,9 @@ const BankMandate: React.FC<bankMandate> = ({ show, setShow, schemeList, setSche
 
 
   const handleTransaction = () => {
-
+      console.log("schemelisttttt",schemeList);
+      alert("schmelist ok")
+      return
     finalTransaction(schemeList, isSipTransaction ? keys.sip : keys.purchase, setSuccessData,additionalPurchase).then((res) => {
       console.log(res);
 

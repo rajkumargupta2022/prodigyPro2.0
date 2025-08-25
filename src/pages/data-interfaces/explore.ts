@@ -45,6 +45,7 @@ export interface filteredSchemesKeys {
   // s_name: string;
   accordAMCCode:number;
   // ISIN: string;
+  fundSize:number;
   accordSchemeCode?: number;
   PURCHASE_ALLOWED: string;
   SIP_ALLOWED: string;

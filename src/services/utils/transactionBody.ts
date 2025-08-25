@@ -5,7 +5,7 @@ import { dateForApi } from "../dates/dateFormater";
 export const sipFilterBody = (schemeList: schemeDeatilDataKeys[],additionalPurchase:boolean=false) => {
   
   if (schemeList?.length > 0) {
-    
+ 
     const data = schemeList.map((item: schemeDeatilDataKeys) => ({
       NSEProductCode: item.nseProductCode,
       NSEAmcCode: item.nseAMCCode, // make sure this is a string or a defined constant

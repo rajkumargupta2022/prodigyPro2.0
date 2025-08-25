@@ -41,7 +41,7 @@ const SelectFolioPopup: React.FC<SchemeDetailsProps> = ({ show, setShow, schemeL
       setOpenBankMandate(true);
       setShow(false);
     } else {
-      finalTransaction(schemeList,"purchase",setSuccessData).then((res)=>{
+      finalTransaction(schemeList,"purchase",setSuccessData,false).then((res)=>{
         console.log(res);
         
       })
@@ -133,7 +133,7 @@ const SelectFolioPopup: React.FC<SchemeDetailsProps> = ({ show, setShow, schemeL
       </Modal>
       <CreateNewFolio show={openCreateFolio} setShow={setOpenCreateFolio} schemeList={schemeList}  setSchemeList={setSchemeList}  folioList={folioList} selectedFolioIndex={selectedFolioIndex}  />
 
-      <BankMandate show={openBankMandate} setShow={setOpenBankMandate} schemeList={schemeList}  setSchemeList={setSchemeList} isSipTransaction={isSipTransaction} />
+      <BankMandate show={openBankMandate} setShow={setOpenBankMandate} schemeList={schemeList}  setSchemeList={setSchemeList} isSipTransaction={isSipTransaction}additionalPurchase={false}/>
       <OrderPlaces show={openSuccess} setShow={setOpenSuccess} successData={successData}/>
 
 

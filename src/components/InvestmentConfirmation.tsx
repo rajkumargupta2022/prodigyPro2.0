@@ -185,7 +185,7 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
       setAmountErrorMsg("Minimum investment amount is ₹" + minTotal)
       return
     }
-  
+
     if (from === "portfolio" && isSipTransaction) {
       setOpenBankMandate(true)
       setShow(false)
@@ -194,6 +194,8 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
       finalTransaction(schemeList, isSipTransaction ? keys.sip : keys.purchase, setSuccessData,true).then((res) => {
         setOpenSuccess(true)
         setShow(false)
+        console.log(res);
+        
         return
       })
 
