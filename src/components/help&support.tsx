@@ -54,9 +54,9 @@ function HelpSupport({ backButton }: { backButton: any; activeInactive: any }) {
         <br />
         <button className="mandate-button mt-2" onClick={() =>
           window.open(
-        `tel:${helpAndSupportData?.phoneSupport}`,
-        "_blank"
-      )
+            `tel:${helpAndSupportData?.phoneSupport}`,
+            "_blank"
+          )
         }>
           <Telephone size={20} className="me-2" />
           Call Us
@@ -93,9 +93,9 @@ function HelpSupport({ backButton }: { backButton: any; activeInactive: any }) {
         <br />
         <button className="mandate-button mt-2" onClick={() =>
           window.open(
-        `https://wa.me/${helpAndSupportData?.whatsappSupport}`,
-        "_blank"
-      )
+            `https://wa.me/${helpAndSupportData?.whatsappSupport}`,
+            "_blank"
+          )
         }>
           <ChatDots size={20} className="me-2" /> Message Us
         </button>
@@ -112,11 +112,11 @@ function HelpSupport({ backButton }: { backButton: any; activeInactive: any }) {
           </span>
           <br />
           <button className="mandate-button mt-2" onClick={() =>
-          window.open(
-        `tel:${helpAndSupportData?.rmSupport}`,
-        "_blank"
-      )
-        }>
+            window.open(
+              `tel:${helpAndSupportData?.rmSupport}`,
+              "_blank"
+            )
+          }>
             <Telephone size={20} className="me-2" /> Call Us
           </button>
           {helpAndSupportData?.RMID &&
