@@ -24,7 +24,7 @@ const RecommendedSchemeGoal = () => {
         </div>
       </div>
       <div className="container pt-2">
-        <RecomendedSchemes  from={location?.state?.title}/>
+        <RecomendedSchemes  from={location?.state}/>
       </div>
       <SchemeDetails show={openSchemeDetail} setShow={setOpenSchemeDetail}/>
     </>

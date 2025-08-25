@@ -31,14 +31,14 @@ function LocateUs() {
         <div className="d-md-flex border-bottom mt-2">
           <p className="me-1 fs16px mb-0">Address:</p>
           <p className="m-0 fs14px">
-            C.P.-61, Viraj Khand-4, Viraj Khand, Gomti Nagar, Lucknow, Uttar
+            C.P.-61, Viraj Khand-4, Gomti Nagar, Lucknow, Uttar
             Pradesh 226010
           </p>
         </div>
 
         <div className="d-flex border-bottom mt-2">
           <h6 className="me-1 fs16px"> Hours: </h6>
-          <p className="m-0 fs14px"> Mon - Sat 9:30am-5:30pm</p>
+          <p className="m-0 fs14px"> Mon - Sat 9:30am-6:30pm</p>
         </div>
 
         <div className="d-flex mt-2">
@@ -48,7 +48,7 @@ function LocateUs() {
 
         <div className="d-flex ">
           <h6 className="me-1"> Mobile:</h6>
-          <p style={{ color: "#1A35FE" }}>+05223514141</p>
+          <p style={{ color: "#1A35FE" }}>+917347700888</p>
         </div>
         <button className="btn btn-primary">
           <BookFill className="me-2" />

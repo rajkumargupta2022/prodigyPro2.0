@@ -39,7 +39,7 @@ const GoalPlanning = () => {
               </div>
               <div className="card-body">
                 <p className="fs14px mb-0 ">Retirement</p>
-                <small><CurrencyRupee className="mb-1" />2.25Cr</small>
+                {/* <small><CurrencyRupee className="mb-1" />2.25Cr</small> */}
               </div>
             </div>
           </div>
@@ -50,7 +50,7 @@ const GoalPlanning = () => {
               </div>
               <div className="card-body">
                 <p className="fs14px mb-0 ">Education</p>
-                <small><CurrencyRupee className="mb-1" />2.25Cr</small>
+                {/* <small><CurrencyRupee className="mb-1" />2.25Cr</small> */}
               </div>
             </div>
           </div>
@@ -61,7 +61,7 @@ const GoalPlanning = () => {
               </div>
               <div className="card-body">
                 <p className="fs14px mb-0 ">House</p>
-                <small><CurrencyRupee className="mb-1" />2.25Cr</small>
+                {/* <small><CurrencyRupee className="mb-1" />2.25Cr</small> */}
               </div>
             </div>
           </div>
@@ -72,7 +72,7 @@ const GoalPlanning = () => {
               </div>
               <div className="card-body">
                 <p className="fs14px mb-0 ">Car</p>
-                <small><CurrencyRupee className="mb-1" />2.25Cr</small>
+                {/* <small><CurrencyRupee className="mb-1" />2.25Cr</small> */}
               </div>
             </div>
           </div>
@@ -83,7 +83,7 @@ const GoalPlanning = () => {
               </div>
               <div className="card-body">
                 <p className="fs14px mb-0 ">Vacation</p>
-                <small><CurrencyRupee className="mb-1" />2.25Cr</small>
+                {/* <small><CurrencyRupee className="mb-1" />2.25Cr</small> */}
               </div>
             </div>
           </div>
@@ -94,7 +94,7 @@ const GoalPlanning = () => {
               </div>
               <div className="card-body">
                 <p className="fs14px mb-0 ">Marriage</p>
-                <small><CurrencyRupee className="mb-1" />2.25Cr</small>
+                {/* <small><CurrencyRupee className="mb-1" />2.25Cr</small> */}
               </div>
             </div>
           </div>
@@ -105,7 +105,7 @@ const GoalPlanning = () => {
               </div>
               <div className="card-body">
                 <p className="fs14px mb-0 ">Wealth</p>
-                <small><CurrencyRupee className="mb-1" />2.25Cr</small>
+                {/* <small><CurrencyRupee className="mb-1" />2.25Cr</small> */}
               </div>
             </div>
           </div>

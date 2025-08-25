@@ -10,7 +10,7 @@ const Goal = () => {
   const location = useLocation()
 
 
-  const [amount, setAmount] = useState("")
+  const [amount, setAmount] = useState("2500000")
   const [error, setError] = useState("")
 
   const calculateResult = async () => {
@@ -23,11 +23,6 @@ const Goal = () => {
 
     const { newsipamt, lumpsumRequired ,ir} = await goalCalculater(Number(amount), Number(investmentPeriod));
 
-
-    if (!amount) {
-      alert("Plaese enter amount...");
-      return;
-    }
     navigate("/goal-result", {
       state: {
         newsipamt, lumpsumRequired, investmentPeriod,amount, ir,  title: location.state?.title,

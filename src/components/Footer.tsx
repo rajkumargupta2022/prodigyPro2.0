@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 
 const Footer = () => {
     return (
@@ -7,9 +8,9 @@ const Footer = () => {
                     Copyright © 2025 BFC Capital. All Rights Reserved
                 </div>
                 <div className="col-md-6 text-md-end text-center py-1">
-                    <a href="#">Privacy Policy</a>
+                    <Link to={"/privacyPolicy"}>Privacy Policy</Link>
                     <span>&nbsp;&nbsp;</span>
-                    <a href="#">Terms & Conditions</a>
+                    {/* <a href="#">Terms & Conditions</a> */}
                 </div>
             </footer>
         </div>
