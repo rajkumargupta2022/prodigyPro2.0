@@ -42,7 +42,7 @@ const FundDetails = () => {
   const [cagr, setCagr] = useState<number>(0)
   const [durarinInYear, setDurarinInYear] = useState<string>("")
   // const schmeDetail = location.state
-  const [schmeDetail,setSchmeDetail] = useState<detailPortfolioSchemeType[]>([location.state])
+  const [schmeDetail, setSchmeDetail] = useState<detailPortfolioSchemeType[]>([location.state])
 
   const [sipDateList, setSipDateList] = useState<number[]>([])
   // const [amount, setAmount] = useState<number>(0)
@@ -65,7 +65,7 @@ const FundDetails = () => {
         type: "area",
         background: "transparent",
         toolbar: {
-          show: false,
+          show: true,
         },
         zoom: {
           enabled: false,
@@ -78,6 +78,27 @@ const FundDetails = () => {
         curve: "smooth",
         width: [2], // ✅ Custom width (3px for first line, 2px for second line)
         colors: ["#357AF6"],
+      },
+      fill: {
+        type: "gradient",
+        gradient: {
+          shadeIntensity: 0.2, // keep it light
+          opacityFrom: 0.3,    // start opacity (near line)
+          opacityTo: 0.0,      // fade to transparent
+          stops: [0, 90, 100], // control spread of gradient
+          colorStops: [
+            {
+              offset: 0,
+              color: "#357AF6",
+              opacity: 0.25,
+            },
+            {
+              offset: 100,
+              color: "#357AF6",
+              opacity: 0,
+            },
+          ],
+        },
       },
 
       xaxis: {
@@ -133,7 +154,7 @@ const FundDetails = () => {
 
 
   useEffect(() => {
-   
+
     if (location?.state?.accordSchemeCode) {
       fetchSchemeDetail()
       fetchNavHistory(12)
@@ -153,7 +174,7 @@ const FundDetails = () => {
     try {
       const res = await postRequest<schemeDetailType>(endPoints.getSchemeDetails, { productcode: location.state.accordSchemeCode })
       setSchemeList(res.data)
-      
+
       setSipDateList([...res.data[0].sipDateList])
       handleNearSipDate(res.data[0].sipDateList)
       // setAmount(res.data[0].minSIPAmt)
@@ -211,7 +232,7 @@ const FundDetails = () => {
   };
 
 
- 
+
 
   const fetchFolios = async () => {
     const adminUser = fetchAdminUser();
@@ -257,8 +278,8 @@ const FundDetails = () => {
     if (!nearestDate) {
       nearestDate = sipDateNumbers[0];
     }
-  
-  
+
+
   }
 
   const handleMinAmount = (type: boolean) => {
@@ -283,14 +304,14 @@ const FundDetails = () => {
     setOpenInvestPopup(true)
   }
 
-  const handleSwitch = (type:string) => {
+  const handleSwitch = (type: string) => {
     setTransactionType(type)
     setOpenSwitchSchemeModel(true)
   }
   const handleRedmptionModel = () => {
     setOpenRedumptionModel(true)
   }
-  const handleSwp = ()=>{
+  const handleSwp = () => {
     setOpenSwpModel(true)
   }
 
@@ -332,9 +353,9 @@ const FundDetails = () => {
               </div>
 
               <div className="d-flex justify-content-between align-items-center mx-4 mt-0 crPointer" >
-                <p className={`${duration === 1 && "activeDuratin"} `} onClick={() => fetchNavHistory(1)}>1M</p>
+                <p className={`${duration === 1 && "activeDuratin"}`} onClick={() => fetchNavHistory(1)}>1M</p>
                 <p className={`${duration === 3 && "activeDuratin"}`} onClick={() => fetchNavHistory(3)}>3M</p>
-                <p className={`${duration === 6 && "activeDuratin"}`} onClick={() => fetchNavHistory(6)}> 6M</p>
+                <p className={`${duration === 6 && "activeDuratin"}`} onClick={() => fetchNavHistory(6)}>6M</p>
                 <p className={`${duration === 12 && "activeDuratin"}`} onClick={() => fetchNavHistory(12)}>1Y</p>
                 <p className={`${duration === 36 && "activeDuratin"}`} onClick={() => fetchNavHistory(36)}>3Y</p>
                 <p className={`${duration === 60 && "activeDuratin"}`} onClick={() => fetchNavHistory(60)}>5Y</p>
@@ -398,7 +419,7 @@ const FundDetails = () => {
           </div>
 
           {/* Mutual Funds List */}
-          {location?.state?.fromPortfolio  ?
+          {location?.state?.fromPortfolio ?
             <div className="col-md-4 col-12 position-relative" >
               <div
                 className="card mb-4 radius16OverFlow"
@@ -407,7 +428,7 @@ const FundDetails = () => {
                 <div className="p-lg-3 p-4 row">
 
                   <div className="d-flex gap-2 justify-content-around">
-                    {(checkTransactionAllowed(schemeList, keys.sip) || checkTransactionAllowed(schemeList, keys.purchase))&&
+                    {(checkTransactionAllowed(schemeList, keys.sip) || checkTransactionAllowed(schemeList, keys.purchase)) &&
                       <div onClick={handleInvestMore} >
                         <label
                           className="btn_colorfull rounded-3 declaration-button w-100 paddingLeftRight px-4 py-2 mobile-fontset crPointer"
@@ -417,7 +438,7 @@ const FundDetails = () => {
                         </label>
                       </div>}
                     {checkTransactionAllowed(schemeList, keys.switch) &&
-                      <div onClick={()=>handleSwitch("Switch")} >
+                      <div onClick={() => handleSwitch("Switch")} >
                         <label
                           className="btn_colorfull rounded-3 declaration-button w-100 paddingLeftRight px-4 py-2 mobile-fontset crPointer"
                           htmlFor="option1"
@@ -443,9 +464,9 @@ const FundDetails = () => {
                 <div className="card mb-4 popup_card_steup_area">
                   <div className="p-3">
                     <ul className="ps-0 style-unerline-prodgy mb-0 crPointer">
-                    { checkTransactionAllowed(schemeList, keys.redumption) &&  <li onClick={() => handleRedmptionModel()}>Redeem Fund</li>}
-                      { checkTransactionAllowed(schemeList, keys.stp) &&  <li onClick={()=>handleSwitch("STP")}>Systematic Transfer Plan (STP)</li>}
-                        <li onClick={() => handleSwp()}>Systematic Withdrawal Plan (SWP)</li>
+                      {checkTransactionAllowed(schemeList, keys.redumption) && <li onClick={() => handleRedmptionModel()}>Redeem Fund</li>}
+                      {checkTransactionAllowed(schemeList, keys.stp) && <li onClick={() => handleSwitch("STP")}>Systematic Transfer Plan (STP)</li>}
+                      <li onClick={() => handleSwp()}>Systematic Withdrawal Plan (SWP)</li>
                       <li>Transaction History</li>
 
                     </ul>
@@ -500,7 +521,7 @@ const FundDetails = () => {
 
               </div>
 
-            </div> :(schemeList[0]?.sipAllowed || schemeList[0]?.purchaseAllowed) &&<InvestmentForm schemeList={schemeList} setSchemeList={setSchemeList} />}
+            </div> : (schemeList[0]?.sipAllowed || schemeList[0]?.purchaseAllowed) && <InvestmentForm schemeList={schemeList} setSchemeList={setSchemeList} />}
         </div>
 
       </Container>
@@ -513,9 +534,9 @@ const FundDetails = () => {
         from={"portfolio"}
       />
       <SelectFolioPopup show={openSelectFolio} setShow={setOpenSelectFolio} schemeList={schemeList} setSchemeList={setSchemeList} isSipTransaction={true} />
-      <SwitchSchemeModel show={openSwitchSchemeModel} setShow={setOpenSwitchSchemeModel} selectedAmcCode={[schemeList[0]?.accordAMCCode]} schemeList={location.state} transactionType={transactionType}/>
-      <SwpConfirmation show={openSwpModel} setShow={setOpenSwpModel} swpList={schmeDetail} schemeList={schemeList}/>
-      <RedumptionConfirmation show={openRedumptionModel} setShow={setOpenRedumptionModel}  redeemList={schmeDetail} setRedeemList={setSchmeDetail}/>
+      <SwitchSchemeModel show={openSwitchSchemeModel} setShow={setOpenSwitchSchemeModel} selectedAmcCode={[schemeList[0]?.accordAMCCode]} schemeList={location.state} transactionType={transactionType} />
+      <SwpConfirmation show={openSwpModel} setShow={setOpenSwpModel} swpList={schmeDetail} schemeList={schemeList} />
+      <RedumptionConfirmation show={openRedumptionModel} setShow={setOpenRedumptionModel} redeemList={schmeDetail} setRedeemList={setSchmeDetail} />
       <Footer />
     </>
   );

@@ -192,6 +192,7 @@ const GoalResult = () => {
           show: true, // ✅ Removes ticks (small lines under labels)
         },
       },
+      
       yaxis: {
         labels: {
           show: true, // ✅ Removes vertical numbers (Y-axis labels)
