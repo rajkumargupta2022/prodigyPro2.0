@@ -28,5 +28,7 @@ export enum endPoints{
    stp="transact/stp",
    getHelpandSupport ="content/get-help-support",
    getAboutUs = "content/get-about-us",
-   getPrivacyPolicy = "content/get-privacy-policy"
+   getPrivacyPolicy = "content/get-privacy-policy",
+   goalPlanningSchemes="goal-planning/get-goal-planning-schemes",
+   rateRm="content/rate-rm"
 }

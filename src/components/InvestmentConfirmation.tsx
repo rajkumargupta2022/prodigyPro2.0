@@ -12,7 +12,7 @@ import { postRequest } from '../services/Api/HandleApi';
 import { fetchAdminUser } from '../services/user/adminUser';
 import { endPoints, imageUrl } from '../services/utils/urls';
 import BankMandate from './BankMandate';
-import { convertDayToFullDate, daysAdded } from '../services/dates/dateFormater';
+import { daysAdded } from '../services/dates/dateFormater';
 import { keys } from '../services/utils/keys';
 import { checkTransactionAllowed } from '../services/utils/services';
 import { finalTransaction } from '../services/utils/transactionApi';
@@ -41,6 +41,7 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
   const [openSuccess, setOpenSuccess] = useState(false)
   const [successData, setSuccessData] = useState<any[]>([])
   const [isSipTransaction, setIsSipTransaction] = useState<boolean>(true)
+  const [isLumpsumTransaction, setIsLumpsumTransaction] = useState<boolean>(true)
   const [sipDateShow, setSipDateShow] = useState<boolean>(false)
   const [amount, setAmount] = useState<number>(0)
   const [amountErrorMsg, setAmountErrorMsg] = useState<string>("")
@@ -56,29 +57,24 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
   const handleSipDate = (value: number) => {
     setSipDate(value)
     setSipDateShow(false)
-    setSchemeList(schemeList.map(obj => ({
-      ...obj,
-      start_date: convertDayToFullDate(Number(value))
-    })))
   }
 
- 
+
   useEffect(() => {
     fetchFolios()
     defaultTransactionType()
-    
-  setSchemeList((prev: any) =>
-  prev.map((obj: any) => {
-    return {
-      ...obj,
-      start_date: daysAdded(7,sipDateList),
-    };
-  })
-);
+
+    setSchemeList((prev: any) =>
+      prev.map((obj: any) => {
+        return {
+          ...obj,
+          start_date: daysAdded(7, sipDateList),
+        };
+      })
+    );
   }, [show]);
 
-  const dateHandle = (e:Date|null) => {
-   
+  const dateHandle = (e: Date | null) => {
     setSchemeList((prev: any) =>
       prev.map((obj: any) => ({
         ...obj,
@@ -95,7 +91,13 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
 
   useEffect(() => {
     if (foliosFetched) {
-      handleMinAmount(true);
+      if(schemeList[0]?.totalAmount){
+         distributeAmount(Number(schemeList[0]?.totalAmount))
+         setAmount(Number(schemeList[0]?.totalAmount))
+         setIsLumpsumTransaction(false)
+      }else{
+        handleMinAmount(true);
+      }
       setFoliosFetched(false);
     }
   }, [foliosFetched, schemeList]);
@@ -103,25 +105,25 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
   const defaultTransactionType = () => {
     let data = checkTransactionAllowed(schemeList, keys.sip) ? true : false
     setIsSipTransaction(data)
-      if(!data){
-        setAddAmountValues({
+    if (!data) {
+      setAddAmountValues({
         min: 5000,
         first: 10000,
         second: 15000,
         third: 25000
       })
-        setAmount(5000);
-    distributeAmount(5000);
-      }else{
-         setAddAmountValues({
+      setAmount(5000);
+      distributeAmount(5000);
+    } else {
+      setAddAmountValues({
         min: 1000,
         first: 2000,
         second: 3000,
         third: 5000
       })
-        setAmount(1000);
-    distributeAmount(1000);
-      }
+      setAmount(1000);
+      distributeAmount(1000);
+    }
   }
 
   const fetchFolios = async () => {
@@ -162,7 +164,7 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
 
 
   const handleFolioSelection = () => {
-  
+
     const total = schemeList.reduce((acc, scheme) => {
       const minAmount = scheme.amount ?? 0; // use 0 if undefined
       return acc + minAmount;
@@ -170,10 +172,10 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
 
 
     const minTotal = schemeList.reduce((acc, scheme) => {
-      const minAmount = isSipTransaction ? scheme.minSIPAmt : scheme.minLumSumAmt;
+      const minAmount = isSipTransaction ? Number(scheme.minSIPAmt) : (scheme.minLumSumAmt);
       return acc + minAmount;
     }, 0);
-      if (!schemeList[0].start_date && isSipTransaction) {
+    if (!schemeList[0].start_date && isSipTransaction) {
       errorToast("Please select sip day...")
       return
     }
@@ -185,17 +187,18 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
       setAmountErrorMsg("Minimum investment amount is ₹" + minTotal)
       return
     }
+console.log("schemeeeeeeeeet",schemeList);
 
     if (from === "portfolio" && isSipTransaction) {
       setOpenBankMandate(true)
       setShow(false)
       return
     } else if (from === "portfolio") {
-      finalTransaction(schemeList, isSipTransaction ? keys.sip : keys.purchase, setSuccessData,true).then((res) => {
+      finalTransaction(schemeList, isSipTransaction ? keys.sip : keys.purchase, setSuccessData, true).then((res) => {
         setOpenSuccess(true)
         setShow(false)
         console.log(res);
-        
+
         return
       })
 
@@ -288,7 +291,7 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
     if (schemeList?.length > 0) {
       let total = 0;
       const updatedSchemes = schemeList.map((scheme) => {
-        const minAmount = type ? scheme.minSIPAmt : scheme.minLumSumAmt;
+        const minAmount = type ? Number(scheme.minSIPAmt) : Number(scheme.minLumSumAmt);
         total += minAmount;
 
         return {
@@ -313,7 +316,7 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
 
       >
         <Modal.Header closeButton className='modal-bg'>
-         
+
           <Modal.Title>Investment Confirmation</Modal.Title>
         </Modal.Header>
         <Modal.Body className='modal-bg'>
@@ -336,7 +339,7 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
                 <div className="col py-2 py-md-0">
                   <div className={`${isSipTransaction ? "text-white logobg_color" : "logoBlueColor"} w-100 border  text-center monthly_btn crPointer`} onClick={() => { handleTransactionType(true) }}> Monthly SIP</div>
                 </div>}
-              {checkTransactionAllowed(schemeList, keys.purchase) &&
+              {(checkTransactionAllowed(schemeList, keys.purchase) && isLumpsumTransaction)&&
                 <div className="col py-2 py-md-0">
                   <div className={`${!isSipTransaction ? "text-white logobg_color" : "logoBlueColor"} w-100 border  text-center monthly_btn crPointer`} onClick={() => { handleTransactionType(false) }}> One-Time </div>
                 </div>}
@@ -350,11 +353,11 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
                     <p>Day of SIP</p>
                     <DatePicker
                       selected={schemeList[0]?.start_date}
-                      onChange={(e)=>dateHandle(e)}
+                      onChange={(e) => dateHandle(e)}
                       filterDate={isAllowedDay}
                       placeholderText="DD/MM/YYYY"
                       dateFormat="dd/MM/yyyy"
-                      minDate={daysAdded(7,sipDateList)}
+                      minDate={daysAdded(7, sipDateList)}
                       className="form-control border-0 focus_datepickers121"
                     />
                   </div>
@@ -375,7 +378,7 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
                 <button type="button" className="btn shortcutValue mx-1" onClick={() => addAmount(addAmountValues.third)}>+<CurrencyRupee className='mb-1' />{addAmountValues.third.toLocaleString("en-In")}</button>
               </div>
             </div>
-            {from === "emergency" && <>
+            {from !== "portfolio" && <>
 
               <p className='sip_amount_breakup12 fs14px mb-0'>Sip amount breakup</p>
               {schemeList?.map((item, index) => {
@@ -414,7 +417,7 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
       </Modal>
       <SipDates show={sipDateShow} setShow={setSipDateShow} sipDate={sipDate} sipDateList={sipDateList} handleSipDate={handleSipDate} />
       <SelectFolioPopup show={openSelectFolio} setShow={setOpenSelectFolio} schemeList={schemeList} setSchemeList={setSchemeList} isSipTransaction={isSipTransaction} />
-      <BankMandate show={openBankMandate} setShow={setOpenBankMandate} schemeList={schemeList} setSchemeList={setSchemeList} isSipTransaction={isSipTransaction} additionalPurchase={true}/>
+      <BankMandate show={openBankMandate} setShow={setOpenBankMandate} schemeList={schemeList} setSchemeList={setSchemeList} isSipTransaction={isSipTransaction} additionalPurchase={true} />
       <OrderPlaces show={openSuccess} setShow={setOpenSuccess} successData={successData} />
     </>
   );

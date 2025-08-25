@@ -34,7 +34,7 @@ const fetchSupportData =async ()=>{
 
   return (
     <main className="col-md-9 ms-sm-auto col-lg-9 px-md-4 py-4">
-      <RateYourRM show={show} setShow={setShow} />
+      <RateYourRM show={show} setShow={setShow} rmId={helpAndSupportData?.RMID}/>
       <h2>
         <ArrowLeft className="crPointer" size={25} onClick={backButton} />
         Help & Support
@@ -48,7 +48,7 @@ const fetchSupportData =async ()=>{
         </span>
         <br />
         <span className="note">
-          Time: 9:30 AM to 6:30 PM on market Trading days. Standard calling
+          Time: 9:30 AM to 6:00 PM on market Trading days. Standard calling
           rates apply.
         </span>
         <br />
@@ -77,7 +77,7 @@ const fetchSupportData =async ()=>{
         </span>
         <br />
         <span className="note">
-          Time: 9:30 AM to 6:30 PM on market Trading days. Standard calling
+          Time: 9:30 AM to 6:00 PM on market Trading days. Standard calling
           rates apply.
         </span>
         <br />
@@ -85,25 +85,26 @@ const fetchSupportData =async ()=>{
           <ChatDots size={20} className="me-2" /> Message Us
         </button>
       </div>
-
+ {helpAndSupportData?.rmSupport&&
       <div className="p-4 shadow-sm bg-white border-0 rounded-4 mb-2 mt-2">
         <span>
           Relationship Manager: <span className="link">{helpAndSupportData?.rmSupport}</span>
         </span>
         <br />
         <span className="note">
-          Time: 9:30 AM to 6:30 PM on market Trading days. Standard calling
+          Time: 9:30 AM to 6:00 PM on market Trading days. Standard calling
           rates apply.
         </span>
         <br />
         <button className="mandate-button mt-2">
           <Telephone size={20} className="me-2" /> Call Us
         </button>
+        {helpAndSupportData?.RMID &&
         <button className="outline-button  ms-2" onClick={() => setShow(true)}>
           <Star size={20} className="me-2" />
           Rate your RM
-        </button>
-      </div>
+        </button>}
+      </div>}
     </main>
   );
 }

@@ -39,6 +39,7 @@ export interface schemeDeatilDataKeys {
   threeYearCAGR: number;
   fiveYearCAGR: number;
   amount?: number;
+  totalAmount?:number;
   folioList?: foliosKeys[];
   selectedFolio?: foliosKeys;
   umrn_no?: string;
@@ -154,14 +155,34 @@ export interface switchKeys {
   reg_remark: string,
   schemeName: string
 }
-export interface swpResponse{
-  success:boolean,
-  data:swpKey[]
+export interface swpResponse {
+  success: boolean,
+  data: swpKey[]
 }
 
-export interface HelpandSupport{
+export interface HelpandSupport {
   phoneSupport: string;
   emailSupport: string;
   whatsappSupport: string;
   rmSupport: string;
+}
+
+export interface goalSchemeRes {
+  success: boolean,
+  msg: string,
+  length: number,
+  data: goalSchmes[]
+}
+export interface goalSchmes {
+  accordAMCCode: number,
+  accordSchemeCode: number,
+  equityType: string,
+  scheme: string,
+  nseAMCCode: string,
+  nseProductCode: string,
+  sipDateList: number[],
+  minSIPAmt: string,
+  minLumSumAmt: string,
+  sipAllowed: boolean,
+  purchaseAllowed: boolean
 }
