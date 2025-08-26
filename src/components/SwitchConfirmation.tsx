@@ -11,6 +11,7 @@ import { postRequest } from '../services/Api/HandleApi';
 import { endPoints, imageUrl } from '../services/utils/urls';
 import { fetchAdminUser } from '../services/user/adminUser';
 import { errorToast } from '../services/utils/toast';
+import { switchFilterBody } from '../services/utils/transactionBody';
 // import { FaArrowLeftLong } from "react-icons/fa6";
 
 interface investmetProps {
@@ -40,10 +41,12 @@ const SwitchConfirmation: React.FC<investmetProps> = ({ show, setShow, cartItem,
      errorToast("Plaese enter units...")
      return
     }
+      
     const reqBody = {
       ucc: adminUser?.ucc,
-      cartItems: cartItem
+      cartItems: switchFilterBody(cartItem)
     }
+
     try {
       const res = await postRequest<switchResponse>(endPoints.switch, reqBody)
       console.log(res);
@@ -57,7 +60,6 @@ const SwitchConfirmation: React.FC<investmetProps> = ({ show, setShow, cartItem,
       console.log(err);
 
     }
-
 
   }
   const handleSwitchAllUnit = (e: React.ChangeEvent<HTMLInputElement>, allUnit: number, index: number) => {

@@ -118,7 +118,7 @@ const AllMutualFunds = () => {
         <div className="row">
           <div className="col-lg-4 border-end d-none d-lg-block">
 
-            <Returns />
+            {/* <Returns /> */}
 
             <Category handleFilter={handleFilter} isAvailable={isAvailable} />
 

@@ -173,7 +173,16 @@ const FundDetails = () => {
   const fetchSchemeDetail = async () => {
     try {
       const res = await postRequest<schemeDetailType>(endPoints.getSchemeDetails, { productcode: location.state.accordSchemeCode })
-      setSchemeList(res.data)
+      const updated = res.data.map(obj => ({
+        ...obj,
+        firstSIPToday: true,
+        to_date:"",
+        from_date:"",
+        mandateId:"",
+        amount:0,
+        totalAmount:0
+      }));
+      setSchemeList([...updated])
 
       setSipDateList([...res.data[0].sipDateList])
       handleNearSipDate(res.data[0].sipDateList)
@@ -254,7 +263,7 @@ const FundDetails = () => {
         },
       ];
 
-      setSchemeList(updatedList);
+      setSchemeList([...updatedList]);
     } catch (error) {
 
       const updatedList = [
@@ -264,7 +273,7 @@ const FundDetails = () => {
         },
       ];
 
-      setSchemeList(updatedList);
+      setSchemeList([...updatedList]);
     }
 
   };
@@ -295,7 +304,7 @@ const FundDetails = () => {
           amount: minAmount,
         };
       });
-      setSchemeList(updatedSchemes);
+      setSchemeList([...updatedSchemes]);
     }
   };
 

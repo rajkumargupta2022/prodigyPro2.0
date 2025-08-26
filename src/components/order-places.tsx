@@ -52,10 +52,10 @@ const OrderPlaces: React.FC<OrderPlaces> = ({ show, setShow,successData }) => {
 
 
                     <div className={`mx-md-5 m-2 ${item.reg_status ? "schemeDetailBox":"schemeDetailBoxRed"} my-md-3 my-1`}>
-                      <div className="d-flex text-start fs12pxWhite">
+                     {item?.reg_id && <div className="d-flex text-start fs12pxWhite">
                         <p className="order-Placed-modal text-start">UNIQUE NUMBER:</p>
                         <p className="fs16">{item.reg_id}</p>
-                      </div>
+                      </div>}
                       {/* <div className="d-flex text-start fs12pxWhite">
                         <p className="order-Placed-modal">TRXN NUMBER:</p>
                         <p className="fs16">265498989</p>
@@ -64,22 +64,30 @@ const OrderPlaces: React.FC<OrderPlaces> = ({ show, setShow,successData }) => {
                         <p className="order-Placed-modal">FUND:</p>
                         <p className="fs16">{item.schemeName}</p>
                       </div>
+                      {item?.folio_no!==" "&&
                       <div className="d-flex text-start fs12pxWhite">
                         <p className="order-Placed-modal">FOLIO NUMBER:</p>
                         <p className="fs16">{item.folio_no}</p>
-                      </div>
+                      </div>}
+                      {item?.amount &&
                       <div className="d-flex text-start fs12pxWhite">
                         <p className="order-Placed-modal">AMOUNT:</p>
                         <p className="fs16">{item.amount}</p>
-                      </div>
+                      </div>}
+                        {item?.unit &&
+                      <div className="d-flex text-start fs12pxWhite">
+                        <p className="order-Placed-modal">Unit:</p>
+                        <p className="fs16">{item.unit}</p>
+                      </div>}
                       <div className="d-flex text-start fs12pxWhite">
                         <p className="order-Placed-modal">STATUS:</p>
                         <p className="fs16">{item.reg_status ? "Successful" :"Failed"}</p>
                       </div>
+                      {item?.reg_remark!==" " &&
                         <div className="d-flex text-start fs12pxWhite">
                         <p className="order-Placed-modal">REMARK:</p>
                         <p className="fs16">{item.reg_remark}</p>
-                      </div>
+                      </div>}
                     </div>
 
 

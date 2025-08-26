@@ -10,25 +10,30 @@ import { finalTransaction } from "../services/utils/transactionApi";
 import { keys } from "../services/utils/keys";
 import { fetchAdminUser } from "../services/user/adminUser";
 import { errorToast } from "../services/utils/toast";
+import { dateForApi2 } from "../services/dates/dateFormater";
 interface bankMandate {
   show: boolean;
   setShow: (show: boolean) => void;
   schemeList: schemeDeatilDataKeys[];
   setSchemeList: (date: any) => void,
   isSipTransaction: boolean,
-  additionalPurchase:boolean
+  additionalPurchase: boolean
 }
 
-const BankMandate: React.FC<bankMandate> = ({ show, setShow, schemeList, setSchemeList, isSipTransaction,additionalPurchase }) => {
+const BankMandate: React.FC<bankMandate> = ({ show, setShow, schemeList, setSchemeList, isSipTransaction, additionalPurchase }) => {
   // const [openCreateFolio,setOpenCreateFolio] = useState<boolean>(false)
   const [openSuccess, setOpenSuccess] = useState(false)
   const [mandateList, setMandateList] = useState<bankMandateKeys[]>([])
+  const [tempData, setTempData] = useState<any[]>([])
   const [successData, setSuccessData] = useState<any[]>([])
 
 
   useEffect(() => {
-    fetchMandateList()     
-    
+
+    if (show) {
+      fetchMandateList()
+    }
+
   }, [show])
 
   const fetchMandateList = async () => {
@@ -39,7 +44,8 @@ const BankMandate: React.FC<bankMandate> = ({ show, setShow, schemeList, setSche
       errorToast("Something went wrong")
       return
     }
-         console.log("schemlistt",schemeList);
+    
+    console.log("schemlistt", schemeList);
 
     try {
       const res = await postRequest<bankMandateResponse>(
@@ -49,21 +55,20 @@ const BankMandate: React.FC<bankMandate> = ({ show, setShow, schemeList, setSche
 
       setMandateList(res.mandates);
       setSelectedUrn(res.mandates[0]?.umrn_no);
-      
-      // setSchemeList((prev: any[]) =>
+    //  console.log("res.mandates[0]",res.mandates[0]);
+     
+
+
+      let update = schemeList.map((scheme: any) => (
+        {
+          ...scheme,
+          mandateId: res.mandates[0]?.umrn_no,
+          from_date: dateForApi2(res.mandates[0]?.from_date),
+          to_date: dateForApi2(res.mandates[0]?.to_date)
+        }))
+        console.log("updateeee",update);
         
-      //   prev.map((scheme: any) => ({
-      //     ...scheme,
-      //     amount:schemeList[0]?.amount,
-      //     urn_no: res.mandates[0]?.umrn_no,
-      //     from_date: res.mandates[0]?.from_date
-      //       ? res.mandates[0].from_date.replace("T", " ")
-      //       : "",
-      //     to_date: res.mandates[0]?.to_date
-      //       ? res.mandates[0].to_date.replace("T", " ")
-      //       : ""
-      //   }))
-      // );
+      setTempData([...update])
     } catch (err) {
       setMandateList([])
     }
@@ -76,23 +81,20 @@ const BankMandate: React.FC<bankMandate> = ({ show, setShow, schemeList, setSche
       {
 
         ...scheme,
-        urn_no: urn,
-        from_date: from_date.replace("T", " "),
-        to_date: to_date.replace("T", " ")
+        mandateId: urn,
+        from_date: dateForApi2(from_date),
+        to_date: dateForApi2(to_date)
         // ✅ only update urn_no
       }));
 
-    setSchemeList(updatedSchemes);
+    setTempData([...updatedSchemes]);
   };
 
 
 
 
   const handleTransaction = () => {
-      console.log("schemelisttttt",schemeList);
-      alert("schmelist ok")
-      return
-    finalTransaction(schemeList, isSipTransaction ? keys.sip : keys.purchase, setSuccessData,additionalPurchase).then((res) => {
+    finalTransaction(tempData, isSipTransaction ? keys.sip : keys.purchase, setSuccessData, additionalPurchase).then((res) => {
       console.log(res);
 
       setOpenSuccess(true)

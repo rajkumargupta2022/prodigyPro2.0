@@ -35,6 +35,7 @@ function HelpSupport({ backButton }: { backButton: any; activeInactive: any }) {
   return (
     <main className="col-md-9 ms-sm-auto col-lg-9 px-md-4 py-4">
       <RateYourRM show={show} setShow={setShow} rmId={helpAndSupportData?.RMID} />
+
       <h2>
         <ArrowLeft className="crPointer" size={25} onClick={backButton} />
         Help & Support
@@ -125,6 +126,8 @@ function HelpSupport({ backButton }: { backButton: any; activeInactive: any }) {
               Rate your RM
             </button>}
         </div>}
+
+
     </main>
   );
 }
