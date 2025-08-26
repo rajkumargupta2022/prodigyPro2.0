@@ -42,10 +42,11 @@ export interface schemeDeatilDataKeys {
   totalAmount?:number;
   folioList?: foliosKeys[];
   selectedFolio?: foliosKeys;
-  umrn_no?: string;
+  mandateId?: string;
   start_date?: any;
   from_date?: any;
   to_date?: any;
+  firstSIPToday:boolean
 }
 
 export interface navHistoryResponse {

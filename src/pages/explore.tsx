@@ -20,7 +20,7 @@ const Explore = () => {
     <>
       <MyNavbar />
       <div className="container mt-4">
-        <div className="input-group mb-3">
+        {/* <div className="input-group mb-3">
           <span className="input-group-text ">
             <Search />
           </span>
@@ -29,7 +29,7 @@ const Explore = () => {
             className="form-control"
             placeholder="Search for mutual funds to invest..."
           />
-        </div>
+        </div> */}
         <div
           className="card p-3 mb-3"
           style={{ border: "none", borderRadius: "16px" }}

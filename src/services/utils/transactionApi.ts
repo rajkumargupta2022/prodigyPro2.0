@@ -26,7 +26,7 @@ export const finalTransaction = async (
   let transactionBody = {
     ucc: adminUser?.ucc,
     transactionType: transactionType,
-    cartItems:transactionType===keys.sip ? sipFilterBody(schemeList,additionalPurchase):transactionType===keys.purchase ? purchaseFilterBody(schemeList):"",
+    cartItems:transactionType===keys.sip ? sipFilterBody(schemeList,additionalPurchase):transactionType===keys.purchase ? purchaseFilterBody(schemeList,additionalPurchase):"",
   };
   try {
     const res = await postRequest<sipPurchaseRedemptionResponse>(

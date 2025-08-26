@@ -30,7 +30,7 @@ function Filters({ handleFilter ,isAvailable}: FiltersProps) {
 
   return (
       <>
-       <div
+       {/* <div
               className="card p-2 mt-2 radius16px"
               
             >
@@ -43,7 +43,7 @@ function Filters({ handleFilter ,isAvailable}: FiltersProps) {
                 <Form.Check type="checkbox" label="Moderate High" name="risk" />
                 <Form.Check type="checkbox" label="Very High" name="risk" />
               </Form>
-            </div>
+            </div> */}
 
             <div
               className="card p-md-4 p-2 mt-2 radius16px"

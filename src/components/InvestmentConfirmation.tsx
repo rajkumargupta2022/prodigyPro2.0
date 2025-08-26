@@ -4,7 +4,6 @@ import Modal from 'react-bootstrap/Modal';
 import Card from 'react-bootstrap/Card';
 import { Calendar4, CurrencyRupee } from 'react-bootstrap-icons';
 import money from "../assets/img/icons/rupee 1.svg"
-import SipDates from './SipDate';
 import { foliosResponse, schemeDeatilDataKeys } from '../pages/data-interfaces/transact';
 import { Link } from 'react-router-dom';
 import SelectFolioPopup from './select-folio-popup';
@@ -19,6 +18,7 @@ import { finalTransaction } from '../services/utils/transactionApi';
 import OrderPlaces from './order-places';
 import DatePicker from 'react-datepicker';
 import { errorToast } from '../services/utils/toast';
+import { Form } from 'react-bootstrap';
 
 interface investmetProps {
   show: boolean;
@@ -42,7 +42,6 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
   const [successData, setSuccessData] = useState<any[]>([])
   const [isSipTransaction, setIsSipTransaction] = useState<boolean>(true)
   const [isLumpsumTransaction, setIsLumpsumTransaction] = useState<boolean>(true)
-  const [sipDateShow, setSipDateShow] = useState<boolean>(false)
   const [amount, setAmount] = useState<number>(0)
   const [amountErrorMsg, setAmountErrorMsg] = useState<string>("")
   const [foliosFetched, setFoliosFetched] = useState(false);
@@ -52,26 +51,24 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
     second: 3000,
     third: 5000
   })
-  const [sipDate, setSipDate] = useState<number>(1)
 
-  const handleSipDate = (value: number) => {
-    setSipDate(value)
-    setSipDateShow(false)
-  }
 
 
   useEffect(() => {
     fetchFolios()
     defaultTransactionType()
 
-    setSchemeList((prev: any) =>
-      prev.map((obj: any) => {
-        return {
-          ...obj,
-          start_date: daysAdded(7, sipDateList),
-        };
-      })
-    );
+    const updated = schemeList.map(obj => ({
+        ...obj,
+        firstSIPToday: true,
+        to_date:"",
+        from_date:"",
+        amount:0,
+        totalAmount:0,
+        start_date: daysAdded(7, sipDateList),
+      }));
+setSchemeList(updated)
+
   }, [show]);
 
   const dateHandle = (e: Date | null) => {
@@ -91,11 +88,11 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
 
   useEffect(() => {
     if (foliosFetched) {
-      if(schemeList[0]?.totalAmount){
-         distributeAmount(Number(schemeList[0]?.totalAmount))
-         setAmount(Number(schemeList[0]?.totalAmount))
-         setIsLumpsumTransaction(false)
-      }else{
+      if (schemeList[0]?.totalAmount) {
+        distributeAmount(Number(schemeList[0]?.totalAmount))
+        setAmount(Number(schemeList[0]?.totalAmount))
+        setIsLumpsumTransaction(false)
+      } else {
         handleMinAmount(true);
       }
       setFoliosFetched(false);
@@ -141,6 +138,12 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
 
         try {
           const res = await postRequest<foliosResponse>(endPoints.getSchemeFolios, reqBody);
+          if(from==="portfolio"){
+            schemeList?.forEach((scheme: any) => {
+      const recommendedFolio = res.data?.find((folio: any) => folio?.is_recommended);
+      scheme.selectedFolio = recommendedFolio || {};
+    });
+          }
 
           return {
             ...item,
@@ -154,7 +157,10 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
         }
       })
     ).then(updatedSchemeList => {
-      setSchemeList(updatedSchemeList);
+
+      console.log("updatedSchemeList",updatedSchemeList);
+      
+      setSchemeList([...updatedSchemeList]);
       setFoliosFetched(true);
     }).catch(err => {
       console.log("This is error", err)
@@ -187,7 +193,6 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
       setAmountErrorMsg("Minimum investment amount is ₹" + minTotal)
       return
     }
-console.log("schemeeeeeeeeet",schemeList);
 
     if (from === "portfolio" && isSipTransaction) {
       setOpenBankMandate(true)
@@ -303,6 +308,17 @@ console.log("schemeeeeeeeeet",schemeList);
       setAmount(total);
     }
   };
+  const handleSipDeduction = () => {
+    console.log("schemeList[0]?.firstSIPToday", schemeList[0]?.firstSIPToday);
+
+    setSchemeList((prev: any) =>
+      prev.map((obj: any, index: number) =>
+        index === 0
+          ? { ...obj, firstSIPToday: !obj.firstSIPToday } // Toggle the value
+          : obj
+      )
+    );
+  };
 
 
   return (
@@ -339,7 +355,7 @@ console.log("schemeeeeeeeeet",schemeList);
                 <div className="col py-2 py-md-0">
                   <div className={`${isSipTransaction ? "text-white logobg_color" : "logoBlueColor"} w-100 border  text-center monthly_btn crPointer`} onClick={() => { handleTransactionType(true) }}> Monthly SIP</div>
                 </div>}
-              {(checkTransactionAllowed(schemeList, keys.purchase) && isLumpsumTransaction)&&
+              {(checkTransactionAllowed(schemeList, keys.purchase) && isLumpsumTransaction) &&
                 <div className="col py-2 py-md-0">
                   <div className={`${!isSipTransaction ? "text-white logobg_color" : "logoBlueColor"} w-100 border  text-center monthly_btn crPointer`} onClick={() => { handleTransactionType(false) }}> One-Time </div>
                 </div>}
@@ -403,6 +419,19 @@ console.log("schemeeeeeeeeet",schemeList);
               })}
             </>
             }
+            {isSipTransaction &&
+              <div className="d-flex justify-content-center align-items-center mt-2 mb-0">
+                <Form.Check
+                  type="checkbox"
+                  id="circleCheckbox"
+                  className="circle-checkbox textColor"
+                  onChange={handleSipDeduction}
+                  checked={schemeList[0]?.firstSIPToday ?? true}
+                  label="First SIP will be deducted today."
+                  name="Sip deduction"
+                />
+              </div>}
+
 
 
 
@@ -415,7 +444,6 @@ console.log("schemeeeeeeeeet",schemeList);
           <Button className='customButton buttunCenter' onClick={handleFolioSelection}>Continue</Button>
         </Modal.Footer>
       </Modal>
-      <SipDates show={sipDateShow} setShow={setSipDateShow} sipDate={sipDate} sipDateList={sipDateList} handleSipDate={handleSipDate} />
       <SelectFolioPopup show={openSelectFolio} setShow={setOpenSelectFolio} schemeList={schemeList} setSchemeList={setSchemeList} isSipTransaction={isSipTransaction} />
       <BankMandate show={openBankMandate} setShow={setOpenBankMandate} schemeList={schemeList} setSchemeList={setSchemeList} isSipTransaction={isSipTransaction} additionalPurchase={true} />
       <OrderPlaces show={openSuccess} setShow={setOpenSuccess} successData={successData} />

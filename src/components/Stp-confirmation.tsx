@@ -75,8 +75,8 @@ const StpConfiramtion: React.FC<investmetProps> = ({ show, setShow, cartItem, se
     const data = cartItem.map((item: cartItemKey) => {
       return {
         schemeName: item.toScheme,
-        fromNSEProductCode: item.fromAccordProductCode,
-        toNSEProductCode: item.toAccordProductCode,
+        fromAccordProductCode: item.fromAccordProductCode,
+        toAccordProductCode: item.toAccordProductCode,
         amount: item.amount || 0,
         folioNumber: item.folioNumber,
         installment_units: item.installment_units || 0,

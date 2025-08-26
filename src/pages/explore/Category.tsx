@@ -60,7 +60,7 @@ const [assetTypeListData, setAssetTypeListData] = useState<assetTypeListKeys[]>(
               </div>
               <Form className="fixed-scrolling-amc">
                 {categoryList.length>0 && categoryList.map((item,index)=>{
-                  return  <Form.Check type="checkbox" checked={isAvailable(item.classcode,"category")} key={index} value={item.classcode} onClick={()=>handleFilter(item.classcode , "category")} label={item.category}name="category"  />
+                  return  <Form.Check type="checkbox" checked={isAvailable(item.classcode,"category")} key={index} value={item.classcode} onChange={()=>handleFilter(item.classcode , "category")} label={item.category}name="category"  />
                
                 })}
               </Form>

@@ -69,7 +69,7 @@ const SwitchSelectionScheme: React.FC<SwitchSelectionProps> = ({ filteredSchemes
                   <div className="col-4">
                     <span className="text-secondary">Last 3Y</span>
                     <br />
-                    <span className="value-font2 text-success">{item.threeyearret}%</span>
+                    <span className="value-font2 text-success">{item.threeYearCAGR}%</span>
                   </div>
 
                   <div className="col-4">

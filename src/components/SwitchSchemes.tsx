@@ -31,7 +31,7 @@ const SwitchSchemes: React.FC<SchemesProps> = ({ handleFilter, isAvailable, filt
           <Col md={6} className="">
             <h5 className="fw-bold mb-0">431 Mutual Funds</h5>
           </Col>
-          <Col md={6}>
+          {/* <Col md={6}>
             <div className="position-relative pt-md-0 pt-3">
               <Search
                 className="mutual-funds-searchbuttonprodgy12 text-secondary "
@@ -40,7 +40,7 @@ const SwitchSchemes: React.FC<SchemesProps> = ({ handleFilter, isAvailable, filt
 
               <input className="rounded-4 exlore-search-box w-100" type="text" placeholder="Search for mutual funds to invest..."></input>
             </div>
-          </Col>
+          </Col> */}
           <div className="col-12 pt-3 d-block d-lg-none">
             <div className="row prody_position_relative">
               <div className="col-4">
