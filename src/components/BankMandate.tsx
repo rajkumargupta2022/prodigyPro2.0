@@ -29,6 +29,7 @@ const BankMandate: React.FC<bankMandate> = ({ show, setShow, schemeList, setSche
 
 
   useEffect(() => {
+
     if (show) {
       fetchMandateList()
     }
@@ -36,6 +37,8 @@ const BankMandate: React.FC<bankMandate> = ({ show, setShow, schemeList, setSche
   }, [show])
 
   const fetchMandateList = async () => {
+    console.log("schemelistttttt",schemeList);
+    
     const adminUser = fetchAdminUser()
     if (!adminUser) {
       errorToast("Something went wrong")

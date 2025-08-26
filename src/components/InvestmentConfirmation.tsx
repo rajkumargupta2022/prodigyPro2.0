@@ -42,6 +42,8 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
   const [successData, setSuccessData] = useState<any[]>([])
   const [isSipTransaction, setIsSipTransaction] = useState<boolean>(true)
   const [isLumpsumTransaction, setIsLumpsumTransaction] = useState<boolean>(true)
+
+
   const [amount, setAmount] = useState<number>(0)
   const [amountErrorMsg, setAmountErrorMsg] = useState<string>("")
   const [foliosFetched, setFoliosFetched] = useState(false);
@@ -53,10 +55,10 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
   })
 
 
-
   useEffect(() => {
     fetchFolios()
     defaultTransactionType()
+
 
     const updated = schemeList.map(obj => ({
         ...obj,
@@ -68,6 +70,7 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
         start_date: daysAdded(7, sipDateList),
       }));
 setSchemeList(updated)
+
 
   }, [show]);
 
@@ -88,6 +91,7 @@ setSchemeList(updated)
 
   useEffect(() => {
     if (foliosFetched) {
+
       if (schemeList[0]?.totalAmount) {
         distributeAmount(Number(schemeList[0]?.totalAmount))
         setAmount(Number(schemeList[0]?.totalAmount))
@@ -193,6 +197,7 @@ setSchemeList(updated)
       setAmountErrorMsg("Minimum investment amount is ₹" + minTotal)
       return
     }
+console.log("schemeeeeeeeeet",schemeList);
 
     if (from === "portfolio" && isSipTransaction) {
       setOpenBankMandate(true)
@@ -355,7 +360,9 @@ setSchemeList(updated)
                 <div className="col py-2 py-md-0">
                   <div className={`${isSipTransaction ? "text-white logobg_color" : "logoBlueColor"} w-100 border  text-center monthly_btn crPointer`} onClick={() => { handleTransactionType(true) }}> Monthly SIP</div>
                 </div>}
+
               {(checkTransactionAllowed(schemeList, keys.purchase) && isLumpsumTransaction) &&
+
                 <div className="col py-2 py-md-0">
                   <div className={`${!isSipTransaction ? "text-white logobg_color" : "logoBlueColor"} w-100 border  text-center monthly_btn crPointer`} onClick={() => { handleTransactionType(false) }}> One-Time </div>
                 </div>}
