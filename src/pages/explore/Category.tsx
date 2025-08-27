@@ -9,7 +9,6 @@ interface CategoryProps {
   isAvailable: (value: number,type:string) => boolean;
 }
 
-
 function Category({ handleFilter,isAvailable }: CategoryProps) {
 const [categoryList, setCategoryList] = useState<categoryListKeys[]>([])
 const [assetTypeListData, setAssetTypeListData] = useState<assetTypeListKeys[]>([])
@@ -26,9 +25,9 @@ const [assetTypeListData, setAssetTypeListData] = useState<assetTypeListKeys[]>(
       }
     } catch (err) {
     }
-
   }
-    const fetchAssetTypeList = async () => {
+
+  const fetchAssetTypeList = async () => {
     try {
       const res = await getRequest<assetTypeListResponse>(endPoints.getAssetTypesList)
       if (res.data) {
@@ -37,34 +36,49 @@ const [assetTypeListData, setAssetTypeListData] = useState<assetTypeListKeys[]>(
     } catch (err) {
       // console.log(err);
     }
-
   }
  
   return (
-    
-      <div
-              className="card p-md-4 p-2 mt-2 radius16px"
-              
-            >
-              <h5 className="mt-3 font-size-16 mb-3" >Category</h5>
+    <div className="card p-md-4 p-2 mt-2 radius16px">
+      <h5 className="mt-3 font-size-16 mb-3">Category</h5>
 
-              <div className="explore-categoryprodgy">
-                <p>Type</p>
-                <div className="d-flex justify-content-between gap-1">
-                  {assetTypeListData.length > 0 && assetTypeListData.map((item,index)=>{
-                    return  <button type="button"  onClick={()=>handleFilter(item.asset_code , "asset")} key={index} className={`btn riskProfileBtn  w-50 ${isAvailable(item.asset_code,"asset")&&"btn_colorfull"}`}>{item.asset_type}</button>
-                  })}
-          
-                </div>
-                <p className="pt-2 fs12px">Category</p>
-              </div>
-              <Form className="fixed-scrolling-amc">
-                {categoryList.length>0 && categoryList.map((item,index)=>{
-                  return  <Form.Check type="checkbox" checked={isAvailable(item.classcode,"category")} key={index} value={item.classcode} onChange={()=>handleFilter(item.classcode , "category")} label={item.category}name="category"  />
-               
-                })}
-              </Form>
+      <div className="explore-categoryprodgy">
+        <p>Type</p>
+        <div className="d-flex justify-content-between gap-1">
+          {assetTypeListData.length > 0 && assetTypeListData.map((item,index)=>{
+            return  <button type="button"  onClick={()=>handleFilter(item.asset_code , "asset")} key={index} className={`btn riskProfileBtn  w-50 ${isAvailable(item.asset_code,"asset")&&"btn_colorfull"}`}>{item.asset_type}</button>
+          })}
+        </div>
+        <p className="pt-2 fs12px">Category</p>
+      </div>
+      
+      <Form className="fixed-scrolling-amc">
+        {categoryList.length>0 && categoryList.map((item,index)=>{
+          return (
+            <div 
+              key={index}
+              className="d-flex align-items-center mb-2 p-1 rounded"
+              onClick={()=>handleFilter(item.classcode , "category")}
+              style={{ cursor: 'pointer' }}
+            >
+              <Form.Check 
+                type="checkbox" 
+                checked={isAvailable(item.classcode,"category")} 
+                onChange={() => {}} // Empty onChange since click is handled by parent div
+                className="me-2"
+                style={{ pointerEvents: 'none' }} // Prevent direct checkbox clicks
+              />
+              <label 
+                className="mb-0 flex-grow-1"
+                style={{ cursor: 'pointer' }}
+              >
+                {item.category}
+              </label>
             </div>
+          )
+        })}
+      </Form>
+    </div>
   );
 }
 
