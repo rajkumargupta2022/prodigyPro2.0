@@ -53,13 +53,12 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
     second: 3000,
     third: 5000
   })
-
+let arrData:schemeDeatilDataKeys[] =[]
   useEffect(() => {
     fetchFolios()
     defaultTransactionType()
 
-    const defaultDate = daysAdded(7, sipDateList);
-    
+ 
     const updated = schemeList.map(obj => ({
       ...obj,
       firstSIPToday: true,
@@ -67,9 +66,12 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
       from_date: "",
       amount: 0,
       totalAmount: 0,
-      start_date: defaultDate,
+      start_date: daysAdded(31, sipDateList),
     }));
     setSchemeList(updated)
+    console.log("updtesss",updated);
+    
+    arrData=[...updated]
 
   }, [show]);
 
@@ -403,7 +405,7 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
                       filterDate={isAllowedDay}
                       placeholderText="DD/MM/YYYY"
                       dateFormat="dd/MM/yyyy"
-                      minDate={daysAdded(7, sipDateList)}
+                      minDate={daysAdded(schemeList[0]?.firstSIPToday?31:7, sipDateList)}
                       className="focus_datepickers121"
                     />
                     <div className="prod_view_fund align-self-center">

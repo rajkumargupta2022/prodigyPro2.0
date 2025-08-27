@@ -4,7 +4,7 @@ import { foliosResponse, schemeDeatilDataKeys } from "../pages/data-interfaces/t
 import { postRequest } from "../services/Api/HandleApi";
 import { endPoints } from "../services/utils/urls";
 import { Calendar4, CurrencyRupee } from "react-bootstrap-icons";
-import { Card } from "react-bootstrap";
+import { Card, Form } from "react-bootstrap";
 import SelectFolioPopup from "./select-folio-popup";
 import { checkTransactionAllowed } from "../services/utils/services";
 import { keys } from "../services/utils/keys";
@@ -49,7 +49,12 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
         prev.map((obj: any) => {
           return {
             ...obj,
-            start_date: daysAdded(7, sipDateList),
+            firstSIPToday: true,
+            to_date: "",
+            from_date: "",
+            amount: 0,
+            totalAmount: 0,
+            start_date: daysAdded(31, sipDateList),
           };
         })
       );
@@ -201,7 +206,7 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
   const handleFolioSelection = () => {
     const minTotal = isSipTransaction ? schemeList[0]?.minSIPAmt : schemeList[0]?.minLumSumAmt
 
-    if(!schemeList[0]?.start_date && isSipTransaction){
+    if (!schemeList[0]?.start_date && isSipTransaction) {
       setDateErrorMsg("Please select sip day")
       return
     }
@@ -218,8 +223,19 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
     setOpenSelectFolio(true)
 
   }
+  const handleSipDeduction = () => {
+    console.log("schemeList[0]?.firstSIPToday", schemeList[0]?.firstSIPToday);
+
+    setSchemeList((prev: any) =>
+      prev.map((obj: any, index: number) =>
+        index === 0
+          ? { ...obj, firstSIPToday: !obj.firstSIPToday } // Toggle the value
+          : obj
+      )
+    );
+  };
   return (<>
-  
+
     <div className="col-md-4 col-12 position-relative">
 
       <div className="bg-white p-3 rounded">
@@ -237,33 +253,34 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
         </div>
 
         {isSipTransaction && <>
-        
-                      <div className="form-group mt-3">
-                        <label className='fs12px'>Date of SIP</label>
-                        <div className="position-relative">
-                          <div className="d-flex justify-content-between crPointer form-control date-picker-container" onClick={() => {
-                            const dateInput = document.querySelector('.focus_datepickers121') as HTMLInputElement | null;
-                            dateInput?.click();
-                          }}
-                          >
-                            <DatePicker
-                              selected={schemeList[0]?.start_date}
-                              onChange={(e) => dateHandle(e)}
-                              filterDate={isAllowedDay}
-                              placeholderText="DD/MM/YYYY"
-                              dateFormat="dd/MM/yyyy"
-                              minDate={daysAdded(7, sipDateList)}
-                              className="focus_datepickers121"
-                            />
-                            <div className="prod_view_fund align-self-center">
-                              <div className="crPointer dateIcon"><Calendar4 className='' /></div>
-                            </div>
-                          </div>
-                         
-                        </div>
-                      </div>
-                      <span className='errorColor'>{dateErrorMsg}</span>
-                    </>}
+
+          <div className="form-group mt-3">
+            <label className='fs12px'>Date of SIP</label>
+            <div className="position-relative">
+              <div className="d-flex justify-content-between crPointer form-control date-picker-container" onClick={() => {
+                const dateInput = document.querySelector('.focus_datepickers121') as HTMLInputElement | null;
+                dateInput?.click();
+              }}
+              >
+                <DatePicker
+                  selected={schemeList[0]?.start_date}
+                  onChange={(e) => dateHandle(e)}
+                  filterDate={isAllowedDay}
+                  placeholderText="DD/MM/YYYY"
+                  dateFormat="dd/MM/yyyy"
+                  minDate={daysAdded(schemeList[0]?.firstSIPToday ? 31 : 7, sipDateList)}
+                  className="focus_datepickers121"
+                />
+                <div className="prod_view_fund align-self-center">
+                  <div className="crPointer dateIcon"><Calendar4 className='' /></div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+          <span className='errorColor'>{dateErrorMsg}</span>
+        </>}
+       
 
         <div className="form-group mt-1">
           <label htmlFor="amountFor" className='fs12px'>INVESTMENT AMOUNT</label>
@@ -276,6 +293,18 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
             <button type="button" className="btn shortcutValue mx-1" onClick={() => addAmount(addAmountValues.third)}>+<CurrencyRupee className='mb-1' />{addAmountValues.third.toLocaleString("en-In")}</button>
           </div>
         </div>
+            {isSipTransaction &&
+                      <div className="d-flex justify-content-center align-items-center mt-2 mb-0">
+                        <Form.Check
+                          type="checkbox"
+                          id="circleCheckbox"
+                          className="circle-checkbox textColor"
+                          onChange={handleSipDeduction}
+                          checked={schemeList[0]?.firstSIPToday ?? true}
+                          label="First SIP will be deducted today."
+                          name="Sip deduction"
+                        />
+                      </div>}
 
       </div>
       <div className="text-white logobg_color  py-2 mb-2 mx-3 order  text-center monthly_btn crPointer" onClick={handleFolioSelection}> {isSipTransaction ? "Invest as SIP" : "Invest Now"}</div>
