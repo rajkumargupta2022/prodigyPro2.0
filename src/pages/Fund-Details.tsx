@@ -530,7 +530,7 @@ const FundDetails = () => {
 
               </div>
 
-            </div> : (schemeList[0]?.sipAllowed || schemeList[0]?.purchaseAllowed) && <InvestmentForm schemeList={schemeList} setSchemeList={setSchemeList} />}
+            </div> : (schemeList[0]?.sipAllowed || schemeList[0]?.purchaseAllowed) && <InvestmentForm schemeList={schemeList} setSchemeList={setSchemeList} sipDateList={sipDateList}/>}
         </div>
 
       </Container>

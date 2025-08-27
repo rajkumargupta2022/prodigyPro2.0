@@ -10,7 +10,7 @@ import { checkTransactionAllowed } from "../services/utils/services";
 import { keys } from "../services/utils/keys";
 import { daysAdded } from "../services/dates/dateFormater";
 import DatePicker from "react-datepicker";
-import { errorToast } from "../services/utils/toast";
+// import { errorToast } from "../services/utils/toast";
 
 interface addAmountKeys {
   min: number,
@@ -21,9 +21,9 @@ interface addAmountKeys {
 interface InvestmentFormProps {
   schemeList: schemeDeatilDataKeys[]
   setSchemeList: (date: any) => void;
-
+  sipDateList: number[]
 }
-const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeList }) => {
+const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeList, sipDateList }) => {
   const [isSipTransaction, setIsSipTransaction] = useState<boolean>(true)
   const [addAmountValues, setAddAmountValues] = useState<addAmountKeys>({
     min: 1000,
@@ -34,6 +34,7 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
   const [openSelectFolio, setOpenSelectFolio] = useState<boolean>(false)
   const [amount, setAmount] = useState<number>(0)
   const [amountErrorMsg, setAmountErrorMsg] = useState<string>("")
+  const [dateErrorMsg, setDateErrorMsg] = useState<string>("")
 
   useEffect(() => {
     if (
@@ -48,7 +49,7 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
         prev.map((obj: any) => {
           return {
             ...obj,
-            start_date: null,
+            start_date: daysAdded(7, sipDateList),
           };
         })
       );
@@ -101,7 +102,10 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
         start_date: e,
       })))
 
-
+    // Clear date error when user selects a date
+    if (e) {
+      setDateErrorMsg("")
+    }
   }
   const isAllowedDay = (date: Date): boolean => {
     const allowedDays: number[] = schemeList[0]?.sipDateList.length > 0 ? schemeList[0]?.sipDateList : [];
@@ -196,8 +200,9 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
 
   const handleFolioSelection = () => {
     const minTotal = isSipTransaction ? schemeList[0]?.minSIPAmt : schemeList[0]?.minLumSumAmt
+
     if(!schemeList[0]?.start_date && isSipTransaction){
-      errorToast("Plaese select day of sip..")
+      setDateErrorMsg("Please select sip day")
       return
     }
     if (amount <= 0) {
@@ -232,26 +237,52 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
         </div>
 
         {isSipTransaction && <>
-
-          <div className="d-flex justify-content-between mt-3" >
-            <div className="d-flex">
-              <div className="ms-2 prod_icon_heading">
-                <p>Day of SIP</p>
-                <DatePicker
-                  selected={schemeList[0]?.start_date}
-                  onChange={(e) => dateHandle(e)}
-                  filterDate={isAllowedDay}
-                  placeholderText="DD/MM/YYYY"
-                  dateFormat="dd/MM/yyyy"
-                  minDate={daysAdded(7,schemeList[0]?.sipDateList)}
-                  className="form-control border-0 focus_datepickers121"
-                />
-              </div>
-            </div>
-            <div className="prod_view_fund align-self-center">
-              <div className="crPointer dateIcon"><Calendar4 className='' /></div>
-            </div>
-          </div> <hr className='mt-0' /> </>}
+        
+                      <div className="form-group mt-3">
+                        <label className='fs12px'>Date of SIP</label>
+                        <div className="position-relative">
+                          <div className="d-flex justify-content-between crPointer form-control date-picker-container" onClick={() => {
+                            const dateInput = document.querySelector('.focus_datepickers121') as HTMLInputElement | null;
+                            dateInput?.click();
+                          }}
+                          >
+                            <DatePicker
+                              selected={schemeList[0]?.start_date || daysAdded(7, sipDateList)}
+                              onChange={(e) => dateHandle(e)}
+                              filterDate={isAllowedDay}
+                              placeholderText="DD/MM/YYYY"
+                              dateFormat="dd/MM/yyyy"
+                              minDate={daysAdded(7, sipDateList)}
+                              className="focus_datepickers121"
+                            />
+                            <div className="prod_view_fund align-self-center">
+                              <div className="crPointer dateIcon"><Calendar4 className='' /></div>
+                            </div>
+                          </div>
+                          <style dangerouslySetInnerHTML={{
+                            __html: `
+                              .focus_datepickers121 { 
+                                border: none !important; 
+                                background: transparent !important; 
+                                box-shadow: none !important; 
+                                padding: 0 !important; 
+                                outline: none !important;
+                              }
+                              .focus_datepickers121:focus {
+                                border: none !important;
+                                box-shadow: none !important;
+                                outline: none !important;
+                              }
+                              .date-picker-container:focus-within {
+                                border-color: #007bff !important;
+                                box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25) !important;
+                              }
+                            `
+                          }} />
+                        </div>
+                      </div>
+                      <span className='errorColor'>{dateErrorMsg}</span>
+                    </>}
 
         <div className="form-group mt-1">
           <label htmlFor="amountFor" className='fs12px'>INVESTMENT AMOUNT</label>
@@ -268,7 +299,7 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
       </div>
       <div className="text-white logobg_color  py-2 mb-2 mx-3 order  text-center monthly_btn crPointer" onClick={handleFolioSelection}> {isSipTransaction ? "Invest as SIP" : "Invest Now"}</div>
 
-      <Card.Header className='scheme-bg footerRadius px-3 py-2 fs12px'>NAV applicable once amount credited to AMC’s bank account</Card.Header>
+      <Card.Header className='scheme-bg footerRadius px-3 py-2 fs12px'>NAV applicable once amount credited to AMC's bank account</Card.Header>
     </div>
     <SelectFolioPopup show={openSelectFolio} setShow={setOpenSelectFolio} schemeList={schemeList} setSchemeList={setSchemeList} isSipTransaction={isSipTransaction} />
   </>)
