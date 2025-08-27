@@ -43,7 +43,6 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
   const [isSipTransaction, setIsSipTransaction] = useState<boolean>(true)
   const [isLumpsumTransaction, setIsLumpsumTransaction] = useState<boolean>(true)
 
-
   const [amount, setAmount] = useState<number>(0)
   const [amountErrorMsg, setAmountErrorMsg] = useState<string>("")
   const [foliosFetched, setFoliosFetched] = useState(false);
@@ -61,15 +60,15 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
 
 
     const updated = schemeList.map(obj => ({
-        ...obj,
-        firstSIPToday: true,
-        to_date:"",
-        from_date:"",
-        amount:0,
-        totalAmount:0,
-        start_date: daysAdded(7, sipDateList),
-      }));
-setSchemeList(updated)
+      ...obj,
+      firstSIPToday: true,
+      to_date: "",
+      from_date: "",
+      amount: 0,
+      totalAmount: 0,
+      start_date: daysAdded(7, sipDateList),
+    }));
+    setSchemeList(updated)
 
 
   }, [show]);
@@ -142,11 +141,11 @@ setSchemeList(updated)
 
         try {
           const res = await postRequest<foliosResponse>(endPoints.getSchemeFolios, reqBody);
-          if(from==="portfolio"){
+          if (from === "portfolio") {
             schemeList?.forEach((scheme: any) => {
-      const recommendedFolio = res.data?.find((folio: any) => folio?.is_recommended);
-      scheme.selectedFolio = recommendedFolio || {};
-    });
+              const recommendedFolio = res.data?.find((folio: any) => folio?.is_recommended);
+              scheme.selectedFolio = recommendedFolio || {};
+            });
           }
 
           return {
@@ -162,9 +161,9 @@ setSchemeList(updated)
       })
     ).then(updatedSchemeList => {
 
-      console.log("updatedSchemeList",updatedSchemeList);
-      
-      setSchemeList([...updatedSchemeList]);
+      console.log("updatedSchemeList", updatedSchemeList);
+
+      setSchemeList(updatedSchemeList);
       setFoliosFetched(true);
     }).catch(err => {
       console.log("This is error", err)
@@ -180,24 +179,29 @@ setSchemeList(updated)
       return acc + minAmount;
     }, 0);
 
-
+     
     const minTotal = schemeList.reduce((acc, scheme) => {
       const minAmount = isSipTransaction ? Number(scheme.minSIPAmt) : (scheme.minLumSumAmt);
       return acc + minAmount;
     }, 0);
     if (!schemeList[0].start_date && isSipTransaction) {
-      errorToast("Please select sip day...")
+      errorToast("Please select sip date...")
       return
     }
     if (total <= 0) {
       setAmountErrorMsg("Enter investment amount")
       return
     }
+    // for(let i = 1 ; i<=schemeList.length;i++){
+    //   if((isSipTransaction ? schemeList[i].minSIPAmt:schemeList[i].minLumSumAmt)<(schemeList[i].amount ?? 0)){
+    //     setAmountErrorMsg("Minimum amount required for " + schemeList[i].scheme)
+    //     return
+    //   }
+    // }
     if (minTotal > total) {
       setAmountErrorMsg("Minimum investment amount is ₹" + minTotal)
       return
     }
-console.log("schemeeeeeeeeet",schemeList);
 
     if (from === "portfolio" && isSipTransaction) {
       setOpenBankMandate(true)

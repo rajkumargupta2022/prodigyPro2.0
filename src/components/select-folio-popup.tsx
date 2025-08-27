@@ -23,20 +23,25 @@ const SelectFolioPopup: React.FC<SchemeDetailsProps> = ({ show, setShow, schemeL
   const [openSuccess, setOpenSuccess] = useState(false)
   const [selectedFolioIndex,setSelectedFolioIndex] = useState<number>(0)
    const [successData,setSuccessData] = useState<sipPurchaseRedemptionKey[]>([])
+   const [tempSchemeList , setTempSchemeList]  = useState<schemeDeatilDataKeys[]>([])
 
   useEffect(() => {
     defaultSelectFolio()
     
   }, [show])
   const defaultSelectFolio = () => {
+    
     schemeList?.forEach((scheme: any) => {
       const recommendedFolio = scheme?.folioList?.find((folio: any) => folio?.is_recommended);
       scheme.selectedFolio = recommendedFolio || {};
     });
+    setTempSchemeList(schemeList)
+    console.log("from folio to mandate on load",schemeList);
   }
 
 
   const handleMandate = () => {
+ 
     if (isSipTransaction) {
       setOpenBankMandate(true);
       setShow(false);
@@ -133,7 +138,7 @@ const SelectFolioPopup: React.FC<SchemeDetailsProps> = ({ show, setShow, schemeL
       </Modal>
       <CreateNewFolio show={openCreateFolio} setShow={setOpenCreateFolio} schemeList={schemeList}  setSchemeList={setSchemeList}  folioList={folioList} selectedFolioIndex={selectedFolioIndex}  />
 
-      <BankMandate show={openBankMandate} setShow={setOpenBankMandate} schemeList={schemeList}  setSchemeList={setSchemeList} isSipTransaction={isSipTransaction}additionalPurchase={false}/>
+      <BankMandate show={openBankMandate} setShow={setOpenBankMandate} schemeList={tempSchemeList}  setSchemeList={setSchemeList} isSipTransaction={isSipTransaction}additionalPurchase={false}/>
       <OrderPlaces show={openSuccess} setShow={setOpenSuccess} successData={successData}/>
 
 

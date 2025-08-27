@@ -63,8 +63,8 @@ const BankMandate: React.FC<bankMandate> = ({ show, setShow, schemeList, setSche
         {
           ...scheme,
           mandateId: res.mandates[0]?.umrn_no,
-          from_date: dateForApi2(res.mandates[0]?.from_date),
-          to_date: dateForApi2(res.mandates[0]?.to_date)
+          from_date: res.mandates[0]?.from_date.replace("T", " ").replace("Z", ""),
+          to_date: res.mandates[0]?.to_date.replace("T", " ").replace("Z", "")
         }))
         console.log("updateeee",update);
         
@@ -82,8 +82,8 @@ const BankMandate: React.FC<bankMandate> = ({ show, setShow, schemeList, setSche
 
         ...scheme,
         mandateId: urn,
-        from_date: dateForApi2(from_date),
-        to_date: dateForApi2(to_date)
+        from_date: from_date.replace("T", " ").replace("Z", ""),
+        to_date: to_date.replace("T", " ").replace("Z", "")
         // ✅ only update urn_no
       }));
 
