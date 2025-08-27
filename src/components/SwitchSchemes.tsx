@@ -29,7 +29,7 @@ const SwitchSchemes: React.FC<SchemesProps> = ({ handleFilter, isAvailable, filt
       <div className="col">
         <Row className="justify-content-between pb-4 pt-md-0 pt-4 align-items-center">
           <Col md={6} className="">
-            <h5 className="fw-bold mb-0">431 Mutual Funds</h5>
+            <h5 className="fw-bold mb-0">{filteredSchemes.length} Mutual Funds</h5>
           </Col>
           {/* <Col md={6}>
             <div className="position-relative pt-md-0 pt-3">

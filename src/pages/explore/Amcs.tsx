@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
-
 import { Form } from 'react-bootstrap';
 import { amcListKeys, amcListResponse } from "../data-interfaces/explore";
 import { endPoints } from "../../services/utils/urls";
 import { getRequest } from "../../services/Api/HandleApi";
+
 interface FiltersProps {
   handleFilter: (value: number, type: string) => void;
   isAvailable: (value: number,type:string) => boolean;
-
 }
 
 function Filters({ handleFilter ,isAvailable}: FiltersProps) {
   const [amcListData, setAmcListData] = useState<amcListKeys[]>([])
+  
   useEffect(() => {
     fetchAmcList()
   }, [])
@@ -25,12 +25,11 @@ function Filters({ handleFilter ,isAvailable}: FiltersProps) {
     } catch (err) {
       // console.log(err);
     }
-
   }
 
   return (
-      <>
-       {/* <div
+    <>
+    {/* <div
               className="card p-2 mt-2 radius16px"
               
             >
@@ -44,30 +43,36 @@ function Filters({ handleFilter ,isAvailable}: FiltersProps) {
                 <Form.Check type="checkbox" label="Very High" name="risk" />
               </Form>
             </div> */}
-
-            <div
-              className="card p-md-4 p-2 mt-2 radius16px"
-              
-            >
-              <h5 className="font-size-16 mb-3">AMC</h5>
-              <Form className="fixed-scrolling-amc">
-                {amcListData.length>0 ? amcListData.map((item,i)=>{
-                   return  <Form.Check
+      <div className="card p-md-4 p-2 mt-2 radius16px">
+        <h5 className="font-size-16 mb-3">AMC</h5>
+        <Form className="fixed-scrolling-amc">
+          {amcListData.length>0 ? amcListData.map((item,i)=>{
+            return (
+              <div 
+                key={i}
+                className="d-flex align-items-center mb-2 p-1 rounded"
+                onClick={()=>handleFilter(item.amc_code,"amc")}
+                style={{ cursor: 'pointer' }}
+              >
+                <Form.Check
                   type="checkbox"
-                  key={i}
-                  label={item?.AMC_Name}
-                  onClick={()=>handleFilter(item.amc_code,"amc")}
-                  name="sortBy"
                   checked={isAvailable(item.amc_code,"amc")}
-                  
+                  onChange={() => {}} // Empty onChange since click is handled by parent div
+                  className="me-2"
+                  style={{ pointerEvents: 'none' }} // Prevent direct checkbox clicks
                 />
-                }):""}
-               
-               
-              </Form>
-            </div>
-      </>
-         
+                <label 
+                  className="mb-0 flex-grow-1"
+                  style={{ cursor: 'pointer' }}
+                >
+                  {item?.AMC_Name}
+                </label>
+              </div>
+            )
+          }):""}
+        </Form>
+      </div>
+    </>
   );
 }
 

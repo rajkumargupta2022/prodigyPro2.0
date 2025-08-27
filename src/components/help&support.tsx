@@ -73,7 +73,7 @@ function HelpSupport({ backButton }: { backButton: any; activeInactive: any }) {
         <br />
         <button className="mandate-button mt-2" onClick={() =>
           window.open(
-            "https://mail.google.com/mail/?view=cm&fs=1&to=customersupport@bfccapital.com",
+            `https://mail.google.com/mail/?view=cm&fs=1&to=${helpAndSupportData?.emailSupport}`,
             "_blank"
           )
         }>

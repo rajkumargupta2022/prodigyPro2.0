@@ -17,7 +17,7 @@ import { checkTransactionAllowed } from '../services/utils/services';
 import { finalTransaction } from '../services/utils/transactionApi';
 import OrderPlaces from './order-places';
 import DatePicker from 'react-datepicker';
-import { errorToast } from '../services/utils/toast';
+// import { errorToast } from '../services/utils/toast';
 import { Form } from 'react-bootstrap';
 
 interface investmetProps {
@@ -43,9 +43,9 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
   const [isSipTransaction, setIsSipTransaction] = useState<boolean>(true)
   const [isLumpsumTransaction, setIsLumpsumTransaction] = useState<boolean>(true)
 
-
   const [amount, setAmount] = useState<number>(0)
   const [amountErrorMsg, setAmountErrorMsg] = useState<string>("")
+  const [dateErrorMsg, setDateErrorMsg] = useState<string>("")
   const [foliosFetched, setFoliosFetched] = useState(false);
   const [addAmountValues, setAddAmountValues] = useState<addAmountKeys>({
     min: 1000,
@@ -54,23 +54,21 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
     third: 5000
   })
 
-
   useEffect(() => {
     fetchFolios()
     defaultTransactionType()
 
-
+    const defaultDate = daysAdded(7, sipDateList);
     const updated = schemeList.map(obj => ({
-        ...obj,
-        firstSIPToday: true,
-        to_date:"",
-        from_date:"",
-        amount:0,
-        totalAmount:0,
-        start_date: daysAdded(7, sipDateList),
-      }));
-setSchemeList(updated)
-
+      ...obj,
+      firstSIPToday: true,
+      to_date: "",
+      from_date: "",
+      amount: 0,
+      totalAmount: 0,
+      start_date: defaultDate,
+    }));
+    setSchemeList(updated)
 
   }, [show]);
 
@@ -81,8 +79,12 @@ setSchemeList(updated)
         start_date: e,
       })))
 
-
+    // Clear date error when user selects a date
+    if (e) {
+      setDateErrorMsg("")
+    }
   }
+
   const isAllowedDay = (date: Date): boolean => {
     const allowedDays: number[] = schemeList[0]?.sipDateList.length > 0 ? schemeList[0]?.sipDateList : [];
     const dayOfMonth = date.getDate();
@@ -132,7 +134,6 @@ setSchemeList(updated)
 
     if (!adminUser?.ucc) return;
 
-
     Promise.all(
       schemeList.map(async (item) => {
         const reqBody = {
@@ -142,11 +143,11 @@ setSchemeList(updated)
 
         try {
           const res = await postRequest<foliosResponse>(endPoints.getSchemeFolios, reqBody);
-          if(from==="portfolio"){
+          if (from === "portfolio") {
             schemeList?.forEach((scheme: any) => {
-      const recommendedFolio = res.data?.find((folio: any) => folio?.is_recommended);
-      scheme.selectedFolio = recommendedFolio || {};
-    });
+              const recommendedFolio = res.data?.find((folio: any) => folio?.is_recommended);
+              scheme.selectedFolio = recommendedFolio || {};
+            });
           }
 
           return {
@@ -162,8 +163,8 @@ setSchemeList(updated)
       })
     ).then(updatedSchemeList => {
 
-      console.log("updatedSchemeList",updatedSchemeList);
-      
+      console.log("updatedSchemeList", updatedSchemeList);
+
       setSchemeList([...updatedSchemeList]);
       setFoliosFetched(true);
     }).catch(err => {
@@ -172,7 +173,6 @@ setSchemeList(updated)
 
   };
 
-
   const handleFolioSelection = () => {
 
     const total = schemeList.reduce((acc, scheme) => {
@@ -180,15 +180,16 @@ setSchemeList(updated)
       return acc + minAmount;
     }, 0);
 
-
     const minTotal = schemeList.reduce((acc, scheme) => {
       const minAmount = isSipTransaction ? Number(scheme.minSIPAmt) : (scheme.minLumSumAmt);
       return acc + minAmount;
     }, 0);
+
     if (!schemeList[0].start_date && isSipTransaction) {
-      errorToast("Please select sip day...")
+      setDateErrorMsg("Please select sip day")
       return
     }
+
     if (total <= 0) {
       setAmountErrorMsg("Enter investment amount")
       return
@@ -197,7 +198,7 @@ setSchemeList(updated)
       setAmountErrorMsg("Minimum investment amount is ₹" + minTotal)
       return
     }
-console.log("schemeeeeeeeeet",schemeList);
+    console.log("schemeeeeeeeeet", schemeList);
 
     if (from === "portfolio" && isSipTransaction) {
       setOpenBankMandate(true)
@@ -282,6 +283,7 @@ console.log("schemeeeeeeeeet",schemeList);
       distributeAmount(maxAmount);
     }
   };
+
   const distributeAmount = (total: number) => {
     const count = schemeList?.length;
 
@@ -297,6 +299,7 @@ console.log("schemeeeeeeeeet",schemeList);
 
     setSchemeList(updatedList);
   };
+
   const handleMinAmount = (type: boolean = isSipTransaction) => {
     if (schemeList?.length > 0) {
       let total = 0;
@@ -313,6 +316,7 @@ console.log("schemeeeeeeeeet",schemeList);
       setAmount(total);
     }
   };
+
   const handleSipDeduction = () => {
     console.log("schemeList[0]?.firstSIPToday", schemeList[0]?.firstSIPToday);
 
@@ -324,7 +328,6 @@ console.log("schemeeeeeeeeet",schemeList);
       )
     );
   };
-
 
   return (
     <>
@@ -370,25 +373,51 @@ console.log("schemeeeeeeeeet",schemeList);
 
             {isSipTransaction && <>
 
-              <div className="d-flex justify-content-between mt-3">
-                <div className="d-flex">
-                  <div className="ms-2 prod_icon_heading">
-                    <p>Day of SIP</p>
+              <div className="form-group mt-3">
+                <label className='fs12px'>Date of SIP</label>
+                <div className="position-relative">
+                  <div className="d-flex justify-content-between crPointer form-control date-picker-container" onClick={() => {
+                    const dateInput = document.querySelector('.focus_datepickers121') as HTMLInputElement | null;
+                    dateInput?.click();
+                  }}
+                  >
                     <DatePicker
-                      selected={schemeList[0]?.start_date}
+                      selected={schemeList[0]?.start_date || daysAdded(7, sipDateList)}
                       onChange={(e) => dateHandle(e)}
                       filterDate={isAllowedDay}
                       placeholderText="DD/MM/YYYY"
                       dateFormat="dd/MM/yyyy"
                       minDate={daysAdded(7, sipDateList)}
-                      className="form-control border-0 focus_datepickers121"
+                      className="focus_datepickers121"
                     />
+                    <div className="prod_view_fund align-self-center">
+                      <div className="crPointer dateIcon"><Calendar4 className='' /></div>
+                    </div>
                   </div>
+                  <style dangerouslySetInnerHTML={{
+                    __html: `
+                      .focus_datepickers121 { 
+                        border: none !important; 
+                        background: transparent !important; 
+                        box-shadow: none !important; 
+                        padding: 0 !important; 
+                        outline: none !important;
+                      }
+                      .focus_datepickers121:focus {
+                        border: none !important;
+                        box-shadow: none !important;
+                        outline: none !important;
+                      }
+                      .date-picker-container:focus-within {
+                        border-color: #007bff !important;
+                        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25) !important;
+                      }
+                    `
+                  }} />
                 </div>
-                <div className="prod_view_fund align-self-center">
-                  <div className="crPointer dateIcon"><Calendar4 className='' /></div>
-                </div>
-              </div> <hr className='mt-0' /> </>}
+              </div>
+              <span className='errorColor'>{dateErrorMsg}</span>
+            </>}
 
             <div className="form-group mt-1">
               <label htmlFor="amountFor" className='fs12px'>INVESTMENT AMOUNT</label>
@@ -439,11 +468,8 @@ console.log("schemeeeeeeeeet",schemeList);
                 />
               </div>}
 
-
-
-
           </div>
-          <Card.Header className='scheme-bg footerRadius px-3 py-2 fs12px'>NAV applicable once amount credited to AMC’s bank account</Card.Header>
+          <Card.Header className='scheme-bg footerRadius px-3 py-2 fs12px'>NAV applicable once amount credited to AMC's bank account</Card.Header>
 
         </Modal.Body>
         <small className='fs12px modal-bg text-center'>By continuing, I agree with the  <Link to={"#"}>Disclaimers</Link> and <Link to={"#"}>Terms & Conditions</Link> </small>
