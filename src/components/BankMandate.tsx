@@ -10,7 +10,6 @@ import { finalTransaction } from "../services/utils/transactionApi";
 import { keys } from "../services/utils/keys";
 import { fetchAdminUser } from "../services/user/adminUser";
 import { errorToast } from "../services/utils/toast";
-import { dateForApi2 } from "../services/dates/dateFormater";
 interface bankMandate {
   show: boolean;
   setShow: (show: boolean) => void;
@@ -38,7 +37,7 @@ const BankMandate: React.FC<bankMandate> = ({ show, setShow, schemeList, setSche
 
   const fetchMandateList = async () => {
     console.log("schemelistttttt",schemeList);
-    
+    setSchemeList(schemeList)
     const adminUser = fetchAdminUser()
     if (!adminUser) {
       errorToast("Something went wrong")

@@ -2,7 +2,7 @@ import {  Container } from "react-bootstrap";
 import MyNavbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import Category from "./explore/Category";
-import Returns from "./explore/SortBy";
+// import Returns from "./explore/SortBy";
 import Filters from "./explore/Amcs";
 import { useEffect, useState } from "react";
 import { postRequest } from "../services/Api/HandleApi";

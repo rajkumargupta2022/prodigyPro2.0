@@ -1,6 +1,5 @@
-import {  Search } from "react-bootstrap-icons";
 import { imageUrl } from "../services/utils/urls";
-import { Card, Col, Form, Row } from "react-bootstrap";
+import { Card, Form } from "react-bootstrap";
 import { filteredSchemesKeys } from "../pages/data-interfaces/explore";
 
 
@@ -19,7 +18,7 @@ const SwitchSelectionScheme: React.FC<SwitchSelectionProps> = ({ filteredSchemes
     <>
 
       <div className="col ">
-        <Row className="justify-content-between pb-4 pt-md-0 align-items-center">
+        {/* <Row className="justify-content-between pb-4 pt-md-0 align-items-center">
 
           <Col md={11}>
             <div className="position-relative pt-md-0 pt-3">
@@ -32,7 +31,7 @@ const SwitchSelectionScheme: React.FC<SwitchSelectionProps> = ({ filteredSchemes
             </div>
           </Col>
 
-        </Row>
+        </Row> */}
         <div className="" style={{height: "50vh", overflowY: "scroll"}}>
           {filteredSchemes.length > 0 ? filteredSchemes.map((item, index) => (
             <Card

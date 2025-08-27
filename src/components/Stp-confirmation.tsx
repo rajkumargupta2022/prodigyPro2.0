@@ -2,7 +2,7 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Card from 'react-bootstrap/Card';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import OrderPlaces from './order-places';
 import { ArrowDown } from 'react-bootstrap-icons';
 import { cartItemKey, switchKeys } from '../pages/data-interfaces/transact';
@@ -25,12 +25,17 @@ const StpConfiramtion: React.FC<investmetProps> = ({ show, setShow, cartItem, se
   const [openSuccess, setOpenSuccess] = useState(false)
   const [successData, setSuccessData] = useState<switchKeys[]>([])
   const [isSwitchAmount, setIsSwitchAmount] = useState<boolean>(true)
-  const [frequency, setFrequency] = useState<string>(cartItem[0]?.stpFrequency[0])
+  const [frequency, setFrequency] = useState<string>("")
   const [fromDate, setFromDate] = useState<Date>()
   const [toDate, setToDate] = useState<Date>()
 
+  useEffect(()=>{
+ console.log("====",cartItem);
+  
+  },[show])
+
   const finalSwitch = async () => {
-   
+    
     if (!cartItem[0]?.amount && cartItem[0]?.installment_units) {
       errorToast("Plaese enter amount or units...")
       return
@@ -232,6 +237,7 @@ const StpConfiramtion: React.FC<investmetProps> = ({ show, setShow, cartItem, se
                 <div className="form-group col-md-12 col-sm-12">
                   <label htmlFor="amountFor" className='fs12px'>FREQUENCY</label>
                   <Form.Select value={frequency} onChange={(e) => setFrequency(e.target.value)}>
+                  <option value={""}>Select Frequency</option>
                     {cartItem[0]?.stpFrequency?.map((item: any) => {
                       return <option value={item}>{item}</option>
                     })}

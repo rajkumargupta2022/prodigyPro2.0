@@ -79,6 +79,7 @@ const NFOApply = () => {
         "MONTHLY",
         "QUARTERLY"
       ],
+      "firstSIPToday":true,
       "stpFrequency": [
         "WEEKLY",
         "MONTHLY",
@@ -182,6 +183,7 @@ const NFOApply = () => {
         27,
         28
       ],
+      "firstSIPToday":true,
       "swpFrequency": [
         "MONTHLY",
         "QUARTERLY"
@@ -194,7 +196,8 @@ const NFOApply = () => {
       "oneYearCAGR": -3.58,
       "threeYearCAGR": 16.77,
       "fiveYearCAGR": 24.66
-    }
+    },
+    
   ])
   // const handleBankMandate = () => {
   //   setOpenBankMandate(true)
@@ -263,7 +266,7 @@ const NFOApply = () => {
 
             </div>
           </div>
-         <InvestmentForm schemeList={schemeList} setSchemeList={setSchemeList}/>
+         <InvestmentForm schemeList={schemeList} setSchemeList={setSchemeList} sipDateList={[]}/>
         </div>
       </div>
 

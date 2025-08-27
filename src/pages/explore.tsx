@@ -2,7 +2,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Tax from "../assets/img/icons/tax.svg";
 import EquityFund from "../assets/img/icons/equity fund.svg";
 import DebtFund from "../assets/img/icons/debt.svg";
-import {  Search } from "react-bootstrap-icons";
+// import {  Search } from "react-bootstrap-icons";
 import MyNavbar from "../components/Navbar";
 import { useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";

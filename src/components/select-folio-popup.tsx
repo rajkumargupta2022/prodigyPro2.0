@@ -41,12 +41,13 @@ const SelectFolioPopup: React.FC<SchemeDetailsProps> = ({ show, setShow, schemeL
 
 
   const handleMandate = () => {
- 
+       console.log("hadnle mandate",tempSchemeList);
+      
     if (isSipTransaction) {
       setOpenBankMandate(true);
       setShow(false);
     } else {
-      finalTransaction(schemeList,"purchase",setSuccessData,false).then((res)=>{
+      finalTransaction(tempSchemeList,"purchase",setSuccessData,false).then((res)=>{
         console.log(res);
         
       })

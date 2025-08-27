@@ -62,7 +62,7 @@ const ElssCalculator = () => {
                   <form onSubmit={submit}>
                     <div className="form-group my-2">
                       <label htmlFor="exampleInputEmail1" className="fs12px">
-                        INVESTMENT AMOUNT (YEARS)
+                        INVESTMENT AMOUNT
                       </label>
                       <ValidatedInput
                         ref={investmentAmountRef}

@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import RangeBar from "./RangeBar";
 import ValidatedInput from "../../services/Validated-inputs/inputs";
 import { isNotEmpty } from "../../services/Validated-inputs/validations";
-import { amountHandler } from "../../services/utils/calculatorsFs";
+import { amountHandler, percentageHandler } from "../../services/utils/calculatorsFs";
 interface ChartState {
   options: object;
   series: number[];
@@ -139,12 +139,12 @@ const EmiCalculator = () => {
                       </label>
                       <ValidatedInput
                         ref={interestRef}
-                        type="text"
+                        type="number"
                         className="form-control"
                         id="exampleInputPassword1"
                         placeholder="12"
                         value={interest}
-                        onChange={(e) => amountHandler(e, 100, setInterest)}
+                        onChange={(e) => percentageHandler(e, 100, setInterest)}
                         validate={isNotEmpty}
                       />
                     </div>

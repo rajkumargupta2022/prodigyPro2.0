@@ -7,7 +7,7 @@ import vacation from "../../assets/img/icons/vacation.svg"
 import wealth from "../../assets/img/icons/wealth creation.svg"
 import ring from "../../assets/img/icons/engagement-ring 1.svg"
 // import customGoal from "../../assets/img/icons/goal.svg"
-import { CurrencyRupee } from "react-bootstrap-icons";
+// import { CurrencyRupee } from "react-bootstrap-icons";
 import { useNavigate } from "react-router-dom";
 import { goalContent, GoalContentInterface } from "../data/goal";
 

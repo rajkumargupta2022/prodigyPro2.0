@@ -1,4 +1,4 @@
-import { ChevronRight, Search } from "react-bootstrap-icons";
+import { ChevronRight } from "react-bootstrap-icons";
 import {  imageUrl } from "../services/utils/urls";
 import { Card, Col, Row } from "react-bootstrap";
 import Returns from "../pages/explore/SortBy";

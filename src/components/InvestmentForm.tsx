@@ -247,7 +247,7 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
                           }}
                           >
                             <DatePicker
-                              selected={schemeList[0]?.start_date || daysAdded(7, sipDateList)}
+                              selected={schemeList[0]?.start_date}
                               onChange={(e) => dateHandle(e)}
                               filterDate={isAllowedDay}
                               placeholderText="DD/MM/YYYY"
@@ -259,26 +259,7 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
                               <div className="crPointer dateIcon"><Calendar4 className='' /></div>
                             </div>
                           </div>
-                          <style dangerouslySetInnerHTML={{
-                            __html: `
-                              .focus_datepickers121 { 
-                                border: none !important; 
-                                background: transparent !important; 
-                                box-shadow: none !important; 
-                                padding: 0 !important; 
-                                outline: none !important;
-                              }
-                              .focus_datepickers121:focus {
-                                border: none !important;
-                                box-shadow: none !important;
-                                outline: none !important;
-                              }
-                              .date-picker-container:focus-within {
-                                border-color: #007bff !important;
-                                box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25) !important;
-                              }
-                            `
-                          }} />
+                         
                         </div>
                       </div>
                       <span className='errorColor'>{dateErrorMsg}</span>

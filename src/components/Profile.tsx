@@ -34,6 +34,7 @@ function Profile() {
         </div>
 
       </form>
+     { familyMemberList.length>0 &&
       <div className="p-4 shadow-sm bg-white border-0 rounded-4 mt-4">
 
         <div className="d-flex">
@@ -60,7 +61,7 @@ function Profile() {
             </>
           })}
         </div>
-      </div>
+      </div>}
     </main>
   );
 }

@@ -59,6 +59,7 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
     defaultTransactionType()
 
     const defaultDate = daysAdded(7, sipDateList);
+    
     const updated = schemeList.map(obj => ({
       ...obj,
       firstSIPToday: true,
@@ -66,20 +67,15 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
       from_date: "",
       amount: 0,
       totalAmount: 0,
-<<<<<<< HEAD
-      start_date: daysAdded(7, sipDateList),
-    }));
-    setSchemeList(updated)
-
-=======
       start_date: defaultDate,
     }));
     setSchemeList(updated)
->>>>>>> 370d79b40bb8eae2693a99aedd3c25e555decc71
 
   }, [show]);
 
   const dateHandle = (e: Date | null) => {
+    console.log("eeeee",e);
+    
     setSchemeList((prev: any) =>
       prev.map((obj: any) => ({
         ...obj,
@@ -172,11 +168,7 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
 
       console.log("updatedSchemeList", updatedSchemeList);
 
-<<<<<<< HEAD
       setSchemeList(updatedSchemeList);
-=======
-      setSchemeList([...updatedSchemeList]);
->>>>>>> 370d79b40bb8eae2693a99aedd3c25e555decc71
       setFoliosFetched(true);
     }).catch(err => {
       console.log("This is error", err)
@@ -191,21 +183,14 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
       return acc + minAmount;
     }, 0);
 
-<<<<<<< HEAD
-     
-=======
->>>>>>> 370d79b40bb8eae2693a99aedd3c25e555decc71
+
     const minTotal = schemeList.reduce((acc, scheme) => {
       const minAmount = isSipTransaction ? Number(scheme.minSIPAmt) : (scheme.minLumSumAmt);
       return acc + minAmount;
     }, 0);
 
     if (!schemeList[0].start_date && isSipTransaction) {
-<<<<<<< HEAD
-      errorToast("Please select sip date...")
-=======
       setDateErrorMsg("Please select sip day")
->>>>>>> 370d79b40bb8eae2693a99aedd3c25e555decc71
       return
     }
 
@@ -213,20 +198,23 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
       setAmountErrorMsg("Enter investment amount")
       return
     }
-    // for(let i = 1 ; i<=schemeList.length;i++){
-    //   if((isSipTransaction ? schemeList[i].minSIPAmt:schemeList[i].minLumSumAmt)<(schemeList[i].amount ?? 0)){
-    //     setAmountErrorMsg("Minimum amount required for " + schemeList[i].scheme)
-    //     return
-    //   }
-    // }
+
+    for (let i = 0; i < schemeList.length; i++) {
+      const scheme = schemeList[i];
+
+      const minAmount = isSipTransaction ? scheme.minSIPAmt : scheme.minLumSumAmt;
+      const enteredAmount = scheme.amount ?? 0;
+
+      if (enteredAmount < minAmount) {
+        setAmountErrorMsg(`Minimum amount required for ${scheme.scheme}`);
+        return;
+      }
+    }
+
     if (minTotal > total) {
       setAmountErrorMsg("Minimum investment amount is ₹" + minTotal)
       return
     }
-<<<<<<< HEAD
-=======
-    console.log("schemeeeeeeeeet", schemeList);
->>>>>>> 370d79b40bb8eae2693a99aedd3c25e555decc71
 
     if (from === "portfolio" && isSipTransaction) {
       setOpenBankMandate(true)
@@ -410,7 +398,7 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
                   }}
                   >
                     <DatePicker
-                      selected={schemeList[0]?.start_date || daysAdded(7, sipDateList)}
+                      selected={schemeList[0]?.start_date}
                       onChange={(e) => dateHandle(e)}
                       filterDate={isAllowedDay}
                       placeholderText="DD/MM/YYYY"
@@ -422,26 +410,7 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
                       <div className="crPointer dateIcon"><Calendar4 className='' /></div>
                     </div>
                   </div>
-                  <style dangerouslySetInnerHTML={{
-                    __html: `
-                      .focus_datepickers121 { 
-                        border: none !important; 
-                        background: transparent !important; 
-                        box-shadow: none !important; 
-                        padding: 0 !important; 
-                        outline: none !important;
-                      }
-                      .focus_datepickers121:focus {
-                        border: none !important;
-                        box-shadow: none !important;
-                        outline: none !important;
-                      }
-                      .date-picker-container:focus-within {
-                        border-color: #007bff !important;
-                        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25) !important;
-                      }
-                    `
-                  }} />
+
                 </div>
               </div>
               <span className='errorColor'>{dateErrorMsg}</span>

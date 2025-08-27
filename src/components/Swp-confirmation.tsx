@@ -26,7 +26,7 @@ interface investmetProps {
 const SwpConfirmation: React.FC<investmetProps> = ({ show, setShow, swpList, schemeList }) => {
   const [openSuccess, setOpenSuccess] = useState(false)
   const [amount, setAmount] = useState<number>()
-  const [frequency, setFrequency] = useState<string>("MONTHLY")
+  const [frequency, setFrequency] = useState<string>("")
   const [fromDate, setFromDate] = useState<Date>()
   const [toDate, setToDate] = useState<Date>()
   const [successDate, setSuccessDate] = useState<any[]>([])
@@ -155,6 +155,7 @@ const SwpConfirmation: React.FC<investmetProps> = ({ show, setShow, swpList, sch
               <div className="form-group col-md-12 col-sm-12">
                 <label htmlFor="amountFor" className='fs12px'>FREQUENCY</label>
                 <Form.Select value={frequency} onChange={(e) => setFrequency(e.target.value)}>
+                  <option value={""}>Select Frequency</option>
                   {schemeList[0]?.swpFrequency?.map((item) => {
                     return <option value={item}>{item}</option>
                   })}

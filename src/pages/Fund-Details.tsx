@@ -475,8 +475,8 @@ const FundDetails = () => {
                     <ul className="ps-0 style-unerline-prodgy mb-0 crPointer">
                       {checkTransactionAllowed(schemeList, keys.redumption) && <li onClick={() => handleRedmptionModel()}>Redeem Fund</li>}
                       {checkTransactionAllowed(schemeList, keys.stp) && <li onClick={() => handleSwitch("STP")}>Systematic Transfer Plan (STP)</li>}
-                      <li onClick={() => handleSwp()}>Systematic Withdrawal Plan (SWP)</li>
-                      <li>Transaction History</li>
+                     {checkTransactionAllowed(schemeList, keys.swp) && <li onClick={() => handleSwp()}>Systematic Withdrawal Plan (SWP)</li>}
+                      {/* <li>Transaction History</li> */}
 
                     </ul>
                   </div>
