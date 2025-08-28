@@ -218,14 +218,13 @@ const AllMutualFunds = () => {
   };
 
   // Initial fetch on component mount or filter change
-  useEffect(() => {
-    setFilteredSchemes([]); // Clear previous data
-    setFetchedPages([]); // Reset fetched pages
-    setPage(1); // Reset to first page
-    setretunrs(3);
-    setHasMore(true);
-    fetchPage(1, amcCode, assetCode, classCode);
-  }, [amcCode, assetCode, classCode]);
+useEffect(() => {
+  setFilteredSchemes([]);
+  setFetchedPages([]);
+  setHasMore(true);
+  fetchPage(page, amcCode, assetCode, classCode); // use current page, not 1
+}, [amcCode, assetCode, classCode]);
+
 
   const handleFilter = (value: number, filterType: string) => {
     let classArr: number[];

@@ -179,9 +179,10 @@ const SwitchSchemes: React.FC<SchemesProps> = ({
   }, [filteredSchemes, startIndex, endIndex]);
 
   // Reset to first client-side page when filteredSchemes or itemsPerPage changes
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [filteredSchemes.length, itemsPerPage]);
+useEffect(() => {
+  setCurrentPage(1);
+}, [itemsPerPage]);
+
 
   const fundDetails = useCallback(
     (item: filteredSchemesKeys) => {
