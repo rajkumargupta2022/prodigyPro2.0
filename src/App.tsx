@@ -1,6 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
+import TermsAndConditions from "./components/TermsAndConditions";
 import PersonalDetails from "./pages/Personal-details";
 import Declaration from "./pages/Declaration";
 import AddressDetails from "./pages/Address-details";
@@ -125,6 +126,7 @@ function App() {
           <Route path="/tax-saving" element={<TaxSaving />} />
           <Route path="/nfo-live" element={<NFOLive />} />
           <Route path="/nfo-apply" element={<NFOApply />} />
+          <Route path="/terms-and-conditions" element={<TermsAndConditions/>} />
           {/* <Route path="/add-family-member" element={<AddFamilyMember />} /> */}
           <Route path="/portfolio-review" element={<PortfolioReview />} />
           <Route path="/kyc-status-check" element={<KycStatusCheck />} />

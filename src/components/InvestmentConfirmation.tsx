@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Card from 'react-bootstrap/Card';
@@ -19,6 +19,7 @@ import OrderPlaces from './order-places';
 import DatePicker from 'react-datepicker';
 // import { errorToast } from '../services/utils/toast';
 import { Form } from 'react-bootstrap';
+import Disclaimer from './Disclaimer'
 
 interface investmetProps {
   show: boolean;
@@ -42,6 +43,7 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
   const [successData, setSuccessData] = useState<any[]>([])
   const [isSipTransaction, setIsSipTransaction] = useState<boolean>(true)
   const [isLumpsumTransaction, setIsLumpsumTransaction] = useState<boolean>(true)
+  const disclaimerRef = useRef<HTMLAnchorElement>(null);
 
   const [amount, setAmount] = useState<number>(0)
   const [amountErrorMsg, setAmountErrorMsg] = useState<string>("")
@@ -76,8 +78,8 @@ let arrData:schemeDeatilDataKeys[] =[]
   }, [show]);
 
   const dateHandle = (e: Date | null) => {
-    console.log("eeeee",e);
-    
+    console.log("eeeee", e);
+
     setSchemeList((prev: any) =>
       prev.map((obj: any) => ({
         ...obj,
@@ -471,11 +473,15 @@ let arrData:schemeDeatilDataKeys[] =[]
           <Card.Header className='scheme-bg footerRadius px-3 py-2 fs12px'>NAV applicable once amount credited to AMC's bank account</Card.Header>
 
         </Modal.Body>
-        <small className='fs12px modal-bg text-center'>By continuing, I agree with the  <div className='logoBlueColor'>Disclaimers</div> and <Link to={"#"}>Terms & Conditions</Link> </small>
+        <small className="fs12px modal-bg text-center">
+          By continuing, I agree with the <Disclaimer linkRef={disclaimerRef} /> and{' '}
+          <Link to="/terms-and-conditions">Terms & Conditions</Link>
+        </small>
         <Modal.Footer className='modal-bg '>
           <Button className='customButton buttunCenter' onClick={handleFolioSelection}>Continue</Button>
         </Modal.Footer>
       </Modal>
+
       <SelectFolioPopup show={openSelectFolio} setShow={setOpenSelectFolio} schemeList={schemeList} setSchemeList={setSchemeList} isSipTransaction={isSipTransaction} />
       <BankMandate show={openBankMandate} setShow={setOpenBankMandate} schemeList={schemeList} setSchemeList={setSchemeList} isSipTransaction={isSipTransaction} additionalPurchase={true} />
       <OrderPlaces show={openSuccess} setShow={setOpenSuccess} successData={successData} />
