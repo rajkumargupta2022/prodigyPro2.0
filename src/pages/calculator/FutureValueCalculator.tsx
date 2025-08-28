@@ -22,6 +22,7 @@ const FutureValueCalculator = () => {
   const [resultInvestment, setResultInvestment] = useState<number>(50000);
   const [gains, setGains] = useState<number>(155292);
   const [resultPeriod, setResultPeriod] = useState<number>(10);
+  const [resultReturn, setResultReturn] = useState<number>(12);
 
   const investAmountRef = useRef<{
     validate: (value: number) => boolean;
@@ -44,6 +45,7 @@ const FutureValueCalculator = () => {
     let lumpsum:number = Math.round(lumpsums)
     setResultInvestment(investAmount);
     setGains(lumpsum);
+    setResultReturn(rateOfReturn)
     setResultPeriod(investmentPeriod)
     }
   };
@@ -207,7 +209,7 @@ const FutureValueCalculator = () => {
                   <h5 className=" fw-normal mb-1">Result</h5>
                   <p className="resultColor">
                     If you invest <span className="fw600">₹{resultInvestment}</span> for a
-                    period of 10 years at a <span className="fw600">{resultPeriod}%</span>{" "}
+                    period of {resultPeriod} years at a <span className="fw600">{resultReturn}%</span>{" "}
                     annual return, the maturity amount will grow to{" "}
                     <span className="fw600">₹{gains.toLocaleString("en-IN")}</span>
                   </p>

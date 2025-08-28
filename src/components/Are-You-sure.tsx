@@ -1,27 +1,44 @@
-import { useState } from 'react';
-import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import { useNavigate } from 'react-router-dom';
+interface AreYouSureProps {
+  show: boolean;
+  setShow: (show: boolean) => void
+}
 
-function AreYouSure() {
-  const [show, setShow] = useState(false);
+const AreYouSure: React.FC<AreYouSureProps> = ({ show, setShow }) => {
+  const navigate = useNavigate()
 
   const handleClose = () => setShow(false);
+  const logout = ()=>{
+       localStorage.clear()
+    navigate("/")
+  }
   return (
-    
-      <Modal show={show} className='text-center'  onHide={handleClose}>
-        <Modal.Header className='text-center' closeButton>
-          <Modal.Title>Modal heading</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>Woohoo, you are reading this text in a modal!</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={handleClose}>
-            Save Changes
-          </Button>
-        </Modal.Footer>
-      </Modal>
+
+    <Modal
+      show={show}
+      onHide={handleClose}
+      backdrop="static"
+      keyboard={false}
+      centered
+      contentClassName="modal-bg smallModel shadow-lg"
+    >
+
+      <Modal.Body className='p-3 rounded-4 w-fit-contet m-auto  my-2'>
+        <div className="p-2">
+          <div className="text-center">
+            <p className='fs-5'>
+              Are you sure you want to <br /> logout?
+            </p>
+          </div>
+          <div className="d-flex justify-content-between">
+            <button className='customCancelButton buttunCenter px-3' onClick={handleClose}>Cancel</button>
+            <button className='customButton buttunCenter px-3' onClick={logout}>Logout</button>
+          </div>
+        </div>
+      </Modal.Body>
+    </Modal>
+
   );
 }
 

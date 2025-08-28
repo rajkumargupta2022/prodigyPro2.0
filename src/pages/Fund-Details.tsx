@@ -412,7 +412,7 @@ const FundDetails = () => {
                   <h4 className="fs-6">₹{schemeList[0]?.minSIPAmt}</h4>
                 </div>
                 <div className="col-6 py-2">
-                  <span className="text-secondary text-uppercase fs-7">Withdrawal Charges</span>
+                  <span className="text-secondary text-uppercase fs-7">Exit Load</span>
                   <h4 className="fs-6"> {schemeList[0]?.exitLoad?.split(',')?.map((line, index) => (
                     <span key={index}>
                       {line?.trim() || "N/A"}

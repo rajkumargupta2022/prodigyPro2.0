@@ -253,7 +253,7 @@ const StpConfiramtion: React.FC<investmetProps> = ({ show, setShow, cartItem, se
                     filterDate={isAllowedDay}
                     placeholderText="Select a date"
                     dateFormat="dd/MM/yyyy"
-                    minDate={daysAdded(7, cartItem[0].stpDateList)}
+                    minDate={daysAdded(31, cartItem[0].stpDateList)}
                     className="form-control"
                   />
                 </div>
@@ -265,7 +265,7 @@ const StpConfiramtion: React.FC<investmetProps> = ({ show, setShow, cartItem, se
                     filterDate={isAllowedDay}
                     placeholderText="Select a date"
                     dateFormat="dd/MM/yyyy"
-                    minDate={daysAdded(8, cartItem[0].stpDateList)}
+                    minDate={daysAdded(32, cartItem[0].stpDateList)}
                     className="form-control"
                   />
                 </div>

@@ -22,20 +22,20 @@ const AllMutualFunds = () => {
   const [filteredSchemes, setFilteredSchemes] = useState<filteredSchemesKeys[]>([])
 
   useEffect(() => {
-    fetchFilteredScheme(amcCode, assetCode, classCode)
+    fetchFilteredScheme(amcCode, assetCode, classCode,page,retunrs)
     setPage(1)
     setretunrs(3)
     
   }, [])
 
-  const fetchFilteredScheme = async (amc: number[] = amcCode, asset: number[] = assetCode, classArr: number[] = classCode) => {
+  const fetchFilteredScheme = async (amc: number[] = amcCode, asset: number[] = assetCode, classArr: number[] = classCode,page2:number,return2:number) => {
     const reBody = {
       amc_code: amc,
       asset_code: asset,
       classcode: classArr
     }
     try {
-      const res = await postRequest<filteredSchemeResponse>(endPoints.getFilteredScheme + "?page=" + page + "&returns=" + retunrs, reBody)
+      const res = await postRequest<filteredSchemeResponse>(endPoints.getFilteredScheme + "?page=" + page2 + "&returns=" + return2, reBody)
       if (res.data) {
         setFilteredSchemes(res.data)
       } else {
@@ -56,27 +56,27 @@ const AllMutualFunds = () => {
         if (classCode.includes(value)) {
           classArr = classCode.filter(item => item !== value)
           setClassCode(classArr);
-          fetchFilteredScheme(amcCode, assetCode, classArr)
+          fetchFilteredScheme(amcCode, assetCode, classArr,page,retunrs)
         } else {
           classArr = [...classCode, value]
           setClassCode(classArr)
-          fetchFilteredScheme(amcCode, assetCode, classArr)
+          fetchFilteredScheme(amcCode, assetCode, classArr,page,retunrs)
         }
         break;
       case "asset":
         asset = [value]
         setAssetCode(asset)
-        fetchFilteredScheme(amcCode, asset, classCode)
+        fetchFilteredScheme(amcCode, asset, classCode,page,retunrs)
         break;
       case "amc":
         amc = amcCode.filter(item => item !== value)
         if (amcCode.includes(value)) {
           setAmcCode(amc);
-          fetchFilteredScheme(amc, assetCode, classCode)
+          fetchFilteredScheme(amc, assetCode, classCode,page,retunrs)
         } else {
           amc = [...amcCode, value]
           setAmcCode(amc)
-          fetchFilteredScheme(amc, assetCode, classCode)
+          fetchFilteredScheme(amc, assetCode, classCode,page,retunrs)
         }
         break;
       default:

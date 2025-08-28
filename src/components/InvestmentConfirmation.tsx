@@ -471,7 +471,7 @@ let arrData:schemeDeatilDataKeys[] =[]
           <Card.Header className='scheme-bg footerRadius px-3 py-2 fs12px'>NAV applicable once amount credited to AMC's bank account</Card.Header>
 
         </Modal.Body>
-        <small className='fs12px modal-bg text-center'>By continuing, I agree with the  <Link to={"#"}>Disclaimers</Link> and <Link to={"#"}>Terms & Conditions</Link> </small>
+        <small className='fs12px modal-bg text-center'>By continuing, I agree with the  <div className='logoBlueColor'>Disclaimers</div> and <Link to={"#"}>Terms & Conditions</Link> </small>
         <Modal.Footer className='modal-bg '>
           <Button className='customButton buttunCenter' onClick={handleFolioSelection}>Continue</Button>
         </Modal.Footer>

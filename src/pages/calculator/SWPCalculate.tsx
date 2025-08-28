@@ -111,7 +111,6 @@ const SWPCalculator = () => {
   const calculatePercentage = (enteredAmount: number) => {
     if (lumpsumAmount > 1) {
       let ress = (enteredAmount * 100) / lumpsumAmount
-      console.log("enteredAmount", ress);
       setWidthdrawalAmountInPercentage(ress)
     }
   }
@@ -135,7 +134,7 @@ const SWPCalculator = () => {
     e.preventDefault()
     const res = await postRequest<swpResponse>(endPoints.swpCalculator, {
       monthlyWithdrawl: Math.round(widthdrawalAmount),
-      period: investmentPeriod,
+      period: Number(investmentPeriod),
       interestRate: expectedReturn,
       lumpsum: Math.round(lumpsumAmount)
     });

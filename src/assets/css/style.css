@@ -1494,6 +1494,10 @@ span.text-secondary.text-uppercase.fs-7 {
   background-color: #f9fbfc;
   color: #444;
   font-size: 13px;
+  /* position: absolute;
+  bottom: 0px;
+  width: 100%; */
+  border-top: 1px solid #dee2e6;
 }
 
 .footer a {
@@ -1562,7 +1566,7 @@ span.text-secondary.text-uppercase.fs-7 {
 .navbar {
   position: sticky;
   top: 0px;
-  z-index: 1;
+  z-index: 9;
 }
 
 .portfolio_sticky_2025 {

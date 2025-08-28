@@ -88,7 +88,7 @@ const SwitchSchemes: React.FC<SchemesProps> = ({ handleFilter, isAvailable, filt
                         {item.PRODUCT_LONG_NAME}
                       </h6>
                       <span className="text-secondary">
-                        Equity - Large Cap
+                        Category - {item.equityType}
                       </span>
                     </div>
                   </div>

@@ -52,15 +52,16 @@ const Account = ({ Component }: { Component: any }) => {
                 <ul className="nav flex-column">
                   {navBar.map((el, i) => {
                     return (
-                      <li
-                        className={`nav-item  d-flex justify-content-between align-items-center ${i !== 5 && "border-bottom"} ${pathname === el.url ? "active" : ""
-                          }`}
-                      >
-                        <Link className="nav-link" to={el.url}>
+                      <Link className="nav-link" to={el.url}>
+                        <li
+                          className={`nav-item  d-flex justify-content-between align-items-center ${i !== 5 && "border-bottom"} ${pathname === el.url ? "active" : ""
+                            }`}
+                        >
+
                           {el.name}
-                        </Link>
-                        <ChevronRight size={15} className="text-secondary me-3" />
-                      </li>
+                          <ChevronRight size={15} className="text-secondary me-3" />
+                        </li>
+                      </Link>
                     );
                   })}
                 </ul>
@@ -72,15 +73,15 @@ const Account = ({ Component }: { Component: any }) => {
                 <ul className="nav flex-column">
                   {navBar2.map((el, i) => {
                     return (
-                      <li
-                        className={`nav-item  d-flex justify-content-between  align-items-center ${i !== 3 && "border-bottom"} ${pathname === el.url ? "active" : ""
-                          }`}
-                      >
-                        <Link className="nav-link" to={el.url}>
+                      <Link className="nav-link" to={el.url}>
+                        <li
+                          className={`nav-item  d-flex justify-content-between  align-items-center ${i !== 3 && "border-bottom"} ${pathname === el.url ? "active" : ""
+                            }`}
+                        >
                           {el.name}
-                        </Link>
-                        <ChevronRight size={15} className="text-secondary me-3" />
-                      </li>
+                          <ChevronRight size={15} className="text-secondary me-3" />
+                        </li>
+                      </Link>
                     );
                   })}
                 </ul>

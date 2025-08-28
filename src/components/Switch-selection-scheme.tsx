@@ -42,7 +42,7 @@ const SwitchSelectionScheme: React.FC<SwitchSelectionProps> = ({ filteredSchemes
               <Card.Body onClick={() => handleSchemeSelection(item)}>
 
                 <div className="row justify-content-between">
-                  <div className="col-8 py-2" >
+                  <div className="col-9 py-2" >
 
                     <div className="d-flex align-items-center gap-1 crPointer">
                       <Form.Check type="checkbox" checked={checkIsSelected(item)} key={index} value={item.PRODUCT_CODE} />
@@ -52,7 +52,7 @@ const SwitchSelectionScheme: React.FC<SwitchSelectionProps> = ({ filteredSchemes
                           {item.PRODUCT_LONG_NAME}
                         </h6>
                         <span className="text-secondary">
-                          Equity - Large Cap
+                         Category- {item.equityType}
                         </span>
                       </div>
                     </div>

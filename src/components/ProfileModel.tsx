@@ -1,19 +1,22 @@
 
 import Modal from 'react-bootstrap/Modal';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { SlLogout } from "react-icons/sl";
 import { ProfileModelProps } from '../pages/data-interfaces/dashboard';
 import { useAdminUser } from "../context/AdminContext"
+import AreYouSure from './Are-You-sure';
+import { useState } from 'react';
 
 
 const ProfileModel: React.FC<ProfileModelProps> = ({ show, setShow }) => {
-  const navigate = useNavigate()
   const { switchProfile, adminUser, familyMemberList } = useAdminUser()
+  const [openSureModel,setOpenSureModel] = useState<boolean>(false)
   const handleClose = () => setShow(false);
 
   const logOut = () => {
-    localStorage.clear()
-    navigate("/")
+    setOpenSureModel(true)
+    setShow(false)
+ 
   }
 
 
@@ -81,6 +84,7 @@ const ProfileModel: React.FC<ProfileModelProps> = ({ show, setShow }) => {
         </Modal.Body>
 
       </Modal>
+      <AreYouSure show={openSureModel} setShow={setOpenSureModel}/>
     </>
   );
 }
