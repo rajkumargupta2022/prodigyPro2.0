@@ -49,7 +49,7 @@ const SwitchConfirmation: React.FC<investmetProps> = ({ show, setShow, cartItem,
 
     try {
       const res = await postRequest<switchResponse>(endPoints.switch, reqBody)
-      console.log(res);
+ 
       if (res.data) {
 
         setSuccessData(res.data)

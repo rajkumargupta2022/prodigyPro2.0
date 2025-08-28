@@ -2,7 +2,7 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Card from 'react-bootstrap/Card';
 
-import { useEffect, useState } from 'react';
+import {  useState } from 'react';
 import OrderPlaces from './order-places';
 import { ArrowDown } from 'react-bootstrap-icons';
 import { cartItemKey, switchKeys } from '../pages/data-interfaces/transact';
@@ -29,10 +29,7 @@ const StpConfiramtion: React.FC<investmetProps> = ({ show, setShow, cartItem, se
   const [fromDate, setFromDate] = useState<Date>()
   const [toDate, setToDate] = useState<Date>()
 
-  useEffect(()=>{
- console.log("====",cartItem);
-  
-  },[show])
+
 
   const finalSwitch = async () => {
     
@@ -63,7 +60,7 @@ const StpConfiramtion: React.FC<investmetProps> = ({ show, setShow, cartItem, se
     }
     try {
       const res = await postRequest<any>(endPoints.stp, reqBody)
-      console.log(res);
+
       if (res.data) {
 
         setSuccessData(res.data)

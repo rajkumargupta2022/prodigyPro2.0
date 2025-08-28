@@ -36,12 +36,10 @@ const SelectFolioPopup: React.FC<SchemeDetailsProps> = ({ show, setShow, schemeL
       scheme.selectedFolio = recommendedFolio || {};
     });
     setTempSchemeList(schemeList)
-    console.log("from folio to mandate on load",schemeList);
   }
 
 
   const handleMandate = () => {
-       console.log("hadnle mandate",tempSchemeList);
       
     if (isSipTransaction) {
       setOpenBankMandate(true);

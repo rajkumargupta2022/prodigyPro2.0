@@ -36,7 +36,6 @@ const BankMandate: React.FC<bankMandate> = ({ show, setShow, schemeList, setSche
   }, [show])
 
   const fetchMandateList = async () => {
-    console.log("schemelistttttt",schemeList);
     setSchemeList(schemeList)
     const adminUser = fetchAdminUser()
     if (!adminUser) {
@@ -44,7 +43,6 @@ const BankMandate: React.FC<bankMandate> = ({ show, setShow, schemeList, setSche
       return
     }
     
-    console.log("schemlistt", schemeList);
 
     try {
       const res = await postRequest<bankMandateResponse>(
@@ -65,7 +63,6 @@ const BankMandate: React.FC<bankMandate> = ({ show, setShow, schemeList, setSche
           from_date: res.mandates[0]?.from_date.replace("T", " ").replace("Z", ""),
           to_date: res.mandates[0]?.to_date.replace("T", " ").replace("Z", "")
         }))
-        console.log("updateeee",update);
         
       setTempData([...update])
     } catch (err) {

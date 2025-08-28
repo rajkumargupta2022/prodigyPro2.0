@@ -153,10 +153,10 @@ const AllMutualFunds = () => {
   const [assetCode, setAssetCode] = useState<number[]>([1]);
   const [classCode, setClassCode] = useState<number[]>([]);
   const [page, setPage] = useState<number>(1); // Tracks current API page
-  const [retunrs, setretunrs] = useState<number>(3);
+  // const [retunrs, setretunrs] = useState<number>(3);
   const [filteredSchemes, setFilteredSchemes] = useState<filteredSchemesKeys[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
+  // const [error, setError] = useState<string | null>(null);
   const [hasMore, setHasMore] = useState<boolean>(true); // Tracks if more pages exist
   const [fetchedPages, setFetchedPages] = useState<number[]>([]); // Tracks fetched API pages
 
@@ -168,7 +168,6 @@ const AllMutualFunds = () => {
     pageNum: number = page
   ) => {
     setIsLoading(true);
-    setError(null);
     const reBody = {
       amc_code: amc,
       asset_code: asset,
@@ -176,7 +175,7 @@ const AllMutualFunds = () => {
     };
     try {
       const res = await postRequest<filteredSchemeResponse>(
-        `${endPoints.getFilteredScheme}?page=${pageNum}&returns=${retunrs}&per_page=25`,
+        `${endPoints.getFilteredScheme}?page=${pageNum}&returns=${3}&per_page=25`,
         reBody
       );
       setIsLoading(false);
@@ -186,7 +185,6 @@ const AllMutualFunds = () => {
     } catch (err) {
       console.error(`Error fetching page ${pageNum}:`, err);
       setIsLoading(false);
-      setError("Failed to fetch mutual funds. Please try again.");
       return { data: [] };
     }
   };

@@ -224,7 +224,6 @@ const RecomendedSchemes: React.FC<pageProps> = ({ from }) => {
     setOpenInvestmentConfirmation(true)
   }
   const handleSipIntersection = () => {
-    console.log("location.state.newsipamt",location.state.newsipamt);
     const sipIntersectionData = selectedSchemeList?.map(scheme => scheme.sipDateList)
       .reduce((acc, curr) => acc.filter(date => curr.includes(date)))
     setSipDateList(sipIntersectionData)

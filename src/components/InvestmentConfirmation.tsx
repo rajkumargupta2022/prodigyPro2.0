@@ -55,7 +55,6 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
     second: 3000,
     third: 5000
   })
-let arrData:schemeDeatilDataKeys[] =[]
   useEffect(() => {
     fetchFolios()
     defaultTransactionType()
@@ -71,15 +70,13 @@ let arrData:schemeDeatilDataKeys[] =[]
       start_date: daysAdded(31, sipDateList),
     }));
     setSchemeList(updated)
-    console.log("updtesss",updated);
     
-    arrData=[...updated]
+    
 
   }, [show]);
 
   const dateHandle = (e: Date | null) => {
-    console.log("eeeee", e);
-
+   
     setSchemeList((prev: any) =>
       prev.map((obj: any) => ({
         ...obj,
@@ -170,7 +167,6 @@ let arrData:schemeDeatilDataKeys[] =[]
       })
     ).then(updatedSchemeList => {
 
-      console.log("updatedSchemeList", updatedSchemeList);
 
       setSchemeList(updatedSchemeList);
       setFoliosFetched(true);
@@ -338,7 +334,6 @@ let arrData:schemeDeatilDataKeys[] =[]
   };
 
   const handleSipDeduction = () => {
-    console.log("schemeList[0]?.firstSIPToday", schemeList[0]?.firstSIPToday);
 
     setSchemeList((prev: any) =>
       prev.map((obj: any, index: number) =>

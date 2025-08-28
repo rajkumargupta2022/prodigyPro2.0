@@ -6,7 +6,6 @@ import { useEffect } from "react";
 function Profile() {
   const { switchProfile, adminUser, familyMemberList } = useAdminUser()
    useEffect(()=>{
- console.log("familyMemberList",familyMemberList);
  
    },[])
   return (

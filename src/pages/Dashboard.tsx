@@ -3,7 +3,6 @@ import Card from 'react-bootstrap/Card';
 import { CurrencyRupee, ArrowUpCircleFill, ArrowDownCircleFill, ChevronDown } from "react-bootstrap-icons";
 import { useEffect, useRef, useState } from "react";
 
-import AreYouSure from "../components/Are-You-sure";
 // import OurServices from "./dashboard/Our-services";
 import GoalPlanning from "./dashboard/Goal-planning";
 import PopularFunds from "./dashboard/Popular-funds";
@@ -92,7 +91,7 @@ const Dashboard = () => {
       
       />
 
-      <AreYouSure />
+  
 
       <Footer />
     </>
