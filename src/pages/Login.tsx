@@ -7,6 +7,8 @@ import { useState } from "react";
 import { handleNumbers } from "../services/utils/states";
 import { postRequest } from "../services/Api/HandleApi";
 import { endPoints } from "../services/utils/urls"
+import { Link } from "react-router-dom";
+
 
 interface responseType {
   msg: string;
@@ -91,13 +93,17 @@ const Login = () => {
                 Get OTP
               </button>
             </form>
-            <p className="mt-3">
-              By logging in, you agree to our Terms & Conditions
+            <p>
+              By logging in, you agree to our
+              <Link to="/terms-and-conditions">
+                Terms & Conditions
+              </Link>
             </p>
+
           </div>
         </div>
       </div>
-    </div>
+    </div >
   );
 };
 export default Login;
