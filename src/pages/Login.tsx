@@ -7,7 +7,6 @@ import { useState } from "react";
 import { handleNumbers } from "../services/utils/states";
 import { postRequest } from "../services/Api/HandleApi";
 import { endPoints } from "../services/utils/urls"
-import { Link } from "react-router-dom";
 
 
 interface responseType {
@@ -62,6 +61,9 @@ const Login = () => {
   const handleNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
     handleNumbers(10, e.target.value, setMobile);
   };
+  const goTermAndConditions = ()=>{
+    navigate("/terms-and-conditions")
+  }
 
   return (
     <div className="container-fluid">
@@ -94,10 +96,9 @@ const Login = () => {
               </button>
             </form>
             <p>
-              By logging in, you agree to our
-              <Link to="/terms-and-conditions">
-                Terms & Conditions
-              </Link>
+              By logging in, you agree to our   <small className="logoBlueColor crPointer" onClick={goTermAndConditions}>
+                Terms & Conditions.
+              </small>
             </p>
 
           </div>

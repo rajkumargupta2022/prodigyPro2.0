@@ -35,7 +35,9 @@ const Disclaimer: React.FC<DisclaimerProps> = ({ linkRef }) => {
             <div
                 ref={popupRef}
                 style={{
-                    position: 'fixed',
+                    position: 'absolute',
+                    top : '360px' ,
+                    left : '150px',
                     // top: position.top + 25,
                     // left: position.left,
                     backgroundColor: 'white',

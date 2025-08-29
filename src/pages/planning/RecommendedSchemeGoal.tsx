@@ -1,12 +1,9 @@
 import NavBar from "../../components/Navbar";
 import { useLocation } from "react-router-dom";
-import { useState } from "react";
-import SchemeDetails from "../../components/SchemeDetails";
 import RecomendedSchemes from "../../components/Recomended-schemes";
 
 const RecommendedSchemeGoal = () => {
   const location = useLocation()
-  const [openSchemeDetail,setOpenSchemeDetail] = useState<boolean>(false)
 
   return (
     <>
@@ -26,7 +23,6 @@ const RecommendedSchemeGoal = () => {
       <div className="container pt-2">
         <RecomendedSchemes  from={location?.state}/>
       </div>
-      <SchemeDetails show={openSchemeDetail} setShow={setOpenSchemeDetail}/>
     </>
   );
 };

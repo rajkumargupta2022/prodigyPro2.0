@@ -5,7 +5,7 @@ import Card from 'react-bootstrap/Card';
 import { Calendar4, CurrencyRupee } from 'react-bootstrap-icons';
 import money from "../assets/img/icons/rupee 1.svg"
 import { foliosResponse, schemeDeatilDataKeys } from '../pages/data-interfaces/transact';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import SelectFolioPopup from './select-folio-popup';
 import { postRequest } from '../services/Api/HandleApi';
 import { fetchAdminUser } from '../services/user/adminUser';
@@ -44,6 +44,7 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
   const [isSipTransaction, setIsSipTransaction] = useState<boolean>(true)
   const [isLumpsumTransaction, setIsLumpsumTransaction] = useState<boolean>(true)
   const disclaimerRef = useRef<HTMLAnchorElement>(null);
+  const navigate = useNavigate()
 
   const [amount, setAmount] = useState<number>(0)
   const [amountErrorMsg, setAmountErrorMsg] = useState<string>("")
@@ -70,9 +71,6 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
       start_date: daysAdded(31, sipDateList),
     }));
     setSchemeList(updated)
-    
-    
-
   }, [show]);
 
   const dateHandle = (e: Date | null) => {
@@ -343,6 +341,9 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
       )
     );
   };
+  const handleTerms =()=>{
+     window.open("/terms-and-conditions", "_blank");
+  }
 
   return (
     <>
@@ -366,7 +367,7 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
                   <img src={from === "portfolio" ? imageUrl + schemeList[0]?.accordAMCCode + ".png" : money} height={35} width={35} alt="" className='rounded-2' />
                 </div>
                 <div className="ms-2 prod_icon_heading">
-                  <h4>{from === "portfolio" ? schemeList[0]?.scheme : "Emergency Fund"}</h4>
+                  <h4>{from === "portfolio" ? schemeList[0]?.scheme : from}</h4>
                   <p>Selected fund {schemeList?.length}</p>
                 </div>
               </div>
@@ -402,7 +403,7 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
                       filterDate={isAllowedDay}
                       placeholderText="DD/MM/YYYY"
                       dateFormat="dd/MM/yyyy"
-                      minDate={daysAdded(schemeList[0]?.firstSIPToday?31:7, sipDateList)}
+                      minDate={daysAdded(31, sipDateList)}
                       className="focus_datepickers121"
                     />
                     <div className="prod_view_fund align-self-center">
@@ -470,7 +471,7 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
         </Modal.Body>
         <small className="fs12px modal-bg text-center">
           By continuing, I agree with the <Disclaimer linkRef={disclaimerRef} /> and{' '}
-          <Link to="/terms-and-conditions">Terms & Conditions</Link>
+          <div className='logoBlueColor crPointer' onClick={handleTerms}>Terms & Conditions</div>
         </small>
         <Modal.Footer className='modal-bg '>
           <Button className='customButton buttunCenter' onClick={handleFolioSelection}>Continue</Button>

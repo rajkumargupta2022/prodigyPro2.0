@@ -159,6 +159,7 @@ const AllMutualFunds = () => {
   // const [error, setError] = useState<string | null>(null);
   const [hasMore, setHasMore] = useState<boolean>(true); // Tracks if more pages exist
   const [fetchedPages, setFetchedPages] = useState<number[]>([]); // Tracks fetched API pages
+  const [isNewFilter, setIsNewFilter] = useState<boolean>(false); // Tracks if filters have changed
 
   // Fetch data for a specific page
   const fetchFilteredScheme = async (
@@ -194,16 +195,22 @@ const AllMutualFunds = () => {
     pageNum: number,
     amc: number[] = amcCode,
     asset: number[] = assetCode,
-    classArr: number[] = classCode
+    classArr: number[] = classCode,
+    isNewFilter: boolean = false
   ) => {
-    if (fetchedPages.includes(pageNum)) return; // Skip if page already fetched
+    if (!isNewFilter && fetchedPages.includes(pageNum)) return; // Skip if page already fetched
     const { data } = await fetchFilteredScheme(amc, asset, classArr, pageNum);
     if (data.length === 0 || data.length < 25) {
       setHasMore(false); // No more data to fetch
     } else {
       setHasMore(true);
     }
-    setFilteredSchemes((prev) => [...prev, ...data]); // Append new data
+    
+    if (isNewFilter) {
+      setFilteredSchemes(data); // Replace data for new filters
+    } else {
+      setFilteredSchemes((prev) => [...prev, ...data]); // Append new data
+    }
     setFetchedPages((prev) => [...prev, pageNum]); // Mark page as fetched
     setPage(pageNum); // Update current API page
   };
@@ -211,47 +218,69 @@ const AllMutualFunds = () => {
   // Handle page change from SwitchSchemes
   const handlePageChange = async (newPage: number) => {
     if (newPage >= 1 && hasMore && !fetchedPages.includes(newPage)) {
-      await fetchPage(newPage);
+      await fetchPage(newPage, amcCode, assetCode, classCode, false);
     }
   };
 
   // Initial fetch on component mount or filter change
-useEffect(() => {
-  setFilteredSchemes([]);
-  setFetchedPages([]);
-  setHasMore(true);
-  fetchPage(page, amcCode, assetCode, classCode); // use current page, not 1
-}, [amcCode, assetCode, classCode]);
+  useEffect(() => {
+    const resetAndFetch = async () => {
+      let asset = location?.state?.assetCode ? location?.state?.assetCode:assetCode
+      let classC = location?.state?.classCode ? location?.state?.classCode:classCode
+      setAssetCode(asset)
+      setClassCode(classC)
+      setFilteredSchemes([]);
+      setFetchedPages([]);
+      setHasMore(true);
+      setPage(1);
+      setIsNewFilter(true);
+      await fetchPage(1, amcCode, asset, classC, true); // Reset to page 1 and use current filters
+      // Don't reset isNewFilter immediately - let SwitchSchemes handle it
+    };
+    
+    resetAndFetch();
+  }, [amcCode, assetCode, classCode]); // Only depend on filter changes
 
+  // Reset isNewFilter flag after a short delay to allow SwitchSchemes to detect it
+  useEffect(() => {
+    if (isNewFilter) {
+      const timer = setTimeout(() => {
+        setIsNewFilter(false);
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [isNewFilter]);
 
   const handleFilter = (value: number, filterType: string) => {
     let classArr: number[];
     let amc: number[];
     let asset: number[];
+    
     switch (filterType) {
       case "category":
         if (classCode.includes(value)) {
           classArr = classCode.filter((item) => item !== value);
-          setClassCode(classArr);
         } else {
           classArr = [...classCode, value];
-          setClassCode(classArr);
         }
+        setClassCode(classArr);
         break;
       case "asset":
         asset = [value];
         setAssetCode(asset);
         break;
       case "amc":
-        amc = amcCode.includes(value)
-          ? amcCode.filter((item) => item !== value)
-          : [...amcCode, value];
+        if (amcCode.includes(value)) {
+          amc = amcCode.filter((item) => item !== value);
+        } else {
+          amc = [...amcCode, value];
+        }
         setAmcCode(amc);
         break;
       default:
         return;
     }
-    setFilteredSchemes([]); // Clear schemes before fetching new data
+    // Note: setFilteredSchemes([]) is handled in useEffect now
   };
 
   const isAvailable = (value: number, type: string): boolean => {
@@ -272,7 +301,7 @@ useEffect(() => {
       <MyNavbar />
       <Container className="mt-4">
         <div className="d-md-block d-none">
-          <h4 className="fw-bold">{location.state ? location.state : "All Mutual Funds"}</h4>
+          <h4 className="fw-bold">{location?.state?.name ? location?.state?.name : "All Mutual Funds"}</h4>
           <p>
             Discover mutual funds across all categories using the all mutual funds
             screener
@@ -280,16 +309,18 @@ useEffect(() => {
         </div>
         <div className="row">
           <div className="col-lg-4 border-end d-none d-lg-block">
-            <Category handleFilter={handleFilter} isAvailable={isAvailable} />
+          {!location?.state?.name  &&<Category handleFilter={handleFilter} isAvailable={isAvailable} />}
             <Filters handleFilter={handleFilter} isAvailable={isAvailable} />
           </div>
           <SwitchSchemes
             handleFilter={handleFilter}
             isAvailable={isAvailable}
-            filteredSchemes={filteredSchemes}
+            filteredSchemes={filteredSchemes || []}
             handlePageChange={handlePageChange}
             currentApiPage={page}
             hasMore={hasMore}
+            isNewFilter={isNewFilter}
+            key={`${amcCode.join(',')}-${assetCode.join(',')}-${classCode.join(',')}`}
           />
         </div>
         {isLoading && (

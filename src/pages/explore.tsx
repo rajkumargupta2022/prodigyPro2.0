@@ -13,8 +13,8 @@ import PopularFunds from "./dashboard/Popular-funds";
 const Explore = () => {
   const navigate = useNavigate()
 
-  const goToFundPage = (name:string)=>{
-    navigate("/all-mutual-funds",{state:name})
+  const goToFundPage = (name:string,assetCode:number[]=[],classCode:number[]=[],)=>{
+    navigate("/all-mutual-funds",{state:{name,assetCode,classCode}})
   }
   return (
     <>
@@ -49,15 +49,15 @@ const Explore = () => {
               <img src={Award} alt="" width={28} height={28} />
               <h6 className="fs14pxBlack">Top Rated Funds</h6>
             </div>*/}
-            <div className="py-2 text-center" onClick={()=>goToFundPage("Tax Saver")}>
+            <div className="py-2 text-center" onClick={()=>goToFundPage("Tax Saver",[1],[8])}>
               <img src={Tax} alt="" width={28} height={28} />
               <h6 className="fs14pxBlack">Tax Saver</h6>
             </div> 
-            <div className="py-2 text-center" onClick={()=>goToFundPage("Equity Funds")}>
+            <div className="py-2 text-center" onClick={()=>goToFundPage("Equity Funds",[1])}>
               <img src={EquityFund} alt="" width={28} height={28} />
               <h6 className="fs14pxBlack">Equity Funds</h6>
             </div>
-            <div className="py-2 text-center" onClick={()=>goToFundPage("Debt Funds")}>
+            <div className="py-2 text-center" onClick={()=>goToFundPage("Debt Funds",[3])}>
               <img src={DebtFund} alt="" width={28} height={28} />
               <h6 className="fs14pxBlack">Debt Funds</h6>
             </div>

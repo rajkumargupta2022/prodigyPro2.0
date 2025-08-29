@@ -27,8 +27,8 @@ const TermsAndConditions = () => {
   }
 
   return (
-    <main className="px-3 py-4 d-flex justify-content-center">
-      <div className="p-4 shadow-sm bg-white border-0 rounded-4 mb-4" style={{maxWidth: '800px', width: '100%'}}>
+    <main className="px-5 py-4 d-flex justify-content-center">
+      <div className="p-5 shadow-sm bg-white border-0 rounded-4 mb-4" style={{maxWidth: '1000px', width: '100%'}}>
         <style>
           {`
             .terms-content h2 {
