@@ -255,6 +255,10 @@ const GoalResult = () => {
     navigate("/recommended-scheme-goal", { state: location.state });
   }
 
+  const recalculate = () => {
+    navigate("/goal", { state: location.state })
+  }
+
 
 
   return (
@@ -284,7 +288,7 @@ const GoalResult = () => {
               </div>
             </div>
             <div className="col-6 my-4">
-              <button className='customCancelButton buttunCenter px-3'>Re-Calculate</button>
+              <button className='customCancelButton buttunCenter px-3' onClick={recalculate}>Re-Calculate</button>
             </div>
             <div className="col-6 my-4">
               <button className='customButton buttunCenter px-3' onClick={handleGoal}>Continue</button>
