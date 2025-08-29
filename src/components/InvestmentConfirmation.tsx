@@ -459,7 +459,7 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
                   className="circle-checkbox textColor"
                   onChange={handleSipDeduction}
                   checked={schemeList[0]?.firstSIPToday ?? true}
-                  label="First SIP will be deducted today."
+                  label="First instalment will be deducted today."
                   name="Sip deduction"
                 />
               </div>}

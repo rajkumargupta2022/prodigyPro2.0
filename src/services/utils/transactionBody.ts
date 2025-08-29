@@ -41,7 +41,7 @@ export const redeemFilterBody = (redeemList: detailPortfolioSchemeType[]) => {
   if (redeemList?.length > 0) {
     const data = redeemList.map((item: detailPortfolioSchemeType) => ({
       accordProductCode: item.accordSchemeCode,
-      amount: item.amount??0,
+      amount: Math.round(Number(item.amount))??0,
       redemption_units:item.redemption_units??0,
       all_units: item.redemption_units??0===Number(item.unit) ? true:false,
       folioNumber: item?.folio,
