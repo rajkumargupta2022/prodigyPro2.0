@@ -2,6 +2,16 @@ import {  BookFill } from "react-bootstrap-icons";
 import Map from "../assets/img/map.svg";
 
 function LocateUs() {
+
+  const handleDirectionClick = () => {
+    const destination = encodeURIComponent(
+      "C.P.-61, Viraj Khand-4, Gomti Nagar, Lucknow, Uttar Pradesh 226010"
+    );
+    // Google Maps directions link (origin=My Location lets Google use user’s current location)
+    const url = `https://www.google.com/maps/dir/?api=1&destination=${destination}&travelmode=driving`;
+    window.open(url, "_blank"); // open in new tab
+  };
+
   return (
     <main className="col-md-9 ms-sm-auto col-lg-9 px-md-4 py-4">
       <h2>
@@ -50,7 +60,7 @@ function LocateUs() {
           <h6 className="me-1"> Mobile:</h6>
           <p style={{ color: "#1A35FE" }}>+917347700888</p>
         </div>
-        <button className="btn btn-primary">
+        <button className="btn btn-primary" onClick={handleDirectionClick}>
           <BookFill className="me-2" />
           Direction
         </button>
