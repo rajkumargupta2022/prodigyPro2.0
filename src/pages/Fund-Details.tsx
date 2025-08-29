@@ -41,12 +41,9 @@ const FundDetails = () => {
   const [duration, setDuration] = useState<number>(12)
   const [cagr, setCagr] = useState<number>(0)
   const [durarinInYear, setDurarinInYear] = useState<string>("")
-  // const schmeDetail = location.state
   const [schmeDetail, setSchmeDetail] = useState<detailPortfolioSchemeType[]>([location.state])
 
   const [sipDateList, setSipDateList] = useState<number[]>([])
-  // const [amount, setAmount] = useState<number>(0)
-
   const [openSwitchSchemeModel, setOpenSwitchSchemeModel] = useState<boolean>(false)
   const [openRedumptionModel, setOpenRedumptionModel] = useState<boolean>(false)
 
@@ -309,7 +306,6 @@ const FundDetails = () => {
   };
 
   const handleInvestMore = () => {
-
     setOpenInvestPopup(true)
   }
 
@@ -333,7 +329,7 @@ const FundDetails = () => {
           <img src={`${imageUrl + schemeList[0]?.accordAMCCode}.png`} className="logoRadius" alt="Image not found" width={60} height={60} />
           <div style={{ marginLeft: "1%", marginTop: "1%" }}>
             <h4 className="fw-bold">{schemeList[0]?.scheme}</h4>
-            <p>Equity: Flexi Cap</p>
+            <p>Category-{schemeList[0]?.equityType}</p>
           </div>
         </div>
 

@@ -52,7 +52,7 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
             firstSIPToday: true,
             to_date: "",
             from_date: "",
-            amount: 0,
+            amount: Number(obj.minSIPAmt),
             totalAmount: 0,
             start_date: daysAdded(31, sipDateList),
           };
@@ -301,7 +301,7 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
                           className="circle-checkbox textColor"
                           onChange={handleSipDeduction}
                           checked={schemeList[0]?.firstSIPToday ?? true}
-                          label="First SIP will be deducted today."
+                          label="First instalment will be deducted today."
                           name="Sip deduction"
                         />
                       </div>}
