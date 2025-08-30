@@ -73,7 +73,7 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
   }, [show]);
 
   const dateHandle = (e: Date | null) => {
-   
+
     setSchemeList((prev: any) =>
       prev.map((obj: any) => ({
         ...obj,
@@ -154,6 +154,7 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
           return {
             ...item,
             folioList: res.data || [],
+            start_date: item.start_date ?? daysAdded(31, sipDateList), // 👈 keep default if missing
           };
         } catch (error) {
           return {
