@@ -321,6 +321,7 @@ const AllMutualFunds = () => {
             hasMore={hasMore}
             isNewFilter={isNewFilter}
             key={`${amcCode.join(',')}-${assetCode.join(',')}-${classCode.join(',')}`}
+            from={location?.state?.name?true:false}
           />
         </div>
         {isLoading && (

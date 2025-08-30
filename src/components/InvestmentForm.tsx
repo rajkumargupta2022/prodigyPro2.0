@@ -59,6 +59,9 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
         })
       );
       setAmount(schemeList[0].minSIPAmt ?? 1000);
+      if (!checkTransactionAllowed(schemeList, keys.sip) && checkTransactionAllowed(schemeList, keys.purchase)) {
+        handleTransactionType(false)
+      }
     }
   }, [schemeList]);
 
@@ -280,7 +283,7 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
           </div>
           <span className='errorColor'>{dateErrorMsg}</span>
         </>}
-       
+
 
         <div className="form-group mt-1">
           <label htmlFor="amountFor" className='fs12px'>INVESTMENT AMOUNT</label>
@@ -293,18 +296,18 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
             <button type="button" className="btn shortcutValue mx-1" onClick={() => addAmount(addAmountValues.third)}>+<CurrencyRupee className='mb-1' />{addAmountValues.third.toLocaleString("en-In")}</button>
           </div>
         </div>
-            {isSipTransaction &&
-                      <div className="d-flex justify-content-center align-items-center mt-2 mb-0">
-                        <Form.Check
-                          type="checkbox"
-                          id="circleCheckbox"
-                          className="circle-checkbox textColor"
-                          onChange={handleSipDeduction}
-                          checked={schemeList[0]?.firstSIPToday ?? true}
-                          label="First instalment will be deducted today."
-                          name="Sip deduction"
-                        />
-                      </div>}
+        {isSipTransaction &&
+          <div className="d-flex justify-content-center align-items-center mt-2 mb-0">
+            <Form.Check
+              type="checkbox"
+              id="circleCheckbox"
+              className="circle-checkbox textColor"
+              onChange={handleSipDeduction}
+              checked={schemeList[0]?.firstSIPToday ?? true}
+              label="First instalment will be deducted today."
+              name="Sip deduction"
+            />
+          </div>}
 
       </div>
       <div className="text-white logobg_color  py-2 mb-2 mx-3 order  text-center monthly_btn crPointer" onClick={handleFolioSelection}> {isSipTransaction ? "Invest as SIP" : "Invest Now"}</div>

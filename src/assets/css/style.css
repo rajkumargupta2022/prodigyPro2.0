@@ -977,7 +977,7 @@ hr {
   border-radius: 24px;
 }
 .schemeDetailBoxRed {
-  background-color: #c82527;
+  background-color: rgb(193, 51, 84);
   padding: 16px;
   border-radius: 24px;
 }
@@ -1498,6 +1498,14 @@ span.text-secondary.text-uppercase.fs-7 {
   bottom: 0px;
   width: 100%; */
   border-top: 1px solid #dee2e6;
+}
+
+.opacity-grpimg-none{
+  opacity: 0;
+}
+
+.bg-orderd-faild{
+  background: linear-gradient(90deg,rgba(189, 63, 93, 1) 0%, rgba(160, 84, 126, 1) 50%);
 }
 
 .footer a {

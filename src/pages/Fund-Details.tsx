@@ -58,11 +58,12 @@ const FundDetails = () => {
     ],
     options: {
       chart: {
+        
         height: 350,
         type: "area",
         background: "transparent",
         toolbar: {
-          show: true,
+          show: false,
         },
         zoom: {
           enabled: false,

@@ -5,12 +5,12 @@ import Card from 'react-bootstrap/Card';
 import { Calendar4, CurrencyRupee } from 'react-bootstrap-icons';
 import money from "../assets/img/icons/rupee 1.svg"
 import { foliosResponse, schemeDeatilDataKeys } from '../pages/data-interfaces/transact';
-import { useNavigate } from 'react-router-dom';
 import SelectFolioPopup from './select-folio-popup';
 import { postRequest } from '../services/Api/HandleApi';
 import { fetchAdminUser } from '../services/user/adminUser';
 import { endPoints, imageUrl } from '../services/utils/urls';
 import BankMandate from './BankMandate';
+
 import { daysAdded } from '../services/dates/dateFormater';
 import { keys } from '../services/utils/keys';
 import { checkTransactionAllowed } from '../services/utils/services';
@@ -44,7 +44,6 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
   const [isSipTransaction, setIsSipTransaction] = useState<boolean>(true)
   const [isLumpsumTransaction, setIsLumpsumTransaction] = useState<boolean>(true)
   const disclaimerRef = useRef<HTMLAnchorElement>(null);
-  const navigate = useNavigate()
 
   const [amount, setAmount] = useState<number>(0)
   const [amountErrorMsg, setAmountErrorMsg] = useState<string>("")

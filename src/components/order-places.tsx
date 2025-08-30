@@ -32,7 +32,7 @@ const OrderPlaces: React.FC<OrderPlaces> = ({ show, setShow,successData }) => {
                     {/* Image Wrapper */}
                     <div className="position-relative d-inline-block">
                       {/* Background Image */}
-                  <img src={group} alt="Group" className="img-fluid" height={110} width={250} />
+                  <img src={group} alt="Group" className={`img-fluid ${item.reg_status|| "opacity-grpimg-none"}`} height={110} width={250} />
                       {/* Overlay Image */}
                       <img
                         src={item.reg_status ? correct:failed}

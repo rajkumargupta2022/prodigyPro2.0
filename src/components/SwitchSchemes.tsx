@@ -137,7 +137,7 @@
 import { ChevronRight, ChevronLeft, ChevronDoubleLeft, ChevronDoubleRight } from "react-bootstrap-icons";
 import { imageUrl } from "../services/utils/urls";
 import { Card, Col, Row, Dropdown, Form } from "react-bootstrap";
-import Returns from "../pages/explore/SortBy";
+// import Returns from "../pages/explore/SortBy";
 import Category from "../pages/explore/Category";
 import Filter from "../pages/explore/Amcs";
 import { useNavigate } from "react-router-dom";
@@ -153,6 +153,7 @@ interface SchemesProps {
   currentApiPage: number;
   hasMore: boolean;
   isNewFilter: boolean;
+  from:boolean
 }
 
 const SwitchSchemes: React.FC<SchemesProps> = ({
@@ -163,6 +164,7 @@ const SwitchSchemes: React.FC<SchemesProps> = ({
   currentApiPage,
   hasMore,
   isNewFilter,
+  from
 }) => {
   const navigate = useNavigate();
   const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -430,7 +432,7 @@ const SwitchSchemes: React.FC<SchemesProps> = ({
           </Col>
           <div className="col-12 pt-3 d-block d-lg-none">
             <div className="row prody_position_relative">
-              
+              {!from&&
               <div className="col-4">
                 <div className="Prodgymobile_filtering_dataa category_show_data">
                   <span>
@@ -440,7 +442,7 @@ const SwitchSchemes: React.FC<SchemesProps> = ({
                     <Category handleFilter={handleFilter} isAvailable={isAvailable} />
                   </div>
                 </div>
-              </div>
+              </div>}
               <div className="col-4">
                 <div className="Prodgymobile_filtering_dataa filters_show_mobile">
                   <span>
