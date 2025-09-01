@@ -10,6 +10,7 @@ import {
   maxAmount,
   minAmount,
 } from "../../services/Validated-inputs/validations";
+import { useNavigate } from "react-router-dom";
 
 interface ChartState {
   options: ApexOptions;
@@ -17,6 +18,7 @@ interface ChartState {
 }
 
 const SipCalculator = () => {
+  const navigate = useNavigate()
   const [investmentPeriod, setInvestmentPeriod] = useState<number>(10);
   const [monthlySaving, setMonthlySaving] = useState<number>(10000);
   const [expectedRateOfReturn, setExpectedRateOfReturn] =
@@ -249,6 +251,9 @@ const SipCalculator = () => {
                   </div>
                 </div>
               </div>
+                <button type="button" className="btn investBtn mt-2 shadow-lg" onClick={()=>{navigate("/all-mutual-funds")}}>
+                  Invest
+                </button>
             </div>
           </div>
         </div>

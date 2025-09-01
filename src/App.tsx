@@ -78,6 +78,7 @@ import { useEffect } from "react";
 import StateFolioDetails from "./components/statement-folio-details";
 import NoFolioFounds from "./components/no-folio-found";
 import useAuthRedirect from "./services/user/useAuthRedirect";
+import SighnUp from "./pages/Sign-up";
 
 
 const LoaderHandler = () => {
@@ -263,6 +264,7 @@ function App() {
           />
           <Route path="/risk-profile" element={<RiskProfile />} />
           <Route path="/risk-result" element={<RiskResult />} />
+          <Route path="/sign-up" element={<SighnUp />} />
 
           <Route path="/custom-goal" element={<CustomGoal />} />
             <Route path="*" element={<Navigate to="/" replace />} />

@@ -9,8 +9,10 @@ import {
 } from "../../services/Validated-inputs/validations";
 import { amountHandler, percentageHandler, pmtvalue } from "../../services/utils/calculatorsFs";
 import { errorToast } from "../../services/utils/toast";
+import { useNavigate } from "react-router-dom";
 
 const EducationCalculator = () => {
+  const navigate = useNavigate()
   const [childAge, setChildAge] = useState<number>(10);
   const [startCollegeAge, setStartCollegeAge] = useState<number>(18);
   const [durationOfEducation, setDurationOfEducation] = useState<number>(3);
@@ -195,7 +197,7 @@ const EducationCalculator = () => {
                     <h6 className="mt-1">₹{monthlyInvestmentRequired.toLocaleString('en-IN')}</h6>
                   </div>
                 </div>
-                <button type="button" className="btn investBtn mt-2">
+                <button type="button" className="btn investBtn mt-2 shadow-lg" onClick={()=>{navigate("/all-mutual-funds")}}>
                   Invest
                 </button>
               </div>

@@ -152,7 +152,7 @@ const SWPCalculator = () => {
           <div className="col-12 align-items-start mb-3">
             <h4>SWP Calculator</h4>
             <p className="fs14px">
-              Plan your regular withdrawals for a steady income.
+              This calculator helps you to plan your regular withdrawals for a steady income.
             </p>
           </div>
 

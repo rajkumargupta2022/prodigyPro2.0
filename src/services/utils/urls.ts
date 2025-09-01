@@ -31,5 +31,6 @@ export enum endPoints{
    getPrivacyPolicy = "content/get-privacy-policy",
    goalPlanningSchemes="goal-planning/get-goal-planning-schemes",
    rateRm="content/rate-rm",
-   getTermsAndConditions="content/get-terms-condition"
+   getTermsAndConditions="content/get-terms-condition",
+   tempOnboarding="content/temp-onboarding"
 }

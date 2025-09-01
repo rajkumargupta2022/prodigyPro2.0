@@ -35,6 +35,7 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
   const [amount, setAmount] = useState<number>(0)
   const [amountErrorMsg, setAmountErrorMsg] = useState<string>("")
   const [dateErrorMsg, setDateErrorMsg] = useState<string>("")
+    const [minimumDate, setMinimumDate] = useState<Date>()
 
   useEffect(() => {
     if (
@@ -44,7 +45,7 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
     ) {
       handleMinAmount(true);
       fetchFolios();
-
+     setMinimumDate(daysAdded(31,sipDateList))
       setSchemeList((prev: any) =>
         prev.map((obj: any) => {
           return {
@@ -227,12 +228,12 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
 
   }
   const handleSipDeduction = () => {
-    console.log("schemeList[0]?.firstSIPToday", schemeList[0]?.firstSIPToday);
+     setMinimumDate(!schemeList[0].firstSIPToday ?  daysAdded(31, sipDateList): daysAdded(7, sipDateList))
 
     setSchemeList((prev: any) =>
       prev.map((obj: any, index: number) =>
         index === 0
-          ? { ...obj, firstSIPToday: !obj.firstSIPToday } // Toggle the value
+          ? { ...obj, firstSIPToday: !obj.firstSIPToday,start_date:null } // Toggle the value
           : obj
       )
     );
@@ -271,7 +272,7 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
                   filterDate={isAllowedDay}
                   placeholderText="DD/MM/YYYY"
                   dateFormat="dd/MM/yyyy"
-                  minDate={daysAdded(schemeList[0]?.firstSIPToday ? 31 : 7, sipDateList)}
+                  minDate={minimumDate}
                   className="focus_datepickers121"
                 />
                 <div className="prod_view_fund align-self-center">

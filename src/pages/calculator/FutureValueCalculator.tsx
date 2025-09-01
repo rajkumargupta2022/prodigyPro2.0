@@ -13,8 +13,10 @@ import {
   minAmount,
 } from "../../services/Validated-inputs/validations";
 import { amountHandler, percentageHandler } from "../../services/utils/calculatorsFs";
+import { useNavigate } from "react-router-dom";
 
 const FutureValueCalculator = () => {
+  const navigate = useNavigate()
   const [investmentPeriod, setInvestmentPeriod] = useState<number>(10);
 
   const [investAmount, setInvestAmount] = useState<number>(50000);
@@ -229,6 +231,9 @@ const FutureValueCalculator = () => {
                   </div>
                 </div>
               </div>
+              <button type="button" className="btn investBtn mt-2 shadow-lg" onClick={()=>{navigate("/all-mutual-funds")}}>
+                  Invest
+                </button>
             </div>
           </div>
         </div>

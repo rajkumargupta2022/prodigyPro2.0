@@ -28,17 +28,21 @@ const Otp = () => {
     }
     return () => clearTimeout(timer);
   }, [counter]);
-
+  useEffect(() => {
+    if (!location?.state?.mobile) {
+      navigate("/");
+    }
+  }, [])
 
   const varifyOtp = async (e: any) => {
     e.preventDefault();
-    if (!otp || otp.length < 4) {
+    if (!otp || otp?.length < 4) {
       setOtpErrorMsg("Invalid OTP")
       return
     }
 
     const reqBody: object = {
-      mobile: Number(location.state.mobile),
+      mobile: Number(location?.state?.mobile),
       otp: Number(otp),
     };
 
@@ -56,8 +60,9 @@ const Otp = () => {
         }
         if (res.success && !res?.portfolioUser) {
           localStorage.setItem("token", res.token);
+          navigate("/sign-up")
         }
-        successToast(res);
+        // successToast(res);
       } else {
 
         errorToast(res);
@@ -96,7 +101,7 @@ const Otp = () => {
             <img src={MobileIcon} alt="" className="mobileIcon img-fluid" />
             <p className="text-dark font-weight-bold">Verify OTP</p>
             <form className="" action="#" onSubmit={varifyOtp}>
-              <p className="pb-1 fs12px">OTP sent to +91 {location.state.mobile}</p>
+              <p className="pb-1 fs12px">OTP sent to +91 {location?.state?.mobile}</p>
 
               <div className="mb-3 row">
                 <OtpInput

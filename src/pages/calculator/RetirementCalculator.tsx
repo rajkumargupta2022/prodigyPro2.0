@@ -7,8 +7,10 @@ import {
   minAmount,
 } from "../../services/Validated-inputs/validations";
 import { amountHandler, percentageHandler, pmtvalue, RetirementPresentValue } from "../../services/utils/calculatorsFs";
+import { useNavigate } from "react-router-dom";
 
 const RetirementCalculator = () => {
+  const navigate = useNavigate()
   const [currentAge, setCurrentAge] = useState<number>(30);
   const [retirementAge, setRetirementAge] = useState<number>(60);
 
@@ -22,10 +24,10 @@ const RetirementCalculator = () => {
 
   const [yearToRetirement, setYearToRetirement] = useState<number>(30);
   const [amountPostRetirementPM, setAmountPostRetirementPM] = useState<number>(172305);
-  // const [corppusToBeAchive, setCorppusToBeAchive] = useState<number>(37702270);
+  const [corppusToBeAchive, setCorppusToBeAchive] = useState<number>(37702271);
   const [corpusYouWillAccumalateWithCurrentSaving, setCorpusYouWillAccumalateWithCurrentSaving] = useState<number>(17474821);
   const [corpusYouWillAccumalateWithExistingSaving, setCorpusYouWillAccumalateWithExistingSaving] = useState<number>(5081744);
-  const [sortfallAmount, setSortfallAmount] = useState<number>(15145705);
+  const [sortfallAmount, setSortfallAmount] = useState<number>(15145706);
   const [extraSavingPM, setExtraSavingPM] = useState<number>(4963);
   const [isCalculate, setIsCalculate] = useState<boolean>(false)
  
@@ -84,7 +86,7 @@ const RetirementCalculator = () => {
     let lifeExpectancy_yr:number = lifeExpectancy * 12
     // let lumpsumRequired = presentValue(adj_rate, yearsleft, 0, fv);
     let fvvalue:number = (monthlyExpenses * (Math.pow(onePlusinflationR, retirement_yr)));
-    fvvalue = Math.round(fvvalue)
+    fvvalue = fvvalue
     //let corpusAchieved = (fvvalue * pow) / inflationAdjustReturn;
     let onePlusinflationAdjustReturn:number = 1 + inflationAdjustReturn
     // let powValue:number = 1 - Math.pow(onePlusinflationAdjustReturn, -lifeExpectancy_yr);
@@ -111,9 +113,9 @@ const RetirementCalculator = () => {
     let logg = (1 + nom);
      pow = Math.pow(logg, retirement_yr);
     let corpus_exist:number = existingCorpus * pow;
-     corpus_exist = Math.round(corpus_exist)
+     corpus_exist = corpus_exist
     let shortfall_amt:number = corpusAchieved - (corpus_month + corpus_exist)
-     shortfall_amt = Math.round(shortfall_amt)
+     shortfall_amt = shortfall_amt
 
     let nomialRate:number = 12.0 * (Math.pow((1 + (preRetirementReturns * 0.01)), (1 / 12.0)) - 1);
     let nominalRateMonthly:number = parseFloat((nomialRate / 12).toFixed(9))
@@ -124,7 +126,7 @@ const RetirementCalculator = () => {
     setExtraSavingPM(Math.round(newsipamt));
     setCorpusYouWillAccumalateWithCurrentSaving(Math.round(corpus_month));
     setCorpusYouWillAccumalateWithExistingSaving(Math.round(corpus_exist));
-    // setCorppusToBeAchive(Math.round(corpusAchieved));
+    setCorppusToBeAchive(Math.round(corpusAchieved));
     setIsCalculate(true)
     }
   };
@@ -224,7 +226,7 @@ const RetirementCalculator = () => {
                           htmlFor="exampleInputPassword1"
                           className="fs12px"
                         >
-                          Existing Corpus(₹)
+                          EXISTING CORPUS(₹)
                         </label>
                         <ValidatedInput
                           ref={existingCorpusRef}
@@ -315,6 +317,10 @@ const RetirementCalculator = () => {
                       AMOUNT REQUIRED P.M. - POST RETIREMENT
                     </p>
                     <h6 className="mt-1">₹{amountPostRetirementPM.toLocaleString("en-IN")}</h6>
+                      <p className="fs12px mb-0 mt-3">
+                      CORPUS TO BE ACHIEVED @ RETIREMENT
+                    </p>
+                    <h6 className="mt-1">₹{corppusToBeAchive.toLocaleString("en-IN")}</h6>
                     <p className="fs12px mb-0 mt-3">
                       CORPUS YOU WILL ACCUMULATE WITH CURRENT SAVINGS PER MONTH
                     </p>
@@ -331,7 +337,7 @@ const RetirementCalculator = () => {
                     <h6 className="mt-1">₹{extraSavingPM.toLocaleString("en-IN")}</h6>
                   </div>
                 </div>
-                <button type="button" className="btn investBtn mt-2">
+                <button type="button" className="btn investBtn mt-2 shadow-lg" onClick={()=>{navigate("/all-mutual-funds")}}>
                   Invest
                 </button>
               </div>

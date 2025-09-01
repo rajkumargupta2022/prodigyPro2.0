@@ -95,6 +95,7 @@ const ElssCalculator = () => {
                         <option value="20">20%</option>
                         <option value="30">30%</option>
                       </select>
+                      <small className="fs12px" >Inclusive of all cess</small>
                     </div>
                     <button type="submit" className="customButton px-3 mt-3">
                       Calculate
