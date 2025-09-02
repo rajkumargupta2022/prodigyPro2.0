@@ -139,9 +139,7 @@ const RetirementCalculator = () => {
           <div className="col-12 align-items-start mb-3">
             <h4>Retirement Planning</h4>
             <p className="fs14px">
-              This calculator help you to see the future expenditure which will
-              be incurred at the time when you are retired from active
-              employment/service.
+              This calculator helps you to estimate your future recurring expenses after retirement, giving you a clearer picture of your financial needs after active employment.
             </p>
           </div>
 

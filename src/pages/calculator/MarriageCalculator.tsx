@@ -85,8 +85,7 @@ const MarriageCalculator = () => {
           <div className="col-12 align-items-start mb-3">
             <h4>Marriage Calculator</h4>
             <p className="fs14px">
-              This planner helps you to see the future expenditure which will be
-              incurred at the time of marriage of your children.
+             This calculator helps you to estimate the future expenditure needed at the time of marriage of your child.
             </p>
           </div>
 

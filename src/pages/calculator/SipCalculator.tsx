@@ -23,6 +23,8 @@ const SipCalculator = () => {
   const [monthlySaving, setMonthlySaving] = useState<number>(10000);
   const [expectedRateOfReturn, setExpectedRateOfReturn] =
     useState<number>(16.5);
+     const [resultRateOfReturn, setResultRateOfReturn] =
+    useState<number>(16.5);
   const [gains, setGains] = useState<number>(3017292);
   const [totalYear, setTotalYear] = useState<number>(10);
   const [totalGains, setTotalGains] = useState<number>(3017292);
@@ -139,6 +141,7 @@ const SipCalculator = () => {
     setTotalYear(investmentPeriod);
     setTotalMonthlySaving(totalSaving);
     setOneMonthSaving(monthlySaving);
+    setResultRateOfReturn(expectedRateOfReturn)
     // let a = parseInt(totalSaving)
     // let g = parseInt(gains)
     // let gainss = a + g
@@ -156,8 +159,7 @@ const SipCalculator = () => {
           <div className="col-12 align-items-start mb-3">
             <h4>Sip Calculator</h4>
             <p className="fs14px">
-              This calculator will help you to visualize/calculate the amount
-              accumulated with a regular investment.
+              This calculator will help you to calculate the corpus you can accumulate with a regular monthly investments.
             </p>
           </div>
 
@@ -219,19 +221,20 @@ const SipCalculator = () => {
                 <div className="card-body">
                   <h5 className=" fw-normal mb-1">Result</h5>
                   <p className="resultColor">
-                    If you invest{" "}
+                    If you invest
                     <span className="fw600">
                       {" "}
                       ₹{oneMonthSaving.toLocaleString("en-IN")}
                     </span>{" "}
-                    per month for a period of {totalYear} years your investment
-                    amount will be{" "}
+                    per month for a period of {totalYear} years at a annual return of   <span className="fw600">
+                      {" "}
+                      {resultRateOfReturn}
+                    </span>% your invested amount will be
                     <span className="fw600">
                       {" "}
                       ₹{totalMonthlySaving.toLocaleString("en-IN")}{" "}
                     </span>{" "}
-                    and maturity amount will be grow to{" "}
-                    <span className="fw600">
+                    and your estimated corpus will grow to <span className="fw600">
                       ₹{totalGains.toLocaleString("en-IN")}{" "}
                     </span>
                   </p>
