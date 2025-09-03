@@ -477,11 +477,11 @@ const GoalResult = () => {
                   <p className="fs14px fw-normal mb-1">
                     Future value of amount needed
                   </p>
-                  <h4>₹{location.state.lumpsumRequired}</h4>
+                  <h4>₹{location.state.lumpsumRequired.toLocaleString("en-IN")}</h4>
                   <p className="fs14px fw-normal mb-1 my-3">
                     Required monthly SIP
                   </p>
-                  <h4>₹{location.state.newsipamt}</h4>
+                  <h4>₹{location.state.newsipamt.toLocaleString("en-IN")}</h4>
                 </div>
                 <div>
                   <ReactApexChart
