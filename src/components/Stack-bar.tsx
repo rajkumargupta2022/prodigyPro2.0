@@ -27,11 +27,11 @@ const InvestmentChart: React.FC<schemeDataProps> = ({ schemeData }) => {
     series: [
       {
         name: "Invested",
-        data: [totalInvestment,0,0,0,0,0,0, totalInvestment],
+        data: [totalInvestment, 0, 0, 0, 0, 0, 0, totalInvestment],
       },
       {
         name: "Maturity",
-        data: [totalFixedProfit,0,0,0,0,0,0, totalProfit],
+        data: [totalFixedProfit, 0, 0, 0, 0, 0, 0, totalProfit],
       },
     ],
     options: {
@@ -100,13 +100,14 @@ const InvestmentChart: React.FC<schemeDataProps> = ({ schemeData }) => {
         opacity: 1,
       }, tooltip: {
         custom: function ({ series, dataPointIndex }) {
-
+           console.log("oooo",selectedInvestmentType);
+           
           const invested = series[0][dataPointIndex];
           const maturity = series[1][dataPointIndex];
 
           return `
       <div style="padding: 10px; background: white; border-radius: 8px; box-shadow: 0px 0px 10px rgba(0,0,0,0.1); font-family: sans-serif; text-align: center;">
-        <div style="font-size: 14px; color: #011EFE ;">${dataPointIndex ? "This Fund" : "Fixed Deposit"}</div>
+        <div style="font-size: 14px; color: #011EFE ;">${dataPointIndex ? "This Fund" : selectedInvestmentType==="sip"?"Recurring Deposit":"Fixed Deposit"}</div>
         <div style="font-size: 14px; color: #333;">Invested: ₹${invested.toLocaleString('en-IN')}</div>
         <div style="font-size: 14px; color: #333;">Maturity: ₹${maturity.toLocaleString('en-IN')}</div>
       </div>
@@ -118,7 +119,7 @@ const InvestmentChart: React.FC<schemeDataProps> = ({ schemeData }) => {
 
   useEffect(() => {
     setReturnPercentage(schemeData?.threeYearCAGR)
-    
+
   }, [schemeData?.threeYearCAGR]);
   //  useEffect(() => {
   //   const style = document.createElement("style");
@@ -163,7 +164,7 @@ const InvestmentChart: React.FC<schemeDataProps> = ({ schemeData }) => {
       const val1: number = 1 + r / (100 * n);
       const val2: number = n;
       amt = pric * Math.pow(val1, val2);
-      pric = parseFloat(amt.toFixed(0));
+      pric = amt;
     }
 
     setTotalInvestment(p)
@@ -176,8 +177,8 @@ const InvestmentChart: React.FC<schemeDataProps> = ({ schemeData }) => {
       calculateForSip(amount, period)
     } else {
       calculateFutureValue(amount, period)
+      calculateFixedDeposit(period, amount, type)
     }
-    calculateFixedDeposit(period, amount, type)
   }
 
   const calculateFutureValue = (amount: number, period: number) => {
@@ -224,12 +225,24 @@ const InvestmentChart: React.FC<schemeDataProps> = ({ schemeData }) => {
     let monthlyRate: number = cagr / 12 / 100;
     let months: number = period * 12;
     let futureValue: number = 0;
-    futureValue = (amount * (Math.pow(1 + monthlyRate, months) - 1)) / monthlyRate;
+    futureValue = ((amount * (Math.pow(1 + monthlyRate, months) - 1)) / monthlyRate) * (1 + monthlyRate);
 
     setTotalInvestment(months * amount)
     let mainresults: number = futureValue
     let gain: number = mainresults - (amount * months);
     setTotalProfit(Math.round(gain + (months * amount)))
+    recuringDeposite(amount, period)
+  }
+  const recuringDeposite = (amount: number, period: number) => {
+    let monthlyRate: number = 6.55 / 12 / 100;
+    let months: number = period * 12;
+    let futureValue: number = 0;
+    futureValue = ((amount * (Math.pow(1 + monthlyRate, months) - 1)) / monthlyRate) * (1 + monthlyRate);
+
+    setTotalInvestment(months * amount)
+    let mainresults: number = futureValue
+    let gain: number = mainresults - (amount * months);
+    setTotalFixedProfit(Math.round(gain + (months * amount)))
   }
 
   const amountHandler = (
@@ -323,17 +336,17 @@ const InvestmentChart: React.FC<schemeDataProps> = ({ schemeData }) => {
             </div>
           </div>
           <div className="row">
-              <div className="col-6">
-                <p className="mb-0 text-muted ml20">₹{getValueInSort(totalFixedProfit)}</p>
-                <p className="mb-0 text-success ml20">6.55%</p>
-                <p className="text-muted ml20">Fixed Deposit</p>
-              </div>
-              <div className="col-6">
-                <p className="mb-0 text-muted ml20 m-0">₹{getValueInSort(totalProfit)}</p>
-                <p className="mb-0 text-success ml20 m-0">{returnPercentage}%</p>
-                <p className="text-muted ml20 m-0">This Fund</p>
-              </div>
+            <div className="col-6">
+              <p className="mb-0 text-muted ml20">₹{getValueInSort(totalFixedProfit)}</p>
+              <p className="mb-0 text-success ml20">6.55%</p>
+              <p className="text-muted ml20">{selectedInvestmentType==="sip"?"Recurring Deposit":"Fixed Deposit"}</p>
             </div>
+            <div className="col-6">
+              <p className="mb-0 text-muted ml20 m-0">₹{getValueInSort(totalProfit)}</p>
+              <p className="mb-0 text-success ml20 m-0">{returnPercentage}%</p>
+              <p className="text-muted ml20 m-0">This Fund</p>
+            </div>
+          </div>
 
         </div>
       </div>

@@ -499,7 +499,7 @@ const SwitchSchemes: React.FC<SchemesProps> = ({
                     <div className="col-4">
                       <span className="text-secondary">Last 3Y</span>
                       <br />
-                      <span className="value-font2 text-success">{item.threeYearCAGR}%</span>
+                      <span className="value-font2 text-success">{item.threeYearCAGR? item.threeYearCAGR:0}%</span>
                     </div>
                     <div className="col-4">
                       <span className="text-secondary">Min. SIP</span>

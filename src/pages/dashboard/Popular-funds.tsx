@@ -85,9 +85,7 @@ const PopularFunds = () => {
                     <small className="congratesColor">{item.threeYearCAGR}%</small> 3Y Returns{" "}
                     <small>
                       {" "}
-                      Min. SIP <CurrencyRupee />
-                    </small>
-                    {item.minSIPAmt}
+                      Min. SIP <CurrencyRupee /></small>{item.minSIPAmt}
                   </small>
                 </div>
               </div>

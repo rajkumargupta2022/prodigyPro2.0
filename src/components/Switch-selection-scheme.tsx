@@ -1,6 +1,7 @@
 import { imageUrl } from "../services/utils/urls";
 import { Card, Form } from "react-bootstrap";
 import { filteredSchemesKeys } from "../pages/data-interfaces/explore";
+import { getValueInSort } from "../services/calculation/percentageCalculate";
 
 
 interface SwitchSelectionProps {
@@ -75,14 +76,14 @@ const SwitchSelectionScheme: React.FC<SwitchSelectionProps> = ({ filteredSchemes
                     <span className="text-secondary">Min. SIP</span>
                     <br />
                     <span className="value-font2">
-                      ₹1000
+                      ₹{item.minSIPAmt}
                     </span>
                   </div>
 
                   <div className="col-4">
                     <span className="text-secondary">Fund Size</span>
                     <br />
-                    <span className="value-font2">₹26,776.87 Cr</span>
+                    <span className="value-font2">₹{getValueInSort(item.fundSize)}</span>
                   </div>
                 </div>
               </Card.Body>

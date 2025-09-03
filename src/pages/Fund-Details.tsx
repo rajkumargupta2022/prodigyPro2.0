@@ -313,12 +313,16 @@ const FundDetails = () => {
   const handleSwitch = (type: string) => {
     setTransactionType(type)
     setOpenSwitchSchemeModel(true)
+    setShow(false)
   }
   const handleRedmptionModel = () => {
     setOpenRedumptionModel(true)
+    setShow(false)
   }
   const handleSwp = () => {
     setOpenSwpModel(true)
+     setShow(false)
+  
   }
 
   return (

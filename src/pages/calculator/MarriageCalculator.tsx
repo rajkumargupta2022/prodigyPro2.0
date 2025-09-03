@@ -7,8 +7,10 @@ import {
   minAmount,
 } from "../../services/Validated-inputs/validations";
 import { amountHandler,percentageHandler, pmtvalue, presentValue } from "../../services/utils/calculatorsFs";
+import { useNavigate } from "react-router-dom";
 
 const MarriageCalculator = () => {
+  const navigate = useNavigate()
   const [childAge, setChildAge] = useState<number>(8);
   const [marriedAge, setMarriedAge] = useState<number>(18);
   const [requiredAmount, setRequiredAmount] = useState<number>(1000000);
@@ -83,8 +85,7 @@ const MarriageCalculator = () => {
           <div className="col-12 align-items-start mb-3">
             <h4>Marriage Calculator</h4>
             <p className="fs14px">
-              This planner helps you to see the future expenditure which will be
-              incurred at the time of marriage of your children.
+             This calculator helps you to estimate the future expenditure needed at the time of marriage of your child.
             </p>
           </div>
 
@@ -101,7 +102,7 @@ const MarriageCalculator = () => {
                         setValue={setChildAge}
                       />
                       <RangeBar
-                        label={"ChILD WILL GET MARRIED AT THE AGE"}
+                        label={"CHILD WILL GET MARRIED AT THE AGE"}
                         maxLimit={30}
                         value={marriedAge}
                         setValue={setMarriedAge}
@@ -214,7 +215,7 @@ const MarriageCalculator = () => {
                     <h6 className="mt-1">₹{monthlyInvestmentRequired.toLocaleString('en-IN')}</h6>
                   </div>
                 </div>
-                <button type="button" className="btn investBtn mt-2">
+                <button type="button" className="btn investBtn mt-2" onClick={()=>{navigate("/all-mutual-funds")}}>
                   Invest
                 </button>
               </div>

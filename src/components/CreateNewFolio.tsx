@@ -43,7 +43,7 @@ const CreateNewFolio: React.FC<CreateNewFolioProp> = ({
     if (isNewFolio) {
       updatedList[selectedFolioIndex].selectedFolio = {
         folio_number: "",
-        scheme_code:0,
+        scheme_code: 0,
         invested_amt: 0,
         current_value: 0,
         is_recommended: false,
@@ -78,43 +78,49 @@ const CreateNewFolio: React.FC<CreateNewFolioProp> = ({
                 currentSelectedFolio?.folio_number === item.folio_number));
 
           return (
-            <div key={item.folio_number} className="row container-fluid border-bottom">
-              <div className="col col-md-8 round" onClick={() => handleSelectFolio(item)}>
-                <input
-                  type="checkbox"
-                  id={`checkbox-${item.folio_number}`}
-                  checked={isChecked}
-                  readOnly
-                />
-                <label htmlFor={`checkbox-${item.folio_number}`}></label>
-                <small>Folio: {item.folio_number}</small>
-              </div>
+            <div className="p-2">
 
-              {item.is_recommended && (
-                <div className="col col-md-4 text-end fs12px">
-                  <button
-                    type="button"
-                    className="btn scheme-bg rounded-5 logoBlueColor popularButton"
-                  >
-                    Recommended
-                  </button>
+              <div key={item.folio_number} className="row container-fluid">
+                <div className="col col-md-8 round pb-2" onClick={() => handleSelectFolio(item)}>
+                  <input
+                    type="checkbox"
+                    id={`checkbox-${item.folio_number}`}
+                    checked={isChecked}
+                    readOnly
+                  />
+                  <label htmlFor={`checkbox-${item.folio_number}`}></label>
+                  <small>Folio: {item.folio_number}</small>
                 </div>
-              )}
 
-              <div className="col p-0">
-                <small className="fs12px">INVESTED</small>
-                <p className="fs12px text-dark">
-                  <CurrencyRupee />
-                  {item.invested_amt}
-                </p>
+                {item.is_recommended && (
+                  <div className="col col-md-4 text-end fs12px">
+                    <button
+                      type="button"
+                      className="btn scheme-bg rounded-5 logoBlueColor popularButton"
+                    >
+                      Recommended
+                    </button>
+                  </div>
+                )}
               </div>
 
-              <div className="col">
-                <small className="fs12px">Current</small>
-                <p className="fs12px text-dark">
-                  <CurrencyRupee />
-                  {item.current_value}
-                </p>
+              <div className="row py-2 border-bottom">
+
+                <div className="col-6 p-0">
+                  <small className="fs12px">INVESTED</small>
+                  <p className="fs12px text-dark">
+                    <CurrencyRupee />
+                    {item.invested_amt}
+                  </p>
+                </div>
+
+                <div className="col-6">
+                  <small className="fs12px">Current</small>
+                  <p className="fs12px text-dark">
+                    <CurrencyRupee />
+                    {item.current_value}
+                  </p>
+                </div>
               </div>
             </div>
           );

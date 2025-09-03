@@ -48,6 +48,7 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
   const [amount, setAmount] = useState<number>(0)
   const [amountErrorMsg, setAmountErrorMsg] = useState<string>("")
   const [dateErrorMsg, setDateErrorMsg] = useState<string>("")
+  const [minimumDate, setMinimumDate] = useState<Date>()
   const [foliosFetched, setFoliosFetched] = useState(false);
   const [addAmountValues, setAddAmountValues] = useState<addAmountKeys>({
     min: 1000,
@@ -58,7 +59,7 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
   useEffect(() => {
     fetchFolios()
     defaultTransactionType()
-
+    setMinimumDate(daysAdded(31,sipDateList))
  
     const updated = schemeList.map(obj => ({
       ...obj,
@@ -332,11 +333,11 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
   };
 
   const handleSipDeduction = () => {
-
+      setMinimumDate(!schemeList[0].firstSIPToday ?  daysAdded(31, sipDateList): daysAdded(7, sipDateList))
     setSchemeList((prev: any) =>
       prev.map((obj: any, index: number) =>
         index === 0
-          ? { ...obj, firstSIPToday: !obj.firstSIPToday } // Toggle the value
+          ? { ...obj, firstSIPToday: !obj.firstSIPToday,} // Toggle the value
           : obj
       )
     );
@@ -403,7 +404,7 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
                       filterDate={isAllowedDay}
                       placeholderText="DD/MM/YYYY"
                       dateFormat="dd/MM/yyyy"
-                      minDate={daysAdded(31, sipDateList)}
+                      minDate={minimumDate}
                       className="focus_datepickers121"
                     />
                     <div className="prod_view_fund align-self-center">
