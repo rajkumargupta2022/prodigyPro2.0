@@ -132,7 +132,7 @@ const SipCalculator = () => {
       let monthlyRate: number = expectedRateOfReturn / 12 / 100;
     let months: number = investmentPeriod * 12;
     let futureValue: number = 0;
-    futureValue = (monthlySaving * (Math.pow(1 + monthlyRate, months) - 1)) / monthlyRate;
+    futureValue = ((monthlySaving * (Math.pow(1 + monthlyRate, months) - 1)) / monthlyRate)*(1+monthlyRate);
 
     let mainresults: number = Math.round(futureValue);
     let totalSaving: number = monthlySaving * months;

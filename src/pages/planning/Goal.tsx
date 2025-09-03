@@ -22,7 +22,7 @@ const Goal = () => {
 
 
     const { newsipamt, lumpsumRequired ,ir} = await goalCalculater(Number(amount), Number(investmentPeriod));
-
+      
     navigate("/goal-result", {
       state: {
         newsipamt, lumpsumRequired, investmentPeriod,amount, ir,  title: location.state?.title,
