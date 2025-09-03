@@ -13,7 +13,7 @@ interface AdminUserContextType {
   ) => void;
   familySnapShotData: familyDataType[];
   snapshotData: familyDataType;
-  familyPortfolio: (adminData: allFamilyListKeys) => void;
+  familyPortfolio: (adminData: allFamilyListKeys,fromPortfolio?:boolean) => void;
   setSnapshotData: (value: any) => void;
   fetchDetailedPortfolio: (value: string) => void;
   setPortfolioDetailData: (value: any) => void;
@@ -146,7 +146,7 @@ export const AdminUserProvider = ({ children }: { children: ReactNode }) => {
     if (setShow) setShow(false);
   };
 
-  const familyPortfolio = async (adminUser: any) => {
+  const familyPortfolio = async (adminUser: any,fromPortfolio:boolean=false) => {
     if (adminUser?.ucc) {
       const res = await postRequest<familySnapshotResponseType>(endPoints.getFamilySnapshot, {
         ucc: adminUser?.ucc
@@ -157,9 +157,11 @@ export const AdminUserProvider = ({ children }: { children: ReactNode }) => {
           const portfolioType = localStorage.getItem("portfolioType")
           if (res.finalArray[0]?.myPortfolio && portfolioType === "my") {
             setSnapshotData(res.finalArray[0])
-          } else if (!res.finalArray[1]?.myPortfolio && portfolioType === "family") {
+          }
+           else if (!res.finalArray[1]?.myPortfolio && portfolioType === "family" && (!fromPortfolio)) {
             setSnapshotData(res.finalArray[1])
-          } else {
+          }
+           else {
             // Default to first available portfolio if portfolioType doesn't match
             setSnapshotData(res.finalArray[0])
           }

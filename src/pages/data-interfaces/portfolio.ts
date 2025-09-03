@@ -51,7 +51,7 @@ export interface detailPortfolioSchemeType {
   amount?: number,
   folioNumber?: string,
   redemption_units?: number,
-  all_units?: boolean
+  all_units?: boolean,
 }
 export interface detailPortfolioTotalTransactionType {
   TotalMarketValue: number;

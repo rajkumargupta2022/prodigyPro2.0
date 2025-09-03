@@ -95,7 +95,6 @@ const ElssCalculator = () => {
                         <option value="20">20%</option>
                         <option value="30">30%</option>
                       </select>
-                      <small className="fs12px" >Inclusive of all cess</small>
                     </div>
                     <button type="submit" className="customButton px-3 mt-3">
                       Calculate
@@ -109,7 +108,9 @@ const ElssCalculator = () => {
                 <div className="card-body">
                   <h5 className=" fw-normal mb-1">Result</h5>
                   <p className="fs12px mb-0 mt-3">TOTAL TAX SAVED U/S 80(C)</p>
-                  <h6 className="mt-1">₹{totalTaxSaved.toLocaleString("en-IN")}</h6>
+                  <h6 className="mt-1 mb-0">₹{totalTaxSaved.toLocaleString("en-IN")}</h6>
+                      <small className="fs12px" >Inclusive of all cess</small>
+
                 </div>
               </div>
             </div>

@@ -7,7 +7,7 @@ import OrderPlaces from './order-places';
 import { Form } from 'react-bootstrap';
 import { detailPortfolioSchemeType } from '../pages/data-interfaces/portfolio';
 import { endPoints, imageUrl } from '../services/utils/urls';
-import { currentDateInStringNumber, daysAdded } from '../services/dates/dateFormater';
+import { currentDateInStringNumber, dateForApi, daysAdded } from '../services/dates/dateFormater';
 import { amountHandler } from '../services/utils/calculatorsFs';
 import { schemeDeatilDataKeys, swpResponse } from '../pages/data-interfaces/transact';
 import DatePicker from "react-datepicker";
@@ -25,7 +25,7 @@ interface investmetProps {
 
 const SwpConfirmation: React.FC<investmetProps> = ({ show, setShow, swpList, schemeList }) => {
   const [openSuccess, setOpenSuccess] = useState(false)
-  const [amount, setAmount] = useState<number>()
+  const [amount, setAmount] = useState<number>(5000)
   const [frequency, setFrequency] = useState<string>("")
   const [fromDate, setFromDate] = useState<Date>()
   const [toDate, setToDate] = useState<Date>()
@@ -37,8 +37,14 @@ const SwpConfirmation: React.FC<investmetProps> = ({ show, setShow, swpList, sch
 
 
   const handleSwpTransaction = async () => {
+    console.log(schemeList);
+    return
     if (!amount) {
       errorToast("Please enter amount...")
+      return
+    }
+    if (amount<5000) {
+      errorToast("SWP amount can not be less than ₹5000")
       return
     }
     if (!frequency) {
@@ -63,11 +69,12 @@ const SwpConfirmation: React.FC<investmetProps> = ({ show, setShow, swpList, sch
       cartItems: [
         {
           schemeName: swpList[0]?.scheme,
-          NSEProductCode: swpList[0]?.accordSchemeCode,
+          NSEProductCode: swpList[0]?.productcode,
           amount: amount,
           folioNumber: swpList[0]?.folioNumber,
-          from_date: fromDate,
-          to_date: toDate
+          from_date: dateForApi(fromDate),
+          frequency,
+          to_date: dateForApi(toDate)
         }
       ]
     }

@@ -28,7 +28,7 @@ const Portfolio = () => {
   useEffect(() => {
     const pan = localStorage.getItem("pan")
     if (pan) {
-      familyPortfolio(adminUser)
+      familyPortfolio(adminUser,true)
       fetchDetailedPortfolio(adminUser?.ucc)
     }
   }, [])
