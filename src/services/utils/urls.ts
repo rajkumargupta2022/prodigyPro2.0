@@ -33,5 +33,6 @@ export enum endPoints{
    rateRm="content/rate-rm",
    getTermsAndConditions="content/get-terms-condition",
    tempOnboarding="content/temp-onboarding",
-   
+   getSipOrders="orders/get-sip-orders",
+   getSwpOrders="orders/get-swp-orders"
 }

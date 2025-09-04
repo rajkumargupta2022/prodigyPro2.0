@@ -43,101 +43,90 @@ const FutureValueCalculator = () => {
     ].every((value) => value === true);
 
     if (isValidated) {
-    let lumpsums:number = investAmount * Math.pow((1 + rateOfReturn / 100), investmentPeriod);
-    let lumpsum:number = Math.round(lumpsums)
-    setResultInvestment(investAmount);
-    setGains(lumpsum);
-    setResultReturn(rateOfReturn)
-    setResultPeriod(investmentPeriod)
+      let lumpsums: number = investAmount * Math.pow((1 + rateOfReturn / 100), investmentPeriod);
+      let lumpsum: number = Math.round(lumpsums)
+      setResultInvestment(investAmount);
+      setGains(lumpsum);
+      setResultReturn(rateOfReturn)
+      setResultPeriod(investmentPeriod)
     }
   };
-  const valueForGraph = (data: number): number[] => {
-    let graphValue: number[] = [];
-    for (let i = resultPeriod; i > 0; i--) {
-      graphValue.push(Math.round(data / i));
+  // Build correct invested (start-of-year) and gain (this year) arrays
+  const buildYearSeries = (principal: number, rate: number, years: number) => {
+    const invested: number[] = [];
+    const gain: number[] = [];
+    for (let i = 1; i <= years; i++) {
+      const startOfYear = Math.round(principal * Math.pow(1 + rate / 100, i - 1));
+      const endOfYear = Math.round(principal * Math.pow(1 + rate / 100, i));
+      invested.push(startOfYear);
+      gain.push(endOfYear - startOfYear);
     }
+    return { invested, gain };
+  };
 
-    return graphValue;
-  };
+  const { invested: investedArr, gain: gainArr } = buildYearSeries(
+    resultInvestment,
+    resultReturn,
+    resultPeriod
+  );
 
-  const yearInString = (year:number): number[] => {
-    let xAxisArray: number[] = [];
-    for (let i = 1; i <= year; i++) {
-      xAxisArray.push(i);
-    }
-    return xAxisArray;
-  };
+  const yearsArray: number[] = Array.from({ length: resultPeriod }, (_, i) => i + 1);
 
   const state: ChartState = {
     series: [
       {
-        name: "Market Value",
-        data: valueForGraph(gains),
+        name: "Invested Value",
+        data: investedArr,
       },
       {
-        name: "Investment Amount",
-        data: valueForGraph(resultInvestment),
+        name: "Gain",
+        data: gainArr,
       },
     ],
     options: {
-      chart: {
-        type: "bar",
-        height: 1000,
-        stacked: true,
-      },
+      chart: { type: "bar", stacked: true, height: 1000 },
       colors: ["#CCD2FF", "#1A35FE"],
       plotOptions: {
         bar: {
-          borderRadius: 3, // ✅ Adds rounded corners to the top of bars
+          borderRadius: 3,
           borderRadiusApplication: "end",
           horizontal: false,
-          dataLabels: {
-            total: {
-              enabled: false,
-              offsetX: 0,
-              style: {
-                fontSize: "13px",
-                fontWeight: 900,
-              },
-            },
-          },
         },
       },
-      stroke: {
-        width: 0,
-        colors: ["#1A35FE"],
-      },
-      title: {
-        text: "Investment Performance",
-      },
-      dataLabels: {
-        enabled: false, // ✅ Hides the numbers above bars
-      },
-      grid: {
-        show: false, // ✅ Removes the background grey lines
-      },
-      xaxis: {
-        categories: yearInString(resultPeriod),
-        labels: {
-          formatter: function (val: any) {
-            return val;
-          },
-        },
-        axisTicks: {
-          show: false, // ✅ Removes ticks (small lines under labels)
-        },
-      },
-      yaxis: {
-        labels: {
-          show: false, // ✅ Removes vertical numbers (Y-axis labels)
-        },
-      },
+      tooltip: {
+        shared: true,
+        intersect: false,
+        custom: function ({ series, dataPointIndex }: any) {
+          const investedVal = series[0][dataPointIndex] ?? 0;
+          const gain = series[1][dataPointIndex] ?? 0;
+          const current = investedVal + gain;
+          const year = yearsArray[dataPointIndex];
 
-      fill: {
-        opacity: 1,
+          const formatValue = (v: number) => {
+            if (v >= 10000000) return `₹${(v / 10000000).toFixed(2)}Cr`;
+            if (v >= 100000) return `₹${(v / 100000).toFixed(2)}L`;
+            if (v >= 1000) return `₹${(v / 1000).toFixed(2)}K`;
+            return `₹${v.toLocaleString("en-IN")}`;
+          };
+
+          return `
+          <div style="padding:8px; border-radius:8px; border:1px solid #e6e9ff; background:#fff;">
+            <div><b>Year: ${year}</b></div>
+            <div>Current Value: ${formatValue(current)}</div>
+            <div>Invested Value: ${formatValue(investedVal)}</div>
+            <div>Gain: <span style="color:green;">${formatValue(gain)}</span></div>
+          </div>
+        `;
+        },
       },
+      xaxis: { categories: yearsArray, axisTicks: { show: false } },
+      yaxis: { labels: { show: false } },
+      grid: { show: false },
+      dataLabels: { enabled: false },
+      fill: { opacity: 1 },
     },
   };
+
 
   return (
     <>
@@ -231,9 +220,9 @@ const FutureValueCalculator = () => {
                   </div>
                 </div>
               </div>
-              <button type="button" className="btn investBtn mt-2 shadow-lg" onClick={()=>{navigate("/all-mutual-funds")}}>
-                  Invest
-                </button>
+              <button type="button" className="btn investBtn mt-2 shadow-lg" onClick={() => { navigate("/all-mutual-funds") }}>
+                Invest
+              </button>
             </div>
           </div>
         </div>

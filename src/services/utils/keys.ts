@@ -6,6 +6,9 @@ export enum keys{
    redumption="redumption",
    swp="swp",
    stp="stp",
-   STP="STP"
+   STP="STP",
+   rejected="Rejected",
+   pending="Pending",
+   active="Active"
 
 }
