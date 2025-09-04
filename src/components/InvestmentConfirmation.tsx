@@ -74,7 +74,7 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
   }, [show]);
 
   const dateHandle = (e: Date | null) => {
-   
+
     setSchemeList((prev: any) =>
       prev.map((obj: any) => ({
         ...obj,
@@ -155,6 +155,7 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
           return {
             ...item,
             folioList: res.data || [],
+            start_date: item.start_date ?? daysAdded(31, sipDateList), // 👈 keep default if missing
           };
         } catch (error) {
           return {
@@ -466,7 +467,7 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
               </div>}
 
           </div>
-          <Card.Header className='scheme-bg footerRadius px-3 py-2 fs12px'>NAV applicable once amount credited to AMC's bank account</Card.Header>
+          <Card.Header className='scheme-bg footerRadius px-3 py-2 fs12px'>Units allotment is subject to realization of funds in AMC's A/c.</Card.Header>
 
         </Modal.Body>
         <small className="fs12px modal-bg text-center">
