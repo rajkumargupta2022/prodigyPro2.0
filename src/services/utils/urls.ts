@@ -32,5 +32,6 @@ export enum endPoints{
    goalPlanningSchemes="goal-planning/get-goal-planning-schemes",
    rateRm="content/rate-rm",
    getTermsAndConditions="content/get-terms-condition",
-   tempOnboarding="content/temp-onboarding"
+   tempOnboarding="content/temp-onboarding",
+   
 }

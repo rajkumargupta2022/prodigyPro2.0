@@ -29,7 +29,7 @@ function SIP() {
             <span className="failed-badge">Failed</span>
           </div>
         </div>
-        <hr className="fw-light text-secondary" />
+        <hr className="fw-light text-secondary mt-1 mb-1" />
         <div className="d-flex justify-content-between">
           <div>
             <span className="text-secondary">Next SIP Date</span>

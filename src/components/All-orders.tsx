@@ -4,6 +4,7 @@ import SIP from "./Sip";
 import { useState } from "react";
 import STP from "./STP";
 import SWP from "./SWP";
+import { keys } from "../services/utils/keys";
 
 function AllOrders() {
   const [active, setActive] = useState("buy/sell");
@@ -55,7 +56,7 @@ function AllOrders() {
               name="options"
               id="option2"
               autoComplete="off"
-              onChange={() => setActive("sip")}
+              onChange={() => setActive(keys.sip)}
             />
             <label
               className="btn btn-outline-primary declaration-button w-100 paddingLeftRight py-1"
@@ -73,7 +74,7 @@ function AllOrders() {
               name="options"
               id="option3"
               autoComplete="off"
-              onChange={() => setActive("stp")}
+              onChange={() => setActive(keys.stp)}
             />
             <label
               className="btn btn-outline-primary declaration-button w-100 paddingLeftRight py-1"
@@ -91,7 +92,7 @@ function AllOrders() {
               name="options"
               id="option4"
               autoComplete="off"
-              onChange={() => setActive("swp")}
+              onChange={() => setActive(keys.swp)}
             />
             <label
               className="btn btn-outline-primary declaration-button w-100 paddingLeftRight py-1"
