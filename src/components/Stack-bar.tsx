@@ -4,6 +4,7 @@ import ReactApexChart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
 import { schemeDeatilDataKeys } from "../pages/data-interfaces/transact";
 import { getValueInSort } from "../services/calculation/percentageCalculate";
+import { keys } from "../services/utils/keys";
 
 interface ChartState {
   options: ApexOptions;
@@ -27,11 +28,11 @@ const InvestmentChart: React.FC<schemeDataProps> = ({ schemeData }) => {
     series: [
       {
         name: "Invested",
-        data: [totalInvestment, 0, 0, 0, 0, 0, 0, totalInvestment],
+        data: [0,totalInvestment, 0,  0,  0, 0, totalInvestment,0],
       },
       {
         name: "Maturity",
-        data: [totalFixedProfit, 0, 0, 0, 0, 0, 0, totalProfit],
+        data: [0,totalFixedProfit-totalInvestment,  0, 0,  0, 0, totalProfit-totalInvestment,0],
       },
     ],
     options: {
@@ -98,18 +99,19 @@ const InvestmentChart: React.FC<schemeDataProps> = ({ schemeData }) => {
       },
       fill: {
         opacity: 1,
-      }, tooltip: {
+      },
+       tooltip: {
         custom: function ({ series, dataPointIndex }) {
-           console.log("oooo",selectedInvestmentType);
-           
+          console.log("oooo", selectedInvestmentType);
+
           const invested = series[0][dataPointIndex];
           const maturity = series[1][dataPointIndex];
 
           return `
       <div style="padding: 10px; background: white; border-radius: 8px; box-shadow: 0px 0px 10px rgba(0,0,0,0.1); font-family: sans-serif; text-align: center;">
-        <div style="font-size: 14px; color: #011EFE ;">${dataPointIndex ? "This Fund" : selectedInvestmentType==="sip"?"Recurring Deposit":"Fixed Deposit"}</div>
+        <div style="font-size: 14px; color: #011EFE ;">${dataPointIndex ? "This Fund" : selectedInvestmentType === "sip" ? "Recurring Deposit" : "Fixed Deposit"}</div>
         <div style="font-size: 14px; color: #333;">Invested: ₹${invested.toLocaleString('en-IN')}</div>
-        <div style="font-size: 14px; color: #333;">Maturity: ₹${maturity.toLocaleString('en-IN')}</div>
+        <div style="font-size: 14px; color: #333;">Maturity: ₹${(totalInvestment+maturity).toLocaleString('en-IN')}</div>
       </div>
     `;
         }
@@ -119,20 +121,11 @@ const InvestmentChart: React.FC<schemeDataProps> = ({ schemeData }) => {
 
   useEffect(() => {
     setReturnPercentage(schemeData?.threeYearCAGR)
-
+     calculateFixedDeposit(3, investmentAmount, keys.sip)
+    checkInvestmentType(keys.sip, investmentAmount, 3)
   }, [schemeData?.threeYearCAGR]);
-  //  useEffect(() => {
-  //   const style = document.createElement("style");
-  //   style.innerHTML = `
-  //     .apexcharts-series[data\\:series-index="1"] {
-  //       transform: translateX(500px);
-  //     }
-  //   `;
-  //   document.head.appendChild(style);
-
-  //   return () => {
-  //     document.head.removeChild(style);
-  //   };
+  // useEffect(() => {
+   
   // }, []);
 
 
@@ -182,7 +175,8 @@ const InvestmentChart: React.FC<schemeDataProps> = ({ schemeData }) => {
   }
 
   const calculateFutureValue = (amount: number, period: number) => {
-    let cagr: number;
+    if(schemeData?.oneYearCAGR){
+  let cagr: number;
     switch (period) {
       case 1:
         setReturnPercentage(schemeData.oneYearCAGR)
@@ -202,22 +196,24 @@ const InvestmentChart: React.FC<schemeDataProps> = ({ schemeData }) => {
     let lumpsums: number = amount * Math.pow((1 + cagr / 100), period);
     setTotalInvestment(amount)
     setTotalProfit(Math.round(lumpsums))
+    }
+  
   }
 
   const calculateForSip = (amount: number, period: number) => {
     let cagr: number;
     switch (period) {
       case 1:
-        setReturnPercentage(schemeData.oneYearCAGR)
+        setReturnPercentage(schemeData?.oneYearCAGR)
         cagr = schemeData.oneYearCAGR
         break;
       case 3:
-        setReturnPercentage(schemeData.threeYearCAGR)
-        cagr = schemeData.threeYearCAGR
+        setReturnPercentage(schemeData?.threeYearCAGR)
+        cagr = schemeData?.threeYearCAGR
         break;
       case 5:
-        setReturnPercentage(schemeData.fiveYearCAGR)
-        cagr = schemeData.fiveYearCAGR
+        setReturnPercentage(schemeData?.fiveYearCAGR)
+        cagr = schemeData?.fiveYearCAGR
         break;
       default:
         return
@@ -336,10 +332,11 @@ const InvestmentChart: React.FC<schemeDataProps> = ({ schemeData }) => {
             </div>
           </div>
           <div className="row">
-            <div className="col-6">
+            <div className="col-1"></div>
+            <div className="col-4">
               <p className="mb-0 text-muted ml20">₹{getValueInSort(totalFixedProfit)}</p>
               <p className="mb-0 text-success ml20">6.55%</p>
-              <p className="text-muted ml20">{selectedInvestmentType==="sip"?"Recurring Deposit":"Fixed Deposit"}</p>
+              <p className="text-muted ml20">{selectedInvestmentType === "sip" ? "Recurring Deposit" : "Fixed Deposit"}</p>
             </div>
             <div className="col-6">
               <p className="mb-0 text-muted ml20 m-0">₹{getValueInSort(totalProfit)}</p>

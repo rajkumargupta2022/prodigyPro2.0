@@ -10,7 +10,7 @@ import { dateInStringNumber } from "../services/dates/dateFormater";
 
 function SIP() {
   const navigate = useNavigate();
-  const [limit, setLimit] = useState<number>(50);
+  const [limit, setLimit] = useState<number>(20);
   const [page, setPage] = useState<number>(1);
   const [sipListData, setSipListData] = useState<sipOrderKeys[]>([]);
   const [totalRecords, setTotalRecords] = useState<number>(0);
@@ -38,6 +38,10 @@ function SIP() {
   const totalPages = Math.ceil(totalRecords / limit);
   const startRecord = (page - 1) * limit + 1;
   const endRecord = Math.min(page * limit, totalRecords);
+
+  const detailPage = (item:sipOrderKeys)=>{
+        navigate("/sip-order",{state:item})
+  }
 
   return (
     <>
@@ -102,7 +106,7 @@ function SIP() {
           <div
             key={item.folio_number + item.scheme_name}
             className="p-4 shadow-sm bg-white border-0 rounded-4 mb-3"
-            onClick={() => navigate("/sip-order")}
+            onClick={()=>detailPage(item)}
           >
             <div className="row justify-content-between">
               <div className="col-lg-8 col-md-8 col-12 py-2">
@@ -122,7 +126,7 @@ function SIP() {
                 </div>
               </div>
            <div className="col-lg-4 col-md-4 col-12 py-2 text-md-end text-start">
-               {item.status===keys.rejected?<span className="failed-badge">Failed</span>:item.status===keys.pending?<span className="pending-badge">Pending</span>:<span className="success-badge">Active</span>}
+               {item.status===keys.failed?<span className="failed-badge">Failed</span>:item.status===keys.pending?<span className="pending-badge">Pending</span>:<span className="success-badge">Active</span>}
                
              </div>
 

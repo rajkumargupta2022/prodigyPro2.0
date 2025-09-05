@@ -9,6 +9,7 @@ export enum keys{
    STP="STP",
    rejected="Rejected",
    pending="Pending",
-   active="Active"
+   active="Active",
+   failed="Failed"
 
 }

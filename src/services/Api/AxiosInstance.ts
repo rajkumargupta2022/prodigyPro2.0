@@ -1,6 +1,6 @@
-import axios from "axios"
-import { baseUrl } from "../utils/urls"
-import { showLoader,hideLoader } from "../Loader/LoaderController";
+import axios from "axios";
+import { baseUrl } from "../utils/urls";
+import { showLoader, hideLoader } from "../Loader/LoaderController";
 
 const AxiosInstance = axios.create({
   baseURL: baseUrl,
@@ -8,15 +8,15 @@ const AxiosInstance = axios.create({
 
 AxiosInstance.interceptors.request.use(
   (config) => {
-    showLoader()
-    const token = localStorage.getItem('token'); // Use your token key here
+    showLoader();
+    const token = localStorage.getItem("token"); // Use your token key here
     if (token) {
-      config.headers['Authorization'] = `Bearer ${token}`;
+      config.headers["Authorization"] = `Bearer ${token}`;
     }
     return config;
   },
   (error) => {
-    hideLoader()
+    hideLoader();
     return Promise.reject(error);
   }
 );
@@ -33,4 +33,4 @@ AxiosInstance.interceptors.response.use(
   }
 );
 
-export default AxiosInstance; 
+export default AxiosInstance;

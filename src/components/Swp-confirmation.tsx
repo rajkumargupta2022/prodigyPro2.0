@@ -32,18 +32,21 @@ const SwpConfirmation: React.FC<investmetProps> = ({ show, setShow, swpList, sch
   const [successDate, setSuccessDate] = useState<any[]>([])
 
 
- 
 
+  // useEffect(() => {
+  //   setFromDate(daysAdded(31, schemeList[0]?.swpDateList))
+  //   setToDate(daysAdded(365, schemeList[0]?.swpDateList))
+  //   setFrequency(schemeList[0]?.swpFrequency[0]??"")
+  // }, [])
 
 
   const handleSwpTransaction = async () => {
-    console.log(schemeList);
-    return
+
     if (!amount) {
       errorToast("Please enter amount...")
       return
     }
-    if (amount<5000) {
+    if (amount < 5000) {
       errorToast("SWP amount can not be less than ₹5000")
       return
     }
@@ -60,7 +63,7 @@ const SwpConfirmation: React.FC<investmetProps> = ({ show, setShow, swpList, sch
       return
     }
     const adminUser = fetchAdminUser()
-    if(!adminUser){
+    if (!adminUser) {
       errorToast("Something went wrong..")
       return
     }
@@ -69,9 +72,9 @@ const SwpConfirmation: React.FC<investmetProps> = ({ show, setShow, swpList, sch
       cartItems: [
         {
           schemeName: swpList[0]?.scheme,
-          NSEProductCode: swpList[0]?.productcode,
+          NSEProductCode: schemeList[0]?.nseProductCode,
           amount: amount,
-          folioNumber: swpList[0]?.folioNumber,
+          folioNumber: swpList[0]?.folio,
           from_date: dateForApi(fromDate),
           frequency,
           to_date: dateForApi(toDate)
@@ -93,14 +96,14 @@ const SwpConfirmation: React.FC<investmetProps> = ({ show, setShow, swpList, sch
       errorToast(err)
     }
   }
-  function addDays(date: Date, days: number) {
-    let result = new Date(date); // clone so original isn't changed
-    result.setDate(result.getDate() + days);
-    setToDate(result)
-  }
+  // function addDays(date: Date, days: number) {
+  //   let result = new Date(date); // clone so original isn't changed
+  //   result.setDate(result.getDate() + days);
+  //   setToDate(result)
+  // }
   const handleFromDate = (e: any) => {
     setFromDate(e)
-    addDays(e, 1)
+    // addDays(e, 1)
   }
   const handleToDate = (e: any) => {
     setToDate(e)
@@ -178,7 +181,7 @@ const SwpConfirmation: React.FC<investmetProps> = ({ show, setShow, swpList, sch
                   filterDate={isAllowedDay}
                   placeholderText="DD/MM/YYYY"
                   dateFormat="dd/MM/yyyy"
-                  minDate={daysAdded(7,schemeList[0]?.swpDateList)}
+                  minDate={daysAdded(31, schemeList[0]?.swpDateList)}
                   className="form-control"
                 />
               </div>
@@ -190,7 +193,7 @@ const SwpConfirmation: React.FC<investmetProps> = ({ show, setShow, swpList, sch
                   filterDate={isAllowedDay}
                   placeholderText="DD/MM/YYYY"
                   dateFormat="dd/MM/yyyy"
-                  minDate={daysAdded(8,schemeList[0]?.swpDateList)}
+                  minDate={daysAdded(365, schemeList[0]?.swpDateList)}
                   className="form-control"
                 />
               </div>

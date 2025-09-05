@@ -1,7 +1,52 @@
 import { ArrowLeft } from "react-bootstrap-icons";
 import HDFC from "../assets/img/icons/hdfc.svg";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { fetchAdminUser } from "../services/user/adminUser";
+import { postRequest } from "../services/Api/HandleApi";
+import { endPoints } from "../services/utils/urls";
+import { sipOrderDetailKey, sipOrderDetailRes } from "../pages/data-interfaces/orders";
+
 
 function SIPOrderDetails({ backButton }: { backButton: any }) {
+  const location = useLocation()
+  const navigate = useNavigate()
+  const [page,setPage] = useState<number>(1)
+  const [limit,setLimit] = useState<number>(10)
+  const [orderDetail , setOrderDetail] = useState<any>()
+  useEffect(() => {
+    if (location.state?.accord_amc_code) {
+      fetchOrderDetails()
+    } else {
+      navigate("/dashboard")
+    }
+  }, [])
+
+  const fetchOrderDetails =async () => {
+    const adminUser  =  fetchAdminUser()
+    if(adminUser?.ucc){
+      let data = location.state
+try {
+      const reqBody = {
+        ucc: adminUser.ucc,
+        transaction_id: data.transaction_id,
+        folio_number: data.folio_number,
+        accord_product_code: data.accord_product_code,
+        page,
+        limit
+      }
+      const res = await postRequest<sipOrderDetailRes>(endPoints.getSipOrdersDetails,reqBody)
+      if(res.success){
+        setOrderDetail(res.data)
+      }
+    } catch (err) {
+     setOrderDetail({})
+    }
+    }
+    
+  }
+
+
   return (
     <main className="col-md-9 ms-sm-auto col-lg-9 px-md-4 py-4">
       <h2>
@@ -45,7 +90,7 @@ function SIPOrderDetails({ backButton }: { backButton: any }) {
 
       <div
         className="p-4 shadow-sm bg-white border-0 rounded-4 mb-2"
-        // onClick={() => activeInactive("order-timeline")}
+      // onClick={() => activeInactive("order-timeline")}
       >
         <div className="d-flex justify-content-between align-items-center">
           <div>
@@ -80,7 +125,7 @@ function SIPOrderDetails({ backButton }: { backButton: any }) {
 
       <div
         className="p-4 shadow-sm bg-white border-0 rounded-4 mb-2"
-        // onClick={() => activeInactive("order-timeline")}
+      // onClick={() => activeInactive("order-timeline")}
       >
         <div className="d-flex justify-content-between align-items-center">
           <div>
@@ -115,7 +160,7 @@ function SIPOrderDetails({ backButton }: { backButton: any }) {
 
       <div
         className="p-4 shadow-sm bg-white border-0 rounded-4 mb-2"
-        // onClick={() => activeInactive("order-timeline")}
+      // onClick={() => activeInactive("order-timeline")}
       >
         <div className="d-flex justify-content-between align-items-center">
           <div>

@@ -122,7 +122,7 @@ function SWP() {
                 </div>
               </div>
               <div className="col-lg-4 col-md-4 col-12 py-2 text-md-end text-start">
-                {item.status === keys.rejected ? (
+                {item.status === keys.failed ? (
                   <span className="failed-badge">Failed</span>
                 ) : item.status === keys.pending ? (
                   <span className="pending-badge">Pending</span>

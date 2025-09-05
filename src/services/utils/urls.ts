@@ -34,5 +34,6 @@ export enum endPoints{
    getTermsAndConditions="content/get-terms-condition",
    tempOnboarding="content/temp-onboarding",
    getSipOrders="orders/get-sip-orders",
-   getSwpOrders="orders/get-swp-orders"
+   getSwpOrders="orders/get-swp-orders",
+   getSipOrdersDetails="orders/get-sip-orders-details"
 }
