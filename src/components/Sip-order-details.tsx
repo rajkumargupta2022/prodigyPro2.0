@@ -6,6 +6,8 @@ import { fetchAdminUser } from "../services/user/adminUser";
 import { postRequest } from "../services/Api/HandleApi";
 import { endPoints } from "../services/utils/urls";
 import { sipOrderDetailKey, sipOrderDetailRes } from "../pages/data-interfaces/orders";
+import { dateInStringNumber } from "../services/dates/dateFormater";
+import { getValueInSort } from "../services/calculation/percentageCalculate";
 
 
 function SIPOrderDetails({ backButton }: { backButton: any }) {
@@ -13,7 +15,7 @@ function SIPOrderDetails({ backButton }: { backButton: any }) {
   const navigate = useNavigate()
   const [page,setPage] = useState<number>(1)
   const [limit,setLimit] = useState<number>(10)
-  const [orderDetail , setOrderDetail] = useState<any>()
+  const [orderDetail , setOrderDetail] = useState<sipOrderDetailKey| null>(null);
   useEffect(() => {
     if (location.state?.accord_amc_code) {
       fetchOrderDetails()
@@ -40,7 +42,7 @@ try {
         setOrderDetail(res.data)
       }
     } catch (err) {
-     setOrderDetail({})
+     setOrderDetail(null)
     }
     }
     
@@ -68,11 +70,11 @@ try {
         </div>
         <div className="d-flex justify-content-between mb-2">
           <span className="text-secondary">MONTHLY SIP</span>
-          <span className="value-font2">₹5,999.9</span>
+          <span className="value-font2">₹{orderDetail?.installment_amount}</span>
         </div>
         <div className="d-flex justify-content-between mb-2">
           <span className="text-secondary">SIP INVESTED</span>
-          <span className="value-font2">₹80,000</span>
+          <span className="value-font2">₹{orderDetail?.total_invested}</span>
         </div>
         <div className="d-flex justify-content-between mb-2">
           <span className="text-secondary">LINKED BANK ACCOUNT</span>
@@ -80,21 +82,21 @@ try {
         </div>
         <div className="d-flex justify-content-between mb-2">
           <span className="text-secondary">SIP REGISTERED ON</span>
-          <span className="value-font2">14 jan 2025</span>
+          <span className="value-font2">{dateInStringNumber(orderDetail?.sip_start_date)}</span>
         </div>
         <div className="d-flex justify-content-between mb-2">
           <span className="text-secondary">FOLIO NUMBER</span>
-          <span className="value-font2">8685425241</span>
+          <span className="value-font2">{orderDetail?.folio_number}</span>
         </div>
       </div>
-
-      <div
+    {orderDetail?.installments?.length ?? 0 > 0 ? orderDetail?.installments.map((item)=>{
+       return <div
         className="p-4 shadow-sm bg-white border-0 rounded-4 mb-2"
       // onClick={() => activeInactive("order-timeline")}
       >
         <div className="d-flex justify-content-between align-items-center">
           <div>
-            <h6 style={{ margin: 0 }}>3rd SIP Instalment</h6>
+            <h6 style={{ margin: 0 }}>{item.installment}rd SIP Instalment</h6>
           </div>
           <span className="success-badge">Sucessful</span>
         </div>
@@ -104,94 +106,29 @@ try {
           <div>
             <span className="text-secondary">SIP Date</span>
             <br />
-            <span className="value-font2">14 Feb 2025</span>
+            <span className="value-font2">{dateInStringNumber(item.installment_date)}</span>
           </div>
 
           <div>
             <span className="text-secondary">Units</span>
             <br />
             <span className="value-font2">
-              11.62 <span className="fw-light">(NAV:₹84.04)</span>
+              {item.units_allocated} <span className="fw-light">(NAV:₹84.04)</span>
             </span>
           </div>
 
           <div>
             <span className="text-secondary">Amount</span>
             <br />
-            <span className="value-font2">₹4.5K</span>
+            <span className="value-font2">₹{getValueInSort(Number(item?.installment_amount))}</span>
           </div>
         </div>
       </div>
+    })
+      
+:"" }
+    
 
-      <div
-        className="p-4 shadow-sm bg-white border-0 rounded-4 mb-2"
-      // onClick={() => activeInactive("order-timeline")}
-      >
-        <div className="d-flex justify-content-between align-items-center">
-          <div>
-            <h6 style={{ margin: 0 }}>2nd SIP Instalment</h6>
-          </div>
-          <span className="success-badge">Sucessful</span>
-        </div>
-        <hr className="fw-light text-secondary" />
-
-        <div className="d-flex justify-content-between">
-          <div>
-            <span className="text-secondary">SIP Date</span>
-            <br />
-            <span className="value-font2">14 Feb 2025</span>
-          </div>
-
-          <div>
-            <span className="text-secondary">Units</span>
-            <br />
-            <span className="value-font2">
-              11.62 <span className="fw-light">(NAV:₹84.04)</span>
-            </span>
-          </div>
-
-          <div>
-            <span className="text-secondary">Amount</span>
-            <br />
-            <span className="value-font2">₹4.5K</span>
-          </div>
-        </div>
-      </div>
-
-      <div
-        className="p-4 shadow-sm bg-white border-0 rounded-4 mb-2"
-      // onClick={() => activeInactive("order-timeline")}
-      >
-        <div className="d-flex justify-content-between align-items-center">
-          <div>
-            <h6 style={{ margin: 0 }}>1st SIP Instalment</h6>
-          </div>
-          <span className="success-badge">Sucessful</span>
-        </div>
-        <hr className="fw-light text-secondary" />
-
-        <div className="d-flex justify-content-between">
-          <div>
-            <span className="text-secondary">SIP Date</span>
-            <br />
-            <span className="value-font2">14 Feb 2025</span>
-          </div>
-
-          <div>
-            <span className="text-secondary">Units</span>
-            <br />
-            <span className="value-font2">
-              11.62 <span className="fw-light">(NAV:₹84.04)</span>
-            </span>
-          </div>
-
-          <div>
-            <span className="text-secondary">Amount</span>
-            <br />
-            <span className="value-font2">₹4.5K</span>
-          </div>
-        </div>
-      </div>
     </main>
   );
 }
