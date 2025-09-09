@@ -13,3 +13,15 @@ export enum keys{
    failed="Failed"
 
 }
+export enum riskKey{
+   aggressive=3,
+   moderate=2,
+   conservative=1
+}
+export enum years{
+   oneYear=1,
+   threeYear=3,
+   fiveYear=5,
+   eightYear=8,
+   tenYear=10,
+}

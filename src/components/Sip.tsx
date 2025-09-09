@@ -22,7 +22,7 @@ function SIP() {
   const fetchOrderData = async () => {
     const adminUser = fetchAdminUser();
     if (adminUser?.ucc) {
-      const reqBody = { ucc: adminUser?.ucc, page, limit };
+      const reqBody = { ucc: "5013733558", page, limit };
       try {
         const res = await postRequest<sipOrderRes>(endPoints.getSipOrders, reqBody);
         if (res.data) {

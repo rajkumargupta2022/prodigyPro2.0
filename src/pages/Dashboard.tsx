@@ -13,6 +13,7 @@ import { fetchAdminUser } from "../services/user/adminUser";
 import { useAdminUser } from "../context/AdminContext";
 import SwitchPortfolio from "./dashboard/Switch-portfolio";
 import Footer from "../components/Footer";
+import OurServices from "./dashboard/Our-services";
 
 
 
@@ -74,7 +75,7 @@ const Dashboard = () => {
                   </div>
                 </Card.Body>
               </Card>
-              {/* <OurServices /> */}
+              <OurServices />
               <GoalPlanning />
               <PopularFunds />
             </div>

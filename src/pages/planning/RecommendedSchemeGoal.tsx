@@ -9,7 +9,6 @@ const RecommendedSchemeGoal = () => {
     <>
       <NavBar />
 
-     
       <div className="container pt-2">
         <div className="personal_form_container">
           <div className="row">

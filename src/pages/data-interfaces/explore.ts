@@ -43,10 +43,10 @@ export interface filteredSchemeResponse {
 }
 export interface filteredSchemesKeys {
   // s_name: string;
-  accordAMCCode:number;
+  accordAMCCode: number;
   // ISIN: string;
-  equityType:string,
-  fundSize:number;
+  equityType: string;
+  fundSize: number;
   accordSchemeCode?: number;
   PURCHASE_ALLOWED: string;
   SIP_ALLOWED: string;
@@ -59,14 +59,27 @@ export interface filteredSchemesKeys {
   REINVEST_TAG: string;
   oneyrret: number;
   twoyearret: number;
-  minSIPAmt:string;
-  threeYearCAGR:number;
-  threeyearret: number|null;
-  fouryearret: number|null;
-  fiveyearret: number|null;
-  sevenyearret: number|null;
-  tenyearret: number|null;
-  fifteenyearret: number|null;
- 
-
+  minSIPAmt: string;
+  threeYearCAGR: number;
+  threeyearret: number | null;
+  fouryearret: number | null;
+  fiveyearret: number | null;
+  sevenyearret: number | null;
+  tenyearret: number | null;
+  fifteenyearret: number | null;
+}
+export interface riskDurationRes {
+  success: boolean;
+  msg: string;
+  length: number;
+  dataDuration: durationKeys[];
+  dataRisk: riskKeys[];
+}
+export interface durationKeys {
+  duration: string;
+  durationValues: number;
+}
+export interface riskKeys {
+  risk: number;
+  Constellation: string;
 }

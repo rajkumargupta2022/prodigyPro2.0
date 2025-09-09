@@ -1,16 +1,44 @@
 import NavBar from "../components/Navbar";
 import { ChevronRight } from "react-bootstrap-icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SchemeDetails from "../components/SchemeDetails";
 import { useNavigate } from "react-router-dom";
 import RecomendedSchemes from "../components/Recomended-schemes";
+import { riskKey, years } from "../services/utils/keys";
+import { endPoints } from "../services/utils/urls";
+import { getRequest, postRequest } from "../services/Api/HandleApi";
+import { durationKeys, riskDurationRes, riskKeys } from "./data-interfaces/explore";
 
 const RecommendedFunds = () => {
   const navigate = useNavigate()
   const [openSchemeDetail, setOpenSchemeDetail] = useState<boolean>(false)
-  // const handleSchemeDetail = () => {
-  //   setOpenSchemeDetail(true)
-  // }
+  const [selectedRiskType, setSelectedRiskType] = useState<number>()
+  const [selectedYear, setSelectedYear] = useState<number>()
+  const [years, setYears] = useState<riskKeys[]>()
+  const [duration, setDuration] = useState<durationKeys[]>()
+
+  useEffect(() => {
+    fetchDurationAndRisk()
+  }, [])
+  const handleRisk = (type: number) => {
+    setSelectedRiskType(type)
+  }
+  const handleYears = (year: number) => {
+    setSelectedYear(year)
+  }
+  const fetchDurationAndRisk = async () => {
+    try {
+    const res = await  getRequest<riskDurationRes>(endPoints.getRightSchemeDurationRisk)
+
+        setDuration(res.dataDuration)
+        setYears(res.dataRisk)
+        setSelectedRiskType(res.dataRisk[1].risk)
+        setSelectedYear(res.dataDuration[3].durationValues)
+     
+    } catch (err) {
+
+    }
+  }
   return (
     <>
       <NavBar />
@@ -20,7 +48,7 @@ const RecommendedFunds = () => {
 
         <div className="personal_form_container">
           <div className="d-flex my-3">
-            <h6 className="logoBlueColor crPointer" onClick={()=>navigate("/dashboard")}>Home <small className="greyColor"> <ChevronRight className="fs14px" /> Recommended Funds </small> </h6>
+            <h6 className="logoBlueColor crPointer" onClick={() => navigate("/dashboard")}>Home <small className="greyColor"> <ChevronRight className="fs14px" /> Recommended Funds </small> </h6>
           </div>
           <div className="row">
             <div className=" col">
@@ -32,9 +60,10 @@ const RecommendedFunds = () => {
             <div className=" col">
               <small className="fs14px lightBlack">Risk Profile</small>
               <div className="">
-                <button type="button" className="btn riskProfileBtn">Conservative</button>
-                <button type="button" className="btn riskProfileBtn mx-1">Moderate</button>
-                <button type="button" className="btn riskProfileBtn mx-1">Aggressive</button>
+                {years?.map((item)=>{
+                  return   <button type="button" className={`btn ms-1 ${item.risk === selectedRiskType ? "selectedBtn" : "riskProfileBtn"}`} onClick={() => handleRisk(item.risk)}>{item.Constellation}</button>
+                })}
+                
               </div>
             </div>
           </div>
@@ -43,18 +72,17 @@ const RecommendedFunds = () => {
             <div className=" col">
               <small className="fs14px lightBlack">Investment horizon</small>
               <div className="">
-                <button type="button" className="btn riskProfileBtn">Upto 1 Yr</button>
-                <button type="button" className="btn riskProfileBtn mx-1">Upto 3 Yrs</button>
-                <button type="button" className="btn riskProfileBtn mx-1">Upto 5Yrs</button>
-                <button type="button" className="btn riskProfileBtn mx-1">Upto 8 Yrs</button>
-                <button type="button" className="btn riskProfileBtn mx-1">Upto 10 Yrs</button>
+                   {duration?.map((item)=>{
+               return <button type="button" className={`btn mx-1  ${item.durationValues === selectedYear ? "selectedBtn" : "riskProfileBtn"}`} onClick={() => handleYears(item.durationValues)}> {item.duration}</button>
+                })}
+             
               </div>
             </div>
           </div>
 
         </div>
       </div>
-        <RecomendedSchemes  from={"emergency"}/>
+      <RecomendedSchemes from={"Recomended"} url={endPoints.getRecommendedSchemes} risk={selectedRiskType} duration={selectedYear} />
       <SchemeDetails show={openSchemeDetail} setShow={setOpenSchemeDetail} />
     </>
   );
