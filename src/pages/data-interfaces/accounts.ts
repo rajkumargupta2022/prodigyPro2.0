@@ -90,3 +90,8 @@ export interface PrivacyPolicyResponse {
   success: boolean;
   data: PrivacyPolicy;
 }
+
+export interface SaveRiskProfileResponse{
+  success: boolean;
+  msg: string;
+}
