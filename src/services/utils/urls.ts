@@ -37,5 +37,7 @@ export enum endPoints{
    getSwpOrders="orders/get-swp-orders",
    getSipOrdersDetails="orders/get-sip-orders-details",
    getRecommendedSchemes="product/get-recommended-schemes",
-   getRightSchemeDurationRisk="product/get-right-scheme-duration-risk"
+   getRightSchemeDurationRisk="product/get-right-scheme-duration-risk",
+   saveRiskProfile ="user/save-risk-profile",
+   getRiskProfile="user/get-risk-profile"
 }

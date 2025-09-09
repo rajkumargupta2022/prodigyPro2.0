@@ -4,9 +4,8 @@ import { useEffect, useState } from "react";
 import SchemeDetails from "../components/SchemeDetails";
 import { useNavigate } from "react-router-dom";
 import RecomendedSchemes from "../components/Recomended-schemes";
-import { riskKey, years } from "../services/utils/keys";
 import { endPoints } from "../services/utils/urls";
-import { getRequest, postRequest } from "../services/Api/HandleApi";
+import { getRequest } from "../services/Api/HandleApi";
 import { durationKeys, riskDurationRes, riskKeys } from "./data-interfaces/explore";
 
 const RecommendedFunds = () => {
