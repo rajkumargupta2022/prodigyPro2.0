@@ -4,6 +4,7 @@ import Footer from "../components/Footer";
 import { useNavigate } from "react-router-dom";
 
 import RecomendedSchemes from "../components/Recomended-schemes";
+import { endPoints } from "../services/utils/urls";
 
 const EmergencyFund = () => {
   const navigate = useNavigate()
@@ -27,7 +28,7 @@ const EmergencyFund = () => {
           </div>
         </div>
       </div>
-      <RecomendedSchemes  from={"emergency"}/>
+      <RecomendedSchemes  from={"Emergency"} url={endPoints.getEmergencyFunds}/>
 
       <Footer />
     </>

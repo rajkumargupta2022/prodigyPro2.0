@@ -52,10 +52,7 @@ const BankMandate: React.FC<bankMandate> = ({ show, setShow, schemeList, setSche
 
       setMandateList(res.mandates);
       setSelectedUrn(res.mandates[0]?.umrn_no);
-    //  console.log("res.mandates[0]",res.mandates[0]);
-     
-
-
+    
       let update = schemeList.map((scheme: any) => (
         {
           ...scheme,

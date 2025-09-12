@@ -5,7 +5,7 @@ import InvetmentConfirmation from "../components/InvestmentConfirmation";
 import { endPoints, imageUrl } from "../services/utils/urls";
 import { errorToast } from "../services/utils/toast";
 import { schemeDeatilDataKeys } from "../pages/data-interfaces/transact";
-import { postRequest } from "../services/Api/HandleApi";
+import { getRequest, postRequest } from "../services/Api/HandleApi";
 
 interface pageProps {
   from: string,
@@ -28,10 +28,40 @@ const RecomendedSchemes: React.FC<pageProps> = ({ from, url = endPoints.goalPlan
   useEffect(() => {
     if (url === endPoints.getRecommendedSchemes) {
       fetchRecomendedSchemeList()
+    } else if (url === endPoints.getEmergencyFunds) {
+      fetchEmergencyScheme()
+    }else if (url === endPoints.getTaxPlanningScheme) {
+      fetchTaxSavingScheme()
     } else {
       fetchSchemeList()
     }
-  }, [risk,duration])
+  }, [risk, duration])
+
+  const fetchTaxSavingScheme = async () => {
+    try {
+      const res = await getRequest<any>(endPoints.getTaxPlanningScheme)
+      if (res) {
+        setSchemeList(res.data)
+        setSelectedSchemeList(res.data)
+      }
+    } catch (err) {
+      console.log(err);
+
+    }
+  }
+  const fetchEmergencyScheme = async () => {
+    try {
+      const res = await getRequest<any>(endPoints.getEmergencyFunds)
+      if (res) {
+        setSchemeList(res.data)
+        setSelectedSchemeList(res.data)
+      }
+    } catch (err) {
+      console.log(err);
+
+    }
+  }
+
   const handleInvestmentConfirmation = () => {
     if (selectedSchemeList.length <= 0) {
       errorToast("Plaese select schemes..")
@@ -44,16 +74,16 @@ const RecomendedSchemes: React.FC<pageProps> = ({ from, url = endPoints.goalPlan
     const sipIntersectionData = selectedSchemeList?.map(scheme => scheme.sipDateList)
       .reduce((acc, curr) => acc.filter(date => curr.includes(date)))
     setSipDateList(sipIntersectionData)
-if (url === endPoints.goalPlanningSchemes) {
-    setSelectedSchemeList((prev: any) =>
-      prev.map((obj: any) => {
-        return {
-          ...obj,
-          totalAmount: location.state.newsipamt,
-        };
-      })
-    );
-  }
+    if (url === endPoints.goalPlanningSchemes) {
+      setSelectedSchemeList((prev: any) =>
+        prev.map((obj: any) => {
+          return {
+            ...obj,
+            totalAmount: location.state.newsipamt,
+          };
+        })
+      );
+    }
   }
 
   const handleSelectedScheme = (item: any) => {

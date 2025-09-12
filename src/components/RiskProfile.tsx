@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom"
 import { fetchAdminUser } from "../services/user/adminUser"
 import { postRequest } from "../services/Api/HandleApi"
 import { endPoints } from "../services/utils/urls"
-import { successToast } from "../services/utils/toast"
 
 
 

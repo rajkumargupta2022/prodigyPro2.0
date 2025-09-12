@@ -39,5 +39,9 @@ export enum endPoints{
    getRecommendedSchemes="product/get-recommended-schemes",
    getRightSchemeDurationRisk="product/get-right-scheme-duration-risk",
    saveRiskProfile ="user/save-risk-profile",
-   getRiskProfile="user/get-risk-profile"
+   getRiskProfile="user/get-risk-profile",
+   getEmergencyFunds="product/get-emergency-funds",
+   getTaxPlanningScheme="product/get-tax-planning-scheme",
+   getUserBanks="user/get-user-banks",
+   getUserMandates="user/get-user-mandates"
 }

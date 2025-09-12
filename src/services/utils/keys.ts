@@ -25,3 +25,7 @@ export enum years{
    eightYear=8,
    tenYear=10,
 }
+export enum bankType{
+   SB="Saving Account",
+   CB="Current Account"
+}

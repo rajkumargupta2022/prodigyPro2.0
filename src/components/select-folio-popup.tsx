@@ -24,10 +24,11 @@ const SelectFolioPopup: React.FC<SchemeDetailsProps> = ({ show, setShow, schemeL
   const [selectedFolioIndex,setSelectedFolioIndex] = useState<number>(0)
    const [successData,setSuccessData] = useState<sipPurchaseRedemptionKey[]>([])
    const [tempSchemeList , setTempSchemeList]  = useState<schemeDeatilDataKeys[]>([])
-
+   const sip =isSipTransaction
   useEffect(() => {
-    defaultSelectFolio()
+    console.log("siiii",sip);
     
+    defaultSelectFolio()
   }, [show])
   const defaultSelectFolio = () => {
     
@@ -40,17 +41,17 @@ const SelectFolioPopup: React.FC<SchemeDetailsProps> = ({ show, setShow, schemeL
 
 
   const handleMandate = () => {
-      
-    if (isSipTransaction) {
+           console.log("siiii222",sip);
+    if (sip) {
       setOpenBankMandate(true);
       setShow(false);
     } else {
       finalTransaction(tempSchemeList,"purchase",setSuccessData,false).then((res)=>{
         console.log(res);
-        
-      })
-      setOpenSuccess(true)
+        setOpenSuccess(true)
       setShow(false);
+      })
+      
     }
   }
   const handleFolioSelection = (data: foliosKeys[] = [],index:number) => {

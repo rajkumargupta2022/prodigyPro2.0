@@ -1,133 +1,82 @@
-import HDFC from "../assets/img/icons/hdfc.svg";
-import {useNavigate} from "react-router-dom"
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom"
+import { fetchAdminUser } from "../services/user/adminUser";
+import { postRequest } from "../services/Api/HandleApi";
+import { bankListKeys, bankListRes } from "../pages/data-interfaces/bank-and-mandate";
+import { endPoints } from "../services/utils/urls";
+import { bankType } from "../services/utils/keys";
 
 
-function BankList({ activeInactive }: { activeInactive: any }) {
-  
+function BankList() {
+
   const navigate = useNavigate()
+  const [bankList, setBankList] = useState<bankListKeys[]>([])
 
+  useEffect(() => {
+    fetchBankList()
+  }, [])
+
+  const fetchBankList = async () => {
+    const adminUser = fetchAdminUser()
+    if (adminUser?.ucc) {
+      let arr:bankListKeys[]=[];
+      try {
+        const res = await postRequest<bankListRes>(endPoints.getUserBanks, { ucc: adminUser.ucc })
+        if (res) {
+          res?.data.forEach(item=>{
+            item.primary? arr.unshift(item):arr.push(item)
+          })
+          setBankList(arr)
+        }
+
+      } catch (err) {
+        console.log(err);
+
+      }
+    }
+
+  }
+
+  const detailPage = (account_number:string)=>{
+     navigate("/bank-details-show",{state:account_number})
+  }
   return (
     <>
-      <div
-        className="p-4 shadow-sm bg-white border-0 rounded-4 mb-2"
-        onClick={() => navigate("/bank-details-show")}
-        
-      >
-        <div className="row justify-content-between">
-          <div className="col-lg-8 col-md-8 col-12 py-2">
-            <div className="d-flex">
-              <img className="align-self-start" src={HDFC} alt="Image not found" />
-              <div className="ms-2" style={{ flex: 1 }}>
-                <h6 style={{ margin: 0 }}>State Bank of India</h6>
-                <span className="text-secondary">
-                  Digital Autopay <span className="mx-2">|</span>
-                  <span style={{ color: "#06A358" }}>Approved</span>
-                </span>
-                <br />
-                <span className="text-secondary">Mandate ID: 123211</span>
+
+      {bankList?.length > 0 ? bankList.map((item) => {
+        return <div
+          className="p-4 shadow-sm bg-white border-0 rounded-4 mb-2"
+          onClick={()=>detailPage(item.account_number)}
+
+        >
+          <div className="row justify-content-between crPointer">
+            <div className="col-lg-8 col-md-8 col-12 py-2">
+              <div className="d-flex">
+                <img className="align-self-start rounded" height={40} width={40} src={"https://bankamcimagesv2.s3.ap-southeast-1.amazonaws.com/demo-bank.png"} alt="Image not found" />
+                <div className="ms-2" style={{ flex: 1 }}>
+                  <h6 style={{ margin: 0 }}>{item.bank_name}</h6>
+                  <span className="text-secondary">
+                    {bankType[item.account_type as keyof typeof bankType]}
+                     {/* <span className="mx-2">|</span> */}
+                    {/* <span style={{ color: "#06A358" }}>Verified</span> */}
+                  </span>
+                  <br />
+                  <span className="text-secondary">Account number: XXXXXX{item.account_number?.slice(-4)}</span>
+                </div>
               </div>
             </div>
-          </div>
-          <div className="col-lg-4 col-md-4 col-12 py-2 text-md-end text-start">
-            <span className="info-badge align-self-start">Primary</span>
-          </div>
-        </div>
-
-        <div className="d-flex justify-content-between mt-2">
-          <div>
-            <span className="text-secondary">ACCOUNT NUMBER</span>
-            <br />
-            <span className="value-font2">****1267</span>
+            {item.primary &&
+              <div className="col-lg-4 col-md-4 col-12 py-2 text-md-end text-start">
+                <span className="info-badge align-self-start">Primary</span>
+              </div>}
           </div>
 
-          <div>
-            <span className="text-secondary">MAX LIMIT</span>
-            <br />
-            <span className="value-font2">₹25,000</span>
-          </div>
-          <div></div>
-        </div>
-      </div >
 
-      <div
-        className="p-4 shadow-sm bg-white border-0 rounded-4 mb-2"
-        onClick={() => activeInactive("bank-details")}
-      >
-        <div className="row justify-content-between">
-          <div className="col-lg-8 col-md-8 col-12 py-2">
-            <div className="d-flex">
-              <img className="align-self-start" src={HDFC} alt="Image not found" />
-              <div className="ms-2" style={{ flex: 1 }}>
-                <h6 style={{ margin: 0 }}>State Bank of India</h6>
-                <span className="text-secondary">
-                  Digital Autopay <span className="mx-2">|</span>
-                  <span style={{ color: "#06A358" }}>Approved</span>
-                </span>
-                <br />
-                <span className="text-secondary">Mandate ID: 123211</span>
-              </div>
-            </div>
-          </div>
-          <div className="col-lg-4 col-md-4 col-12 py-2 text-md-end text-start">
+        </div >
+      }) : ""}
 
-          </div>
-        </div>
 
-        <div className="d-flex justify-content-between mt-2">
-          <div>
-            <span className="text-secondary">ACCOUNT NUMBER</span>
-            <br />
-            <span className="value-font2">****1267</span>
-          </div>
 
-          <div>
-            <span className="text-secondary">MAX LIMIT</span>
-            <br />
-            <span className="value-font2">₹25,000</span>
-          </div>
-          <div></div>
-        </div>
-      </div>
-
-      <div
-        className="p-4 shadow-sm bg-white border-0 rounded-4 mb-2"
-        onClick={() => activeInactive("order-timeline")}
-      >
-        <div className="row justify-content-between">
-          <div className="col-lg-8 col-md-8 col-12 py-2">
-            <div className="d-flex">
-              <img className="align-self-start" src={HDFC} alt="Image not found" />
-              <div className="ms-2" style={{ flex: 1 }}>
-                <h6 style={{ margin: 0 }}>State Bank of India</h6>
-                <span className="text-secondary">
-                  Digital Autopay <span className="mx-2">|</span>
-                  <span style={{ color: "#06A358" }}>Approved</span>
-                </span>
-                <br />
-                <span className="text-secondary">Mandate ID: 123211</span>
-              </div>
-            </div>
-          </div>
-          <div className="col-lg-4 col-md-4 col-12 py-2 text-md-end text-start">
-
-          </div>
-        </div>
-
-        <div className="d-flex justify-content-between mt-2">
-          <div>
-            <span className="text-secondary">ACCOUNT NUMBER</span>
-            <br />
-            <span className="value-font2">****1267</span>
-          </div>
-
-          <div>
-            <span className="text-secondary">MAX LIMIT</span>
-            <br />
-            <span className="value-font2">₹25,000</span>
-          </div>
-          <div></div>
-        </div>
-      </div>
     </>
   );
 }

@@ -17,6 +17,8 @@ function SIPOrderDetails({ backButton }: { backButton: any }) {
   const [limit,setLimit] = useState<number>(10)
   const [orderDetail , setOrderDetail] = useState<sipOrderDetailKey| null>(null);
   useEffect(() => {
+    setLimit(1)
+    setPage(1)
     if (location.state?.accord_amc_code) {
       fetchOrderDetails()
     } else {

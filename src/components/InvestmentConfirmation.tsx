@@ -36,6 +36,7 @@ interface addAmountKeys {
   third: number
 }
 
+
 const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, schemeList, setSchemeList, sipDateList, from }) => {
   const [openSelectFolio, setOpenSelectFolio] = useState(false)
   const [openBankMandate, setOpenBankMandate] = useState(false)
@@ -105,11 +106,12 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
       }
       setFoliosFetched(false);
     }
-  }, [foliosFetched, schemeList]);
+    
+  }, [foliosFetched]);
 
   const defaultTransactionType = () => {
-    let data = checkTransactionAllowed(schemeList, keys.sip) ? true : false
-    setIsSipTransaction(data)
+    if(isSipTransaction){
+ let data = checkTransactionAllowed(schemeList, keys.sip) ? true : false
     if (!data) {
       setAddAmountValues({
         min: 5000,
@@ -120,6 +122,7 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
       setAmount(5000);
       distributeAmount(5000);
     } else {
+      setIsSipTransaction(data)
       setAddAmountValues({
         min: 1000,
         first: 2000,
@@ -129,6 +132,8 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
       setAmount(1000);
       distributeAmount(1000);
     }
+    }
+   
   }
 
   const fetchFolios = async () => {
@@ -183,8 +188,9 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
     }, 0);
 
 
+
     const minTotal = schemeList.reduce((acc, scheme) => {
-      const minAmount = isSipTransaction ? Number(scheme.minSIPAmt) : (scheme.minLumSumAmt);
+      const minAmount = isSipTransaction ? Number(scheme.minSIPAmt) : Number(scheme.minLumSumAmt);
       return acc + minAmount;
     }, 0);
 
@@ -201,7 +207,7 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
     for (let i = 0; i < schemeList.length; i++) {
       const scheme = schemeList[i];
 
-      const minAmount = isSipTransaction ? scheme.minSIPAmt : scheme.minLumSumAmt;
+      const minAmount = isSipTransaction ? Number(scheme.minSIPAmt) : Number(scheme.minLumSumAmt);
       const enteredAmount = scheme.amount ?? 0;
 
       if (enteredAmount < minAmount) {

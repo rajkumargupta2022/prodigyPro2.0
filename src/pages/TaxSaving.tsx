@@ -4,6 +4,7 @@ import {  useNavigate } from "react-router-dom";
 import { useState } from "react";
 import SchemeDetails from "../components/SchemeDetails";
 import RecomendedSchemes from "../components/Recomended-schemes";
+import { endPoints } from "../services/utils/urls";
 
 const TaxSaving = () => {
   const navigate = useNavigate()
@@ -29,7 +30,7 @@ const TaxSaving = () => {
           </div>
         </div>
       </div>
-       <RecomendedSchemes  from={"emergency"}/>
+       <RecomendedSchemes  from={"Tax Saving"} url={endPoints.getTaxPlanningScheme}/>
       <SchemeDetails show={openSchemeDetail} setShow={setOpenSchemeDetail} />
     </>
   );
