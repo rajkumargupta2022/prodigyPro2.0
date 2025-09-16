@@ -12,9 +12,15 @@ import PopularFunds from "./dashboard/Popular-funds";
 
 const Explore = () => {
   const navigate = useNavigate()
+  const content = [
+    "Maximize your savings with the right tax-saving mutual funds",
+    "Discover top-performing equity funds across various categories",
+    "Explore a wide spectrum of debt funds tailored for stability and income",
+    "Discover mutual funds across all categories using the all mutual funds screener"
+  ]
 
-  const goToFundPage = (name:string,assetCode:number[]=[],classCode:number[]=[],)=>{
-    navigate("/all-mutual-funds",{state:{name,assetCode,classCode}})
+  const goToFundPage = (name:string,assetCode:number[]=[],classCode:number[]=[],msg:string)=>{
+    navigate("/all-mutual-funds",{state:{name,assetCode,classCode,msg}})
   }
   return (
     <>
@@ -49,19 +55,19 @@ const Explore = () => {
               <img src={Award} alt="" width={28} height={28} />
               <h6 className="fs14pxBlack">Top Rated Funds</h6>
             </div>*/}
-            <div className="py-2 text-center" onClick={()=>goToFundPage("Tax Saver",[1],[8])}>
+            <div className="py-2 text-center" onClick={()=>goToFundPage("Tax Saver",[1],[8],content[0])}>
               <img src={Tax} alt="" width={28} height={28} />
               <h6 className="fs14pxBlack">Tax Saver</h6>
             </div> 
-            <div className="py-2 text-center" onClick={()=>goToFundPage("Equity Funds",[1])}>
+            <div className="py-2 text-center" onClick={()=>goToFundPage("Equity Funds",[1],[],content[1])}>
               <img src={EquityFund} alt="" width={28} height={28} />
               <h6 className="fs14pxBlack">Equity Funds</h6>
             </div>
-            <div className="py-2 text-center" onClick={()=>goToFundPage("Debt Funds",[3])}>
+            <div className="py-2 text-center" onClick={()=>goToFundPage("Debt Funds",[3],[],content[2])}>
               <img src={DebtFund} alt="" width={28} height={28} />
               <h6 className="fs14pxBlack">Debt Funds</h6>
             </div>
-            <div className="py-2 text-center crPointer" onClick={()=>{navigate("/all-mutual-funds")}}>
+            <div className="py-2 text-center crPointer" onClick={()=>navigate("/all-mutual-funds")}>
               <img src={DebtFund} alt="" width={28} height={28} />
               <h6 className="fs14pxBlack ">Explore All</h6>
             </div>

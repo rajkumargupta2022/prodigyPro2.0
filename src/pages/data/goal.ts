@@ -7,7 +7,7 @@ export const goalContent: Record<string, GoalContentInterface> = {
   retirement: {
     title: "Retirement",
     paragraph:
-      "Set your retirement goal and start investing today to ensure a secure and stress-free future.",
+      "Set your retirement goal and start investing today to ensure a secure and worry-free retirement.",
   },
   education: {
     title: "Child Education",

@@ -13,8 +13,8 @@ const Account = ({ Component }: { Component: any }) => {
 
   const navBar = [
     { name: "My Profile", url: "/my-profile" },
-    { name: "All Orders", url: "/all-orders" },
-    { name: "Linked Bank Accounts", url: "/linked-bank-account" },
+    // { name: "All Orders", url: "/all-orders" },
+    // { name: "Linked Bank Accounts", url: "/linked-bank-account" },
     { name: "Risk Profile ", url: "/risk-profile" },
     { name: "Financial Calculators", url: "/calculator-list" },
     // { name: "Statements", url: "/statements" },

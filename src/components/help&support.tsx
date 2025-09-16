@@ -10,9 +10,11 @@ import { useEffect, useState } from "react";
 import { helpAndSupportKey, helpAndSupportResponse } from "../pages/data-interfaces/accounts";
 import { postRequest } from "../services/Api/HandleApi";
 import { endPoints } from "../services/utils/urls";
+import { useNavigate } from "react-router-dom";
 
 
-function HelpSupport({ backButton }: { backButton: any; activeInactive: any }) {
+function HelpSupport() {
+  const navigate = useNavigate()
   const [show, setShow] = useState(false);
   const [helpAndSupportData, setHelpAndSupportData] = useState<helpAndSupportKey>()
 
@@ -37,7 +39,7 @@ function HelpSupport({ backButton }: { backButton: any; activeInactive: any }) {
       <RateYourRM show={show} setShow={setShow} rmId={helpAndSupportData?.RMID} />
 
       <h2>
-        <ArrowLeft className="crPointer" size={25} onClick={backButton} />
+        <ArrowLeft className="crPointer" size={25} onClick={()=>navigate(-1)} />
         Help & Support
       </h2>
       <hr className="fw-light text-secondary" />

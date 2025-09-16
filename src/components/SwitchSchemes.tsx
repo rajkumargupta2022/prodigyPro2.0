@@ -141,7 +141,7 @@ import { Card, Col, Row, Dropdown, Form } from "react-bootstrap";
 import Category from "../pages/explore/Category";
 import Filter from "../pages/explore/Amcs";
 import { useNavigate } from "react-router-dom";
-import { filteredSchemesKeys } from "../pages/data-interfaces/explore";
+import { assetTypeListKeys, categoryListKeys, filteredSchemesKeys } from "../pages/data-interfaces/explore";
 import { getValueInSort } from "../services/calculation/percentageCalculate";
 import { useState, useMemo, useEffect, useCallback } from "react";
 
@@ -153,7 +153,9 @@ interface SchemesProps {
   currentApiPage: number;
   hasMore: boolean;
   isNewFilter: boolean;
-  from:boolean
+  from:boolean;
+  categoryList:categoryListKeys[];
+    assetTypeListData:assetTypeListKeys[]
 }
 
 const SwitchSchemes: React.FC<SchemesProps> = ({
@@ -164,7 +166,9 @@ const SwitchSchemes: React.FC<SchemesProps> = ({
   currentApiPage,
   hasMore,
   isNewFilter,
-  from
+  from,
+  categoryList,
+  assetTypeListData
 }) => {
   const navigate = useNavigate();
   const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -439,7 +443,7 @@ const SwitchSchemes: React.FC<SchemesProps> = ({
                     Category <span><ChevronRight className="" size={18} /></span>
                   </span>
                   <div className="category_on_mobile">
-                    <Category handleFilter={handleFilter} isAvailable={isAvailable} />
+                    <Category handleFilter={handleFilter} isAvailable={isAvailable} categoryList={categoryList} assetTypeListData={assetTypeListData}/>
                   </div>
                 </div>
               </div>}

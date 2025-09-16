@@ -35,7 +35,7 @@ function LocateUs() {
           <div className="star"></div>
           <div className="star"></div>
           <div className="star"></div>
-          <span className="fs14px">44 Google Reviews</span>
+          <span className="fs14px">266 Google Reviews</span>
         </div>
 
         <div className="d-md-flex border-bottom mt-2">
@@ -48,17 +48,27 @@ function LocateUs() {
 
         <div className="d-flex border-bottom mt-2">
           <h6 className="me-1 fs16px"> Hours: </h6>
-          <p className="m-0 fs14px"> Mon - Sat 9:30am-6:30pm</p>
+          <p className="m-0 fs14px"> Mon - Sat 9:30am-6:00pm</p>
         </div>
 
         <div className="d-flex mt-2">
           <h6 className="me-1"> Phone:</h6>
-          <p style={{ color: "#1A35FE" }}>+05223514141</p>
+          <p className="logoBlueColor crPointer" onClick={() =>
+            window.open(
+              `tel:05223514141`,
+              "_blank"
+            )
+          }>+05223514141</p>
         </div>
 
         <div className="d-flex ">
           <h6 className="me-1"> Mobile:</h6>
-          <p style={{ color: "#1A35FE" }}>+917347700888</p>
+          <p  className="crPointer logoBlueColor" onClick={() =>
+            window.open(
+              `tel:7347700888`,
+              "_blank"
+            )
+          }>+917347700888</p>
         </div>
         <button className="btn btn-primary" onClick={handleDirectionClick}>
           <BookFill className="me-2" />

@@ -14,14 +14,10 @@ import { useAdminUser } from "../context/AdminContext";
 import SwitchPortfolio from "./dashboard/Switch-portfolio";
 import Footer from "../components/Footer";
 import OurServices from "./dashboard/Our-services";
-import { postRequest } from "../services/Api/HandleApi";
-import { endPoints } from "../services/utils/urls";
-import { useNavigate } from "react-router-dom";
 
 
 
 const Dashboard = () => {
-  const navigate = useNavigate()
   const { familySnapShotData, familyPortfolio, snapshotData } = useAdminUser()
 
   const [openPortfolioSwitch, setOpenPortfolioSwitch] = useState<boolean>(false);
@@ -41,19 +37,19 @@ const Dashboard = () => {
   };
   useEffect(() => {
     familyPortfolio(adminUser)
-    fetchRiskProfile()
+    // fetchRiskProfile()
   }, [])
 
-  const fetchRiskProfile = async () => {
-    try {
-      await postRequest<any>(endPoints.getRiskProfile, { ucc: adminUser?.ucc ?? "" })
-    } catch (err: any) {
-      console.log(err.response.data.data.risk);
-      if (err.response.data.data.risk === -1) {
-        navigate("/risk-profile")
-      }
-    }
-  }
+  // const fetchRiskProfile = async () => {
+  //   try {
+  //     await postRequest<any>(endPoints.getRiskProfile, { ucc: adminUser?.ucc ?? "" })
+  //   } catch (err: any) {
+  //     console.log(err.response.data.data.risk);
+  //     if (err.response.data.data.risk === -1) {
+  //       navigate("/risk-profile")
+  //     }
+  //   }
+  // }
 
 
 

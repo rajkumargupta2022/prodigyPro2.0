@@ -34,3 +34,8 @@ export interface mandateKeys {
   mandate_start: string;
   mandate_end: string;
 }
+export interface ifscRes {
+  success: boolean;
+  bank_name: string;
+  branch_name: string;
+}

@@ -111,7 +111,7 @@ const InvestmentChart: React.FC<schemeDataProps> = ({ schemeData }) => {
       <div style="padding: 10px; background: white; border-radius: 8px; box-shadow: 0px 0px 10px rgba(0,0,0,0.1); font-family: sans-serif; text-align: center;">
         <div style="font-size: 14px; color: #011EFE ;">${dataPointIndex ? "This Fund" : selectedInvestmentType === "sip" ? "Recurring Deposit" : "Fixed Deposit"}</div>
         <div style="font-size: 14px; color: #333;">Invested: ₹${invested.toLocaleString('en-IN')}</div>
-        <div style="font-size: 14px; color: #333;">Maturity: ₹${(totalInvestment+maturity).toLocaleString('en-IN')}</div>
+        <div style="font-size: 14px; color: #333;">${dataPointIndex===6?"Market Value":"Maturity"}: ₹${(totalInvestment+maturity).toLocaleString('en-IN')}</div>
       </div>
     `;
         }

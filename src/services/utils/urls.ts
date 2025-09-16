@@ -43,5 +43,6 @@ export enum endPoints{
    getEmergencyFunds="product/get-emergency-funds",
    getTaxPlanningScheme="product/get-tax-planning-scheme",
    getUserBanks="user/get-user-banks",
-   getUserMandates="user/get-user-mandates"
+   getUserMandates="user/get-user-mandates",
+   fetchBankByIfsc="/banks/fetch-bank-via-ifsc"
 }

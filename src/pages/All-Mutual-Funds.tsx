@@ -141,9 +141,9 @@ import Footer from "../components/Footer";
 import Category from "./explore/Category";
 import Filters from "./explore/Amcs";
 import { useEffect, useState } from "react";
-import { postRequest } from "../services/Api/HandleApi";
+import { getRequest, postRequest } from "../services/Api/HandleApi";
 import { endPoints } from "../services/utils/urls";
-import { filteredSchemeResponse, filteredSchemesKeys } from "./data-interfaces/explore";
+import { assetTypeListKeys, assetTypeListResponse, categoryListKeys, categoryListResponse, filteredSchemeResponse, filteredSchemesKeys } from "./data-interfaces/explore";
 import SwitchSchemes from "../components/SwitchSchemes";
 import { useLocation } from "react-router-dom";
 
@@ -160,8 +160,32 @@ const AllMutualFunds = () => {
   const [hasMore, setHasMore] = useState<boolean>(true); // Tracks if more pages exist
   const [fetchedPages, setFetchedPages] = useState<number[]>([]); // Tracks fetched API pages
   const [isNewFilter, setIsNewFilter] = useState<boolean>(false); // Tracks if filters have changed
-
+const [categoryList, setCategoryList] = useState<categoryListKeys[]>([])
+const [assetTypeListData, setAssetTypeListData] = useState<assetTypeListKeys[]>([])
   // Fetch data for a specific page
+
+
+ const fetchCategoryList = async (data:number) => {
+    try {
+      const res = await getRequest<categoryListResponse>(endPoints.getCategoryTypesList+"?asset_code="+data)
+      if (res.data) {
+        setCategoryList(res.data)
+      }
+    } catch (err) {
+    }
+  }
+
+  const fetchAssetTypeList = async () => {
+    try {
+      const res = await getRequest<assetTypeListResponse>(endPoints.getAssetTypesList)
+      if (res.data) {
+        setAssetTypeListData(res.data)
+      }
+    } catch (err) {
+      // console.log(err);
+    }
+  }
+
   const fetchFilteredScheme = async (
     amc: number[] = amcCode,
     asset: number[] = assetCode,
@@ -237,10 +261,14 @@ const AllMutualFunds = () => {
       await fetchPage(1, amcCode, asset, classC, true); // Reset to page 1 and use current filters
       // Don't reset isNewFilter immediately - let SwitchSchemes handle it
     };
-    
+   
     resetAndFetch();
   }, [amcCode, assetCode, classCode]); // Only depend on filter changes
 
+  useEffect(()=>{
+ fetchCategoryList(assetCode[0])
+    fetchAssetTypeList()
+  },[])
   // Reset isNewFilter flag after a short delay to allow SwitchSchemes to detect it
   useEffect(() => {
     if (isNewFilter) {
@@ -255,7 +283,8 @@ const AllMutualFunds = () => {
     let classArr: number[];
     let amc: number[];
     let asset: number[];
-    
+       console.log(value,filterType);
+       
     switch (filterType) {
       case "category":
         if (classCode.includes(value)) {
@@ -267,6 +296,7 @@ const AllMutualFunds = () => {
         break;
       case "asset":
         asset = [value];
+        fetchCategoryList(value)
         setAssetCode(asset);
         break;
       case "amc":
@@ -284,6 +314,7 @@ const AllMutualFunds = () => {
   };
 
   const isAvailable = (value: number, type: string): boolean => {
+  
     switch (type) {
       case "category":
         return classCode.includes(value);
@@ -301,15 +332,14 @@ const AllMutualFunds = () => {
       <MyNavbar />
       <Container className="mt-4">
         <div className="d-md-block d-none">
-          <h4 className="fw-bold">{location?.state?.name ? location?.state?.name : "All Mutual Funds"}</h4>
+          <h4 className="fw-bold">{location?.state?.name ||"All Mutual Funds"}</h4>
           <p>
-            Discover mutual funds across all categories using the all mutual funds
-            screener
+           {location.state?.msg||"Discover mutual funds across all categories using the all mutual funds screener"}.
           </p>
         </div>
         <div className="row">
           <div className="col-lg-4 border-end d-none d-lg-block">
-          {!location?.state?.name  &&<Category handleFilter={handleFilter} isAvailable={isAvailable} />}
+          {!location?.state?.name  &&<Category handleFilter={handleFilter} isAvailable={isAvailable} categoryList={categoryList} assetTypeListData={assetTypeListData}/>}
             <Filters handleFilter={handleFilter} isAvailable={isAvailable} />
           </div>
           <SwitchSchemes
@@ -322,6 +352,8 @@ const AllMutualFunds = () => {
             isNewFilter={isNewFilter}
             key={`${amcCode.join(',')}-${assetCode.join(',')}-${classCode.join(',')}`}
             from={location?.state?.name?true:false}
+            categoryList={categoryList}
+            assetTypeListData={assetTypeListData}
           />
         </div>
         {isLoading && (

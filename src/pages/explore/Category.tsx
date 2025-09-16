@@ -1,42 +1,42 @@
 import { Form } from 'react-bootstrap';
-import { useEffect, useState } from "react";
-import { assetTypeListKeys, assetTypeListResponse, categoryListKeys, categoryListResponse } from '../data-interfaces/explore';
-import { endPoints } from '../../services/utils/urls';
-import { getRequest } from '../../services/Api/HandleApi';
+import { assetTypeListKeys, categoryListKeys,  } from '../data-interfaces/explore';
+
 
 interface CategoryProps {
   handleFilter: (value: number, type: string) => void;
   isAvailable: (value: number,type:string) => boolean;
+  categoryList:categoryListKeys[];
+  assetTypeListData:assetTypeListKeys[]
 }
 
-function Category({ handleFilter,isAvailable }: CategoryProps) {
-const [categoryList, setCategoryList] = useState<categoryListKeys[]>([])
-const [assetTypeListData, setAssetTypeListData] = useState<assetTypeListKeys[]>([])
-  useEffect(() => {
-    fetchCategoryList()
-    fetchAssetTypeList()
-  }, [])
+function Category({ handleFilter,isAvailable,categoryList,assetTypeListData }: CategoryProps) {
+// const [categoryList, setCategoryList] = useState<categoryListKeys[]>([])
+// const [assetTypeListData, setAssetTypeListData] = useState<assetTypeListKeys[]>([])
+//   useEffect(() => {
+//     fetchCategoryList()
+//     fetchAssetTypeList()
+//   }, [])
 
-  const fetchCategoryList = async () => {
-    try {
-      const res = await getRequest<categoryListResponse>(endPoints.getCategoryTypesList)
-      if (res.data) {
-        setCategoryList(res.data)
-      }
-    } catch (err) {
-    }
-  }
+//   const fetchCategoryList = async () => {
+//     try {
+//       const res = await getRequest<categoryListResponse>(endPoints.getCategoryTypesList)
+//       if (res.data) {
+//         setCategoryList(res.data)
+//       }
+//     } catch (err) {
+//     }
+//   }
 
-  const fetchAssetTypeList = async () => {
-    try {
-      const res = await getRequest<assetTypeListResponse>(endPoints.getAssetTypesList)
-      if (res.data) {
-        setAssetTypeListData(res.data)
-      }
-    } catch (err) {
-      // console.log(err);
-    }
-  }
+//   const fetchAssetTypeList = async () => {
+//     try {
+//       const res = await getRequest<assetTypeListResponse>(endPoints.getAssetTypesList)
+//       if (res.data) {
+//         setAssetTypeListData(res.data)
+//       }
+//     } catch (err) {
+//       // console.log(err);
+//     }
+//   }
  
   return (
     <div className="card p-md-4 p-2 mt-2 radius16px">
@@ -72,7 +72,7 @@ const [assetTypeListData, setAssetTypeListData] = useState<assetTypeListKeys[]>(
                 className="mb-0 flex-grow-1"
                 style={{ cursor: 'pointer' }}
               >
-                {item.category}
+                 {item.category} {item.sub_category ? `(${item.sub_category})` : ""}
               </label>
             </div>
           )

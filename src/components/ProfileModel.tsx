@@ -67,12 +67,12 @@ const ProfileModel: React.FC<ProfileModelProps> = ({ show, setShow }) => {
 
 
 
-              <div className="d-flex justify-content-around crPointer">
+              <div className="d-flex justify-content-around crPointer" onClick={logOut}>
                 {/* <img src={GIRLDP} className='circleImg-2' alt="Image not found" /> */}
                 <div className='circleImg-2 logOutBg '>
                   <SlLogout />
                 </div>
-                <div className="ms-2 mt-2 " style={{ flex: 4 }} onClick={logOut}>
+                <div className="ms-2 mt-2 " style={{ flex: 4 }} >
                   <h6 className='m-0'>
                     Log Out
                   </h6>

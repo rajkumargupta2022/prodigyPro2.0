@@ -31,8 +31,8 @@ const RecommendedFunds = () => {
 
         setDuration(res.dataDuration)
         setYears(res.dataRisk)
-        setSelectedRiskType(res.dataRisk[1].risk)
-        setSelectedYear(res.dataDuration[2].durationValues)
+        setSelectedRiskType(res.dataRisk[2].risk)
+        setSelectedYear(res.dataDuration[4].durationValues)
      
     } catch (err) {
 
