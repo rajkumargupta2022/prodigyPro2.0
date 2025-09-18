@@ -2,12 +2,15 @@ import { Col } from "react-bootstrap";
 import { ArrowLeft } from "react-bootstrap-icons";
 import { useNavigate } from "react-router-dom";
 import Form from 'react-bootstrap/Form';
-import { useEffect, useState } from "react";
-import { getRequest } from "../services/Api/HandleApi";
-import { ifscRes } from "../pages/data-interfaces/bank-and-mandate";
+import { useState } from "react";
+import { getRequest, postRequest } from "../services/Api/HandleApi";
+import { ifscRes, varifyBankRes } from "../pages/data-interfaces/bank-and-mandate";
 import { endPoints } from "../services/utils/urls";
 import { errorToast } from "../services/utils/toast";
-import { bankType } from "../services/utils/keys";
+import { bankTypeObj } from "../services/utils/keys";
+import { fetchAdminUser } from "../services/user/adminUser";
+import AlertModel from "./AlertModel";
+import CreateMandate from "./create-mandate";
 
 
 function AddBankDetails() {
@@ -15,31 +18,77 @@ function AddBankDetails() {
   const navigate = useNavigate();
   const [accountNumber, setAccountNumber] = useState<string>("")
   const [confirmAccountNumber, setConfirmAccountNumber] = useState<string>("")
-  const [accountType, setAccountType] = useState<string>(bankType.SB)
+  const [accountType, setAccountType] = useState<string>(bankTypeObj.SB.code)
   const [ifscCode, setIfscCode] = useState<string>("")
   const [bankName, setBankName] = useState<string>("")
   const [branchName, setBranchName] = useState<string>("")
   const [validated, setValidated] = useState(false);
+  const [openAlertModel, setOpenAlertModel] = useState<boolean>(false)
+  const [openCreateMandate, setOpenCreateMandate] = useState<boolean>(false)
+  const [score, setScore] = useState<number>(0)
+  const [inputType,setInputType] = useState<string>("text")
 
-  useEffect(() => {
-    setIfscCode("")
-    setBankName("")
-    setBranchName("")
-  }, [])
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     const form = event.currentTarget;
     event.preventDefault()
-    console.log("formm", form.checkValidity());
 
-    // if (form.checkValidity() === false) {
-    //   event.preventDefault();
-    //   event.stopPropagation();
-    //   navigate("/add-verification-details")
-    // }
+    if (form.checkValidity()) {
+      if (accountNumber !== confirmAccountNumber) {
+        errorToast("Account number and confirm account number does not matched.")
+        return
+      }
+      try {
+        const adminUser = fetchAdminUser()
+        const reqBody = {
+          beneficiaryAccount: accountNumber,
+          beneficiaryIFSC: ifscCode,
+          beneficiaryName: "MOHD ZUHAIB KHAN"
+          // beneficiaryName: adminUser.name.toUpperCase()
+        }
+        const res = await postRequest<varifyBankRes>(endPoints.verifyBank, reqBody)
+        if (res.data.nameMatch.toLocaleLowerCase() === "yes" && Number(res.data.nameMatchScore) === 1) {
+          setScore(Number(res.data.nameMatchScore))
+          saveBank()
+        } else if (res.data.nameMatch.toLocaleLowerCase() === "no" && Number(res.data.nameMatchScore) >= 0.8) {
+          setScore(Number(res.data.nameMatchScore))
+          setOpenAlertModel(true)
+        } else {
+          errorToast(res.data.reason)
+        }
+      } catch (err) {
+        errorToast("Something went wrong")
+
+      }
+    }
 
     setValidated(true);
   };
 
+  const saveBank = async () => {
+    try {
+      const adminUser = fetchAdminUser()
+      const reqBody = {
+        ucc: adminUser?.ucc,
+        account_type: accountType,
+        account_number: accountNumber,
+        ifsc_code: ifscCode
+      }
+      const res = await postRequest<any>(endPoints.addBank, reqBody)
+      if (res.success) {
+
+        if (score === 1) {
+          setOpenCreateMandate(true)
+        } else if (score >= 0.8 && score < 1) {
+          navigate("/add-verification-details")
+        }
+      } else {
+        errorToast("Something went wromg..")
+      }
+    } catch (err) {
+      errorToast(err)
+    }
+  }
   const handleAccount = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value
     if (!isNaN(Number(value)) && value.length < 20) {
@@ -49,6 +98,7 @@ function AddBankDetails() {
   const handleConfirmAccount = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value
     if (!isNaN(Number(value)) && value.length < 20) {
+      setInputType("password")
       setConfirmAccountNumber(value.trim())
     }
   }
@@ -79,6 +129,7 @@ function AddBankDetails() {
     }
   }
 
+
   return (
     <main className="col-md-9 ms-sm-auto col-lg-9 px-md-4 py-4">
       <h4>
@@ -88,18 +139,18 @@ function AddBankDetails() {
       <hr className="fw-light text-secondary" />
       <Form noValidate validated={validated} onSubmit={handleSubmit}>
         <div className="p-4 shadow-sm bg-white border-0 rounded-4 mb-2 mt-2">
+
           <Form.Group as={Col} md="12" controlId="validationCustom01">
             <Form.Label className="mb-0">ACCOUNT NUMBER</Form.Label>
             <Form.Control
               required
-              type="text"
+              type={inputType}
               minLength={10}
               // maxLength={20}
               onChange={handleAccount}
               placeholder="Enter account number"
               // defaultValue="Mark"
               value={accountNumber}
-              className="text-muted"
             />
             {/* <span className="text-danger">{accountNumber.length=== 0?"":""}</span> */}
             <Form.Control.Feedback type="invalid">{accountNumber.length === 0 ? "Mandotry field" : accountNumber.length < 10 && "Please enter valid account number"}</Form.Control.Feedback>
@@ -119,8 +170,8 @@ function AddBankDetails() {
           </Form.Group>
           <div className="mt-2">
             <Form.Label className="mb-0 fs12px">ACCOUNT TYPE</Form.Label><br />
-            <button type="button" className={`btn ms-1 ${accountType === bankType.SB ? "selectedBtn" : "riskProfileBtn"}`} onClick={() => setAccountType(bankType.SB)}>Saving Account</button>
-            <button type="button" className={`btn ms-1 ${accountType === bankType.CB ? "selectedBtn" : "riskProfileBtn"}`} onClick={() => setAccountType(bankType.CB)}>Current Account</button>
+            <button type="button" className={`btn ms-1 ${accountType === bankTypeObj.SB.code ? "selectedBtn" : "riskProfileBtn"}`} onClick={() => setAccountType(bankTypeObj.SB.code)}>Saving Account</button>
+            <button type="button" className={`btn ms-1 ${accountType === bankTypeObj.CB.code ? "selectedBtn" : "riskProfileBtn"}`} onClick={() => setAccountType(bankTypeObj.CB.code)}>Current Account</button>
           </div>
           <Form.Group as={Col} md="12" controlId="validationCustom03" className="mt-2">
             <Form.Label className="mb-0">IFSC CODE</Form.Label>
@@ -133,7 +184,7 @@ function AddBankDetails() {
               value={ifscCode}
 
             />
-                       <Form.Control.Feedback type="invalid">{ifscCode.length=== 0?"Mandotry field":ifscCode.length<11&&"Please enter valid ifsc code"}</Form.Control.Feedback>
+            <Form.Control.Feedback type="invalid">{ifscCode.length === 0 ? "Mandotry field" : ifscCode.length < 11 && "Please enter valid ifsc code"}</Form.Control.Feedback>
 
           </Form.Group>
           <Form.Group as={Col} md="12" controlId="validationCustom04" className="mt-2">
@@ -162,6 +213,8 @@ function AddBankDetails() {
         </div>
         <button type="submit" className={`customButton px-2 mt-2`}   >Craete e-Mandate</button>
       </Form>
+      <AlertModel show={openAlertModel} setShow={setOpenAlertModel} title={"Proceed"} msg={"The name on your UCC does not match with the bank name on your account. This can lead to possible rejections. \nDo you want to continue?"} apiFun={saveBank} />
+      <CreateMandate show={openCreateMandate} setShow={setOpenCreateMandate}/>
     </main>
   );
 }

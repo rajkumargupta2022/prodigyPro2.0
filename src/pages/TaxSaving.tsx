@@ -1,6 +1,6 @@
 import NavBar from "../components/Navbar";
 import { ChevronRight } from "react-bootstrap-icons";
-import {  useNavigate } from "react-router-dom";
+import {  Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import SchemeDetails from "../components/SchemeDetails";
 import RecomendedSchemes from "../components/Recomended-schemes";
@@ -20,7 +20,7 @@ const TaxSaving = () => {
       <div className="container pt-2">
         <div className="personal_form_container">
         <div className="d-flex my-3">
-            <h6 className="logoBlueColor crPointer" onClick={()=>navigate("/dashboard")}>Home <small className="greyColor"> <ChevronRight className="fs12px bold" /> Tax Saving</small> </h6>
+            <h6 className="logoBlueColor crPointer" ><Link to={"/dashboard"}>Home</Link> <small className="greyColor"> <ChevronRight className="fs12px bold" /> Tax Saving</small> </h6>
           </div>
           <div className="row">
             <div className=" col">

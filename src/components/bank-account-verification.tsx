@@ -1,19 +1,71 @@
 import { ArrowLeft, Upload } from "react-bootstrap-icons";
 import CreateMandate from "./create-mandate";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { postRequest } from "../services/Api/HandleApi";
+import { endPoints } from "../services/utils/urls";
+import { fetchAdminUser } from "../services/user/adminUser";
+import { errorToast } from "../services/utils/toast";
 
 
-function AddAccountVerification({ backButton }: { backButton: any }) {
-   const [show, setShow] = useState(false);
+function AddAccountVerification() {
+  const navigate = useNavigate()
+  const [show, setShow] = useState(false);
+  const cancelChequeRef = useRef<HTMLInputElement>(null);
+  const [fileBase64Checque, setFileBase64Checque] = useState<string | null>(null);
+  const [cancelCheque, setCancelCheque] = useState<string>("");
+
+
+
+  const toBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file); // converts to base64 string
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = (error) => reject(error);
+    });
+  };
+
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setCancelCheque(file.name);
+
+      try {
+        const base64 = await toBase64(file);
+        setFileBase64Checque(base64);
+        console.log("Base64 file:", base64);
+      } catch (err) {
+        console.error("Error converting file:", err);
+      }
+    }
+  };
+
+  const proofSubmit = async () => {
+    try {
+      const adminUser = fetchAdminUser()
+      const reqBody = {
+        data: fileBase64Checque,
+        fileName: cancelCheque,
+        ucc: adminUser?.ucc
+      }
+      const res =await postRequest<any>(endPoints.uploadProof, reqBody)
+      console.log(res);
+
+    } catch (err) {
+         errorToast(err)
+    }
+  }
+
 
 
   return (
     <main className="col-md-9 ms-sm-auto col-lg-9 px-md-4 py-4">
-       <CreateMandate setShow={setShow} show={show} />
-      <h2>
-        <ArrowLeft className="crPointer" size={25} onClick={backButton} />
+      <CreateMandate setShow={setShow} show={show} />
+      <h3>
+        <ArrowLeft className="crPointer" size={25} onClick={() => navigate(-1)} />
         Add Bank Account
-      </h2>
+      </h3>
       <hr className="fw-light text-secondary" />
       <h2 className="sub-heading">Verification Incomplete</h2>
       <span className="note">
@@ -25,30 +77,31 @@ function AddAccountVerification({ backButton }: { backButton: any }) {
         <div className="col-md-6">
           <span className="xs-heading">BANK ACCOUNT PROOF</span>
           <br />
-          <input type="file" style={{ display: "none" }} />
-          <button className="upload-button">
+          <input
+            type="file"
+            ref={cancelChequeRef}
+            onChange={handleFileChange}
+            className="d-none"
+            accept="image/*" // optional: restrict to images
+          />
+          <button type="button"
+            className="upload-button"
+            onClick={() => { cancelChequeRef.current?.click() }}>
             <Upload className="me-2" /> Upload Cancelled Cheque
           </button>
+          {fileBase64Checque && (
+            <div className="mt-3">
+              <p><strong>File:</strong> {cancelCheque}</p>
+              {fileBase64Checque.startsWith("data:image") ? (
+                <img src={fileBase64Checque} alt="preview" width="100" className="rounded" />
+              ) : (
+                <p>📄 PDF file selected</p>
+              )}
+            </div>
+          )}
 
-          <div
-            className="d-flex justify-content-center align-items-center my-3"
-            style={{
-              width: "40px",
-              height: "40px",
-              borderRadius: "50%",
-              border: "2px solid #D0DBEA",
-              fontWeight: "bold",
-              margin: "0 auto",
-              color: "#6778fe",
-            }}
-          >
-            OR
-          </div>
 
-          <input type="file" style={{ display: "none" }} />
-          <button className="upload-button">
-            <Upload className="me-2" /> Bank Statement
-          </button>
+
         </div>
       </div>
 
@@ -67,7 +120,7 @@ function AddAccountVerification({ backButton }: { backButton: any }) {
         </ul>
       </div>
 
-      <button className="mandate-button mt-4" onClick={()=>setShow(true)}>Submit</button>
+      <button className="mandate-button mt-3" onClick={proofSubmit}>Submit</button>
     </main>
   );
 }

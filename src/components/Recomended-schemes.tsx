@@ -27,12 +27,14 @@ const RecomendedSchemes: React.FC<pageProps> = ({ from, url = endPoints.goalPlan
 
   useEffect(() => {
     if (url === endPoints.getRecommendedSchemes) {
+
       fetchRecomendedSchemeList()
     } else if (url === endPoints.getEmergencyFunds) {
       fetchEmergencyScheme()
-    }else if (url === endPoints.getTaxPlanningScheme) {
+    } else if (url === endPoints.getTaxPlanningScheme) {
       fetchTaxSavingScheme()
     } else {
+
       fetchSchemeList()
     }
   }, [risk, duration])
@@ -41,8 +43,7 @@ const RecomendedSchemes: React.FC<pageProps> = ({ from, url = endPoints.goalPlan
     try {
       const res = await getRequest<any>(endPoints.getTaxPlanningScheme)
       if (res) {
-        setSchemeList(res.data)
-        setSelectedSchemeList(res.data)
+        await filterData(res.data)
       }
     } catch (err) {
       console.log(err);
@@ -53,8 +54,7 @@ const RecomendedSchemes: React.FC<pageProps> = ({ from, url = endPoints.goalPlan
     try {
       const res = await getRequest<any>(endPoints.getEmergencyFunds)
       if (res) {
-        setSchemeList(res.data)
-        setSelectedSchemeList(res.data)
+        await filterData(res.data)
       }
     } catch (err) {
       console.log(err);
@@ -63,12 +63,20 @@ const RecomendedSchemes: React.FC<pageProps> = ({ from, url = endPoints.goalPlan
   }
 
   const handleInvestmentConfirmation = () => {
+    console.log("dfdf");
+
     if (selectedSchemeList.length <= 0) {
       errorToast("Plaese select schemes..")
       return
     }
     handleSipIntersection()
     setOpenInvestmentConfirmation(true)
+  }
+  const filterData = async (data: schemeDeatilDataKeys[]) => {
+    const arr = data.filter(item => item.nseProductCode
+    )
+    setSchemeList(arr)
+    setSelectedSchemeList(arr)
   }
   const handleSipIntersection = () => {
     const sipIntersectionData = selectedSchemeList?.map(scheme => scheme.sipDateList)
@@ -101,8 +109,7 @@ const RecomendedSchemes: React.FC<pageProps> = ({ from, url = endPoints.goalPlan
   const fetchSchemeList = async () => {
     try {
       const res = await postRequest<any>(endPoints.goalPlanningSchemes, { durationValues: location.state.investmentPeriod })
-      setSchemeList(res.data)
-      setSelectedSchemeList(res.data)
+      await filterData(res.data)
 
     } catch (err) {
       setSchemeList([])
@@ -114,8 +121,7 @@ const RecomendedSchemes: React.FC<pageProps> = ({ from, url = endPoints.goalPlan
         risk, duration
       }
       const res = await postRequest<any>(endPoints.getRecommendedSchemes, reqBody)
-      setSchemeList(res.data)
-      setSelectedSchemeList(res.data)
+      await filterData(res.data)
 
     } catch (err) {
       setSchemeList([])

@@ -1,8 +1,8 @@
 import NavBar from "../components/Navbar";
-import { ChevronRight } from "react-bootstrap-icons";
+import { ChevronRight, Line } from "react-bootstrap-icons";
 import { useEffect, useState } from "react";
 import SchemeDetails from "../components/SchemeDetails";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import RecomendedSchemes from "../components/Recomended-schemes";
 import { endPoints } from "../services/utils/urls";
 import { getRequest } from "../services/Api/HandleApi";
@@ -47,7 +47,7 @@ const RecommendedFunds = () => {
 
         <div className="personal_form_container">
           <div className="d-flex my-3">
-            <h6 className="logoBlueColor crPointer" onClick={() => navigate("/dashboard")}>Home <small className="greyColor"> <ChevronRight className="fs14px" /> Recommended Funds </small> </h6>
+            <h6 className="logoBlueColor crPointer" ><Link to={"/dashboard"}>Home</Link>  <small className="greyColor"> <ChevronRight className="fs14px" /> Recommended Funds </small> </h6>
           </div>
           <div className="row">
             <div className=" col">

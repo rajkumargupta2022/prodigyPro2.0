@@ -29,3 +29,13 @@ export enum bankType{
    SB="Saving Account",
    CB="Current Account"
 }
+export const bankTypeObj = {
+  SB: {
+    code: "SB",
+    text: "Saving Account"
+  },
+  CB:{
+   code: "CB",
+    text: "Current Account"
+  }
+} as const;

@@ -44,5 +44,8 @@ export enum endPoints{
    getTaxPlanningScheme="product/get-tax-planning-scheme",
    getUserBanks="user/get-user-banks",
    getUserMandates="user/get-user-mandates",
-   fetchBankByIfsc="/banks/fetch-bank-via-ifsc"
+   fetchBankByIfsc="/banks/fetch-bank-via-ifsc",
+   addBank="banks/add-bank",
+   verifyBank="banks/verify-bank",
+   uploadProof="banks/upload-proof"
 }

@@ -6,15 +6,15 @@ export const checkTransactionAllowed = (
   checkType: string
 ) => {
   for (let i = 0; i < schemeList?.length; i++) {
-    if (checkType === keys.sip) {
-      if (schemeList[i].sipDateList.length === 0) {
+    if (checkType === keys?.sip) {
+      if (schemeList[i]?.sipDateList?.length === 0) {
         return false;
       }
-      return schemeList[i].sipAllowed;
+      return schemeList[i]?.sipAllowed;
     } else if (checkType === keys.purchase) {
-      return schemeList[i].purchaseAllowed;
-    } else if (checkType === keys.switch) {
-      return schemeList[i].switchAllowed;
+      return schemeList[i]?.purchaseAllowed;
+    } else if (checkType === keys?.switch) {
+      return schemeList[i]?.switchAllowed;
     } else if (checkType === keys.redumption) {
       return schemeList[i].redemptionAllowed;
     } else if (checkType === keys.stp) {

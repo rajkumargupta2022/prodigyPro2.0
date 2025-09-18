@@ -39,3 +39,14 @@ export interface ifscRes {
   bank_name: string;
   branch_name: string;
 }
+export interface varifyBankRes {
+  success: boolean;
+  msg: string;
+  data: varifyBankKeys;
+}
+export interface varifyBankKeys {
+  active: string;
+  reason: string;
+  nameMatch: string;
+  nameMatchScore: string;
+}
