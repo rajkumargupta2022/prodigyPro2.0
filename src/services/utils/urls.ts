@@ -47,5 +47,6 @@ export enum endPoints{
    fetchBankByIfsc="/banks/fetch-bank-via-ifsc",
    addBank="banks/add-bank",
    verifyBank="banks/verify-bank",
-   uploadProof="banks/upload-proof"
+   uploadProof="banks/upload-proof",
+   createMandate="mandates/create-mandate"
 }

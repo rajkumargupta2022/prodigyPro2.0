@@ -24,7 +24,7 @@ function AddBankDetails() {
   const [branchName, setBranchName] = useState<string>("")
   const [validated, setValidated] = useState(false);
   const [openAlertModel, setOpenAlertModel] = useState<boolean>(false)
-  const [openCreateMandate, setOpenCreateMandate] = useState<boolean>(false)
+  const [openCreateMandate, setOpenCreateMandate] = useState<boolean>(true)
   const [score, setScore] = useState<number>(0)
   const [inputType,setInputType] = useState<string>("text")
 
@@ -43,10 +43,10 @@ function AddBankDetails() {
         const reqBody = {
           beneficiaryAccount: accountNumber,
           beneficiaryIFSC: ifscCode,
-          beneficiaryName: "MOHD ZUHAIB KHAN"
-          // beneficiaryName: adminUser.name.toUpperCase()
+          beneficiaryName: adminUser.name.toUpperCase()
         }
         const res = await postRequest<varifyBankRes>(endPoints.verifyBank, reqBody)
+         navigate("/add-verification-details",{state:{accountNumber,ifscCode,accountType}})
         if (res.data.nameMatch.toLocaleLowerCase() === "yes" && Number(res.data.nameMatchScore) === 1) {
           setScore(Number(res.data.nameMatchScore))
           saveBank()
@@ -54,7 +54,7 @@ function AddBankDetails() {
           setScore(Number(res.data.nameMatchScore))
           setOpenAlertModel(true)
         } else {
-          errorToast(res.data.reason)
+          errorToast("Something went wrong")
         }
       } catch (err) {
         errorToast("Something went wrong")
@@ -76,11 +76,10 @@ function AddBankDetails() {
       }
       const res = await postRequest<any>(endPoints.addBank, reqBody)
       if (res.success) {
-
         if (score === 1) {
           setOpenCreateMandate(true)
         } else if (score >= 0.8 && score < 1) {
-          navigate("/add-verification-details")
+          navigate("/add-verification-details",{state:{accountNumber,ifscCode,accountType}})
         }
       } else {
         errorToast("Something went wromg..")
@@ -153,7 +152,7 @@ function AddBankDetails() {
               value={accountNumber}
             />
             {/* <span className="text-danger">{accountNumber.length=== 0?"":""}</span> */}
-            <Form.Control.Feedback type="invalid">{accountNumber.length === 0 ? "Mandotry field" : accountNumber.length < 10 && "Please enter valid account number"}</Form.Control.Feedback>
+            <Form.Control.Feedback type="invalid">{accountNumber.length === 0 ? "Mandotry Field" : accountNumber.length < 10 && "Please enter valid account number"}</Form.Control.Feedback>
           </Form.Group>
           <Form.Group as={Col} md="12" controlId="validationCustom02" className="mt-2">
             <Form.Label className="mb-0 fs12px">RE-ENTER ACCOUNT NUMBER</Form.Label>
@@ -165,7 +164,7 @@ function AddBankDetails() {
               placeholder="Enter account number"
               value={confirmAccountNumber}
             />
-            <Form.Control.Feedback type="invalid">{confirmAccountNumber.length === 0 ? "Mandotry field" : confirmAccountNumber.length < 10 && "Please enter valid account number"}</Form.Control.Feedback>
+            <Form.Control.Feedback type="invalid">{confirmAccountNumber.length === 0 ? "Mandotry Field" : confirmAccountNumber.length < 10 && "Please enter valid account number"}</Form.Control.Feedback>
 
           </Form.Group>
           <div className="mt-2">
@@ -184,7 +183,7 @@ function AddBankDetails() {
               value={ifscCode}
 
             />
-            <Form.Control.Feedback type="invalid">{ifscCode.length === 0 ? "Mandotry field" : ifscCode.length < 11 && "Please enter valid ifsc code"}</Form.Control.Feedback>
+            <Form.Control.Feedback type="invalid">{ifscCode.length === 0 ? "Mandotry Field" : ifscCode.length < 11 && "Please enter valid ifsc code"}</Form.Control.Feedback>
 
           </Form.Group>
           <Form.Group as={Col} md="12" controlId="validationCustom04" className="mt-2">
@@ -214,7 +213,7 @@ function AddBankDetails() {
         <button type="submit" className={`customButton px-2 mt-2`}   >Craete e-Mandate</button>
       </Form>
       <AlertModel show={openAlertModel} setShow={setOpenAlertModel} title={"Proceed"} msg={"The name on your UCC does not match with the bank name on your account. This can lead to possible rejections. \nDo you want to continue?"} apiFun={saveBank} />
-      <CreateMandate show={openCreateMandate} setShow={setOpenCreateMandate}/>
+      <CreateMandate show={openCreateMandate} setShow={setOpenCreateMandate} accountNumber={accountNumber} ifscCode={ifscCode} accountType={accountType}/>
     </main>
   );
 }

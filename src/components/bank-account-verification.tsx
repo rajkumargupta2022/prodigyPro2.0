@@ -1,7 +1,7 @@
 import { ArrowLeft, Upload } from "react-bootstrap-icons";
 import CreateMandate from "./create-mandate";
-import { useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { postRequest } from "../services/Api/HandleApi";
 import { endPoints } from "../services/utils/urls";
 import { fetchAdminUser } from "../services/user/adminUser";
@@ -10,12 +10,19 @@ import { errorToast } from "../services/utils/toast";
 
 function AddAccountVerification() {
   const navigate = useNavigate()
+  const location = useLocation()
   const [show, setShow] = useState(false);
   const cancelChequeRef = useRef<HTMLInputElement>(null);
   const [fileBase64Checque, setFileBase64Checque] = useState<string | null>(null);
   const [cancelCheque, setCancelCheque] = useState<string>("");
+  
 
 
+  useEffect(()=>{
+      if(!location?.state?.accountNumber){
+        navigate("/add-bank-details")
+      }
+  },[])
 
   const toBase64 = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -29,12 +36,22 @@ function AddAccountVerification() {
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
+      if (!file.type.startsWith("image/")) {
+        errorToast("Only image files are allowed!");
+        return;
+      }
+
+     
+      const maxSize = 5 * 1024 * 1024; 
+      if (file.size > maxSize) {
+        errorToast("File size must be under 5 MB!");
+        return;
+      }
       setCancelCheque(file.name);
 
       try {
         const base64 = await toBase64(file);
         setFileBase64Checque(base64);
-        console.log("Base64 file:", base64);
       } catch (err) {
         console.error("Error converting file:", err);
       }
@@ -44,16 +61,20 @@ function AddAccountVerification() {
   const proofSubmit = async () => {
     try {
       const adminUser = fetchAdminUser()
-      const reqBody = {
-        data: fileBase64Checque,
-        fileName: cancelCheque,
-        ucc: adminUser?.ucc
-      }
-      const res =await postRequest<any>(endPoints.uploadProof, reqBody)
+
+      const formData = new FormData();
+      formData.append("image", fileBase64Checque ?? "");
+      formData.append("fileName", cancelCheque ?? "");
+      formData.append("ucc", adminUser?.ucc ?? "");
+      formData.append("account_number", location.state.accountNumber ?? "");
+      formData.append("ifsc_code",location.state.ifscCode  ?? "");
+      formData.append("account_type",location.state.accountType  ?? "");
+
+      const res = await postRequest<any>(endPoints.uploadProof, formData)
       console.log(res);
 
     } catch (err) {
-         errorToast(err)
+      errorToast(err)
     }
   }
 
@@ -61,7 +82,7 @@ function AddAccountVerification() {
 
   return (
     <main className="col-md-9 ms-sm-auto col-lg-9 px-md-4 py-4">
-      <CreateMandate setShow={setShow} show={show} />
+      <CreateMandate setShow={setShow} show={show} accountNumber={location?.state?.accountNumber} ifscCode={location?.state?.ifscCode} accountType={location.state.accountType}/>
       <h3>
         <ArrowLeft className="crPointer" size={25} onClick={() => navigate(-1)} />
         Add Bank Account

@@ -1,21 +1,66 @@
 import { useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import { CurrencyRupee } from "react-bootstrap-icons";
+import { amountHandler } from "../services/utils/calculatorsFs";
+import { postRequest } from "../services/Api/HandleApi";
+import { endPoints } from "../services/utils/urls";
+import { errorToast, successToast } from "../services/utils/toast";
 
 interface investmetProps {
   show: boolean;
   setShow: (show: boolean) => void;
+  accountNumber:string,
+  ifscCode:string,
+  accountType:string
+}
+const shortAmount={
+  minValue:1000,
+  twoKValue:2000,
+  threeKValue:3000,
+  fiveKValue:5000
+  
 }
 
-const CreateMandate: React.FC<investmetProps> = ({ show, setShow }) => {
+const CreateMandate: React.FC<investmetProps> = ({ show, setShow,accountNumber,ifscCode,accountType }) => {
   // const [openBankMandate, setOpenBankMandate] = useState<boolean>(false);
   const [checked, setChecked] = useState(false);
+  const [amount,setAmount] = useState<number>(1000)
+  const [fromDate,setFromDate] = useState<string>()
+  const [toDate,setToDate] = useState<string>()
+   const today = new Date().toISOString().split("T")[0];
 
-  // const handleBankMandate = () => {
-  //   setOpenBankMandate(true);
-  //   setShow(false);
-  // };
+  
+  const updateAmount = (value:number)=>{
+       setAmount(amount+value)
+  }
+  const fromDateHandle = (e:React.ChangeEvent<HTMLInputElement>)=>{
+    setFromDate(e.target.value)
+  }
 
+  const toDateHandle = (e:React.ChangeEvent<HTMLInputElement>)=>{
+    setToDate(e.target.value)
+  }
+
+  const createMandate =async ()=>{
+
+    try{
+      const reqBody ={
+        account_number:accountNumber,
+        ifsc_code:ifscCode,
+        account_type:accountType,
+        amount:amount.toString(),
+        start_date:`${fromDate} 00:00:00.000`,
+        end_date:`${toDate} 00:00:00.000`
+      }
+   
+       const res = await postRequest<any>(endPoints.createMandate,reqBody)
+       if(res.success){
+         successToast("Successfully created")
+       }
+    }catch(err){
+       errorToast(err)
+    }
+  }
   return (
     <>
       <Modal
@@ -30,8 +75,8 @@ const CreateMandate: React.FC<investmetProps> = ({ show, setShow }) => {
         <Modal.Body className="modal-bg">
           <div className="borderColor p-3 rounded-4 bg-white">
             <span className="sub-heading modal-heading">Mandate Details</span>
-            <p className="form-label mt-2">MODE</p>
-            <div className="row">
+             {/*  <p className="form-label mt-2">MODE</p>
+          <div className="row">
               <div>
                 <button type="button" className="btn shortcutValue">
                   Debit Card
@@ -41,7 +86,7 @@ const CreateMandate: React.FC<investmetProps> = ({ show, setShow }) => {
                   Net Banking
                 </button>
               </div>
-            </div>
+            </div> */}
             <form>
               <div className="form-group mt-3">
                 <label htmlFor="amountFor" className="fs12px">
@@ -49,26 +94,28 @@ const CreateMandate: React.FC<investmetProps> = ({ show, setShow }) => {
                 </label>
                 <input
                   type="text"
-                  className="form-control input-text"
+                  className="form-control"
                   id="amountFor"
                   aria-describedby="emailHelp"
-                  value={50000}
+                  value={amount}
+
+                  onChange={(e)=>amountHandler(e,1000000,setAmount)}
                 />
                 <div className=" mt-2">
-                  <button type="button" className="btn shortcutValue">
+                  <button type="button" className="btn shortcutValue"onClick={()=>updateAmount(shortAmount.minValue)} >
                     Min.
                   </button>
-                  <button type="button" className="btn shortcutValue mx-1">
+                  <button type="button" className="btn shortcutValue mx-1" onClick={()=>updateAmount(shortAmount.twoKValue)}>
                     <CurrencyRupee className="mb-1" />
-                    1,000
+                    {shortAmount.twoKValue}
                   </button>
-                  <button type="button" className="btn shortcutValue mx-1">
+                  <button type="button" className="btn shortcutValue mx-1" onClick={()=>updateAmount(shortAmount.threeKValue)}>
                     <CurrencyRupee className="mb-1" />
-                    2,000
+                   {shortAmount.threeKValue}
                   </button>
-                  <button type="button" className="btn shortcutValue mx-1">
+                  <button type="button" className="btn shortcutValue mx-1"onClick={()=>updateAmount(shortAmount.fiveKValue)}>
                     <CurrencyRupee className="mb-1" />
-                    5,000
+                    {shortAmount.fiveKValue}
                   </button>
                 </div>
                 <div className="text-center">
@@ -83,8 +130,8 @@ const CreateMandate: React.FC<investmetProps> = ({ show, setShow }) => {
                     <div
                       className={`position-relative rounded-pill`}
                       style={{
-                        width: "50px",
-                        height: "10px",
+                        width: "45px",
+                        height: "8px",
                         transition: "background 0.3s",
                         backgroundColor: checked ? "#CCD2FF" : "#ccc",
                       }}
@@ -92,8 +139,8 @@ const CreateMandate: React.FC<investmetProps> = ({ show, setShow }) => {
                     <div
                       className="position-absolute rounded-circle"
                       style={{
-                        width: "20px",
-                        height: "20px",
+                        width: "17px",
+                        height: "17px",
                         backgroundColor: "#1A35FE",
                         left: checked ? "35px" : "0px",
                         transition: "left 0.3s",
@@ -106,12 +153,12 @@ const CreateMandate: React.FC<investmetProps> = ({ show, setShow }) => {
                   <div className="d-flex mt-3">
                     <div className="w-100 me-2">
                       <label className="form-label mt-2">FROM</label>
-                      <input type="date" className="form-control" />
+                      <input type="date" className="form-control" value={fromDate} onChange={fromDateHandle} min={fromDate || today}/>
                     </div>
 
                     <div className="w-100 ms-2">
                       <label className="form-label mt-2">To</label>
-                      <input type="date" className="form-control" />
+                      <input type="date" className="form-control" value={toDate} onChange={toDateHandle} min={toDate || today}/>
                     </div>
                   </div>
                 )}
@@ -129,7 +176,7 @@ const CreateMandate: React.FC<investmetProps> = ({ show, setShow }) => {
           The debit mandate amount represents the daily maximum limit per
           transaction.
           <div className="mb-3 mt-3">
-            <button className="mandate-button">Proceed</button>
+            <button className="mandate-button" onClick={createMandate}>Proceed</button>
           </div>
         </small>
       </Modal>

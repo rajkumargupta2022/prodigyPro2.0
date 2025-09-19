@@ -231,7 +231,7 @@ const [assetTypeListData, setAssetTypeListData] = useState<assetTypeListKeys[]>(
     }
     
     if (isNewFilter) {
-      setFilteredSchemes(data); // Replace data for new filters
+      setFilteredSchemes(data); 
     } else {
       setFilteredSchemes((prev) => [...prev, ...data]); // Append new data
     }
@@ -296,6 +296,7 @@ const [assetTypeListData, setAssetTypeListData] = useState<assetTypeListKeys[]>(
         break;
       case "asset":
         asset = [value];
+        setClassCode([])
         fetchCategoryList(value)
         setAssetCode(asset);
         break;
