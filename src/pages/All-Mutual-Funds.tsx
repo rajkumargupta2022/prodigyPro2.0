@@ -340,9 +340,11 @@ const [assetTypeListData, setAssetTypeListData] = useState<assetTypeListKeys[]>(
         </div>
         <div className="row">
           <div className="col-lg-4 border-end d-none d-lg-block">
+      
           {!location?.state?.name  &&<Category handleFilter={handleFilter} isAvailable={isAvailable} categoryList={categoryList} assetTypeListData={assetTypeListData}/>}
             <Filters handleFilter={handleFilter} isAvailable={isAvailable} />
           </div>
+               
           <SwitchSchemes
             handleFilter={handleFilter}
             isAvailable={isAvailable}
@@ -357,14 +359,7 @@ const [assetTypeListData, setAssetTypeListData] = useState<assetTypeListKeys[]>(
             assetTypeListData={assetTypeListData}
           />
         </div>
-        {isLoading && (
-          <div className="text-center py-5">
-            <div className="spinner-border text-primary" role="status">
-              <span className="visually-hidden">Loading...</span>
-            </div>
-            <p className="mt-2 text-muted">Loading mutual funds...</p>
-          </div>
-        )}
+        
      
       </Container>
       <Footer />

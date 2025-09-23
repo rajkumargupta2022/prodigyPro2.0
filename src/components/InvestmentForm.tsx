@@ -45,7 +45,7 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
     ) {
       handleMinAmount(true);
       fetchFolios();
-     setMinimumDate(daysAdded(31,sipDateList))
+     setMinimumDate(daysAdded(7,sipDateList))
       setSchemeList((prev: any) =>
         prev.map((obj: any) => {
           return {
@@ -55,7 +55,7 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
             from_date: "",
             amount: Number(obj.minSIPAmt),
             totalAmount: 0,
-            start_date: daysAdded(31, sipDateList),
+            start_date: daysAdded(7, sipDateList),
           };
         })
       );
@@ -228,12 +228,12 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
 
   }
   const handleSipDeduction = () => {
-     setMinimumDate(!schemeList[0].firstSIPToday ?  daysAdded(31, sipDateList): daysAdded(7, sipDateList))
+     setMinimumDate(!schemeList[0].firstSIPToday ?  daysAdded(7, sipDateList): daysAdded(7, sipDateList))
 
     setSchemeList((prev: any) =>
       prev.map((obj: any, index: number) =>
         index === 0
-          ? { ...obj, firstSIPToday: !obj.firstSIPToday,start_date:null } // Toggle the value
+          ? { ...obj, firstSIPToday: !obj.firstSIPToday } // Toggle the value
           : obj
       )
     );

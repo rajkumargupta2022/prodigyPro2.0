@@ -27,7 +27,7 @@ const PortfolioEmpty: React.FC<PortfolioEmptyProps> = ({
       setShow(true);
     }, 1000); // Delay 2 seconds
 
-    return () => clearTimeout(timer); // Cleanup
+  return () => clearTimeout(timer); // Cleanup
   }, []);
 
   return (
@@ -35,19 +35,19 @@ const PortfolioEmpty: React.FC<PortfolioEmptyProps> = ({
       {/* <NavBar /> */}
       <div className="container px-4 mt-3" >
         <div className="row">
-        {show&&<div className="col-md-12 col-sm-12 ">
+        <div className="col-md-12 col-sm-12 ">
             <div className="row  justify-content-center mb-3">
               <div className="col-lg-6 col-md-12 col-sm-12 ">
                 <div className="d-flex justify-content-center my-4">
-                  <img src={images} alt="" height={300}  />
+                  <img src={images} alt="" height={240}  />
                 </div>
-               {title?  <h4 className="text-center">{title}</h4>:""}  
-                 {body?<p className="fs16px mt-1 text-center">{body}</p>:""} 
+               {title?  <h5 className="text-center">{title}</h5>:""}  
+                 {body?<p className="fs14px mt-1 text-center">{body}</p>:""} 
                  
                  {btnName?<button type="button"  className="customButton px-4 mx-auto d-block" onClick={navigateOnPage}>{btnName}</button>:""} 
               </div>
             </div>
-          </div>}
+          </div>
           
 
         </div>

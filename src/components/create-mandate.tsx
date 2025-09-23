@@ -1,64 +1,86 @@
 import { useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import { CurrencyRupee } from "react-bootstrap-icons";
-import { amountHandler } from "../services/utils/calculatorsFs";
 import { postRequest } from "../services/Api/HandleApi";
 import { endPoints } from "../services/utils/urls";
 import { errorToast, successToast } from "../services/utils/toast";
+import { addYearsForApi, currentDayForApi } from "../services/dates/dateFormater";
+import { fetchAdminUser } from "../services/user/adminUser";
+import { useNavigate } from "react-router-dom";
 
 interface investmetProps {
   show: boolean;
   setShow: (show: boolean) => void;
-  accountNumber:string,
-  ifscCode:string,
-  accountType:string
+  accountNumber: string,
+  ifscCode: string,
+  accountType: string
 }
-const shortAmount={
-  minValue:1000,
-  twoKValue:2000,
-  threeKValue:3000,
-  fiveKValue:5000
-  
+const shortAmount = {
+  minValue: 10000,
+  twoKValue: 20000,
+  threeKValue: 50000,
+  fiveKValue: 100000
+
 }
 
-const CreateMandate: React.FC<investmetProps> = ({ show, setShow,accountNumber,ifscCode,accountType }) => {
-  // const [openBankMandate, setOpenBankMandate] = useState<boolean>(false);
-  const [checked, setChecked] = useState(false);
-  const [amount,setAmount] = useState<number>(1000)
-  const [fromDate,setFromDate] = useState<string>()
-  const [toDate,setToDate] = useState<string>()
-   const today = new Date().toISOString().split("T")[0];
+const CreateMandate: React.FC<investmetProps> = ({ show, setShow, accountNumber, ifscCode, accountType }) => {
+   const navigate = useNavigate()
+  const [amount, setAmount] = useState<number>(shortAmount.minValue)
+  const [fromDate, setFromDate] = useState<string>()
+  const [toDate, setToDate] = useState<string>()
+  const [amountError, setAmountError] = useState<string>("")
+  const [fromDateError, setFromDateError] = useState<string>("")
+  const [toDateError, setToDateError] = useState<string>("")
+  const today = new Date().toISOString().split("T")[0];
 
-  
-  const updateAmount = (value:number)=>{
-       setAmount(amount+value)
+
+  const updateAmount = (value: number) => {
+    setAmount(amount + value)
   }
-  const fromDateHandle = (e:React.ChangeEvent<HTMLInputElement>)=>{
-    setFromDate(e.target.value)
-  }
+  const amountHandler = (e: React.ChangeEvent<HTMLInputElement>, maxAmount: number,): void => {
+    let value = Number(e.target.value.trim());
+    if (value <= 1000000000) {
+      setAmount(value);
+      setAmountError("")
 
-  const toDateHandle = (e:React.ChangeEvent<HTMLInputElement>)=>{
-    setToDate(e.target.value)
-  }
+    }
+    else if (value >= maxAmount) {
+      setAmount(maxAmount);
+    }
+  };
 
-  const createMandate =async ()=>{
 
-    try{
-      const reqBody ={
-        account_number:accountNumber,
-        ifsc_code:ifscCode,
-        account_type:accountType,
-        amount:amount.toString(),
-        start_date:`${fromDate} 00:00:00.000`,
-        end_date:`${toDate} 00:00:00.000`
+  const createMandate = async () => {
+    if (!amount) {
+      setAmountError("Please enter amount")
+      return
+    }
+    if (amount < 1000) {
+      setAmountError(`Amount should be greater than or equal to ${shortAmount.minValue}`)
+      return
+    }
+
+
+    try {
+      const adminUser = fetchAdminUser()
+      const reqBody = {
+        ucc: adminUser?.ucc,
+        account_number: accountNumber,
+        ifsc_code: ifscCode,
+        account_type: accountType,
+        amount: amount.toString(),
+        start_date: currentDayForApi(),
+        end_date: addYearsForApi(40)
       }
-   
-       const res = await postRequest<any>(endPoints.createMandate,reqBody)
-       if(res.success){
-         successToast("Successfully created")
-       }
-    }catch(err){
-       errorToast(err)
+
+      const res = await postRequest<any>(endPoints.createMandate, reqBody)
+      if (res.success) {
+        successToast("Mandate created successfully! You'll receive a confirmation link on your registered mail id.")
+        setShow(false)
+        navigate("/bank-details-show")
+      }
+    } catch (err) {
+      errorToast(err)
     }
   }
   return (
@@ -75,7 +97,7 @@ const CreateMandate: React.FC<investmetProps> = ({ show, setShow,accountNumber,i
         <Modal.Body className="modal-bg">
           <div className="borderColor p-3 rounded-4 bg-white">
             <span className="sub-heading modal-heading">Mandate Details</span>
-             {/*  <p className="form-label mt-2">MODE</p>
+            {/*  <p className="form-label mt-2">MODE</p>
           <div className="row">
               <div>
                 <button type="button" className="btn shortcutValue">
@@ -99,69 +121,27 @@ const CreateMandate: React.FC<investmetProps> = ({ show, setShow,accountNumber,i
                   aria-describedby="emailHelp"
                   value={amount}
 
-                  onChange={(e)=>amountHandler(e,1000000,setAmount)}
+                  onChange={(e) => amountHandler(e, 1000000)}
                 />
+                <small className="errorColor">{amountError}</small>
                 <div className=" mt-2">
-                  <button type="button" className="btn shortcutValue"onClick={()=>updateAmount(shortAmount.minValue)} >
+                  <button type="button" className="btn shortcutValue" onClick={() => updateAmount(shortAmount.minValue)} >
                     Min.
                   </button>
-                  <button type="button" className="btn shortcutValue mx-1" onClick={()=>updateAmount(shortAmount.twoKValue)}>
+                  <button type="button" className="btn shortcutValue mx-1" onClick={() => updateAmount(shortAmount.twoKValue)}>
                     <CurrencyRupee className="mb-1" />
                     {shortAmount.twoKValue}
                   </button>
-                  <button type="button" className="btn shortcutValue mx-1" onClick={()=>updateAmount(shortAmount.threeKValue)}>
+                  <button type="button" className="btn shortcutValue mx-1" onClick={() => updateAmount(shortAmount.threeKValue)}>
                     <CurrencyRupee className="mb-1" />
-                   {shortAmount.threeKValue}
+                    {shortAmount.threeKValue}
                   </button>
-                  <button type="button" className="btn shortcutValue mx-1"onClick={()=>updateAmount(shortAmount.fiveKValue)}>
+                  <button type="button" className="btn shortcutValue mx-1" onClick={() => updateAmount(shortAmount.fiveKValue)}>
                     <CurrencyRupee className="mb-1" />
                     {shortAmount.fiveKValue}
                   </button>
                 </div>
-                <div className="text-center">
-                  <span className="D4D4D4D px-3"> Unit Cancelled</span>
-                  <label className="d-inline-flex align-items-center position-relative">
-                    <input
-                      type="checkbox"
-                      className="d-none"
-                      checked={checked}
-                      onChange={() => setChecked(!checked)}
-                    />
-                    <div
-                      className={`position-relative rounded-pill`}
-                      style={{
-                        width: "45px",
-                        height: "8px",
-                        transition: "background 0.3s",
-                        backgroundColor: checked ? "#CCD2FF" : "#ccc",
-                      }}
-                    ></div>
-                    <div
-                      className="position-absolute rounded-circle"
-                      style={{
-                        width: "17px",
-                        height: "17px",
-                        backgroundColor: "#1A35FE",
-                        left: checked ? "35px" : "0px",
-                        transition: "left 0.3s",
-                      }}
-                    ></div>
-                  </label>
-                </div>
 
-                {checked && (
-                  <div className="d-flex mt-3">
-                    <div className="w-100 me-2">
-                      <label className="form-label mt-2">FROM</label>
-                      <input type="date" className="form-control" value={fromDate} onChange={fromDateHandle} min={fromDate || today}/>
-                    </div>
-
-                    <div className="w-100 ms-2">
-                      <label className="form-label mt-2">To</label>
-                      <input type="date" className="form-control" value={toDate} onChange={toDateHandle} min={toDate || today}/>
-                    </div>
-                  </div>
-                )}
               </div>
             </form>
           </div>

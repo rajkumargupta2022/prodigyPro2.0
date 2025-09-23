@@ -32,3 +32,30 @@ export const checkTransactionAllowed = (
     }
   }
 };
+
+export function maskString(input: string): string {
+  if (input.length <= 8) return input; // If too short, return as is
+
+  const firstFour = input.slice(0, 4);
+  const lastFour = input.slice(-4);
+  const stars = '*'.repeat(input.length - 8);
+
+  return `${firstFour}${stars}${lastFour}`;
+}
+
+export function firstLettersOnly(sentence: string): string {
+  if (!sentence) return "";
+
+  return sentence
+    .split(" ")
+    .map(word => word.charAt(0).toUpperCase())
+    .join("");
+}
+
+export const filterData = (arr: any[], key: string) => {
+  if (!Array.isArray(arr) || arr.length === 0) {
+    throw new Error("Array required..");
+  }
+
+  return arr.filter((item: any) => item[key] > 0);
+};

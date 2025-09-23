@@ -1,5 +1,5 @@
 import NofolioImg from "../assets/img/no-folio-founds.jpeg";
-import MySipStpSwp from "./Sip-Stp-Swp";
+import MySipStpSwp from "./Elss-statements";
 import Dividends from "./Dividends";
 import { useState } from "react";
 import MyTransactions from "./My-transactions";

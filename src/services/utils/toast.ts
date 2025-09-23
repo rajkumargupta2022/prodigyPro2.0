@@ -2,6 +2,15 @@ import { toast } from "react-toastify";
 
 export const successToast = (res: any) => {
   toast.dismiss();
+   if (typeof res == "string") {
+    return toast.success(res, {
+      position: "bottom-right",
+      theme: "dark",
+      autoClose: 5000,
+      hideProgressBar: true,
+      closeOnClick: true,
+    });
+  }
   toast.success(res.msg || res.message, {
     position: "bottom-right",
     theme: "dark",

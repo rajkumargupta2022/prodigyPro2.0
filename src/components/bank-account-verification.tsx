@@ -15,6 +15,7 @@ function AddAccountVerification() {
   const cancelChequeRef = useRef<HTMLInputElement>(null);
   const [fileBase64Checque, setFileBase64Checque] = useState<string | null>(null);
   const [cancelCheque, setCancelCheque] = useState<string>("");
+  const [openCreateMandate, setOpenCreateMandate] = useState<boolean>(false)
   
 
 
@@ -71,7 +72,9 @@ function AddAccountVerification() {
       formData.append("account_type",location.state.accountType  ?? "");
 
       const res = await postRequest<any>(endPoints.uploadProof, formData)
-      console.log(res);
+      if(res.success){
+
+      }
 
     } catch (err) {
       errorToast(err)
@@ -142,7 +145,9 @@ function AddAccountVerification() {
       </div>
 
       <button className="mandate-button mt-3" onClick={proofSubmit}>Submit</button>
+      <CreateMandate show={openCreateMandate} setShow={setOpenCreateMandate} accountNumber={location.state.accountNumber} ifscCode={location.state.ifscCode} accountType={location.state.accountType}/>
     </main>
+
   );
 }
 

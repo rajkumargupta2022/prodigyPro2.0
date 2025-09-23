@@ -520,7 +520,14 @@ const SwitchSchemes: React.FC<SchemesProps> = ({
               </Card>
             ))}
           </>
-        ) :""}
+        ) :   (
+          <div className="text-center py-5">
+            <div className="spinner-border text-primary" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>
+            <p className="mt-2 text-muted">Loading mutual funds...</p>
+          </div>
+        )} 
 
         {(totalPages > 1 || hasMore) && (
           <div className="d-flex justify-content-between align-items-center mt-4 mb-4 flex-wrap">

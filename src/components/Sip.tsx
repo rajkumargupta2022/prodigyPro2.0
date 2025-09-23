@@ -7,6 +7,8 @@ import { fetchAdminUser } from "../services/user/adminUser";
 import { getValueInSort } from "../services/calculation/percentageCalculate";
 import { keys } from "../services/utils/keys";
 import { dateInStringNumber } from "../services/dates/dateFormater";
+import Paginations from "./Pagination";
+
 
 function SIP() {
   const navigate = useNavigate();
@@ -22,7 +24,7 @@ function SIP() {
   const fetchOrderData = async () => {
     const adminUser = fetchAdminUser();
     if (adminUser?.ucc) {
-      const reqBody = { ucc: "5013733558", page, limit };
+      const reqBody = { ucc: adminUser?.ucc, page, limit };
       try {
         const res = await postRequest<sipOrderRes>(endPoints.getSipOrders, reqBody);
         if (res.data) {
@@ -35,9 +37,7 @@ function SIP() {
     }
   };
 
-  const totalPages = Math.ceil(totalRecords / limit);
-  const startRecord = (page - 1) * limit + 1;
-  const endRecord = Math.min(page * limit, totalRecords);
+
 
   const detailPage = (item:sipOrderKeys)=>{
         navigate("/sip-order",{state:item})
@@ -46,60 +46,8 @@ function SIP() {
   return (
     <>
       {/* ✅ Pagination Header Above */}
-      <div className="d-flex flex-wrap justify-content-between align-items-center mb-3">
-        {/* Showing count */}
-        <div className="text-secondary small mb-2 mb-md-0">
-          Showing <span className="fw-semibold">{startRecord}</span> -{" "}
-          <span className="fw-semibold">{endRecord}</span> of{" "}
-          <span className="fw-semibold">{totalRecords}</span> results
-        </div>
-
-        {/* Page size selector */}
-        <div className="d-flex align-items-center mb-2 mb-md-0">
-          <label className="me-2 fw-semibold small">Rows per page:</label>
-          <select
-            className="form-select form-select-sm w-auto"
-            value={limit}
-            onChange={(e) => {
-              setPage(1);
-              setLimit(Number(e.target.value));
-            }}
-          >
-            <option value={5}>5</option>
-            <option value={10}>10</option>
-            <option value={20}>20</option>
-            <option value={50}>50</option>
-          </select>
-        </div>
-
-        {/* Pagination controls */}
-        {totalPages > 1 && (
-          <nav>
-            <ul className="pagination pagination-sm mb-0">
-              <li className={`page-item ${page === 1 ? "disabled" : ""}`}>
-                <button className="page-link" onClick={() => setPage(page - 1)}>
-                  Prev
-                </button>
-              </li>
-
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((num) => (
-                <li key={num} className={`page-item ${page === num ? "active" : ""}`}>
-                  <button className="page-link" onClick={() => setPage(num)}>
-                    {num}
-                  </button>
-                </li>
-              ))}
-
-              <li className={`page-item ${page === totalPages ? "disabled" : ""}`}>
-                <button className="page-link" onClick={() => setPage(page + 1)}>
-                  Next
-                </button>
-              </li>
-            </ul>
-          </nav>
-        )}
-      </div>
-
+  
+    <Paginations totalRecords={totalRecords}  page={page} setPage={setPage}  limit={limit} setLimit={setLimit}/>
       {/* ✅ SIP Data List */}
       {sipListData?.length > 0 ? (
         sipListData?.map((item) => (

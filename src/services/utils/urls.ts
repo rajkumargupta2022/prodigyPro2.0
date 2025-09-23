@@ -48,5 +48,8 @@ export enum endPoints{
    addBank="banks/add-bank",
    verifyBank="banks/verify-bank",
    uploadProof="banks/upload-proof",
-   createMandate="mandates/create-mandate"
+   createMandate="mandates/create-mandate",
+   getFolioStatements="reports/get-folio-statements",
+   getElssStatements="reports/get-elss-statements",
+   getDividendStatement="reports/get-dividend-statement"
 }

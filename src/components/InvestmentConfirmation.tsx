@@ -60,7 +60,7 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
   useEffect(() => {
     fetchFolios()
     defaultTransactionType()
-    setMinimumDate(daysAdded(31,sipDateList))
+    setMinimumDate(daysAdded(7,sipDateList))
  
     const updated = schemeList.map(obj => ({
       ...obj,
@@ -69,7 +69,7 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
       from_date: "",
       amount: 0,
       totalAmount: 0,
-      start_date: daysAdded(31, sipDateList),
+      start_date: daysAdded(7, sipDateList),
     }));
     setSchemeList(updated)
   }, [show]);
@@ -160,7 +160,7 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
           return {
             ...item,
             folioList: res.data || [],
-            start_date: item.start_date ?? daysAdded(31, sipDateList), // 👈 keep default if missing
+            start_date: item.start_date ?? daysAdded(7, sipDateList), // 👈 keep default if missing
           };
         } catch (error) {
           return {
@@ -339,7 +339,7 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
   };
 
   const handleSipDeduction = () => {
-      setMinimumDate(!schemeList[0].firstSIPToday ?  daysAdded(31, sipDateList): daysAdded(7, sipDateList))
+      setMinimumDate(!schemeList[0].firstSIPToday ?  daysAdded(7, sipDateList): daysAdded(7, sipDateList))
     setSchemeList((prev: any) =>
       prev.map((obj: any, index: number) =>
         index === 0

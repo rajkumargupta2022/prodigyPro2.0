@@ -1,15 +1,19 @@
 export const currentDateInStringNumber = (data?: string | null): string => {
-  let date: any;
-  if (data) {
-    date = new Date(data);
-  } else {
-    date = new Date();
-  }
+let date: Date;
 
-  return date.toLocaleDateString("en-GB", {
-    day: "2-digit",
-    month: "short",
-  });
+if (data) {
+  date = new Date(data);
+} else {
+  date = new Date();
+}
+
+// subtract 1 day
+date.setDate(date.getDate() - 1);
+
+return date.toLocaleDateString("en-GB", {
+  day: "2-digit",
+  month: "short",
+});
 };
 
 export const dateInStringNumber = (data?: string | null): string => {
@@ -96,6 +100,30 @@ export  const daysAdded = (
   nextMonthDate.setDate(pickedDay);
   return nextMonthDate;
 };
+export function currentDayForApi() {
+  let date = new Date()
+  const startOfDay = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  const pad = (n:any, width = 2) => n.toString().padStart(width, "0");
+
+  return `${startOfDay.getFullYear()}-${pad(startOfDay.getMonth() + 1)}-${pad(startOfDay.getDate())} ` +
+         `${pad(startOfDay.getHours())}:${pad(startOfDay.getMinutes())}:${pad(startOfDay.getSeconds())}.000`;
+}
+export function addYearsForApi(years:number) {
+  const now = new Date();
+  const futureDate = new Date(
+    now.getFullYear() + years,
+    now.getMonth(),
+    now.getDate(), 
+    0, 0, 0, 0 // reset to 00:00:00.000
+  );
+
+  const pad = (n:any, width = 2) => n.toString().padStart(width, "0");
+  return `${futureDate.getFullYear()}-${pad(futureDate.getMonth() + 1)}-${pad(futureDate.getDate())} 00:00:00.000`;
+}
+
+
+
+
 
 
 

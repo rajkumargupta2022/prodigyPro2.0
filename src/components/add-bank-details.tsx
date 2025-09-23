@@ -24,7 +24,7 @@ function AddBankDetails() {
   const [branchName, setBranchName] = useState<string>("")
   const [validated, setValidated] = useState(false);
   const [openAlertModel, setOpenAlertModel] = useState<boolean>(false)
-  const [openCreateMandate, setOpenCreateMandate] = useState<boolean>(true)
+  const [openCreateMandate, setOpenCreateMandate] = useState<boolean>(false)
   const [score, setScore] = useState<number>(0)
   const [inputType,setInputType] = useState<string>("text")
 
@@ -46,15 +46,15 @@ function AddBankDetails() {
           beneficiaryName: adminUser.name.toUpperCase()
         }
         const res = await postRequest<varifyBankRes>(endPoints.verifyBank, reqBody)
-         navigate("/add-verification-details",{state:{accountNumber,ifscCode,accountType}})
         if (res.data.nameMatch.toLocaleLowerCase() === "yes" && Number(res.data.nameMatchScore) === 1) {
           setScore(Number(res.data.nameMatchScore))
           saveBank()
         } else if (res.data.nameMatch.toLocaleLowerCase() === "no" && Number(res.data.nameMatchScore) >= 0.8) {
+          navigate("/add-verification-details",{state:{accountNumber,ifscCode,accountType}})
           setScore(Number(res.data.nameMatchScore))
           setOpenAlertModel(true)
         } else {
-          errorToast("Something went wrong")
+          errorToast(res.data.reason)
         }
       } catch (err) {
         errorToast("Something went wrong")
@@ -91,6 +91,7 @@ function AddBankDetails() {
   const handleAccount = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value
     if (!isNaN(Number(value)) && value.length < 20) {
+      setInputType("text")
       setAccountNumber(value.trim())
     }
   }

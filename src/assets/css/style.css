@@ -1076,8 +1076,8 @@ hr {
 }
 
 .sub-heading {
-  font-weight: 600;
-  font-size: 20px;
+  font-weight: 500;
+  font-size: 18px;
   color: #212121
 }
 
@@ -1286,7 +1286,8 @@ input[type="number"] {
   width: 100vw;
   height: 100vh;
   /* background-color: white; */
-  background-color: rgba(255, 255, 255, 0.6);
+  background-color: white;
+  /* background-color: rgba(255, 255, 255, 0.6); */
   /* Light white and transparent */
   display: flex;
   justify-content: center;
@@ -1797,4 +1798,8 @@ a{
 }
 .form-control.is-valid:focus, .was-validated .form-control:valid:focus{
  border: none !important;
+}
+.selectBoxBg{
+  background-color: rgba(230, 232, 255, 1);
+  color: rgba(55, 55, 55, 1);
 }
