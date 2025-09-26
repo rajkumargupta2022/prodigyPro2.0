@@ -51,5 +51,8 @@ export enum endPoints{
    createMandate="mandates/create-mandate",
    getFolioStatements="reports/get-folio-statements",
    getElssStatements="reports/get-elss-statements",
-   getDividendStatement="reports/get-dividend-statement"
+   getDividendStatement="reports/get-dividend-statement",
+   requestPortfolioStatement="reports/request-portfolio-statement",
+   requestCapitalGainsStatement="reports/request-capital-gains-statement",
+   liveNfo="nfo/live-nfo"
 }

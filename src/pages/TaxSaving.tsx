@@ -1,13 +1,12 @@
 import NavBar from "../components/Navbar";
 import { ChevronRight } from "react-bootstrap-icons";
-import {  Link, useNavigate } from "react-router-dom";
+import {  Link } from "react-router-dom";
 import { useState } from "react";
 import SchemeDetails from "../components/SchemeDetails";
 import RecomendedSchemes from "../components/Recomended-schemes";
 import { endPoints } from "../services/utils/urls";
 
 const TaxSaving = () => {
-  const navigate = useNavigate()
   const [openSchemeDetail, setOpenSchemeDetail] = useState<boolean>(false)
   // const handleSchemeDetail = () => {
   //   setOpenSchemeDetail(true)

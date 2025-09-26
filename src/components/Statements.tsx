@@ -3,9 +3,10 @@ import MySipStpSwp from "./Elss-statements";
 import Dividends from "./Dividends";
 
 import { useState } from "react";
-import MyTransactions from "./My-transactions";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "react-bootstrap-icons";
+import CapitalGain from "./Capital-gains";
+import PortfolioViaEmail from "./Portfolio-via-email";
 function Statements() {
   const navigate = useNavigate()
   const [active, setActive] = useState("folio-details");
@@ -18,8 +19,10 @@ function Statements() {
         return <MySipStpSwp />;
            case "dividendts":
         return <Dividends />
-      case "dividends":
-        return <MyTransactions />;
+      case "capital-gain":
+        return <CapitalGain />;
+         case "portfolio-via-email":
+        return <PortfolioViaEmail />;
     }
   };
 
@@ -35,8 +38,8 @@ function Statements() {
           <button type="button" className={`btn statementBtn ${active=="folio-details"&&"statementBtnActive"} mx-1 my-md-0 my-1`} onClick={() => setActive("folio-details")}>Folio Details</button>
           <button type="button" className={`btn statementBtn ${active=="elss-statements"&&"statementBtnActive"} mx-1 my-md-0 my-1`} onClick={() => setActive("elss-statements")}>ELSS Statements</button>
           <button type="button" className={`btn statementBtn ${active=="dividendts"&&"statementBtnActive"} mx-1 my-md-0 my-1`} onClick={() => setActive("dividendts")}>Dividends</button>
-          <button type="button" className={`btn statementBtn ${active=="folio-details"&&"statementBtnActive"} mx-1 my-md-0 my-1`} onClick={() => setActive("swp")}> Capital Gains</button>
-          <button type="button" className={`btn statementBtn ${active=="folio-details"&&"statementBtnActive"} mx-1 my-md-0 my-1`} onClick={() => setActive("dividends")}> Portfolio (via Email)</button>
+          <button type="button" className={`btn statementBtn ${active=="capital-gain"&&"statementBtnActive"} mx-1 my-md-0 my-1`} onClick={() => setActive("capital-gain")}> Capital Gains</button>
+          <button type="button" className={`btn statementBtn ${active=="portfolio-via-email"&&"statementBtnActive"} mx-1 my-md-0 my-1`} onClick={() => setActive("portfolio-via-email")}> Portfolio (via Email)</button>
         </div>
 
 

@@ -1,17 +1,91 @@
 import NavBar from "../components/Navbar";
-import icici from "../assets/img/bank-logo/icici.png"
 import { ChevronRight, CurrencyRupee } from "react-bootstrap-icons";
-import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
-import SchemeDetails from "../components/SchemeDetails";
+import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { Card } from "react-bootstrap";
+import { getRequest } from "../services/Api/HandleApi";
+import { endPoints, imageUrl } from "../services/utils/urls";
+import { nfoLiveRes } from "./data-interfaces/nfo";
+import { dateInStringNumber } from "../services/dates/dateFormater";
+import { schemeDeatilDataKeys } from "./data-interfaces/transact";
 
 const NFOLive = () => {
   const navigate = useNavigate()
-  const [openSchemeDetail, setOpenSchemeDetail] = useState<boolean>(false)
-  // const handleSchemeDetail = () => {
-  //   setOpenSchemeDetail(true)
-  // }
+
+  const [nfoSchemeList, setNfoSchemeList] = useState<schemeDeatilDataKeys[]>([])
+
+
+  useEffect(() => {
+    fetchNfoLiveScheme()
+  }, [])
+  const fetchNfoLiveScheme = async () => {
+    try {
+      const res = await getRequest<nfoLiveRes>(endPoints.liveNfo)
+      if (res.success) {
+        let data = res.data.filter((item: schemeDeatilDataKeys) => {
+          return (item.sipAllowed || item.purchaseAllowed || item?.sipDateList?.length > 0)
+        })
+        const validData = removeExpired(data);
+        setNfoSchemeList(validData)
+      }
+    } catch (err) {
+      setNfoSchemeList([])
+    }
+  }
+  function removeExpired(items: schemeDeatilDataKeys[]): schemeDeatilDataKeys[] {
+    const now = new Date();
+
+    return items.filter(item => {
+      const closeDate = new Date(item?.nfo_close_date??"");
+      console.log(closeDate.getTime() );
+      
+      return closeDate.getTime() > now.getTime(); // keep only future ones
+    });
+  }
+
+function getRemainingDays(closeDate: Date | string): string {
+  const now = new Date();
+  const close = new Date(closeDate);
+
+  // Format closing time
+  const options: Intl.DateTimeFormatOptions = { 
+    hour: "numeric", 
+    minute: "2-digit", 
+    hour12: true 
+  };
+  const closingTime = close.toLocaleTimeString("en-US", options);
+
+  // Difference in days (ignoring time)
+  const msInDay = 1000 * 60 * 60 * 24;
+  const today = new Date(now);
+  today.setHours(0, 0, 0, 0);
+
+  const closingDay = new Date(close);
+  closingDay.setHours(0, 0, 0, 0);
+
+  const diffInDays = Math.floor((closingDay.getTime() - today.getTime()) / msInDay);
+
+  if (diffInDays === 0) {
+    return `closes today at ${closingTime}`;
+  } else if (diffInDays === 1) {
+    return "1 day to go";
+  } else if (diffInDays > 1) {
+    return `${diffInDays} days to go`;
+  } else {
+    return "already closed";
+  }
+}
+
+
+
+
+
+
+
+  const applyNow = async (data: schemeDeatilDataKeys) => {
+    navigate("/nfo-apply", { state: data })
+
+  }
   return (
     <>
       <NavBar />
@@ -20,7 +94,7 @@ const NFOLive = () => {
       <div className="container pt-2">
         <div className="personal_form_container">
           <div className="d-flex my-3">
-            <h6 className="logoBlueColor crPointer" onClick={()=>navigate("/dashboard")}>Home <small className="greyColor"> <ChevronRight className="fs12px bold" /> NFO Live</small> </h6>
+            <h6 className="logoBlueColor crPointer" onClick={() => navigate("/dashboard")}>Home <small className="greyColor"> <ChevronRight className="fs12px bold" /> NFO Live</small> </h6>
           </div>
           <div className="row">
             <div className=" col">
@@ -31,136 +105,52 @@ const NFOLive = () => {
 
         </div>
       </div>
-      <div className="container py-2">
-        <div className="personal_form_container">
-          <div className="borderColor p-3 headerRadius bg-white">
-            <div className="d-flex justify-content-between">
-              <div className="d-flex">
-                <div className="prod_icon_img">
-                  <img src={icici} height={35} width={35} alt="" />
+      {nfoSchemeList.length > 0 ? nfoSchemeList.map((item) => {
+        return <div className="container py-2">
+          <div className="personal_form_container">
+            <div className="borderColor p-3 headerRadius bg-white">
+              <div className="d-flex justify-content-between">
+                <div className="d-flex">
+                  <div className="prod_icon_img">
+                    <img src={`${imageUrl + item.accordAMCCode}.png`} height={35} width={35} alt="" className="rounded" />
+                  </div>
+                  <div className="ms-2 prod_icon_heading">
+                    <h4>{item.scheme}</h4>
+                    {/* <p>Selected fund 2</p> */}
+                  </div>
                 </div>
-                <div className="ms-2 prod_icon_heading">
-                  <h4>ICICI Prudential bluechip Funds</h4>
-                  <p>Selected fund 2</p>
+                <div className="prod_view_fund align-self-center">
+                  <div className="logoBlueColor crPointer fs12px"><ChevronRight /></div>
                 </div>
               </div>
-              <div className="prod_view_fund align-self-center">
-                <div className="logoBlueColor crPointer fs12px"><ChevronRight /></div>
+              <hr />
+              <div className="row text-start mt-2">
+                <div className="col-md-4 py-2 py-md-0">
+                  <small className="fs14px">Open</small><br />
+                  <small>{dateInStringNumber(item.launchDate)}</small>
+                </div>
+                <div className="col-md-4 py-2 py-md-0">
+                  <small className="fs14px">Close</small><br />
+                  <small>{dateInStringNumber(item.nfo_close_date)}</small>
+                </div>
+                <div className="col-md-4 py-2 py-md-0">
+                  <small className="fs14px">Min. Invest</small><br />
+                  <small><CurrencyRupee className="mb-1" />{item.sipAllowed ? item.minSIPAmt : item.purchaseAllowed && item.minLumSumAmt}</small>
+                </div>
               </div>
             </div>
-            <hr />
-            <div className="row text-start mt-2">
-              <div className="col-md-4 py-2 py-md-0">
-                <small className="fs14px">Open</small><br />
-                <small>14th Jan</small>
+            <Card.Header className='scheme-bg footerRadius px-3 py-2 fs14px'>
+              <div className="row">
+                <div className="col-6"> {getRemainingDays(item.nfo_close_date ?? "")}</div>
+                <div className="col-6 text-end"> <div className="logoBlueColor crPointer fw-bold" onClick={() => applyNow(item)}>Apply now</div> </div>
               </div>
-              <div className="col-md-4 py-2 py-md-0">
-                <small className="fs14px">Close</small><br />
-                <small>20th Jan</small>
-              </div>
-              <div className="col-md-4 py-2 py-md-0">
-                <small className="fs14px">Min. Invest</small><br />
-                <small><CurrencyRupee className="mb-1" />100</small>
-              </div>
-            </div>
+            </Card.Header>
+
+
           </div>
-          <Card.Header className='scheme-bg footerRadius px-3 py-2 fs14px'>
-            <div className="row">
-              <div className="col-6">4 Days to close</div>
-              <div className="col-6 text-end"> <Link to="/nfo-apply" className="logoBlueColor">Aplly now</Link> </div>
-            </div>
-          </Card.Header>
-
-
         </div>
-      </div>
-      <div className="container py-2">
-        <div className="personal_form_container">
-          <div className="borderColor p-3 headerRadius bg-white">
-            <div className="d-flex justify-content-between">
-              <div className="d-flex">
-                <div className="prod_icon_img">
-                  <img src={icici} height={35} width={35} alt="" />
-                </div>
-                <div className="ms-2 prod_icon_heading">
-                  <h4>ICICI Prudential bluechip Funds</h4>
-                  <p>Selected fund 2</p>
-                </div>
-              </div>
-              <div className="prod_view_fund align-self-center">
-                <div className="logoBlueColor crPointer fs12px"><ChevronRight /></div>
-              </div>
-            </div>
-            <hr />
-            <div className="row text-start mt-2">
-              <div className="col-md-4 py-2 py-md-0">
-                <small className="fs14px">Open</small><br />
-                <small>14th Jan</small>
-              </div>
-              <div className="col-md-4 py-2 py-md-0">
-                <small className="fs14px">Close</small><br />
-                <small>20th Jan</small>
-              </div>
-              <div className="col-md-4 py-2 py-md-0">
-                <small className="fs14px">Min. Invest</small><br />
-                <small><CurrencyRupee className="mb-1" />100</small>
-              </div>
-            </div>
-          </div>
-          <Card.Header className='scheme-bg footerRadius px-3 py-2 fs14px'>
-            <div className="row">
-              <div className="col-6">4 Days to close</div>
-              <div className="col-6 text-end"> <Link to="/nfo-apply">Aplly now</Link> </div>
-            </div>
-          </Card.Header>
+      }) : ""}
 
-
-        </div>
-      </div>
-      <div className="container pt-2">
-        <div className="personal_form_container">
-          <div className="borderColor p-3 headerRadius bg-white">
-            <div className="d-flex justify-content-between">
-              <div className="d-flex">
-                <div className="prod_icon_img">
-                  <img src={icici} height={35} width={35} alt="" />
-                </div>
-                <div className="ms-2 prod_icon_heading">
-                  <h4>ICICI Prudential bluechip Funds</h4>
-                  <p>Selected fund 2</p>
-                </div>
-              </div>
-              <div className="prod_view_fund align-self-center">
-                <div className="logoBlueColor crPointer fs12px"><ChevronRight /></div>
-              </div>
-            </div>
-            <hr />
-            <div className="row text-start mt-2">
-              <div className="col-md-4 py-2 py-md-0">
-                <small className="fs14px">Open</small><br />
-                <small>14th Jan</small>
-              </div>
-              <div className="col-md-4 py-2 py-md-0">
-                <small className="fs14px">Close</small><br />
-                <small>20th Jan</small>
-              </div>
-              <div className="col-md-4 py-2 py-md-0">
-                <small className="fs14px">Min. Invest</small><br />
-                <small><CurrencyRupee className="mb-1" />100</small>
-              </div>
-            </div>
-          </div>
-          <Card.Header className='scheme-bg footerRadius px-3 py-2 fs14px'>
-            <div className="row">
-              <div className="col-6">4 Days to close</div>
-              <div className="col-6 text-end"> <Link to="/nfo-apply">Aplly now</Link> </div>
-            </div>
-          </Card.Header>
-
-
-        </div>
-      </div>
-      <SchemeDetails show={openSchemeDetail} setShow={setOpenSchemeDetail} />
     </>
   );
 };

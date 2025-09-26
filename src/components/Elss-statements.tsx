@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
-import HDFC from "../assets/img/bank-logo/icici.png";
 import Form from 'react-bootstrap/Form';
 import { postRequest } from "../services/Api/HandleApi";
-import { endPoints } from "../services/utils/urls";
+import { endPoints, imageUrl } from "../services/utils/urls";
 import { fetchAdminUser } from "../services/user/adminUser";
 import { elssSchemeKey, elssStatementRes } from "../pages/data-interfaces/reports";
 import { getValueInSort } from "../services/calculation/percentageCalculate";
 import elssEmpty from "../assets/img/elssEmpty.png"
 import PortfolioEmpty from "../pages/PortfolioEmpty";
 import Paginations from "./Pagination";
+import { dateInStringNumber } from "../services/dates/dateFormater";
 
 function ElssStatements() {
-  const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().slice(0, 7))
+  const [selectedDate, setSelectedDate] = useState<string>("")
   const [yearList,setYearList] = useState<string[]>([])
   const [schemeList,setSchemeList] = useState<elssSchemeKey[]>([])
   const [totalInvestment,setTotalInvestment] = useState<number>(0)
@@ -91,7 +91,7 @@ function ElssStatements() {
         <div className="row justify-content-between">
           <div className="col-lg-8 col-md-6 col-12 py-2">
             <div className="d-flex">
-              <img src={HDFC} alt="Image not found" />
+              <img src={`${imageUrl + item?.accord_amc_code}.png`} className="rounded" height={40} width={40} alt="Image not found" />
               <div className="ms-2" style={{ flex: 4 }}>
                 <h6 style={{ margin: 0 }}>
                   {item.scheme_name}
@@ -114,14 +114,14 @@ function ElssStatements() {
           <div>
             <span className="text-secondary">Order Date</span>
             <br />
-            <span className="value-font2">{item.transaction_date}</span>
+            <span className="value-font2">{dateInStringNumber(item.transaction_date)}</span>
           </div>
 
           <div>
             <span className="text-secondary">Units</span>
             <br />
             <span className="value-font2">
-              11.62 <span className="fw-light">(NAV:₹{item.units_alloted})</span>
+              <span className="value-font2">{item.units_alloted.toFixed(2)}</span>
             </span>
           </div>
 

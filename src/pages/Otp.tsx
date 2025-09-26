@@ -51,7 +51,7 @@ const Otp = () => {
       if (res) {
         if (res?.success && res.portfolioUser) {
           localStorage.setItem("token", res.token);
-          localStorage.setItem("pan", res.PAN);
+          res.PAN ? localStorage.setItem("pan", res.PAN) :localStorage.setItem("pan", res.GPAN);
           const userRes = await getRequest<userStatusResponse>(endPoints.userStatus);
           if (userRes) {
             localStorage.setItem("user", JSON.stringify(userRes.data));

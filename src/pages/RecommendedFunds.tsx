@@ -1,15 +1,14 @@
 import NavBar from "../components/Navbar";
-import { ChevronRight, Line } from "react-bootstrap-icons";
+import { ChevronRight } from "react-bootstrap-icons";
 import { useEffect, useState } from "react";
 import SchemeDetails from "../components/SchemeDetails";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import RecomendedSchemes from "../components/Recomended-schemes";
 import { endPoints } from "../services/utils/urls";
 import { getRequest } from "../services/Api/HandleApi";
 import { durationKeys, riskDurationRes, riskKeys } from "./data-interfaces/explore";
 
 const RecommendedFunds = () => {
-  const navigate = useNavigate()
   const [openSchemeDetail, setOpenSchemeDetail] = useState<boolean>(false)
   const [selectedRiskType, setSelectedRiskType] = useState<number>()
   const [selectedYear, setSelectedYear] = useState<number>()

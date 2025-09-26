@@ -18,12 +18,12 @@ interface addAmountKeys {
   second: number;
   third: number
 }
-interface InvestmentFormProps {
+interface NfoInvestmentProps {
   schemeList: schemeDeatilDataKeys[]
   setSchemeList: (date: any) => void;
   sipDateList: number[]
 }
-const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeList, sipDateList }) => {
+const NfoInvestment: React.FC<NfoInvestmentProps> = ({ schemeList, setSchemeList, sipDateList }) => {
   const [isSipTransaction, setIsSipTransaction] = useState<boolean>(true)
   const [addAmountValues, setAddAmountValues] = useState<addAmountKeys>({
     min: 1000,
@@ -63,17 +63,8 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
       if (!checkTransactionAllowed(schemeList, keys.sip) && checkTransactionAllowed(schemeList, keys.purchase)) {
         handleTransactionType(false)
       }
-    }else{
-      setIsSipTransaction(false)
-       setAddAmountValues({
-        min: 5000,
-        first: 10000,
-        second: 15000,
-        third: 25000
-      })
-       setAmount(5000)
     }
-  }, []);
+  }, [schemeList]);
 
 
 
@@ -327,4 +318,4 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
     <SelectFolioPopup show={openSelectFolio} setShow={setOpenSelectFolio} schemeList={schemeList} setSchemeList={setSchemeList} isSipTransaction={isSipTransaction} />
   </>)
 }
-export default InvestmentForm
+export default NfoInvestment

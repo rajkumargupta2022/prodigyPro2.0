@@ -3,41 +3,43 @@ export interface schemeDetailType {
   data: schemeDeatilDataKeys[];
 }
 export interface schemeDeatilDataKeys {
-  accordAMCCode: number;
-  sipAllowed: boolean;
-  stpAllowed: boolean;
-  swpAllowed: boolean;
-  purchaseAllowed: boolean;
-  redemptionAllowed: boolean;
-  switchAllowed: boolean;
-  nseAMCCode: string;
   scheme: string;
   accordSchemeCode: number;
-  nseProductCode: string;
-  // amcCode: string;
-  nseReinvestTag: string;
-  launchDate: string;
-  lockInPeriod: number;
-  ISIN: string;
+  accordAMCCode: number;
   cnav: number;
-  expenseRatio: number;
-  planType: string;
-  planOption: string;
+  launchDate: string;
+  nfo_close_date?:string
   equityType: string;
-  fundSize: number;
-  risk?: string;
   minSIPAmt: number;
-  minLumSumAmt: number;
-  exitLoadPeriod: number;
-  exitLoad: string;
+  minLumSumAmt: number; 
+  planOption: string;
+  sipAllowed: boolean;
   sipDateList: number[];
-  stpDateList: number[];
-  swpDateList: number[];
+  purchaseAllowed: boolean;
+  planType: string;
+  nfo_allotment_date?:string|null
+  nseProductCode: string;
+  nseAMCCode: string;
+  stpAllowed?: boolean;
+  swpAllowed?: boolean;
+  redemptionAllowed?: boolean;
+  switchAllowed?: boolean;
+  // amcCode: string;
+  nseReinvestTag?: string;
+  lockInPeriod?: number;
+  ISIN?: string;
+  expenseRatio?: number;
+  fundSize?: number;
+  risk?: string;
+  exitLoadPeriod?: number;
+  exitLoad?: string;
+  stpDateList?: number[];
+  swpDateList?: number[];
   swpFrequency?: string[];
   stpFrequency?: string[];
-  oneYearCAGR: number;
-  threeYearCAGR: number;
-  fiveYearCAGR: number;
+  oneYearCAGR?: number;
+  threeYearCAGR?: number;
+  fiveYearCAGR?: number;
   amount?: number;
   totalAmount?:number;
   folioList?: foliosKeys[];
@@ -46,7 +48,7 @@ export interface schemeDeatilDataKeys {
   start_date?: any;
   from_date?: any;
   to_date?: any;
-  firstSIPToday:boolean
+  firstSIPToday?:boolean
 }
 
 export interface navHistoryResponse {

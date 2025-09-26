@@ -7,7 +7,7 @@ export const checkTransactionAllowed = (
 ) => {
   for (let i = 0; i < schemeList?.length; i++) {
     if (checkType === keys?.sip) {
-      if (schemeList[i]?.sipDateList?.length === 0) {
+      if ((schemeList[i]?.sipDateList?.length??0) === 0) {
         return false;
       }
       return schemeList[i]?.sipAllowed;
@@ -18,12 +18,12 @@ export const checkTransactionAllowed = (
     } else if (checkType === keys.redumption) {
       return schemeList[i].redemptionAllowed;
     } else if (checkType === keys.stp) {
-      if (schemeList[i].stpDateList.length === 0) {
+      if ((schemeList[i].stpDateList?.length ?? 0) === 0) {
         return false;
       }
       return schemeList[i].stpAllowed;
     } else if (checkType === keys.swp) {
-      if (schemeList[i].swpDateList.length === 0) {
+      if ((schemeList[i].swpDateList?.length??0) === 0) {
         return false;
       }
       return schemeList[i].swpAllowed;
@@ -53,7 +53,7 @@ export function firstLettersOnly(sentence: string): string {
 }
 
 export const filterData = (arr: any[], key: string) => {
-  if (!Array.isArray(arr) || arr.length === 0) {
+  if (!Array.isArray(arr) || arr?.length === 0) {
     throw new Error("Array required..");
   }
 

@@ -51,3 +51,25 @@ export interface elssSchemeKey {
   transaction_type: string; // Buy/Sell (Only successful orders needs to be listed)
   units_alloted: number;
 }
+
+export interface dividendsStatementRes {
+  success: boolean;
+  data: dividendsTotalKey;
+}
+export interface dividendsTotalKey {
+  total_dividend: number;
+  holdings: dividendsSchemeKey[];
+}
+export interface dividendsSchemeKey {
+  accord_scheme_code: number;
+  accord_amc_code: number;
+  scheme_name: string;
+  folio_number: string;
+  dividend_amount: number;
+  transaction_date: string;
+}
+
+export interface capitalGainRes {
+  success: boolean;
+  msg: string;
+}

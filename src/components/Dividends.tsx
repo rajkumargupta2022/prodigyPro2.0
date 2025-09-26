@@ -1,26 +1,26 @@
 import { useEffect, useState } from "react";
-import HDFC from "../assets/img/bank-logo/icici.png";
 import Form from 'react-bootstrap/Form';
 import { postRequest } from "../services/Api/HandleApi";
-import { endPoints } from "../services/utils/urls";
+import { endPoints, imageUrl } from "../services/utils/urls";
 import { fetchAdminUser } from "../services/user/adminUser";
-import { elssSchemeKey, elssStatementRes } from "../pages/data-interfaces/reports";
+import { dividendsSchemeKey, dividendsStatementRes } from "../pages/data-interfaces/reports";
 import { getValueInSort } from "../services/calculation/percentageCalculate";
 import elssEmpty from "../assets/img/elssEmpty.png"
 import PortfolioEmpty from "../pages/PortfolioEmpty";
 import Paginations from "./Pagination";
+import { dateInStringNumber } from "../services/dates/dateFormater";
 
 function Dividends() {
   const [selectedDate, setSelectedDate] = useState<string>()
   const [yearList, setYearList] = useState<string[]>([])
-  const [schemeList, setSchemeList] = useState<elssSchemeKey[]>([])
+  const [schemeList, setSchemeList] = useState<dividendsSchemeKey[]>([])
   const [totalInvestment, setTotalInvestment] = useState<number>(0)
   const [limit, setLimit] = useState<number>(20);
   const [page, setPage] = useState<number>(1);
   const yearHandler = (e: any) => {
     console.log(e.target.value);
     setSelectedDate(e.target.value)
-    fetchElssStatements(e.target.value)
+    fetchDividends(e.target.value)
 
   }
 
@@ -32,22 +32,20 @@ function Dividends() {
     let currentYear = today.getFullYear();
 
     // If before April, we are still in the previous financial year
-    if (today.getMonth() < 3) {
+    if (today.getMonth() <= 3) {
       currentYear -= 1;
     }
-
     const years: string[] = [];
-
     for (let year = startYear; year <= currentYear; year++) {
       years.push(`${year}-${year + 1}`);
     }
 
     const reversed = years.reverse();
     setYearList(reversed);
-    fetchElssStatements(reversed[0]);
+    fetchDividends(reversed[0]);
   };
 
-  const fetchElssStatements = async (year: string) => {
+  const fetchDividends = async (year: string) => {
     try {
       const adminUser = fetchAdminUser()
       const reqBody = {
@@ -55,10 +53,10 @@ function Dividends() {
         from: Number(year.split("-")[0]),
         to: Number(year.split("-")[1])
       }
-      const res = await postRequest<elssStatementRes>(endPoints.getDividendStatement, reqBody)
+      const res = await postRequest<dividendsStatementRes>(endPoints.getDividendStatement, reqBody)
       if (res.success) {
         setSchemeList(res.data.holdings)
-        setTotalInvestment(res.data.total_investment)
+        setTotalInvestment(res.data.total_dividend)
       }
     } catch (err) {
       console.log(err);
@@ -90,7 +88,7 @@ function Dividends() {
           <div className="row justify-content-between">
             <div className="col-lg-8 col-md-6 col-12 py-2">
               <div className="d-flex">
-                <img src={HDFC} alt="Image not found" />
+                 <img src={`${imageUrl + item?.accord_amc_code}.png`} className="rounded" height={40} width={40} alt="Image not found" />
                 <div className="ms-2" style={{ flex: 4 }}>
                   <h6 style={{ margin: 0 }}>
                     {item.scheme_name}
@@ -109,29 +107,24 @@ function Dividends() {
 
           <hr className="fw-light text-secondary" />
 
-          <div className="d-flex justify-content-between">
-            <div>
+          <div className="row">
+            <div className="col-6">
               <span className="text-secondary">Order Date</span>
               <br />
-              <span className="value-font2">{item.transaction_date}</span>
+              <span className="value-font2">{dateInStringNumber(item.transaction_date)}</span>
             </div>
 
-            <div>
-              <span className="text-secondary">Units</span>
+            <div className="col-6">
+              <span className="text-secondary">Amount</span>
               <br />
               <span className="value-font2">
-                11.62 <span className="fw-light">(NAV:₹{item.units_alloted})</span>
+                 <span className="text-dark">₹{getValueInSort(item.dividend_amount)}</span>
               </span>
             </div>
 
-            <div>
-              <span className="text-secondary">Amount</span>
-              <br />
-              <span className="value-font2">₹{getValueInSort(item.transaction_amount)}</span>
-            </div>
           </div>
         </div>
-      }) : <PortfolioEmpty images={elssEmpty} title={"No Investments Found"} body={"Your ELSS investment details will appear here once you start investing."} btnName={""} btnUrl={""} />}
+      }) : <PortfolioEmpty images={elssEmpty} title={"No Investments Found"} body={"Your Dividends investment details will appear here once you start investing."} btnName={""} btnUrl={""} />}
       {schemeList.length > 0 ?
         <Paginations totalRecords={schemeList.length} page={page} setPage={setPage} limit={limit} setLimit={setLimit} /> : ""}
     </>

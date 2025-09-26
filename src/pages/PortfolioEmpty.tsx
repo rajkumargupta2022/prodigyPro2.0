@@ -1,5 +1,5 @@
 // import empty from "../assets/img/empty-img.svg"
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 interface PortfolioEmptyProps{
@@ -17,14 +17,12 @@ const PortfolioEmpty: React.FC<PortfolioEmptyProps> = ({
   btnName,
   btnUrl = "#"
 }) => {
-    const [show, setShow] = useState<boolean>(false);
   const navigate = useNavigate()
   const navigateOnPage = () => {
     navigate(btnUrl)
   }
     useEffect(() => {
     const timer = setTimeout(() => {
-      setShow(true);
     }, 1000); // Delay 2 seconds
 
   return () => clearTimeout(timer); // Cleanup

@@ -1,13 +1,12 @@
 import NavBar from "../components/Navbar";
 import { ChevronRight } from "react-bootstrap-icons";
 import Footer from "../components/Footer";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import RecomendedSchemes from "../components/Recomended-schemes";
 import { endPoints } from "../services/utils/urls";
 
 const EmergencyFund = () => {
-  const navigate = useNavigate()
 
 
 

@@ -155,7 +155,7 @@ const AllMutualFunds = () => {
   const [page, setPage] = useState<number>(1); // Tracks current API page
   // const [retunrs, setretunrs] = useState<number>(3);
   const [filteredSchemes, setFilteredSchemes] = useState<filteredSchemesKeys[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   // const [error, setError] = useState<string | null>(null);
   const [hasMore, setHasMore] = useState<boolean>(true); // Tracks if more pages exist
   const [fetchedPages, setFetchedPages] = useState<number[]>([]); // Tracks fetched API pages
@@ -192,7 +192,6 @@ const [assetTypeListData, setAssetTypeListData] = useState<assetTypeListKeys[]>(
     classArr: number[] = classCode,
     pageNum: number = page
   ) => {
-    setIsLoading(true);
     const reBody = {
       amc_code: amc,
       asset_code: asset,
@@ -203,13 +202,11 @@ const [assetTypeListData, setAssetTypeListData] = useState<assetTypeListKeys[]>(
         `${endPoints.getFilteredScheme}?page=${pageNum}&returns=${3}&per_page=25`,
         reBody
       );
-      setIsLoading(false);
       return {
         data: res.data || [],
       };
     } catch (err) {
       console.error(`Error fetching page ${pageNum}:`, err);
-      setIsLoading(false);
       return { data: [] };
     }
   };

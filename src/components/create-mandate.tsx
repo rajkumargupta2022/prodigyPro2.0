@@ -26,12 +26,8 @@ const shortAmount = {
 const CreateMandate: React.FC<investmetProps> = ({ show, setShow, accountNumber, ifscCode, accountType }) => {
    const navigate = useNavigate()
   const [amount, setAmount] = useState<number>(shortAmount.minValue)
-  const [fromDate, setFromDate] = useState<string>()
-  const [toDate, setToDate] = useState<string>()
   const [amountError, setAmountError] = useState<string>("")
-  const [fromDateError, setFromDateError] = useState<string>("")
-  const [toDateError, setToDateError] = useState<string>("")
-  const today = new Date().toISOString().split("T")[0];
+
 
 
   const updateAmount = (value: number) => {
