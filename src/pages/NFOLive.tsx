@@ -45,9 +45,12 @@ const NFOLive = () => {
 
 function getRemainingDays(closeDate: Date | string): string {
   const now = new Date();
-  const close = new Date(closeDate);
+  const close = new Date("2025-09-29T18:30:00.000Z");
 
-  // Format closing time
+  // Force 6:30 PM on the close date (18:30 hours)
+  close.setHours(18, 30, 0, 0);
+
+  // Format closing time (in local time)
   const options: Intl.DateTimeFormatOptions = { 
     hour: "numeric", 
     minute: "2-digit", 
@@ -55,7 +58,7 @@ function getRemainingDays(closeDate: Date | string): string {
   };
   const closingTime = close.toLocaleTimeString("en-US", options);
 
-  // Difference in days (ignoring time)
+  // Reset times to midnight for day-difference calculation
   const msInDay = 1000 * 60 * 60 * 24;
   const today = new Date(now);
   today.setHours(0, 0, 0, 0);
@@ -64,17 +67,25 @@ function getRemainingDays(closeDate: Date | string): string {
   closingDay.setHours(0, 0, 0, 0);
 
   const diffInDays = Math.floor((closingDay.getTime() - today.getTime()) / msInDay);
-
-  if (diffInDays === 0) {
-    return `closes today at ${closingTime}`;
-  } else if (diffInDays === 1) {
-    return "1 day to go";
-  } else if (diffInDays > 1) {
-    return `${diffInDays} days to go`;
+  console.log("diffInDays",diffInDays);
+  
+  if (diffInDays === 1) {
+    if (now.getTime() > close.getTime()) {
+      return "Already closed";
+    } else {
+      return `Close today at ${closingTime}`;
+    }
+  } else if (diffInDays === 2) {
+    return "1 Day to close";
+  } else if (diffInDays > 2) {
+    return `${diffInDays} Days to close`;
   } else {
-    return "already closed";
+    return "Closed";
   }
 }
+
+
+
 
 
 

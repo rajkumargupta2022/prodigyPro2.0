@@ -83,3 +83,12 @@ export interface riskKeys {
   risk: number;
   Constellation: string;
 }
+
+export interface riskListRes {
+  success: boolean;
+  data: riskListKey[];
+}
+export interface riskListKey{
+  risk:string,
+  risk_code:number
+}

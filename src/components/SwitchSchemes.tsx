@@ -16,42 +16,42 @@
 
 // const SwitchSchemes: React.FC<SchemesProps> = ({ handleFilter, isAvailable, filteredSchemes }) => {
 //   const navigate = useNavigate()
- 
+
 
 //   const fundDetails = (item: filteredSchemesKeys) => {
-    
+
 //     navigate("/fund-details", { state: { accordSchemeCode: item.accordSchemeCode, fromPortfolio: false } })
 //   }
 
-  // return (
-  //   <>
+// return (
+//   <>
 
-  //     <div className="col">
-  //       <Row className="justify-content-between pb-4 pt-md-0 pt-4 align-items-center">
-  //         <Col md={6} className="">
-  //           <h5 className="fw-bold mb-0">{filteredSchemes.length} Mutual Funds</h5>
-  //         </Col>
-  //         {/* <Col md={6}>
-  //           <div className="position-relative pt-md-0 pt-3">
-  //             <Search
-  //               className="mutual-funds-searchbuttonprodgy12 text-secondary "
-  //               size={20}
-  //             />
+//     <div className="col">
+//       <Row className="justify-content-between pb-4 pt-md-0 pt-4 align-items-center">
+//         <Col md={6} className="">
+//           <h5 className="fw-bold mb-0">{filteredSchemes.length} Mutual Funds</h5>
+//         </Col>
+//         {/* <Col md={6}>
+//           <div className="position-relative pt-md-0 pt-3">
+//             <Search
+//               className="mutual-funds-searchbuttonprodgy12 text-secondary "
+//               size={20}
+//             />
 
-  //             <input className="rounded-4 exlore-search-box w-100" type="text" placeholder="Search for mutual funds to invest..."></input>
-  //           </div>
-  //         </Col> */}
-  //         <div className="col-12 pt-3 d-block d-lg-none">
-  //           <div className="row prody_position_relative">
-  //             <div className="col-4">
-  //               <div className="Prodgymobile_filtering_dataa category_show_data">
-  //                 <span>Category <span><ChevronRight className="" size={18} /></span></span>
-  //                 <div className="category_on_mobile">
-  //                   <Category handleFilter={handleFilter} isAvailable={isAvailable} />
-  //                 </div>
-  //               </div>
-  //             </div>
-  //             <div className="col-4">
+//             <input className="rounded-4 exlore-search-box w-100" type="text" placeholder="Search for mutual funds to invest..."></input>
+//           </div>
+//         </Col> */}
+//         <div className="col-12 pt-3 d-block d-lg-none">
+//           <div className="row prody_position_relative">
+//             <div className="col-4">
+//               <div className="Prodgymobile_filtering_dataa category_show_data">
+//                 <span>Category <span><ChevronRight className="" size={18} /></span></span>
+//                 <div className="category_on_mobile">
+//                   <Category handleFilter={handleFilter} isAvailable={isAvailable} />
+//                 </div>
+//               </div>
+//             </div>
+//             <div className="col-4">
 //                 <div className="Prodgymobile_filtering_dataa filters_show_mobile">
 //                   <span>Filter(2) <span><ChevronRight className="" size={18} /></span></span>
 //                   <div className="filters_on_mobile">
@@ -153,9 +153,11 @@ interface SchemesProps {
   currentApiPage: number;
   hasMore: boolean;
   isNewFilter: boolean;
-  from:boolean;
-  categoryList:categoryListKeys[];
-    assetTypeListData:assetTypeListKeys[]
+  from: boolean;
+  categoryList: categoryListKeys[];
+  assetTypeListData: assetTypeListKeys[]
+  setRiskValue: (value: number) => void;
+  riskValue: number
 }
 
 const SwitchSchemes: React.FC<SchemesProps> = ({
@@ -168,7 +170,10 @@ const SwitchSchemes: React.FC<SchemesProps> = ({
   isNewFilter,
   from,
   categoryList,
-  assetTypeListData
+  assetTypeListData,
+  setRiskValue,
+  riskValue
+
 }) => {
   const navigate = useNavigate();
   const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -179,6 +184,16 @@ const SwitchSchemes: React.FC<SchemesProps> = ({
   const totalPages = Math.ceil((filteredSchemes?.length || 0) / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
+  const [showLoader, setShowLoader] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowLoader(false);
+    }, 5000); // 5 seconds
+
+    return () => clearTimeout(timer); // cleanup on unmount
+  }, []);
+
 
   // Get current page items with memoization
   const currentItems = useMemo(() => {
@@ -191,12 +206,12 @@ const SwitchSchemes: React.FC<SchemesProps> = ({
   // Reset to first page only when filters change (detected by data reset) or items per page changes
   useEffect(() => {
     const currentLength = filteredSchemes?.length || 0;
-    
+
     // If isNewFilter is true, or if data length decreased (indicating filter change), reset to page 1
     if (isNewFilter || (currentLength < previousDataLength && currentLength <= 25)) {
       setCurrentPage(1);
     }
-    
+
     setPreviousDataLength(currentLength);
   }, [filteredSchemes?.length, isNewFilter, previousDataLength]);
 
@@ -436,24 +451,24 @@ const SwitchSchemes: React.FC<SchemesProps> = ({
           </Col>
           <div className="col-12 pt-3 d-block d-lg-none">
             <div className="row prody_position_relative">
-              {!from&&
-              <div className="col-4">
-                <div className="Prodgymobile_filtering_dataa category_show_data">
-                  <span>
-                    Category <span><ChevronRight className="" size={18} /></span>
-                  </span>
-                  <div className="category_on_mobile">
-                    <Category handleFilter={handleFilter} isAvailable={isAvailable} categoryList={categoryList} assetTypeListData={assetTypeListData}/>
+              {!from &&
+                <div className="col-4">
+                  <div className="Prodgymobile_filtering_dataa category_show_data">
+                    <span>
+                      Category <span><ChevronRight className="" size={18} /></span>
+                    </span>
+                    <div className="category_on_mobile">
+                      <Category handleFilter={handleFilter} isAvailable={isAvailable} categoryList={categoryList} assetTypeListData={assetTypeListData} />
+                    </div>
                   </div>
-                </div>
-              </div>}
+                </div>}
               <div className="col-4">
                 <div className="Prodgymobile_filtering_dataa filters_show_mobile">
                   <span>
                     Filter <span><ChevronRight className="" size={18} /></span>
                   </span>
                   <div className="filters_on_mobile">
-                    <Filter handleFilter={handleFilter} isAvailable={isAvailable} />
+                    <Filter handleFilter={handleFilter} isAvailable={isAvailable} riskValue={riskValue} setRiskValue={setRiskValue} />
                   </div>
                 </div>
               </div>
@@ -471,7 +486,7 @@ const SwitchSchemes: React.FC<SchemesProps> = ({
           </div>
         </Row>
 
-        {currentItems.length > 0 ? (
+        {currentItems?.length > 0 ? (
           <>
             {currentItems.map((item, index) => (
               <Card className="mb-3 radius16px" key={`${item.accordSchemeCode}-${index}`}>
@@ -503,7 +518,7 @@ const SwitchSchemes: React.FC<SchemesProps> = ({
                     <div className="col-4">
                       <span className="text-secondary">Last 3Y</span>
                       <br />
-                      <span className="value-font2 text-success">{item.threeYearCAGR? item.threeYearCAGR:0}%</span>
+                      <span className="value-font2 text-success">{item.threeYearCAGR ? item.threeYearCAGR : 0}%</span>
                     </div>
                     <div className="col-4">
                       <span className="text-secondary">Min. SIP</span>
@@ -520,14 +535,21 @@ const SwitchSchemes: React.FC<SchemesProps> = ({
               </Card>
             ))}
           </>
-        ) :   (
+        ) : (
+
           <div className="text-center py-5">
-            <div className="spinner-border text-primary" role="status">
-              <span className="visually-hidden">Loading...</span>
-            </div>
-            <p className="mt-2 text-muted">Loading mutual funds...</p>
+            {showLoader ? (
+              <>
+                <div className="spinner-border text-primary" role="status">
+                  <span className="visually-hidden">Loading...</span>
+                </div>
+                <p className="mt-2 text-muted">Loading mutual funds...</p>
+              </>
+            ) : (
+              <p className="mt-2 text-danger fw-bold">No data found</p>
+            )}
           </div>
-        )} 
+        )}
 
         {(totalPages > 1 || hasMore) && (
           <div className="d-flex justify-content-between align-items-center mt-4 mb-4 flex-wrap">

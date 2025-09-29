@@ -25,7 +25,7 @@
 //     fetchFilteredScheme(amcCode, assetCode, classCode)
 //     setPage(1)
 //     setretunrs(3)
-    
+
 //   }, [])
 
 //   const fetchFilteredScheme = async (amc: number[] = amcCode, asset: number[] = assetCode, classArr: number[] = classCode) => {
@@ -85,7 +85,7 @@
 
 //   }
 //   const isAvailable = (value: number, type: string): boolean => {
-    
+
 //     switch (type) {
 //       case "category":
 //         return classCode.includes(value)
@@ -135,7 +135,7 @@
 
 // export default AllMutualFunds;
 
-import { Container } from "react-bootstrap";  
+import { Container } from "react-bootstrap";
 import MyNavbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import Category from "./explore/Category";
@@ -146,6 +146,7 @@ import { endPoints } from "../services/utils/urls";
 import { assetTypeListKeys, assetTypeListResponse, categoryListKeys, categoryListResponse, filteredSchemeResponse, filteredSchemesKeys } from "./data-interfaces/explore";
 import SwitchSchemes from "../components/SwitchSchemes";
 import { useLocation } from "react-router-dom";
+// import Returns from "./explore/SortBy";
 
 const AllMutualFunds = () => {
   const location = useLocation();
@@ -160,14 +161,15 @@ const AllMutualFunds = () => {
   const [hasMore, setHasMore] = useState<boolean>(true); // Tracks if more pages exist
   const [fetchedPages, setFetchedPages] = useState<number[]>([]); // Tracks fetched API pages
   const [isNewFilter, setIsNewFilter] = useState<boolean>(false); // Tracks if filters have changed
-const [categoryList, setCategoryList] = useState<categoryListKeys[]>([])
-const [assetTypeListData, setAssetTypeListData] = useState<assetTypeListKeys[]>([])
+  const [categoryList, setCategoryList] = useState<categoryListKeys[]>([])
+  const [assetTypeListData, setAssetTypeListData] = useState<assetTypeListKeys[]>([])
+  const [riskValue, setRiskValue] = useState<number>(0)
   // Fetch data for a specific page
 
 
- const fetchCategoryList = async (data:number) => {
+  const fetchCategoryList = async (data: number) => {
     try {
-      const res = await getRequest<categoryListResponse>(endPoints.getCategoryTypesList+"?asset_code="+data)
+      const res = await getRequest<categoryListResponse>(endPoints.getCategoryTypesList + "?asset_code=" + data)
       if (res.data) {
         setCategoryList(res.data)
       }
@@ -198,8 +200,14 @@ const [assetTypeListData, setAssetTypeListData] = useState<assetTypeListKeys[]>(
       classcode: classArr,
     };
     try {
+      let url = `${endPoints.getFilteredScheme}?page=${pageNum}&returns=3`;
+
+      if (riskValue > 0) {
+        url += `&risk_code=${riskValue}`;
+      }
+
       const res = await postRequest<filteredSchemeResponse>(
-        `${endPoints.getFilteredScheme}?page=${pageNum}&returns=${3}&per_page=25`,
+        url,
         reBody
       );
       return {
@@ -226,9 +234,9 @@ const [assetTypeListData, setAssetTypeListData] = useState<assetTypeListKeys[]>(
     } else {
       setHasMore(true);
     }
-    
+
     if (isNewFilter) {
-      setFilteredSchemes(data); 
+      setFilteredSchemes(data);
     } else {
       setFilteredSchemes((prev) => [...prev, ...data]); // Append new data
     }
@@ -246,8 +254,8 @@ const [assetTypeListData, setAssetTypeListData] = useState<assetTypeListKeys[]>(
   // Initial fetch on component mount or filter change
   useEffect(() => {
     const resetAndFetch = async () => {
-      let asset = location?.state?.assetCode ? location?.state?.assetCode:assetCode
-      let classC = location?.state?.classCode ? location?.state?.classCode:classCode
+      let asset = location?.state?.assetCode ? location?.state?.assetCode : assetCode
+      let classC = location?.state?.classCode ? location?.state?.classCode : classCode
       setAssetCode(asset)
       setClassCode(classC)
       setFilteredSchemes([]);
@@ -258,14 +266,14 @@ const [assetTypeListData, setAssetTypeListData] = useState<assetTypeListKeys[]>(
       await fetchPage(1, amcCode, asset, classC, true); // Reset to page 1 and use current filters
       // Don't reset isNewFilter immediately - let SwitchSchemes handle it
     };
-   
-    resetAndFetch();
-  }, [amcCode, assetCode, classCode]); // Only depend on filter changes
 
-  useEffect(()=>{
- fetchCategoryList(assetCode[0])
+    resetAndFetch();
+  }, [amcCode, assetCode, classCode,riskValue]); // Only depend on filter changes
+
+  useEffect(() => {
+    fetchCategoryList(assetCode[0])
     fetchAssetTypeList()
-  },[])
+  }, [])
   // Reset isNewFilter flag after a short delay to allow SwitchSchemes to detect it
   useEffect(() => {
     if (isNewFilter) {
@@ -280,8 +288,8 @@ const [assetTypeListData, setAssetTypeListData] = useState<assetTypeListKeys[]>(
     let classArr: number[];
     let amc: number[];
     let asset: number[];
-       console.log(value,filterType);
-       
+    console.log(value, filterType);
+
     switch (filterType) {
       case "category":
         if (classCode.includes(value)) {
@@ -312,7 +320,7 @@ const [assetTypeListData, setAssetTypeListData] = useState<assetTypeListKeys[]>(
   };
 
   const isAvailable = (value: number, type: string): boolean => {
-  
+
     switch (type) {
       case "category":
         return classCode.includes(value);
@@ -330,18 +338,18 @@ const [assetTypeListData, setAssetTypeListData] = useState<assetTypeListKeys[]>(
       <MyNavbar />
       <Container className="mt-4">
         <div className="d-md-block d-none">
-          <h4 className="fw-bold">{location?.state?.name ||"All Mutual Funds"}</h4>
+          <h4 className="fw-bold">{location?.state?.name || "All Mutual Funds"}</h4>
           <p>
-           {location.state?.msg||"Discover mutual funds across all categories using the all mutual funds screener"}.
+            {location.state?.msg || "Discover mutual funds across all categories using the all mutual funds screener"}.
           </p>
         </div>
         <div className="row">
           <div className="col-lg-4 border-end d-none d-lg-block">
-      
-          {!location?.state?.name  &&<Category handleFilter={handleFilter} isAvailable={isAvailable} categoryList={categoryList} assetTypeListData={assetTypeListData}/>}
-            <Filters handleFilter={handleFilter} isAvailable={isAvailable} />
+            {/* <Returns /> */}
+            {!location?.state?.name && <Category handleFilter={handleFilter} isAvailable={isAvailable} categoryList={categoryList} assetTypeListData={assetTypeListData} />}
+            <Filters handleFilter={handleFilter} isAvailable={isAvailable} riskValue={riskValue} setRiskValue={setRiskValue}/>
           </div>
-               
+
           <SwitchSchemes
             handleFilter={handleFilter}
             isAvailable={isAvailable}
@@ -351,13 +359,15 @@ const [assetTypeListData, setAssetTypeListData] = useState<assetTypeListKeys[]>(
             hasMore={hasMore}
             isNewFilter={isNewFilter}
             key={`${amcCode.join(',')}-${assetCode.join(',')}-${classCode.join(',')}`}
-            from={location?.state?.name?true:false}
+            from={location?.state?.name ? true : false}
             categoryList={categoryList}
             assetTypeListData={assetTypeListData}
+            riskValue={riskValue}
+            setRiskValue={setRiskValue}
           />
         </div>
-        
-     
+
+
       </Container>
       <Footer />
     </>
