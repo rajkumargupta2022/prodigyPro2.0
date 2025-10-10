@@ -152,11 +152,10 @@ const FundDetails = () => {
 
 
   useEffect(() => {
-
     if (location?.state?.accordSchemeCode) {
       fetchSchemeDetail()
       fetchNavHistory(12)
-      handleMinAmount(true)
+      handleMinAmount()
       fetchFolios()
     } else {
       if (location?.state?.fromPortfolio) {
@@ -180,6 +179,7 @@ const FundDetails = () => {
         amount:0,
         totalAmount:0
       }));
+      
       setSchemeList([...updated])
 
       setSipDateList([...res.data[0].sipDateList])
@@ -289,14 +289,11 @@ const FundDetails = () => {
 
   }
 
-  const handleMinAmount = (type: boolean) => {
+  const handleMinAmount = () => {
     if (schemeList?.length > 0) {
-      let total = 0;
 
       const updatedSchemes = schemeList.map((scheme) => {
-        const minAmount = type ? scheme.minSIPAmt : scheme.minLumSumAmt;
-        total += minAmount;
-
+        const minAmount = schemeList[0]?.sipAllowed ? scheme.minSIPAmt : scheme.minLumSumAmt;
         return {
           ...scheme,
           amount: minAmount,
@@ -304,6 +301,7 @@ const FundDetails = () => {
       });
       setSchemeList([...updatedSchemes]);
     }
+    
   };
 
   const handleInvestMore = () => {

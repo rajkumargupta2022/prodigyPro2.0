@@ -9,6 +9,7 @@ export interface bankListKeys {
   bank_code: string;
   account_number: string;
   account_type: string;
+  verified:boolean
 }
 
 export interface userMandateRes {

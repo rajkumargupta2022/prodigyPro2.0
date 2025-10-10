@@ -52,7 +52,7 @@ const NFOApply = () => {
               <div className="row px-3 my-3">
                 <div className="col-6">
                   <p className="m-0 fs12px"> ALLOTMENT DATE</p>
-                  <small className="fs14px text-dark">{dateInStringNumber(schemeList[0].nfo_allotment_date)}</small>
+                  <small className="fs14px text-dark">{schemeList[0].nfo_allotment_date?dateInStringNumber(schemeList[0].nfo_allotment_date):"N/A"}</small>
                 </div>
                 <div className="col-6">
                   <p className="m-0 fs12px"> MIN. INVESTMENT</p>

@@ -1,150 +1,24 @@
-// import { ChevronRight } from "react-bootstrap-icons";
-// import {  imageUrl } from "../services/utils/urls";
-// import { Card, Col, Row } from "react-bootstrap";
-// import Returns from "../pages/explore/SortBy";
-// import Category from "../pages/explore/Category";
-// import Filter from "../pages/explore/Amcs";
-// import { useNavigate } from "react-router-dom";
-// import {  filteredSchemesKeys } from "../pages/data-interfaces/explore";
-// import { getValueInSort } from "../services/calculation/percentageCalculate";
 
-// interface SchemesProps {
-//   handleFilter: (value: number, type: string) => void;
-//   isAvailable: (value: number, type: string) => boolean;
-//   filteredSchemes: filteredSchemesKeys[]
-// }
-
-// const SwitchSchemes: React.FC<SchemesProps> = ({ handleFilter, isAvailable, filteredSchemes }) => {
-//   const navigate = useNavigate()
-
-
-//   const fundDetails = (item: filteredSchemesKeys) => {
-
-//     navigate("/fund-details", { state: { accordSchemeCode: item.accordSchemeCode, fromPortfolio: false } })
-//   }
-
-// return (
-//   <>
-
-//     <div className="col">
-//       <Row className="justify-content-between pb-4 pt-md-0 pt-4 align-items-center">
-//         <Col md={6} className="">
-//           <h5 className="fw-bold mb-0">{filteredSchemes.length} Mutual Funds</h5>
-//         </Col>
-//         {/* <Col md={6}>
-//           <div className="position-relative pt-md-0 pt-3">
-//             <Search
-//               className="mutual-funds-searchbuttonprodgy12 text-secondary "
-//               size={20}
-//             />
-
-//             <input className="rounded-4 exlore-search-box w-100" type="text" placeholder="Search for mutual funds to invest..."></input>
-//           </div>
-//         </Col> */}
-//         <div className="col-12 pt-3 d-block d-lg-none">
-//           <div className="row prody_position_relative">
-//             <div className="col-4">
-//               <div className="Prodgymobile_filtering_dataa category_show_data">
-//                 <span>Category <span><ChevronRight className="" size={18} /></span></span>
-//                 <div className="category_on_mobile">
-//                   <Category handleFilter={handleFilter} isAvailable={isAvailable} />
-//                 </div>
-//               </div>
-//             </div>
-//             <div className="col-4">
-//                 <div className="Prodgymobile_filtering_dataa filters_show_mobile">
-//                   <span>Filter(2) <span><ChevronRight className="" size={18} /></span></span>
-//                   <div className="filters_on_mobile">
-//                     <Filter handleFilter={handleFilter} isAvailable={isAvailable} />
-//                   </div>
-//                 </div>
-//               </div>
-//               <div className="col-4">
-//                 <div className="Prodgymobile_filtering_dataa float_right_set">
-//                   <span className="">Return <span><ChevronRight className="" size={18} /></span></span>
-//                   <div className="return_on_mobile">
-//                     <Returns />
-//                   </div>
-//                 </div>
-//               </div>
-//             </div>
-//           </div>
-//         </Row>
-
-//         {filteredSchemes.length > 0 ? filteredSchemes.map((item, index) => (
-//           <Card
-//             className="mb-3 radius16px"
-//             key={index}
-
-//           >
-//             <Card.Body>
-
-//               <div className="row justify-content-between crPointer">
-//                 <div className="col-8 py-2" onClick={() => fundDetails(item)}>
-//                   <div className="d-flex">
-//                     <img src={`${imageUrl + item?.accordAMCCode}.png`} className="logoRadius" height={45} width={45} alt="Image not found" />
-//                     <div className="ms-2" style={{ flex: 4 }}>
-//                       <h6 style={{ margin: 0 }}>
-//                         {item.PRODUCT_LONG_NAME}
-//                       </h6>
-//                       <span className="text-secondary">
-//                         Equity - Large Cap
-//                       </span>
-//                     </div>
-//                   </div>
-//                 </div>
-//                 <div className="col-2 py-2 text-md-end text-start">
-//                   <div className="text-secondary" onClick={() => fundDetails(item)}>
-//                     <ChevronRight className="funds-rightsign-prodgy12" size={20} />
-//                   </div>
-//                 </div>
-//               </div>
-//               <hr className="fw-light text-secondary my-1" />
-//               <div className="row">
-//                 <div className="col-4">
-//                   <span className="text-secondary">Last 3Y</span>
-//                   <br />
-//                   <span className="value-font2 text-success">{item.threeYearCAGR}%</span>
-//                 </div>
-
-//                 <div className="col-4">
-//                   <span className="text-secondary">Min. SIP</span>
-//                   <br />
-//                   <span className="value-font2">
-//                     ₹{item.minSIPAmt}
-//                   </span>
-//                 </div>
-
-//                 <div className="col-4">
-//                   <span className="text-secondary">Fund Size</span>
-//                   <br />
-//                   <span className="value-font2">₹{getValueInSort(item.fundSize)}</span>
-//                 </div>
-//               </div>
-//             </Card.Body>
-//           </Card>
-//         )) : ""}
-//       </div>
-//     </>
-//   );
-// }
-
-// export default SwitchSchemes;
-
-
-
-// New Code with Pagination BUT Make sure about Things Changed as the CHANCES ARE HIGH
-import { ChevronRight, ChevronLeft, ChevronDoubleLeft, ChevronDoubleRight } from "react-bootstrap-icons";
-import { imageUrl } from "../services/utils/urls";
+import { ChevronRight, ChevronLeft, ChevronDoubleLeft, ChevronDoubleRight, Search } from "react-bootstrap-icons";
+import { baseUrl, endPoints, imageUrl } from "../services/utils/urls";
 import { Card, Col, Row, Dropdown, Form } from "react-bootstrap";
-// import Returns from "../pages/explore/SortBy";
+import Returns from "../pages/explore/SortBy";
 import Category from "../pages/explore/Category";
 import Filter from "../pages/explore/Amcs";
 import { useNavigate } from "react-router-dom";
-import { assetTypeListKeys, categoryListKeys, filteredSchemesKeys } from "../pages/data-interfaces/explore";
+import { assetTypeListKeys, categoryListKeys, filteredSchemesKeys, searchRes } from "../pages/data-interfaces/explore";
 import { getValueInSort } from "../services/calculation/percentageCalculate";
 import { useState, useMemo, useEffect, useCallback } from "react";
+import Select from "react-select";
+import emptyScheme from "../assets/img/empty-scheme.svg"
 
+import axios from "axios";
+import PortfolioEmpty from "../pages/PortfolioEmpty";
+
+type OptionType = {
+  value: number;
+  label: string;
+};
 interface SchemesProps {
   handleFilter: (value: number, type: string) => void;
   isAvailable: (value: number, type: string) => boolean;
@@ -157,7 +31,9 @@ interface SchemesProps {
   categoryList: categoryListKeys[];
   assetTypeListData: assetTypeListKeys[]
   setRiskValue: (value: number) => void;
-  riskValue: number
+  riskValue: number;
+  shortByHandler:(value:any)=>void;
+  shortValue:string
 }
 
 const SwitchSchemes: React.FC<SchemesProps> = ({
@@ -172,19 +48,25 @@ const SwitchSchemes: React.FC<SchemesProps> = ({
   categoryList,
   assetTypeListData,
   setRiskValue,
-  riskValue
+  riskValue,
+  shortByHandler,
+  shortValue
 
 }) => {
   const navigate = useNavigate();
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [previousDataLength, setPreviousDataLength] = useState(0);
+  const [searchValue, setSearchValue] = useState<string>("")
+  const [searchedList, setSearchedList] = useState<OptionType[]>([])
+
 
   // Calculate pagination values (client-side, across all fetched data)
   const totalPages = Math.ceil((filteredSchemes?.length || 0) / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const [showLoader, setShowLoader] = useState(true);
+  const [loading, setLoading] = useState<boolean>(false)
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -398,13 +280,62 @@ const SwitchSchemes: React.FC<SchemesProps> = ({
       </div>
     );
   };
+  const fetchSchemeList = async (name: string) => {
+    
+    try {
+      const token = localStorage.getItem("token")
+      let tokenBody = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }
+      }
+      setLoading(true)
+      const res = await axios.get<searchRes>(baseUrl + endPoints.searchScheme + "?text=" + name, tokenBody)
+      if (res.data.success) {
+        const options: OptionType[] = res.data.data.map(item => ({
+          value: item.accord_scheme_code, 
+          label: item.scheme_name     
+        }));
+        setLoading(false)
+        setSearchedList(options)
+      } else {
+        setSearchedList([])
+      }
+      setLoading(false)
+    } catch (err) {
+      setLoading(false)
+      setSearchedList([])
+    }
+  }
+  const handleSearch = (value: string) => {
+    setSearchValue(value);
+  };
 
+
+
+
+  useEffect(() => {
+    if (!searchValue) return;
+
+    const handler = setTimeout(() => {
+      fetchSchemeList(searchValue); // call API after 500ms
+    }, 500);
+
+    // Cleanup to clear previous timer if user keeps typing
+    return () => clearTimeout(handler);
+  }, [searchValue]);
+  const fundDetailsForSearch = (e: any) => {
+
+    navigate("/fund-details", { state: { accordSchemeCode: e.value, fromPortfolio: false } });
+  }
+    ;
   return (
     <>
       <div className="col">
         <Row className="justify-content-between pb-4 pt-md-0 pt-4 align-items-center">
           <Col md={6} className="">
             <h5 className="fw-bold mb-0">{filteredSchemes?.length || 0} Mutual Funds</h5>
+
             {filteredSchemes && filteredSchemes.length > 0 && (
               <div className="d-flex align-items-center mt-2 flex-wrap">
                 <span className="text-secondary small me-3">
@@ -432,22 +363,33 @@ const SwitchSchemes: React.FC<SchemesProps> = ({
               </div>
             )}
           </Col>
-          {/* <Col md={6}>
-            <div className="position-relative pt-md-0 pt-3">
-              <Search
-                className="mutual-funds-searchbuttonprodgy12 text-secondary "
-                size={20}
-              />
 
-              <input className="rounded-4 exlore-search-box w-100" type="text" placeholder="Search for mutual funds to invest..."></input>
-            </div>
-          </Col> */}
           <Col md={6} className="text-end">
             {totalPages > 1 && (
               <div className="d-none d-md-flex justify-content-end align-items-center">
                 <QuickJumpInput />
               </div>
             )}
+          </Col>
+          <Col md={6}>
+            <div className="position-relative pt-md-0 pt-3">
+              <Search
+                className="mutual-funds-searchbuttonprodgy12 text-secondary "
+                size={18}
+
+              />
+
+              <Select<OptionType>
+                onInputChange={handleSearch}
+                inputValue={searchValue}
+                options={searchedList}
+                onChange={fundDetailsForSearch}
+                placeholder="Search scheme.."
+                noOptionsMessage={() => "No scheme available"}
+                isLoading={loading}
+
+              />
+            </div>
           </Col>
           <div className="col-12 pt-3 d-block d-lg-none">
             <div className="row prody_position_relative">
@@ -472,16 +414,16 @@ const SwitchSchemes: React.FC<SchemesProps> = ({
                   </div>
                 </div>
               </div>
-              {/* <div className="col-4">
+              <div className="col-4">
                 <div className="Prodgymobile_filtering_dataa float_right_set">
                   <span className="">
                     Return <span><ChevronRight className="" size={18} /></span>
                   </span>
                   <div className="return_on_mobile">
-                    <Returns />
+                    <Returns shortByHandler={shortByHandler} shortValue={shortValue}/>
                   </div>
                 </div>
-              </div> */}
+              </div>
             </div>
           </div>
         </Row>
@@ -502,7 +444,7 @@ const SwitchSchemes: React.FC<SchemesProps> = ({
                           alt="AMC Logo"
                         />
                         <div className="ms-2" style={{ flex: 4 }}>
-                          <h6 style={{ margin: 0 }}>{item.PRODUCT_LONG_NAME}</h6>
+                          <h6 style={{ margin: 0 }}>{item.scheme}</h6>
                           <span className="text-secondary">Category-{item.equityType}</span>
                         </div>
                       </div>
@@ -545,9 +487,7 @@ const SwitchSchemes: React.FC<SchemesProps> = ({
                 </div>
                 <p className="mt-2 text-muted">Loading mutual funds...</p>
               </>
-            ) : (
-              <p className="mt-2 text-danger fw-bold">No data found</p>
-            )}
+            ) : <PortfolioEmpty images={emptyScheme} title={"No Funds Available"} body={"Looks like there aren't any funds display Fresh opportunities are on the way!"} btnName={""} btnUrl={""} />}
           </div>
         )}
 

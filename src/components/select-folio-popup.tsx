@@ -16,22 +16,22 @@ interface SchemeDetailsProps {
   isSipTransaction: boolean
 }
 
-const SelectFolioPopup: React.FC<SchemeDetailsProps> = ({ show, setShow, schemeList,setSchemeList, isSipTransaction }) => {
+const SelectFolioPopup: React.FC<SchemeDetailsProps> = ({ show, setShow, schemeList, setSchemeList, isSipTransaction }) => {
   const [openCreateFolio, setOpenCreateFolio] = useState<boolean>(false);
   const [openBankMandate, setOpenBankMandate] = useState(false)
   const [folioList, setFolioList] = useState<foliosKeys[]>([])
   const [openSuccess, setOpenSuccess] = useState(false)
-  const [selectedFolioIndex,setSelectedFolioIndex] = useState<number>(0)
-   const [successData,setSuccessData] = useState<sipPurchaseRedemptionKey[]>([])
-   const [tempSchemeList , setTempSchemeList]  = useState<schemeDeatilDataKeys[]>([])
-   const sip =isSipTransaction
+  const [selectedFolioIndex, setSelectedFolioIndex] = useState<number>(0)
+  const [successData, setSuccessData] = useState<sipPurchaseRedemptionKey[]>([])
+  const [tempSchemeList, setTempSchemeList] = useState<schemeDeatilDataKeys[]>([])
+  const sip = isSipTransaction
   useEffect(() => {
-    console.log("siiii",sip);
-    
     defaultSelectFolio()
+    console.log("schemeList===",schemeList);
+    
   }, [show])
   const defaultSelectFolio = () => {
-    
+
     schemeList?.forEach((scheme: any) => {
       const recommendedFolio = scheme?.folioList?.find((folio: any) => folio?.is_recommended);
       scheme.selectedFolio = recommendedFolio || {};
@@ -41,20 +41,19 @@ const SelectFolioPopup: React.FC<SchemeDetailsProps> = ({ show, setShow, schemeL
 
 
   const handleMandate = () => {
-           console.log("siiii222",sip);
     if (sip) {
       setOpenBankMandate(true);
       setShow(false);
     } else {
-      finalTransaction(tempSchemeList,"purchase",setSuccessData,false).then((res)=>{
+      finalTransaction(tempSchemeList, "purchase", setSuccessData, false).then((res) => {
         console.log(res);
         setOpenSuccess(true)
-      setShow(false);
+        setShow(false);
       })
-      
+
     }
   }
-  const handleFolioSelection = (data: foliosKeys[] = [],index:number) => {
+  const handleFolioSelection = (data: foliosKeys[] = [], index: number) => {
     setFolioList(data)
     setSelectedFolioIndex(index)
     setOpenCreateFolio(true)
@@ -109,14 +108,14 @@ const SelectFolioPopup: React.FC<SchemeDetailsProps> = ({ show, setShow, schemeL
                         {item?.selectedFolio?.current_value}
                       </p>
                     </div>
-                    <span className="logoBlueColor fs14px crPointer" onClick={() => handleFolioSelection(item?.folioList,index)}> Change Folio</span>
+                    <span className="logoBlueColor fs14px crPointer" onClick={() => handleFolioSelection(item?.folioList, index)}> Change Folio</span>
                   </> : <div className="form-check prdogy-checkbox12">
-                    <input className="form-check-input" type="checkbox" value="" id="selectFolioPopup" checked={true}/>
+                    <input className="form-check-input" type="checkbox" value="" id="selectFolioPopup" checked={true} />
                     <label className="form-check-label logoBlueColor" htmlFor="selectFolioPopup" >
                       Create New Folio
                     </label>
-                    {folioList.length > 0&&
-                    <p className="logoBlueColor fs14px crPointer mb-0" onClick={() => handleFolioSelection(item?.folioList,index)}> Change Folio</p>
+                    {folioList.length > 0 &&
+                      <p className="logoBlueColor fs14px crPointer mb-0" onClick={() => handleFolioSelection(item?.folioList, index)}> Change Folio</p>
                     }
                   </div>}
                 </div>
@@ -136,10 +135,10 @@ const SelectFolioPopup: React.FC<SchemeDetailsProps> = ({ show, setShow, schemeL
           </div>
         </Modal.Body>
       </Modal>
-      <CreateNewFolio show={openCreateFolio} setShow={setOpenCreateFolio} schemeList={schemeList}  setSchemeList={setSchemeList}  folioList={folioList} selectedFolioIndex={selectedFolioIndex}  />
+      <CreateNewFolio show={openCreateFolio} setShow={setOpenCreateFolio} schemeList={schemeList} setSchemeList={setSchemeList} folioList={folioList} selectedFolioIndex={selectedFolioIndex} />
 
-      <BankMandate show={openBankMandate} setShow={setOpenBankMandate} schemeList={tempSchemeList}  setSchemeList={setSchemeList} isSipTransaction={isSipTransaction}additionalPurchase={false}/>
-      <OrderPlaces show={openSuccess} setShow={setOpenSuccess} successData={successData}/>
+      <BankMandate show={openBankMandate} setShow={setOpenBankMandate} schemeList={tempSchemeList} setSchemeList={setSchemeList} isSipTransaction={isSipTransaction} additionalPurchase={false} />
+      <OrderPlaces show={openSuccess} setShow={setOpenSuccess} successData={successData} />
 
 
     </>

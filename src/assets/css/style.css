@@ -1435,6 +1435,7 @@ span.text-secondary.text-uppercase.fs-7 {
     position: absolute;
     top: 14px;
     left: 20px;
+    
   }
 }
 
@@ -1633,8 +1634,8 @@ span.text-secondary.text-uppercase.fs-7 {
 }
 
 .exlore-search-box {
-  padding: 10px;
-  padding-left: 50px;
+  padding: 7px;
+  padding-left: 45px;
   border: 1px solid #D0DBEA;
 }
 

@@ -133,7 +133,7 @@ export interface cartItemKey {
   fromAccordProductCode: string;
   toAccordProductCode: string | number;
   amount: number;
-  stpDateList: number[];
+  stpDateList?: number[];
   folioNumber: string;
   installment_units: number;
   stpFrequency?: any;

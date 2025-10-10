@@ -55,5 +55,7 @@ export enum endPoints{
    requestPortfolioStatement="reports/request-portfolio-statement",
    requestCapitalGainsStatement="reports/request-capital-gains-statement",
    liveNfo="nfo/live-nfo",
-   getRiskFilters="product/get-risk-filters"
+   getRiskFilters="product/get-risk-filters",
+   searchScheme="product/search-scheme",
+   getSortFilters="product/get-sort-filters"
 }

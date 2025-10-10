@@ -157,7 +157,7 @@ const StpConfiramtion: React.FC<investmetProps> = ({ show, setShow, cartItem, se
 
   // Function to check if date is allowed
   const isAllowedDay = (date: Date): boolean => {
-    const allowedDays: number[] = cartItem[0]?.stpDateList.length > 0 ? cartItem[0]?.stpDateList : [];
+    const allowedDays: number[] = cartItem[0]?.stpDateList??[];
     const dayOfMonth = date.getDate();
     return allowedDays?.includes(dayOfMonth);
   };

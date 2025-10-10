@@ -1,6 +1,6 @@
 
 import capitalGain from "../assets/img/capital-gain.png"
-import {  useState } from "react";
+import {   useState } from "react";
 import { Form } from "react-bootstrap";
 import { fetchAdminUser } from "../services/user/adminUser";
 import { postRequest } from "../services/Api/HandleApi";
@@ -11,8 +11,8 @@ import { convertDateInDDFromMM } from "../services/dates/dateFormater";
 
 
 const PortfolioViaEmail = () => {
-  const [selectedDate, setSelectedDate] = useState<string>("")
-  const today = new Date().toISOString().split("T")[0];
+  const [selectedDate, setSelectedDate] = useState<string>(new Date(Date.now() - 86400000).toISOString().split("T")[0])
+  const today = new Date(Date.now() - 86400000).toISOString().split("T")[0];
 
 
 
@@ -30,7 +30,7 @@ const PortfolioViaEmail = () => {
       const res = await postRequest<capitalGainRes>(endPoints.requestPortfolioStatement, reqBody)
 
       if (res.success) {
-        successToast(res.msg)
+        successToast("Your request has been received, and it shall be responded shortly.")
       }
     } catch (err) {
       errorToast(err)
@@ -39,9 +39,8 @@ const PortfolioViaEmail = () => {
 
 
   const dateHandler = (e: any) => {
-    console.log(e.target.value);
-    
     setSelectedDate(e.target.value)
+console.log(e.target.value);
 
   }
 
@@ -67,7 +66,7 @@ const PortfolioViaEmail = () => {
                   <img src={capitalGain} alt="" height={240} />
                 </div>
                 {/* {title?  <h5 className="text-center">{title}</h5>:""}   */}
-                <p className="fs16px mt-1 text-center">Please select the financial year from the dropdown above to get portfolio statement on email.</p>
+                <p className="fs16px mt-1 text-center">Please select the date from the dropdown above to get portfolio statement on email.</p>
 
                 <button type="button" className="customButton px-4 mx-auto d-block" onClick={getEmailStatement}>Email Statement</button>
               </div>

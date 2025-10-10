@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import {  useNavigate } from "react-router-dom";
 import { getRequest } from "../services/Api/HandleApi";
 import { fetchAdminUser } from "../services/user/adminUser";
-import { endPoints } from "../services/utils/urls";
+import { endPoints, imageUrl } from "../services/utils/urls";
 import { folioStatementKey, folioStatementRes } from "../pages/data-interfaces/reports";
 import PortfolioEmpty from "../pages/PortfolioEmpty";
 import { getValueInSort } from "../services/calculation/percentageCalculate";
@@ -45,6 +45,7 @@ function FolioDetailsList() {
         className="p-4 shadow-sm bg-white border-0 rounded-4 mb-2"
       >
         <p className="sub-heading fs16px m-0">
+         <img src={imageUrl+item.schemes_invested[0].accord_amc_code+".png"} alt="Image not found" height={28} width={28} className="rounded me-2"/>
           {item.primary_user} - {item.folio_number}
         </p>
 
@@ -73,10 +74,7 @@ function FolioDetailsList() {
       </div>
      }):<PortfolioEmpty images={NofolioImg} title={"No Folios Found"} body={"Your investment folios will be listed here once you start investing."} btnName={""} btnUrl={""} />
     }
-     
-
    
-       {/* <PortfolioEmpty images={emptyImg} title={title} body={body} btnName={btnName} btnUrl={btnUrl} /> */}
     </>
   );
 }

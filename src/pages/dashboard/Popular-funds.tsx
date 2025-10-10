@@ -81,7 +81,7 @@ const PopularFunds = () => {
                 </div>
                 <div className="">
                   <small className="">
-                    {item.PRODUCT_LONG_NAME}<br />{" "}
+                    {item.scheme}<br />{" "}
                     <small className="congratesColor">{item.threeYearCAGR}%</small> 3Y Returns{" "}
                     <small>
                       {" "}

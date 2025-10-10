@@ -42,31 +42,56 @@ export interface filteredSchemeResponse {
   data: filteredSchemesKeys[];
 }
 export interface filteredSchemesKeys {
-  // s_name: string;
+  // accordAMCCode: number;
+  // scheme: string;
+  // nseAMCCode:string;
+  // nseProductCode:string;
+  // minLumSumAmt:string;
+  // equityType: string;
+  // fundSize: number;
+  // accordSchemeCode?: number;
+  // PURCHASE_ALLOWED: string;
+  // SIP_ALLOWED: string;
+  // AMC_CODE: string;
+  // PRODUCT_CODE: string;
+  // SIP_DATES: any;
+  // STP_DATES: any;
+  // SWP_DATES: any;
+  // REINVEST_TAG: string;
+  // oneyrret: number;
+  // twoyearret: number;
+  // minSIPAmt: string;
+  // threeYearCAGR: number;
+  // threeyearret: number | null;
+  // fouryearret: number | null;
+  // fiveyearret: number | null;
+  // sevenyearret: number | null;
+  // tenyearret: number | null;
+  // fifteenyearret: number | null;
+
+  accordSchemeCode: number;
+  scheme: string;
   accordAMCCode: number;
-  // ISIN: string;
-  equityType: string;
-  fundSize: number;
-  accordSchemeCode?: number;
-  PURCHASE_ALLOWED: string;
-  SIP_ALLOWED: string;
-  AMC_CODE: string;
-  PRODUCT_CODE: string;
-  PRODUCT_LONG_NAME: string;
-  SIP_DATES: any;
-  STP_DATES: any;
-  SWP_DATES: any;
-  REINVEST_TAG: string;
-  oneyrret: number;
-  twoyearret: number;
+  nseAMCCode: string;
+  nseProductCode: string;
   minSIPAmt: string;
+  minLumSumAmt: string;
+  oneYearCAGR: number;
   threeYearCAGR: number;
-  threeyearret: number | null;
-  fouryearret: number | null;
-  fiveyearret: number | null;
-  sevenyearret: number | null;
-  tenyearret: number | null;
-  fifteenyearret: number | null;
+  fiveYearCAGR: number;
+  equityType: string;
+  sipAllowed: boolean;
+  stpAllowed: boolean;
+  swpAllowed: boolean;
+  purchaseAllowed: boolean;
+  redemptionAllowed: boolean;
+  switchAllowed?: boolean;
+  stpDateList?: number[];
+  sipDateList: number[];
+  swpDateList?: number[];
+  swpFrequency?: string[];
+  stpFrequency?: string[];
+  fundSize: number;
 }
 export interface riskDurationRes {
   success: boolean;
@@ -88,7 +113,25 @@ export interface riskListRes {
   success: boolean;
   data: riskListKey[];
 }
-export interface riskListKey{
-  risk:string,
-  risk_code:number
+export interface riskListKey {
+  risk: string;
+  risk_code: number;
+}
+export interface searchRes {
+  success: boolean;
+  data: searchKeys[];
+}
+
+export interface searchKeys {
+  scheme_name: string;
+  accord_scheme_code: number;
+}
+
+export interface shortRes {
+  success: boolean;
+  data: shortKeys[];
+}
+export interface shortKeys {
+  sort_mode: string;
+  sort_code: number;
 }

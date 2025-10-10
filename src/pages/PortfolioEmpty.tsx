@@ -31,7 +31,7 @@ const PortfolioEmpty: React.FC<PortfolioEmptyProps> = ({
   return (
     <>
       {/* <NavBar /> */}
-      <div className="container px-4 mt-3" >
+      <div className="container px-4 mt-2" >
         <div className="row">
         <div className="col-md-12 col-sm-12 ">
             <div className="row  justify-content-center mb-3">

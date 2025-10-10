@@ -5,6 +5,8 @@ import { postRequest } from "../services/Api/HandleApi";
 import { bankListKeys, bankListRes } from "../pages/data-interfaces/bank-and-mandate";
 import { endPoints } from "../services/utils/urls";
 import { bankType } from "../services/utils/keys";
+import noBankImg from "../assets/img/no-bank.png"
+import PortfolioEmpty from "../pages/PortfolioEmpty";
 
 
 function BankList() {
@@ -57,8 +59,8 @@ function BankList() {
                   <h6 style={{ margin: 0 }}>{item.bank_name}</h6>
                   <span className="text-secondary">
                     {bankType[item.account_type as keyof typeof bankType]}
-                     {/* <span className="mx-2">|</span> */}
-                    {/* <span style={{ color: "#06A358" }}>Verified</span> */}
+                     <span className="mx-2">|</span>
+                 {item.verified? <span style={{ color: "#06A358" }}>Verified</span>: <span style={{ color: "#c5402cff" }}>Not Verified</span>}  
                   </span>
                   <br />
                   <span className="text-secondary">Account number: XXXXXX{item.account_number?.slice(-4)}</span>
@@ -73,7 +75,7 @@ function BankList() {
 
 
         </div >
-      }) : ""}
+      }) : <PortfolioEmpty images={noBankImg} title={"No Banks Linked Yet"} body={"Add an account to start investing."} btnName={""} btnUrl={""} />}
 
 
 

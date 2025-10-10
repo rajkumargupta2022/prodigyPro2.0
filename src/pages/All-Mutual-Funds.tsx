@@ -146,7 +146,7 @@ import { endPoints } from "../services/utils/urls";
 import { assetTypeListKeys, assetTypeListResponse, categoryListKeys, categoryListResponse, filteredSchemeResponse, filteredSchemesKeys } from "./data-interfaces/explore";
 import SwitchSchemes from "../components/SwitchSchemes";
 import { useLocation } from "react-router-dom";
-// import Returns from "./explore/SortBy";
+import Returns from "./explore/SortBy";
 
 const AllMutualFunds = () => {
   const location = useLocation();
@@ -164,6 +164,7 @@ const AllMutualFunds = () => {
   const [categoryList, setCategoryList] = useState<categoryListKeys[]>([])
   const [assetTypeListData, setAssetTypeListData] = useState<assetTypeListKeys[]>([])
   const [riskValue, setRiskValue] = useState<number>(0)
+  const [shortValue, setShortValue] = useState<string>("")
   // Fetch data for a specific page
 
 
@@ -204,6 +205,9 @@ const AllMutualFunds = () => {
 
       if (riskValue > 0) {
         url += `&risk_code=${riskValue}`;
+      }
+       if (Number(shortValue) > 0) {
+        url += `&short=${Number(shortValue)}`;
       }
 
       const res = await postRequest<filteredSchemeResponse>(
@@ -268,7 +272,7 @@ const AllMutualFunds = () => {
     };
 
     resetAndFetch();
-  }, [amcCode, assetCode, classCode,riskValue]); // Only depend on filter changes
+  }, [amcCode, assetCode, classCode,riskValue,shortValue]); // Only depend on filter changes
 
   useEffect(() => {
     fetchCategoryList(assetCode[0])
@@ -283,6 +287,10 @@ const AllMutualFunds = () => {
       return () => clearTimeout(timer);
     }
   }, [isNewFilter]);
+
+  const shortByHandler = (e:any)=>{
+       setShortValue(e.target.value)
+  }
 
   const handleFilter = (value: number, filterType: string) => {
     let classArr: number[];
@@ -345,7 +353,7 @@ const AllMutualFunds = () => {
         </div>
         <div className="row">
           <div className="col-lg-4 border-end d-none d-lg-block">
-            {/* <Returns /> */}
+            <Returns shortByHandler={shortByHandler} shortValue={shortValue}/>
             {!location?.state?.name && <Category handleFilter={handleFilter} isAvailable={isAvailable} categoryList={categoryList} assetTypeListData={assetTypeListData} />}
             <Filters handleFilter={handleFilter} isAvailable={isAvailable} riskValue={riskValue} setRiskValue={setRiskValue}/>
           </div>
@@ -364,6 +372,8 @@ const AllMutualFunds = () => {
             assetTypeListData={assetTypeListData}
             riskValue={riskValue}
             setRiskValue={setRiskValue}
+            shortByHandler={shortByHandler}
+            shortValue={shortValue}
           />
         </div>
 

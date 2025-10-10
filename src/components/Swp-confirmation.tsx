@@ -111,7 +111,7 @@ const SwpConfirmation: React.FC<investmetProps> = ({ show, setShow, swpList, sch
 
   // Function to check if date is allowed
   const isAllowedDay = (date: Date): boolean => {
-    const allowedDays: number[] = schemeList[0]?.swpDateList.length > 0 ? schemeList[0]?.swpDateList : [];
+    const allowedDays: number[]|undefined = schemeList[0]?.swpDateList ?? [];
     const dayOfMonth = date.getDate();
     return allowedDays?.includes(dayOfMonth);
   };

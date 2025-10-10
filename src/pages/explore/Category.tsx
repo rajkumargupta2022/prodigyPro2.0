@@ -10,33 +10,7 @@ interface CategoryProps {
 }
 
 function Category({ handleFilter,isAvailable,categoryList,assetTypeListData }: CategoryProps) {
-// const [categoryList, setCategoryList] = useState<categoryListKeys[]>([])
-// const [assetTypeListData, setAssetTypeListData] = useState<assetTypeListKeys[]>([])
-//   useEffect(() => {
-//     fetchCategoryList()
-//     fetchAssetTypeList()
-//   }, [])
 
-//   const fetchCategoryList = async () => {
-//     try {
-//       const res = await getRequest<categoryListResponse>(endPoints.getCategoryTypesList)
-//       if (res.data) {
-//         setCategoryList(res.data)
-//       }
-//     } catch (err) {
-//     }
-//   }
-
-//   const fetchAssetTypeList = async () => {
-//     try {
-//       const res = await getRequest<assetTypeListResponse>(endPoints.getAssetTypesList)
-//       if (res.data) {
-//         setAssetTypeListData(res.data)
-//       }
-//     } catch (err) {
-//       // console.log(err);
-//     }
-//   }
  
   return (
     <div className="card p-md-4 p-2 mt-2 radius16px">

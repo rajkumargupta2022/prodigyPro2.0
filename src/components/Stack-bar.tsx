@@ -20,7 +20,7 @@ const InvestmentChart: React.FC<schemeDataProps> = ({ schemeData }) => {
   const [totalFixedProfit, setTotalFixedProfit] = useState<number>(218967)
   const [totalProfit, setTotalProfit] = useState<number>(255641)
   const [investmentPeriod, setInvestmentPeriod] = useState<number>(3)
-  const [returnPercentage, setReturnPercentage] = useState<number>(schemeData?.threeYearCAGR)
+  const [returnPercentage, setReturnPercentage] = useState<number>(schemeData?.threeYearCAGR??0)
   const [selectedInvestmentType, setSelectedInvestmentType] = useState<"sip" | "oneTime">("sip")
 
 
@@ -120,7 +120,7 @@ const InvestmentChart: React.FC<schemeDataProps> = ({ schemeData }) => {
   };
 
   useEffect(() => {
-    setReturnPercentage(schemeData?.threeYearCAGR)
+    setReturnPercentage(schemeData?.threeYearCAGR??0)
      calculateFixedDeposit(3, investmentAmount, keys.sip)
     checkInvestmentType(keys.sip, investmentAmount, 3)
   }, [schemeData?.threeYearCAGR]);
@@ -176,24 +176,24 @@ const InvestmentChart: React.FC<schemeDataProps> = ({ schemeData }) => {
 
   const calculateFutureValue = (amount: number, period: number) => {
     if(schemeData?.oneYearCAGR){
-  let cagr: number;
+  let cagr: number| undefined;
     switch (period) {
       case 1:
         setReturnPercentage(schemeData.oneYearCAGR)
         cagr = schemeData.oneYearCAGR
         break;
       case 3:
-        setReturnPercentage(schemeData.threeYearCAGR)
+        setReturnPercentage(schemeData.threeYearCAGR??0)
         cagr = schemeData.threeYearCAGR
         break;
       case 5:
-        setReturnPercentage(schemeData.fiveYearCAGR)
+        setReturnPercentage(schemeData.fiveYearCAGR??0)
         cagr = schemeData.fiveYearCAGR
         break;
       default:
         return
     }
-    let lumpsums: number = amount * Math.pow((1 + cagr / 100), period);
+    let lumpsums: number = amount * Math.pow((1 + (cagr??0) / 100), period);
     setTotalInvestment(amount)
     setTotalProfit(Math.round(lumpsums))
     }
@@ -201,24 +201,24 @@ const InvestmentChart: React.FC<schemeDataProps> = ({ schemeData }) => {
   }
 
   const calculateForSip = (amount: number, period: number) => {
-    let cagr: number;
+    let cagr: number|undefined;
     switch (period) {
       case 1:
-        setReturnPercentage(schemeData?.oneYearCAGR)
+        setReturnPercentage(schemeData?.oneYearCAGR??0)
         cagr = schemeData.oneYearCAGR
         break;
       case 3:
-        setReturnPercentage(schemeData?.threeYearCAGR)
+        setReturnPercentage(schemeData?.threeYearCAGR??0)
         cagr = schemeData?.threeYearCAGR
         break;
       case 5:
-        setReturnPercentage(schemeData?.fiveYearCAGR)
+        setReturnPercentage(schemeData?.fiveYearCAGR??0)
         cagr = schemeData?.fiveYearCAGR
         break;
       default:
         return
     }
-    let monthlyRate: number = cagr / 12 / 100;
+    let monthlyRate: number = (cagr??0) / 12 / 100;
     let months: number = period * 12;
     let futureValue: number = 0;
     futureValue = ((amount * (Math.pow(1 + monthlyRate, months) - 1)) / monthlyRate) * (1 + monthlyRate);
@@ -313,7 +313,9 @@ const InvestmentChart: React.FC<schemeDataProps> = ({ schemeData }) => {
           could have been
         </p>
         <h6 className="">
-          ₹{totalProfit} <span className="congratesColor">(+{returnPercentage}%)</span>
+          ₹{totalProfit}
+          {returnPercentage > 0 ?
+           <span className="congratesColor">(+{returnPercentage}%)</span>:<span className="errorColor">({returnPercentage}%)</span>}
         </h6>
       </div>
 

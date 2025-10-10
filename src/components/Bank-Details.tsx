@@ -92,7 +92,7 @@ function BankDetails() {
       <h6 className="my-3">Existing Mandate</h6>
       {mandateList[0]?.mandates?.length > 0 ? mandateList[0]?.mandates?.map((item) => {
         return <div className="p-4 shadow-sm bg-white border-0 rounded-4 mb-2">
-
+          <p className="fs12px my-0">STATUS:{item.umrn_no===""||item.umrn_no===" "? <span className="text-danger"> NOT APPROVED</span>: <span className="text-success"> APPROVED</span>}</p>
           <div className="row justify-content-between mt-2">
             <div className="col-lg-3 col-md-4 col-12 py-lg-0 py-1">
               <span className="text-secondary">URMN NO</span>

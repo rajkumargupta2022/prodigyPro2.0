@@ -46,11 +46,11 @@ const SwitchSelectionScheme: React.FC<SwitchSelectionProps> = ({ filteredSchemes
                   <div className="col-9 py-2" >
 
                     <div className="d-flex align-items-center gap-1 crPointer">
-                      <Form.Check type="checkbox" checked={checkIsSelected(item)} key={index} value={item.PRODUCT_CODE} />
+                      <Form.Check type="checkbox" checked={checkIsSelected(item)} key={index} value={item.nseProductCode} />
                       <img src={`${imageUrl + item?.accordAMCCode}.png`} className="logoRadius" height={45} width={45} alt="Image not found" />
                       <div className="ms-2" style={{ flex: 4 }}>
                         <h6 style={{ margin: 0 }}>
-                          {item.PRODUCT_LONG_NAME}
+                          {item.scheme}
                         </h6>
                         <span className="text-secondary">
                          Category- {item.equityType}

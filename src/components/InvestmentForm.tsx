@@ -12,12 +12,7 @@ import { daysAdded } from "../services/dates/dateFormater";
 import DatePicker from "react-datepicker";
 // import { errorToast } from "../services/utils/toast";
 
-interface addAmountKeys {
-  min: number,
-  first: number;
-  second: number;
-  third: number
-}
+
 interface InvestmentFormProps {
   schemeList: schemeDeatilDataKeys[]
   setSchemeList: (date: any) => void;
@@ -25,17 +20,11 @@ interface InvestmentFormProps {
 }
 const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeList, sipDateList }) => {
   const [isSipTransaction, setIsSipTransaction] = useState<boolean>(true)
-  const [addAmountValues, setAddAmountValues] = useState<addAmountKeys>({
-    min: 1000,
-    first: 2000,
-    second: 3000,
-    third: 5000
-  })
   const [openSelectFolio, setOpenSelectFolio] = useState<boolean>(false)
   const [amount, setAmount] = useState<number>(0)
   const [amountErrorMsg, setAmountErrorMsg] = useState<string>("")
   const [dateErrorMsg, setDateErrorMsg] = useState<string>("")
-    const [minimumDate, setMinimumDate] = useState<Date>()
+  const [minimumDate, setMinimumDate] = useState<Date>()
 
   useEffect(() => {
     if (
@@ -43,9 +32,11 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
       schemeList[0].folioList === undefined && // Run only if folioList is not yet fetched
       schemeList[0].sipDateList?.length > 0
     ) {
+
+
       handleMinAmount(true);
       fetchFolios();
-     setMinimumDate(daysAdded(7,sipDateList))
+      setMinimumDate(daysAdded(7, sipDateList))
       setSchemeList((prev: any) =>
         prev.map((obj: any) => {
           return {
@@ -53,62 +44,44 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
             firstSIPToday: true,
             to_date: "",
             from_date: "",
-            amount: Number(obj.minSIPAmt),
+            amount: 0,
             totalAmount: 0,
             start_date: daysAdded(7, sipDateList),
           };
         })
       );
-      setAmount(schemeList[0].minSIPAmt ?? 1000);
+      setAmount(0);
       if (!checkTransactionAllowed(schemeList, keys.sip) && checkTransactionAllowed(schemeList, keys.purchase)) {
         handleTransactionType(false)
       }
-    }else{
+    } else {
       setIsSipTransaction(false)
-       setAddAmountValues({
-        min: 5000,
-        first: 10000,
-        second: 15000,
-        third: 25000
-      })
-       setAmount(5000)
+      setAmount(0)
     }
   }, []);
 
 
 
-  const addAmount = (value: number) => {
+  const addAmount = (value: number,isMin:boolean=false) => {
     const updatedAmount = amount + value;
-
+    
     const updatedList = [
       {
         ...schemeList[0],
-        amount: updatedAmount,
+        amount:isMin?value: updatedAmount,
       },
     ];
 
     setSchemeList(updatedList);
-    setAmount(updatedAmount);
+    setAmount(isMin?value: updatedAmount);
   };
 
   const handleTransactionType = (type: boolean) => {
     setIsSipTransaction(type)
     if (type) {
-      setAddAmountValues({
-        min: 1000,
-        first: 2000,
-        second: 3000,
-        third: 5000
-      })
-      setAmount(1000)
+      setAmount(schemeList[0]?.minSIPAmt)
     } else {
-      setAddAmountValues({
-        min: 5000,
-        first: 10000,
-        second: 15000,
-        third: 25000
-      })
-      setAmount(5000)
+      setAmount(schemeList[0]?.minLumSumAmt)
     }
     handleMinAmount(type)
   }
@@ -199,18 +172,17 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
   };
   const handleMinAmount = (type: boolean = isSipTransaction) => {
     if (schemeList?.length > 0) {
-      let total = 0;
 
+      
       const updatedSchemes = schemeList.map((scheme) => {
         const minAmount = type ? scheme.minSIPAmt : scheme.minLumSumAmt;
-        total += minAmount;
-
+        
         return {
           ...scheme,
           amount: minAmount,
         };
       });
-
+      
       setSchemeList(updatedSchemes);
 
     }
@@ -237,7 +209,7 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
 
   }
   const handleSipDeduction = () => {
-     setMinimumDate(!schemeList[0].firstSIPToday ?  daysAdded(7, sipDateList): daysAdded(7, sipDateList))
+    setMinimumDate(!schemeList[0].firstSIPToday ? daysAdded(7, sipDateList) : daysAdded(7, sipDateList))
 
     setSchemeList((prev: any) =>
       prev.map((obj: any, index: number) =>
@@ -297,13 +269,13 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
 
         <div className="form-group mt-1">
           <label htmlFor="amountFor" className='fs12px'>INVESTMENT AMOUNT</label>
-          <input type="text" className="form-control" value={amount} onChange={(e) => handleAmount(e, 1000000, setAmount)} id="amountFor" aria-describedby="emailHelp" placeholder="Enter Amount" />
+          <input type="text" className="form-control" value={amount} onChange={(e) => handleAmount(e, 10000000, setAmount)} id="amountFor" aria-describedby="emailHelp" placeholder="Enter Amount" />
           <span className="errorColor"> {amount >= (isSipTransaction ? schemeList[0]?.minSIPAmt : schemeList[0]?.minLumSumAmt) ? "" : amountErrorMsg}</span>
           <div className=" mt-2">
-            <button type="button" className="btn shortcutValue" onClick={() => handleMinAmount(isSipTransaction)}>Min.</button>
-            <button type="button" className="btn shortcutValue mx-1" onClick={() => addAmount(addAmountValues.first)}>+<CurrencyRupee className='mb-1' />{addAmountValues.first.toLocaleString("en-In")}</button>
-            <button type="button" className="btn shortcutValue mx-1" onClick={() => addAmount(addAmountValues.second)}>+<CurrencyRupee className='mb-1' />{addAmountValues.second.toLocaleString("en-In")}</button>
-            <button type="button" className="btn shortcutValue mx-1" onClick={() => addAmount(addAmountValues.third)}>+<CurrencyRupee className='mb-1' />{addAmountValues.third.toLocaleString("en-In")}</button>
+            <button type="button" className="btn shortcutValue" onClick={() => addAmount(isSipTransaction ? schemeList[0]?.minSIPAmt : schemeList[0]?.minLumSumAmt,true)}>Min.</button>
+            <button type="button" className="btn shortcutValue mx-1" onClick={() => addAmount(isSipTransaction ? schemeList[0]?.minSIPAmt * 2 : schemeList[0]?.minLumSumAmt * 2)}>+<CurrencyRupee className='mb-1' />{isSipTransaction ? schemeList[0]?.minSIPAmt * 2 : (schemeList[0]?.minLumSumAmt * 2).toLocaleString("en-In")}</button>
+            <button type="button" className="btn shortcutValue mx-1" onClick={() => addAmount(isSipTransaction ? schemeList[0]?.minSIPAmt * 3 : schemeList[0]?.minLumSumAmt * 3)}>+<CurrencyRupee className='mb-1' />{isSipTransaction ? schemeList[0]?.minSIPAmt * 3 : (schemeList[0]?.minLumSumAmt * 3).toLocaleString("en-In")}</button>
+            <button type="button" className="btn shortcutValue mx-1" onClick={() => addAmount(isSipTransaction ? schemeList[0]?.minSIPAmt * 5 : schemeList[0]?.minLumSumAmt * 5)}>+<CurrencyRupee className='mb-1' />{isSipTransaction ? schemeList[0]?.minSIPAmt * 5 : (schemeList[0]?.minLumSumAmt * 5).toLocaleString("en-In")}</button>
           </div>
         </div>
         {isSipTransaction &&

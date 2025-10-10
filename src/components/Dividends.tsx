@@ -124,7 +124,7 @@ function Dividends() {
 
           </div>
         </div>
-      }) : <PortfolioEmpty images={elssEmpty} title={"No Investments Found"} body={"Your Dividends investment details will appear here once you start investing."} btnName={""} btnUrl={""} />}
+      }) : <PortfolioEmpty images={elssEmpty} title={"No Investments Found"} body={"You don't have any dividend income for the selected financial year. Start your investment journey today."} btnName={""} btnUrl={""} />}
       {schemeList.length > 0 ?
         <Paginations totalRecords={schemeList.length} page={page} setPage={setPage} limit={limit} setLimit={setLimit} /> : ""}
     </>

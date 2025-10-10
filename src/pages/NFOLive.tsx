@@ -33,19 +33,24 @@ const NFOLive = () => {
     }
   }
   function removeExpired(items: schemeDeatilDataKeys[]): schemeDeatilDataKeys[] {
-    const now = new Date();
+  const now = new Date();
 
-    return items.filter(item => {
-      const closeDate = new Date(item?.nfo_close_date??"");
-      console.log(closeDate.getTime() );
-      
+  return items
+    .filter(item => {
+      const closeDate = new Date(item?.nfo_close_date ?? "");
       return closeDate.getTime() > now.getTime(); // keep only future ones
+    })
+    .sort((a, b) => {
+      const dateA = new Date(a.nfo_close_date ?? "").getTime();
+      const dateB = new Date(b.nfo_close_date ?? "").getTime();
+      return dateA - dateB; // ascending: nearest closing date first
     });
-  }
+}
+
 
 function getRemainingDays(closeDate: Date | string): string {
   const now = new Date();
-  const close = new Date("2025-09-29T18:30:00.000Z");
+  const close = new Date(closeDate);
 
   // Force 6:30 PM on the close date (18:30 hours)
   close.setHours(18, 30, 0, 0);
@@ -73,12 +78,12 @@ function getRemainingDays(closeDate: Date | string): string {
     if (now.getTime() > close.getTime()) {
       return "Already closed";
     } else {
-      return `Close today at ${closingTime}`;
+      return `Closing today at ${closingTime}`;
     }
   } else if (diffInDays === 2) {
-    return "1 Day to close";
+    return `${diffInDays-1} Day to close`;
   } else if (diffInDays > 2) {
-    return `${diffInDays} Days to close`;
+    return `${diffInDays-1} Days to close`;
   } else {
     return "Closed";
   }
@@ -130,7 +135,7 @@ function getRemainingDays(closeDate: Date | string): string {
                     {/* <p>Selected fund 2</p> */}
                   </div>
                 </div>
-                <div className="prod_view_fund align-self-center">
+                <div className="prod_view_fund align-self-center" onClick={() => applyNow(item)}>
                   <div className="logoBlueColor crPointer fs12px"><ChevronRight /></div>
                 </div>
               </div>
