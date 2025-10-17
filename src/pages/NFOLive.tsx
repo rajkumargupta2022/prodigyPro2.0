@@ -141,15 +141,15 @@ function getRemainingDays(closeDate: Date | string): string {
               </div>
               <hr />
               <div className="row text-start mt-2">
-                <div className="col-md-4 py-2 py-md-0">
+                <div className="col-md-4 col-4 col-lg-4">
                   <small className="fs14px">Open</small><br />
                   <small>{dateInStringNumber(item.launchDate)}</small>
                 </div>
-                <div className="col-md-4 py-2 py-md-0">
+                <div className="col-md-4 col-4 col-lg-4">
                   <small className="fs14px">Close</small><br />
                   <small>{dateInStringNumber(item.nfo_close_date)}</small>
                 </div>
-                <div className="col-md-4 py-2 py-md-0">
+                <div className="col-md-4 col-4 col-lg-4">
                   <small className="fs14px">Min. Invest</small><br />
                   <small><CurrencyRupee className="mb-1" />{item.sipAllowed ? item.minSIPAmt : item.purchaseAllowed && item.minLumSumAmt}</small>
                 </div>

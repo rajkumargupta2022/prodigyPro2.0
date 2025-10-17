@@ -165,6 +165,7 @@ const AllMutualFunds = () => {
   const [assetTypeListData, setAssetTypeListData] = useState<assetTypeListKeys[]>([])
   const [riskValue, setRiskValue] = useState<number>(0)
   const [shortValue, setShortValue] = useState<string>("")
+  const [returnsYear, setReturnsYear] = useState<number>(3)
   // Fetch data for a specific page
 
 
@@ -201,13 +202,13 @@ const AllMutualFunds = () => {
       classcode: classArr,
     };
     try {
-      let url = `${endPoints.getFilteredScheme}?page=${pageNum}&returns=3`;
+      let url = `${endPoints.getFilteredScheme}?page=${pageNum}&returns=${returnsYear}`;
 
       if (riskValue > 0) {
         url += `&risk_code=${riskValue}`;
       }
        if (Number(shortValue) > 0) {
-        url += `&short=${Number(shortValue)}`;
+        url += `&sort=${Number(shortValue)}`;
       }
 
       const res = await postRequest<filteredSchemeResponse>(
@@ -272,7 +273,7 @@ const AllMutualFunds = () => {
     };
 
     resetAndFetch();
-  }, [amcCode, assetCode, classCode,riskValue,shortValue]); // Only depend on filter changes
+  }, [amcCode, assetCode, classCode,riskValue,shortValue,returnsYear]); // Only depend on filter changes
 
   useEffect(() => {
     fetchCategoryList(assetCode[0])
@@ -374,6 +375,8 @@ const AllMutualFunds = () => {
             setRiskValue={setRiskValue}
             shortByHandler={shortByHandler}
             shortValue={shortValue}
+            returnsYear={returnsYear}
+            setReturnsYear={setReturnsYear}
           />
         </div>
 

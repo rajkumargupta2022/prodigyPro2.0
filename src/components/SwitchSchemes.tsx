@@ -14,6 +14,8 @@ import emptyScheme from "../assets/img/empty-scheme.svg"
 
 import axios from "axios";
 import PortfolioEmpty from "../pages/PortfolioEmpty";
+import { yearKeys } from "../services/utils/keys";
+
 
 type OptionType = {
   value: number;
@@ -33,7 +35,9 @@ interface SchemesProps {
   setRiskValue: (value: number) => void;
   riskValue: number;
   shortByHandler:(value:any)=>void;
-  shortValue:string
+  shortValue:string;
+  returnsYear:number;
+  setReturnsYear:(value:number)=>void
 }
 
 const SwitchSchemes: React.FC<SchemesProps> = ({
@@ -50,11 +54,13 @@ const SwitchSchemes: React.FC<SchemesProps> = ({
   setRiskValue,
   riskValue,
   shortByHandler,
-  shortValue
+  shortValue,
+  returnsYear,
+  setReturnsYear
 
 }) => {
   const navigate = useNavigate();
-  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const itemsPerPage=25;
   const [currentPage, setCurrentPage] = useState(1);
   const [previousDataLength, setPreviousDataLength] = useState(0);
   const [searchValue, setSearchValue] = useState<string>("")
@@ -123,9 +129,7 @@ const SwitchSchemes: React.FC<SchemesProps> = ({
     [totalPages, hasMore, handlePageChange, currentApiPage, filteredSchemes?.length || 0]
   );
 
-  const handleItemsPerPageChange = useCallback((newItemsPerPage: number) => {
-    setItemsPerPage(newItemsPerPage);
-  }, []);
+
 
   // Generate pagination items
   const renderPaginationItems = () => {
@@ -333,38 +337,40 @@ const SwitchSchemes: React.FC<SchemesProps> = ({
     <>
       <div className="col">
         <Row className="justify-content-between pb-4 pt-md-0 pt-4 align-items-center">
-          <Col md={6} className="">
+          <Col md={8} className="">
             <h5 className="fw-bold mb-0">{filteredSchemes?.length || 0} Mutual Funds</h5>
 
             {filteredSchemes && filteredSchemes.length > 0 && (
               <div className="d-flex align-items-center mt-2 flex-wrap">
-                <span className="text-secondary small me-3">
+                {/* <span className="text-secondary small me-3">
                   Showing {startIndex + 1}-{Math.min(endIndex, filteredSchemes?.length || 0)} of {filteredSchemes?.length || 0} results
-                </span>
-                <div className="d-flex align-items-center">
-                  <span className="text-muted small me-2">Show:</span>
+                </span> */}
+                <div className="d-flex align-items-center mb-2">
+                  {/* <span className="text-muted small me-2">Show:</span> */}
                   <Dropdown>
-                    <Dropdown.Toggle variant="outline-secondary" size="sm" className="border-0">
-                      {itemsPerPage} per page
+                    <Dropdown.Toggle variant="selectBoxBg" size="sm" className="selectBoxBg">
+                      {returnsYear} Year Returns
                     </Dropdown.Toggle>
                     <Dropdown.Menu>
-                      {[10, 25].map((count) => (
+                      {[1, 3,5,7].map((count) => (
                         <Dropdown.Item
                           key={count}
-                          active={itemsPerPage === count}
-                          onClick={() => handleItemsPerPageChange(count)}
+                          active={returnsYear === count}
+                          onClick={() => setReturnsYear(count)}
                         >
-                          {count} per page
+                          {count} Year Returns
                         </Dropdown.Item>
                       ))}
                     </Dropdown.Menu>
                   </Dropdown>
+                  
+                 
                 </div>
               </div>
             )}
           </Col>
 
-          <Col md={6} className="text-end">
+          <Col md={4} className="text-end">
             {totalPages > 1 && (
               <div className="d-none d-md-flex justify-content-end align-items-center">
                 <QuickJumpInput />
@@ -389,8 +395,10 @@ const SwitchSchemes: React.FC<SchemesProps> = ({
                 isLoading={loading}
 
               />
+              
             </div>
           </Col>
+          
           <div className="col-12 pt-3 d-block d-lg-none">
             <div className="row prody_position_relative">
               {!from &&
@@ -430,7 +438,7 @@ const SwitchSchemes: React.FC<SchemesProps> = ({
 
         {currentItems?.length > 0 ? (
           <>
-            {currentItems.map((item, index) => (
+            {currentItems.map((item:any, index) => (
               <Card className="mb-3 radius16px" key={`${item.accordSchemeCode}-${index}`}>
                 <Card.Body>
                   <div className="row justify-content-between crPointer">
@@ -458,9 +466,9 @@ const SwitchSchemes: React.FC<SchemesProps> = ({
                   <hr className="fw-light text-secondary my-1" />
                   <div className="row">
                     <div className="col-4">
-                      <span className="text-secondary">Last 3Y</span>
+                      <span className="text-secondary">Last {returnsYear}Y</span>
                       <br />
-                      <span className="value-font2 text-success">{item.threeYearCAGR ? item.threeYearCAGR : 0}%</span>
+                      <span className="value-font2 text-success">{item[yearKeys[returnsYear]] ? item[yearKeys[returnsYear]] : 0}%</span>
                     </div>
                     <div className="col-4">
                       <span className="text-secondary">Min. SIP</span>

@@ -79,6 +79,8 @@ import StateFolioDetails from "./components/statement-folio-details";
 import NoFolioFounds from "./components/no-folio-found";
 import useAuthRedirect from "./services/user/useAuthRedirect";
 import SighnUp from "./pages/Sign-up";
+import SifFunds from "./pages/SifFunds";
+import FundWithh100 from "./pages/FundWith100";
 
 
 const LoaderHandler = () => {
@@ -242,6 +244,7 @@ function App() {
           <Route path="/calculator-list" element={<CalculatorList />} />
           <Route path="/sip-calculator" element={<SipCalculator />} />
           <Route path="/marriage-calculator" element={<MarriageCalculator />} />
+          <Route path="/sif-funds" element={<SifFunds />} />
           <Route
             path="/education-calculator"
             element={<EducationCalculator />}
@@ -255,6 +258,7 @@ function App() {
             element={<RetirementCalculator />}
           />
           <Route path="/emi-calculator" element={<EmiCalculator />} />
+          <Route path="/fund-with-100" element={<FundWithh100 />} />
           <Route path="/fd-calculator" element={<FDCalculator />} />
           <Route path="/elss-calculator" element={<ElssCalculator />} />
           <Route path="/swp-calculator" element={<SWPCalculator />} />

@@ -27,7 +27,7 @@ function SIP() {
       const reqBody = { ucc: adminUser?.ucc, page, limit };
       try {
         const res = await postRequest<sipOrderRes>(endPoints.getSipOrders, reqBody);
-        if (res.data) {
+        if (res.success) {
           setSipListData(res.data);
           setTotalRecords(res.totalRecords || 0);
         }

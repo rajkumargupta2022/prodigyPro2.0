@@ -1790,7 +1790,7 @@ a{
                         outline: none !important;
                       }
                       .date-picker-container:focus-within {
-                        border-color: #007bff !important;
+                        border-color: #011EFE !important;
                         box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25) !important;
                       }
                       .form-control.is-valid, .was-validated .form-control:valid {
@@ -1801,6 +1801,10 @@ a{
  border: none !important;
 }
 .selectBoxBg{
+  background-color: rgba(230, 232, 255, 1);
+  color: rgba(55, 55, 55, 1);
+}
+.selectBoxBg:hover{
   background-color: rgba(230, 232, 255, 1);
   color: rgba(55, 55, 55, 1);
 }

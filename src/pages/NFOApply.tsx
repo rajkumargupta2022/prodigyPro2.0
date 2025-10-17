@@ -24,15 +24,15 @@ const NFOApply = () => {
           <div className="d-flex my-3">
             <h6 className="logoBlueColor">Home  <ChevronRight className="fs12px" /> NFO Live <ChevronRight className="fs12px" /><small className="greyColor"> Kotak Nifty Small Cap 250 Index Fund - Regular (G) </small> </h6>
           </div>
-          <div className="col-12 d-flex align-items-start">
-            <img src={imageUrl+schemeList[0].accordAMCCode+".png"} alt="" className="rounded" height={50} width={50}/>
+          <div className="col-12  d-flex align-items-start">
+            <img src={imageUrl+schemeList[0].accordAMCCode+".png"} alt="" className="rounded" height={45} width={45}/>
             <div className="d-flex flex-column ps-3">
               <h4 className="mb-0">{schemeList[0].scheme}</h4>
               <small className="fs12px">{schemeList[0].equityType}</small>
             </div>
           </div>
-          <div className="col-8">
-            <div className="col-12 bg-white rounded-2 p-2 px-2 mt-4">
+          <div className="col-md-8 col-lg-8 col-sm-12">
+            <div className="col-12 bg-white rounded-2 p-2 px-2 mt-1">
               <small className="fs14px">Nav</small><br />
               <small><CurrencyRupee className="" />{schemeList[0].cnav}</small>
             </div>

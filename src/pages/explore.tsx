@@ -7,6 +7,9 @@ import MyNavbar from "../components/Navbar";
 import { useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
 import PopularFunds from "./dashboard/Popular-funds";
+import Award from "../assets/img/icons/award 1.svg"
+import Star from "../assets/img/icons/star-1.svg"
+import Rupee from "../assets/img/icons/rupee 1.svg"
 
 
 
@@ -16,7 +19,8 @@ const Explore = () => {
     "Maximize your savings with the right tax-saving mutual funds",
     "Discover top-performing equity funds across various categories",
     "Explore a wide spectrum of debt funds tailored for stability and income",
-    "Discover mutual funds across all categories using the all mutual funds screener"
+    "Discover mutual funds across all categories using the all mutual funds screener",
+    "Achieve the right blend of risk and returns with hybrid funds"
   ]
 
   const goToFundPage = (name:string,assetCode:number[]=[],classCode:number[]=[],msg:string)=>{
@@ -43,18 +47,15 @@ const Explore = () => {
           <h4 className="mb-4 fw-bold fs16px">Discover Funds</h4>
           <div className="grid-exploreprodgy justify-content-between crPointer">
 
-            {/* <div className="py-2 text-center">
+            <div className="py-2 text-center" onClick={()=>navigate("/fund-with-100")}>
               <img src={Rupee} alt="" width={28} height={28} />
               <h6 className="fs14pxBlack">Start with ₹100</h6>
             </div>
-            <div className="py-2 text-center">
+            <div className="py-2 text-center" onClick={()=>navigate("/sif-funds")}>
               <img src={Star} alt="" width={28} height={28} />
-              <h6 className="fs14pxBlack">Best Return Funds</h6>
+              <h6 className="fs14pxBlack">SIF Funds</h6>
             </div>
-            <div className="py-2 text-center">
-              <img src={Award} alt="" width={28} height={28} />
-              <h6 className="fs14pxBlack">Top Rated Funds</h6>
-            </div>*/}
+           
             <div className="py-2 text-center" onClick={()=>goToFundPage("Tax Saver",[1],[8],content[0])}>
               <img src={Tax} alt="" width={28} height={28} />
               <h6 className="fs14pxBlack">Tax Saver</h6>
@@ -63,13 +64,17 @@ const Explore = () => {
               <img src={EquityFund} alt="" width={28} height={28} />
               <h6 className="fs14pxBlack">Equity Funds</h6>
             </div>
+             <div className="py-2 text-center" onClick={()=>goToFundPage("Hybrid Funds",[2],[],content[4])}>
+              <img src={Award} alt="" width={28} height={28} />
+              <h6 className="fs14pxBlack">Hybrid Funds</h6>
+            </div>
             <div className="py-2 text-center" onClick={()=>goToFundPage("Debt Funds",[3],[],content[2])}>
               <img src={DebtFund} alt="" width={28} height={28} />
               <h6 className="fs14pxBlack">Debt Funds</h6>
             </div>
             <div className="py-2 text-center crPointer" onClick={()=>navigate("/all-mutual-funds")}>
               <img src={DebtFund} alt="" width={28} height={28} />
-              <h6 className="fs14pxBlack ">Explore All</h6>
+              <h6 className="fs14pxBlack">Explore All</h6>
             </div>
 
           </div>

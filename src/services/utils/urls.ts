@@ -57,5 +57,7 @@ export enum endPoints{
    liveNfo="nfo/live-nfo",
    getRiskFilters="product/get-risk-filters",
    searchScheme="product/search-scheme",
-   getSortFilters="product/get-sort-filters"
+   getSortFilters="product/get-sort-filters",
+   getActiveSif="product/get-active-sif",
+   startWith100Schemes="product/get-100-rs-schemes"
 }

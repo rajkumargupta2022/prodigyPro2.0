@@ -12,6 +12,7 @@ export interface sipOrderKeys {
   accord_amc_code: string;
   folio_number: string;
   next_sip_date: string;
+  sip_reg_date:string;
   installment_amount: string;
   transaction_id: string;
   status: string;

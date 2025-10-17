@@ -97,15 +97,15 @@ const Portfolio = () => {
 
       { portfolioDetailData?.length > 0 ? portfolioDetailData?.map((item) => {
         return (
-          <div className="container py-2" onClick={()=>fundDetails(item)}>
+          <div className="container py-2 crPointer" onClick={()=>fundDetails(item)}>
             <div className="personal_form_container">
               <div className="borderColor p-3 rounded-4 bg-white">
                 <div className="d-flex justify-content-between">
                   <div className="d-flex">
                     <div className="prod_icon_img">
-                      <img src={`${imageUrl + item?.amcCode}.png`} className="logoRadius" height={50} width={50} alt="" />
+                      <img src={`${imageUrl + item?.amcCode}.png`} className="logoRadius" height={40} width={40} alt="" />
                     </div>
-                    <div className="ms-2 prod_icon_heading mt-3">
+                    <div className="ms-2 prod_icon_heading mt-1">
                       <h4>{item?.scheme}</h4>
                       <p>Folio: {item?.folio}</p>
                     </div>
@@ -113,16 +113,16 @@ const Portfolio = () => {
 
                 </div>
                 <hr />
-                <div className="row text-start mt-2">
-                  <div className="col-6 col-md-4 py-2 py-md-0">
+                <div className="row text-start mt-1">
+                  <div className="col-4 col-md-4">
                     <small className="fs14px">Invested</small><br />
                     <small> <CurrencyRupee className="mb-1" />{getValueInSort(Number(item?.purchase))}</small>
                   </div>
-                  <div className="col-6 col-md-4 py-2 py-md-0">
+                  <div className="col-4 col-md-4">
                     <small className="fs14px">Current Value</small><br />
                     <small> <CurrencyRupee className="mb-1" />{getValueInSort(Number(item?.currentvalue))}</small>
                   </div>
-                  <div className="col-6 col-md-4 py-2 py-md-0">
+                  <div className="col-4 col-md-4">
                     <small className="fs14px">Gain/Loss</small><br />
                     <small> <CurrencyRupee className="mb-1" />{getValueInSort(Number(item?.gain))}</small> <small className={`fs12px ${Number(item?.finalcagr) > 0 ? "congratesColor" : "errorColor2"}`}>{getPercentageValue(Number(item?.purchase), item?.gain)}%</small>
                   </div>

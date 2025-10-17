@@ -36,7 +36,8 @@ const Returns: React.FC<ShortProps> =({shortByHandler,shortValue}) =>{
      <Form>
   {shortList?.map((item, index) => (
     <Form.Check
-      key={index} // ✅ unique key required
+      key={index} 
+      id={`sort-by-${item.sort_code}`}// ✅ unique key required
       type="checkbox"
       label={item.sort_mode}
       checked={Number(shortValue)===item.sort_code}

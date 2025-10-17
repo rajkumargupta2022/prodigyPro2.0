@@ -61,14 +61,14 @@ try {
 
       <div className="d-flex  mb-3 align-items-center">
         <img src={HDFC} alt="image not found" />
-        <span className="fw-bold ms-2">HDFC Flexi Cap Fund - Regular (G)</span>
+        <span className="fw-bold ms-2">{location.state.scheme_name}</span>
       </div>
 
       <div className="p-4 shadow-sm bg-white border-0 rounded-4 mb-2">
         <span className="fw-bold">SIP Details</span>
         <div className="d-flex justify-content-between mb-2 mt-3">
           <span className="text-secondary">STATUS</span>
-          <span className="value-font2">Active</span>
+          <span className="value-font2">{location.state.status}</span>
         </div>
         <div className="d-flex justify-content-between mb-2">
           <span className="text-secondary">MONTHLY SIP</span>
