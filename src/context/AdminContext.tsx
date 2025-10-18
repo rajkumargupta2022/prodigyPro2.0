@@ -18,6 +18,7 @@ interface AdminUserContextType {
   fetchDetailedPortfolio: (value: string) => void;
   setPortfolioDetailData: (value: any) => void;
   portfolioDetailData: detailPortfolioSchemeType[];
+  fetchFamilyPortfoloData:()=>void
 
 }
 
@@ -242,7 +243,8 @@ export const AdminUserProvider = ({ children }: { children: ReactNode }) => {
       setSnapshotData,
       fetchDetailedPortfolio,
       setPortfolioDetailData,
-      portfolioDetailData
+      portfolioDetailData,
+      fetchFamilyPortfoloData
     }}>
       {children}
     </AdminUserContext.Provider>

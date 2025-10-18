@@ -32,3 +32,30 @@ export type userDataKeys = {
   mobile_rel: string | null;
   IINName: string;
 };
+
+export interface familyRelationRes {
+  success: boolean;
+  data: familyRelationKeys[];
+}
+
+export interface familyRelationKeys {
+  relation: string;
+  relation_code: number;
+}
+
+export interface addFamilyRes {
+  success: boolean;
+  request_id?: string;
+  msg: string;
+  mobile: string;
+}
+
+export interface varifyOtpRes {
+  success: boolean;
+  member_ucc: string;
+  msg: string;
+}
+export interface resendOtpRes {
+  success: boolean;
+  msg: string;
+}

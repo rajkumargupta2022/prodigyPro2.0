@@ -94,7 +94,7 @@ const AddFamilyMember = () => {
             <form className="card p-4 shadow-sm bg-white border-0 rounded-4">
               <div className="mb-3">
                 <button type="button" className="btn btn-outline-primary me-3">
-                  Link Accountasa
+                  Link Account
                 </button>
                 <button type="submit" className="btn btn-primary me-3">
                   Create Account

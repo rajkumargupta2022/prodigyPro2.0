@@ -1,41 +1,106 @@
 import { ArrowLeft } from "react-bootstrap-icons";
 import OTPField from "../components/OtpField";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { getRequest, postRequest } from "../services/Api/HandleApi";
+import { endPoints } from "../services/utils/urls";
+import { addFamilyRes, familyRelationKeys, familyRelationRes } from "../pages/data-interfaces/users";
+import { errorToast } from "../services/utils/toast";
 
-function AddFamilyMember({ backButton }: { backButton: any }) {
+function AddFamilyMember() {
+  const navigate = useNavigate()
   const [show, setShow] = useState(false);
-  const [accountState, setAccountState] = useState("link");
+  const [selectedRelation, setSelectedRelation] = useState<number>(0)
+  const [requestId, setRequestId] = useState<string>("")
+  const [memberPan, setMemberPan] = useState<string>("")
+  const [familyRelationList, setFamilyRelationList] = useState<familyRelationKeys[]>([])
+  const [mobile,setMobile] = useState<string>("")
+  const accountState = "link";
+
+  useEffect(() => {
+    fetchRelation()
+  }, [])
+
+  const fetchRelation = async () => {
+    try {
+      const res = await getRequest<familyRelationRes>(endPoints.getFamilyRelations)
+      if (res.success) {
+        setFamilyRelationList(res.data)
+      }
+    } catch (err) {
+      setFamilyRelationList([])
+    }
+  }
+  const panHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value.trim()
+    if (value.length <= 10) {
+      setMemberPan(value.toUpperCase())
+    }
+  }
+
+  const addFamilyMember = async () => {
+    if (!selectedRelation) {
+      errorToast("Plaese select Relation")
+      return
+    }
+    if (!memberPan) {
+      errorToast("Plaese enter pan")
+      return
+    }
+    try {
+      const admin_pan = localStorage.getItem("pan")
+      if (!admin_pan) {
+        errorToast("Please login firrst")
+        return
+      }
+      const reqBody = {
+        family_code: selectedRelation,
+        admin_pan,
+        member_pan: memberPan
+      }
+      const res = await postRequest<addFamilyRes>(endPoints.addFamilyMember, reqBody)
+      if (res.success && res.request_id) {
+        localStorage.setItem("request_id", res?.request_id)
+        setRequestId(res?.request_id)
+        setMobile(res.mobile)
+        setShow(true)
+      }
+      else {
+        errorToast(res.msg)
+      }
+    } catch (err) {
+      errorToast(err)
+    }
+  }
 
   return (
     <>
-      <OTPField show={show} setShow={setShow} />
+      <OTPField show={show} setShow={setShow} requestId={requestId} mobile={mobile}/>
       <main className="col-md-9 ms-sm-auto col-lg-9 px-md-4 py-4">
-        <h4>
-          <ArrowLeft className="crPointer" size={25} onClick={backButton} /> Add
+        <h4 onClick={() => navigate(-1)}>
+          <ArrowLeft className="crPointer" /> Add
           Family Member
         </h4>
         <hr className="fw-light text-secondary" />
         <div className="p-4 shadow-sm bg-white border-0 rounded-4">
-          <div className="d-flex">
+          {/* <div className="d-flex">
             <button type="button" className={`btn statementBtn ${accountState=="link"&&"statementBtnActive"} mx-1`} onClick={() => setAccountState("link")}>Link Account</button>
            
 
              <button type="button" className={`btn statementBtn ${accountState==""&&"statementBtnActive"} mx-1`} onClick={() => setAccountState("")}>Create Account</button>
-          </div>
+          </div> */}
 
           {accountState == "link" ? (
-            <div className="mt-4">
+            <div className="mt-2">
               <div className="form-group">
                 <label className="fs12px" htmlFor="relationship">
                   RELATIONSHIP
                 </label>
-                <select className="form-control" id="relationship">
-                  <option>Select...</option>
-                  <option>1</option>
-                  <option>2</option>
-                  <option>3</option>
-                  <option>4</option>
-                  <option>5</option>
+                <select className="form-control" value={selectedRelation} id="relationship" onChange={(e) => setSelectedRelation(Number(e.target.value))}>
+                  <option value={0} >Select Relation...</option>
+                  {familyRelationList?.length > 0 && familyRelationList?.map((item, i) => {
+                    return <option value={item.relation_code} key={i}>{item.relation}</option>
+                  })}
                 </select>
               </div>
 
@@ -47,14 +112,16 @@ function AddFamilyMember({ backButton }: { backButton: any }) {
                   id="pan-number"
                   className="form-control "
                   type="text"
-                  placeholder="HAGVF6781G"
+                  placeholder="Enter Pan"
+                  value={memberPan}
+                  onChange={panHandler}
                 />
               </div>
 
               <button
                 type="button"
                 className="customButton align-items-end px-3 mb-3 mt-3"
-                onClick={() => setShow(true)}
+                onClick={addFamilyMember}
               >
                 Verify Account
               </button>

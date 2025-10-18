@@ -75,13 +75,13 @@ const Dashboard = () => {
                       <span className="congratesColor">
                         <ArrowUpCircleFill />
                         <CurrencyRupee className="mb-1" />
-                        {snapshotData?.Totaldayschange.toLocaleString("en-In")}  ({getPercentageValue(Number(snapshotData?.Totalpurchase), snapshotData?.Totaldayschange)}%)
+                        {snapshotData?.Totaldayschange.toLocaleString("en-In")}  ({getPercentageValue(Number(snapshotData?.Totalmarketvalue), snapshotData?.Totaldayschange)}%)
                       </span>
                     ) : snapshotData?.Totaldayschange < 0 && (
                       <span className="errorColor2">
                         <ArrowDownCircleFill />
                         <CurrencyRupee className="mb-1" />
-                        {snapshotData?.Totaldayschange.toLocaleString("en-In")} ({getPercentageValue(Number(snapshotData?.Totalpurchase), snapshotData?.Totaldayschange)}%)
+                        {snapshotData?.Totaldayschange.toLocaleString("en-In")} ({getPercentageValue(Number(snapshotData?.Totalmarketvalue), snapshotData?.Totaldayschange)}%)
                       </span>
                     )}
                   </div>

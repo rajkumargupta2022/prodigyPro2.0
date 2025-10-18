@@ -59,5 +59,9 @@ export enum endPoints{
    searchScheme="product/search-scheme",
    getSortFilters="product/get-sort-filters",
    getActiveSif="product/get-active-sif",
-   startWith100Schemes="product/get-100-rs-schemes"
+   startWith100Schemes="product/get-100-rs-schemes",
+   getFamilyRelations="register/get-family-relations",
+   addFamilyMember="register/add-family-member",
+   resendFamilyMemberOtp="register/resend-family-member-otp",
+   verifyFamilyMemberOtp="register/verify-family-member-otp"
 }
