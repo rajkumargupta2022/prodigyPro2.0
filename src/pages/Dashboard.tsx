@@ -56,7 +56,7 @@ const Dashboard = () => {
   return (
     <>
       <MyNavbar />
-      <section>
+      <section className="closeModel">
         <div className="container-fluid">
           <div className="row mt-3 justify-content-md-center">
             <div className="col-lg-7 col-sm-12">
@@ -67,9 +67,9 @@ const Dashboard = () => {
                     <div className="col d-flex">
                       <h6 className="fw-semibold">PORTFOLIO SUMMARY </h6> <span className="fs12px ms-2" > As on {currentDateInStringNumber()}</span>
                     </div>
-                    <h3 className="fw-bold"><CurrencyRupee className="mb-1" />{snapshotData?.Totalmarketvalue.toLocaleString("en-In")}{familySnapShotData.length > 1 && <small className="fs-6 crPointer" onClick={handleClick}><ChevronDown /></small>}</h3>
+                    <h3 className="fw-bold"><CurrencyRupee className="mb-1" />{snapshotData?.Totalmarketvalue.toLocaleString("en-In")}{familySnapShotData.length > 1 &&  <small className="fs-6 crPointer" onClick={handleClick}>  <ChevronDown  className="mx-1"/></small>}</h3>
                   </div>
-                  <div className="mt-2 textColor">
+                  <div className="mt-2 textColor" >
                     1 Day change{" "}
                     {snapshotData?.Totaldayschange >= 0 ? (
                       <span className="congratesColor">

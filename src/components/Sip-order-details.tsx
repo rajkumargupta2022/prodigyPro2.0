@@ -81,6 +81,7 @@ try {
         <div className="d-flex justify-content-between mb-2">
           <span className="text-secondary">LINKED BANK ACCOUNT</span>
           <span className="value-font2">HDFC Bank</span>
+          
         </div>
         <div className="d-flex justify-content-between mb-2">
           <span className="text-secondary">SIP REGISTERED ON</span>
@@ -132,6 +133,7 @@ try {
     
 
     </main>
+    
   );
 }
 
