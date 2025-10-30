@@ -17,6 +17,7 @@ const  Paginations: React.FC<paginationProps>=({totalRecords,page,setPage,limit,
   const handlePage = (num:number)=>{
     setPage(num)
     setPage(num)
+    setLimit(20)
   }
 
   return (
@@ -28,7 +29,7 @@ const  Paginations: React.FC<paginationProps>=({totalRecords,page,setPage,limit,
           <span className="fw-semibold">{endRecord}</span> of{" "}
           <span className="fw-semibold">{totalRecords}</span> results
         </div>
-        <div className="d-flex align-items-center mb-2 mb-md-0">
+        {/* <div className="d-flex align-items-center mb-2 mb-md-0">
           <label className="me-2 fw-semibold small">Rows per page:</label>
           <select
             className="form-select form-select-sm w-auto"
@@ -43,7 +44,7 @@ const  Paginations: React.FC<paginationProps>=({totalRecords,page,setPage,limit,
             <option value={20}>20</option>
             <option value={50}>50</option>
           </select>
-        </div>
+        </div> */}
 
         {/* Pagination controls */}
      

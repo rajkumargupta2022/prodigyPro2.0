@@ -81,6 +81,8 @@ import useAuthRedirect from "./services/user/useAuthRedirect";
 import SighnUp from "./pages/Sign-up";
 import SifFunds from "./pages/SifFunds";
 import FundWithh100 from "./pages/FundWith100";
+import PurchaseDetails from "./components/PurchaseDetails";
+import RedemptionDetails from "./components/RedemptionDetails";
 
 
 const LoaderHandler = () => {
@@ -172,6 +174,14 @@ function App() {
           <Route
             path="/order-timeline"
             element={<Account Component={OrderDetails} />}
+          />
+           <Route
+            path="/purchase-details"
+            element={<Account Component={PurchaseDetails} />}
+          />
+           <Route
+            path="/redemption-details"
+            element={<Account Component={RedemptionDetails} />}
           />
 
           <Route

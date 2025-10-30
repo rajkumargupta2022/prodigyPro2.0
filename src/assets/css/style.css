@@ -149,6 +149,7 @@ span{
 }
 
 .declaration-button {
+   border-color: #D0DBEA;
   border-radius: 15px;
   margin-right: 1%;
   color: #011efe;
@@ -1808,3 +1809,37 @@ a{
   background-color: rgba(230, 232, 255, 1);
   color: rgba(55, 55, 55, 1);
 }
+.nav-btn {
+  background-color: white;
+  color: #011EFE;
+  border: 2px solid #D0DBEA;
+  border-radius: 50px;
+  padding: 6px 18px;
+  font-weight: 500;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 6px rgba(1, 30, 254, 0.08);
+}
+
+.nav-btn:hover {
+  background-color: #011EFE;
+  color: white;
+  border-color: #011EFE;
+  box-shadow: 0 4px 10px rgba(1, 30, 254, 0.25);
+  transform: translateY(-2px);
+}
+
+/* 🔹 Disabled state */
+.nav-btn:disabled {
+  background-color: #f5f5f5;
+  color: #999;
+  border-color: #D0DBEA;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+  opacity: 0.7;
+}
+
+
+

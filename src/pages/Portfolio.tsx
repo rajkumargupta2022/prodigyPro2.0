@@ -20,7 +20,7 @@ const Portfolio = () => {
   const title: string = "You Have No Investments Yet";
   const body: string = "Start investing today to build your portfolio and achieve your financial goals.";
   const btnName = "Explore Funds";
-  const btnUrl = "/"
+  const btnUrl = "/all-mutual-funds"
   const adminUser = fetchAdminUser()
 
 

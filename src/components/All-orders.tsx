@@ -1,34 +1,67 @@
 import { ArrowLeft } from "react-bootstrap-icons";
-import Orders from "./orders";
-import SIP from "./Sip";
-import { useState } from "react";
-import STP from "./STP";
-import SWP from "./SWP";
+import OneTime from "./OneTimeOrders";
+import MonthlySIP from "./MonthlySIP";
+import { useEffect, useState } from "react";
+import RedemptionOrders from "./RedumptionOrders";
+import SWPOrders from "./SWPOrders";
 import { keys } from "../services/utils/keys";
 
 function AllOrders() {
-  const [active, setActive] = useState("buy/sell");
+  const [active, setActive] = useState("");
 
+    useEffect(() => {
+    const savedTab = localStorage.getItem("activeOrderTab");
+    if (savedTab) {
+      setActive(savedTab);
+    }else{
+      setActive("Monthly Sip");
+    }
+  }, [active]);
+
+  
   const renderCompo = () => {
     switch (active) {
-      case "buy/sell":
-        return <Orders />;
-      case "sip":
-        return <SIP />;
-      case "stp":
-        return <STP />;
+      case "Monthly Sip":
+        localStorage.setItem("activeOrderTab", active);
+        return <MonthlySIP />;
+        case "One-time":
+          localStorage.setItem("activeOrderTab", active);
+          return <OneTime />;
+      case "Redemption":
+        localStorage.setItem("activeOrderTab", active);
+        return <RedemptionOrders />;
       case "swp":
-        return <SWP />;
+        localStorage.setItem("activeOrderTab", active);
+        return <SWPOrders />;
     }
   };
 
   return (
     <main className="col-md-9 ms-sm-auto col-lg-9 px-md-4 py-4">
-      <h2>
-        <ArrowLeft className="crPointer" size={25} /> My All Orders
-      </h2>
+      <h4>
+        <ArrowLeft className="crPointer" size={15} /> My All Orders
+      </h4>
       <hr className="fw-light text-secondary" />
       <div className="row justify-content-around mb-4">
+          <div className="col-lg-3 col-md-6 col-12 py-lg-0 py-2">
+          <div className="w-100 me-2">
+            <input
+              type="radio"
+              className="btn-check"
+              name="options"
+              id="option2"
+              autoComplete="off"
+              checked={active === "Monthly Sip"}
+              onChange={() => setActive("Monthly Sip")}
+            />
+            <label
+              className="btn btn-outline-primary declaration-button w-100 paddingLeftRight py-1"
+              htmlFor="option2"
+            >
+             Monthly SIP
+            </label>
+          </div>
+        </div>
         <div className="col-lg-3 col-md-6 col-12 py-lg-0 py-2">
           <div className="w-100 me-2">
             <input
@@ -37,35 +70,18 @@ function AllOrders() {
               name="options"
               id="option1"
               autoComplete="off"
-              checked={active === "buy/sell"}
-              onChange={() => setActive("buy/sell")}
+              checked={active === "One-time"}
+              onChange={() => setActive("One-time")}
             />
             <label
               className="btn btn-outline-primary declaration-button w-100 paddingLeftRight py-1"
               htmlFor="option1"
             >
-              Buy/Sell
+              One-time
             </label>
           </div>
         </div>
-        <div className="col-lg-3 col-md-6 col-12 py-lg-0 py-2">
-          <div className="w-100 me-2">
-            <input
-              type="radio"
-              className="btn-check"
-              name="options"
-              id="option2"
-              autoComplete="off"
-              onChange={() => setActive(keys.sip)}
-            />
-            <label
-              className="btn btn-outline-primary declaration-button w-100 paddingLeftRight py-1"
-              htmlFor="option2"
-            >
-              SIP
-            </label>
-          </div>
-        </div>
+      
         <div className="col-lg-3 col-md-6 col-12 py-lg-0 py-2">
           <div className="w-100 me-2">
             <input
@@ -74,13 +90,13 @@ function AllOrders() {
               name="options"
               id="option3"
               autoComplete="off"
-              onChange={() => setActive(keys.stp)}
+              onChange={() => setActive("Redemption")}
             />
             <label
               className="btn btn-outline-primary declaration-button w-100 paddingLeftRight py-1"
               htmlFor="option3"
             >
-              STP
+              Redemption
             </label>
           </div>
         </div>

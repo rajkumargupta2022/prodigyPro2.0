@@ -63,5 +63,10 @@ export enum endPoints{
    getFamilyRelations="register/get-family-relations",
    addFamilyMember="register/add-family-member",
    resendFamilyMemberOtp="register/resend-family-member-otp",
-   verifyFamilyMemberOtp="register/verify-family-member-otp"
+   verifyFamilyMemberOtp="register/verify-family-member-otp",
+   purchaseOrders="orders/purchase-orders",
+   getAllRedemptionOrders="orders/get-all-redemption-orders",
+   getRedemptionOrderDetails="orders/get-redemption-order-details",
+   getSipInstallmentDetails="orders/get-sip-installment-details",
+   getPurchaseOrdersDetails="orders/get-purchase-orders-details",
 }

@@ -59,3 +59,13 @@ export const yearKeys: Record<number, keyof yearTypeKeys> = {
   10: "tenyearret",
   15: "fifteenyearret",
 };
+
+export const succeessString =[
+  "SUCCESS","APPROVED","AUTHORISED","COMPLETED","VALID"
+]
+export const pendingString =[
+  "PENDING","WAITING","INPROGRESS","PROCESSING"
+]
+export const failedString =[
+  "FAILED","REJECT","ERROR","DECLINED","CANCELLED","INVALID"
+]

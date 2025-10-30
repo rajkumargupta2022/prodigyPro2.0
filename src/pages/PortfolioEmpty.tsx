@@ -1,9 +1,10 @@
 // import empty from "../assets/img/empty-img.svg"
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import emptyImg from "../assets/img/order-empty.svg"
 
 interface PortfolioEmptyProps{
-  images:any;
+  images?:any|null;
   title?:string;
   body?:string;
   btnName? : string;
@@ -11,7 +12,7 @@ interface PortfolioEmptyProps{
 
 }
 const PortfolioEmpty: React.FC<PortfolioEmptyProps> = ({
-  images,  // Replace with a default value or imported image
+  images=emptyImg,  // Replace with a default value or imported image
   title,
   body,
   btnName,
