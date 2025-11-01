@@ -135,11 +135,78 @@ export interface purchaseDetailsKeys {
   folio_number: string;
   order_date: string;
   order_amount?: number;
-  redemption_amount?:number
+  redemption_amount?: number;
   transaction_id: string;
   investment_type: string;
   bank_name: string;
   bank_account_number: string;
+  nav_date: string;
+  nav_price: number;
+}
+export interface swpOrderDetailsRes {
+  success: boolean;
+  data: swpOrderDetailsKeys;
+}
+export interface swpOrderDetailsKeys {
+  scheme_name: string;
+  accord_product_code: number;
+  accord_amc_code: number;
+  installment_amount: number;
+  total_invested: string;
+  total_units: string;
+  status: string;
+  swp_start_date: string;
+  folio_number: string;
+  installments: swpInstallmentKeys[];
+}
+export interface swpInstallmentKeys {
+  installment: number;
+  installment_id: string;
+  installment_date: string;
+  units_withdrawn: number;
+  nav: number;
+  installment_amount: string;
+}
+export interface swpInstallmentDetailsRes {
+  success: boolean;
+  data: swpInstallmetDetailKeys;
+}
+export interface swpInstallmetDetailKeys {
+  status: string;
+  scheme_name: string;
+  accord_product_code: number;
+  accord_amc_code: number;
+  folio_number: string;
+  order_date: string;
+  installment_amount: number;
+  transaction_id: string;
+  investment_type: string;
+  bank_name: string;
+  bank_account_number: string;
+  nav_date: string;
+  nav_price: number;
+}
+export interface cancelSIPRes {
+  success: boolean;
+  status: string;
+  message: string;
+}
+
+export interface transactionHistoryRes {
+  success: boolean;
+  data: transactionHistoryKeys[];
+}
+
+export interface transactionHistoryKeys {
+  scheme_name: string;
+  accord_product_code: number;
+  accord_amc_code: number;
+  folio_number: string;
+  order_date: string;
+  transaction_type: string;
+  order_amount: number;
+  transaction_id: string;
+  status: string;
   nav_date: string;
   nav_price: number;
 }

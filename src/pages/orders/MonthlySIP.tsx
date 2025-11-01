@@ -1,20 +1,20 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { postRequest } from "../services/Api/HandleApi";
-import { oneTimeKeys, OneTimeRes, } from "../pages/data-interfaces/orders";
-import { endPoints, imageUrl } from "../services/utils/urls";
-import { fetchAdminUser } from "../services/user/adminUser";
-import { getValueInSort } from "../services/calculation/percentageCalculate";
-import { failedString, pendingString } from "../services/utils/keys";
-import { dateInStringNumber } from "../services/dates/dateFormater";
-import Paginations from "./Pagination";
+import { postRequest } from "../../services/Api/HandleApi";
+import { sipOrderKeys, sipOrderRes } from "../data-interfaces/orders";
+import { endPoints, imageUrl } from "../../services/utils/urls";
+import { fetchAdminUser } from "../../services/user/adminUser";
+import { getValueInSort } from "../../services/calculation/percentageCalculate";
+import { failedString, pendingString } from "../../services/utils/keys";
+import { dateInStringNumber } from "../../services/dates/dateFormater";
+import Paginations from "../../components/Pagination";
 
 
-function OneTimeOrders() {
+function MonthlySIP() {
   const navigate = useNavigate();
   const [limit, setLimit] = useState<number>(20);
   const [page, setPage] = useState<number>(1);
-  const [purchaseList, setPurchaseList] = useState<oneTimeKeys[]>([]);
+  const [sipListData, setSipListData] = useState<sipOrderKeys[]>([]);
   const [totalRecords, setTotalRecords] = useState<number>(0);
 
   useEffect(() => {
@@ -26,33 +26,34 @@ function OneTimeOrders() {
     if (adminUser?.ucc) {
       const reqBody = { ucc: "", page, limit };
       try {
-        const res = await postRequest<OneTimeRes>(endPoints.purchaseOrders, reqBody);
+        const res = await postRequest<sipOrderRes>(endPoints.getSipOrders, reqBody);
         if (res.success) {
-          setPurchaseList(res.data);
+          setSipListData(res.data);
           setTotalRecords(res.totalRecords || 0);
         }
       } catch {
-        setPurchaseList([]);
+        setSipListData([]);
       }
     }
   };
 
 
 
- const orderTimeLine = (item: oneTimeKeys) => {
-    navigate("/purchase-details", { state: item })
+  const detailPage = (item:sipOrderKeys)=>{
+        navigate("/sip-order",{state:item})
   }
+
   return (
     <>
       {/* ✅ Pagination Header Above */}
-
+  
       {/* ✅ SIP Data List */}
-      {purchaseList?.length > 0 ? (
-        purchaseList?.map((item) => (
+      {sipListData?.length > 0 ? (
+        sipListData?.map((item) => (
           <div
             key={item.folio_number + item.scheme_name}
             className="p-4 shadow-sm bg-white border-0 rounded-4 mb-3 crPointer"
-            onClick={() => orderTimeLine(item)}
+            onClick={()=>detailPage(item)}
           >
             <div className="row justify-content-between">
               <div className="col-lg-8 col-md-8 col-12 py-2">
@@ -64,20 +65,17 @@ function OneTimeOrders() {
                     style={{ width: 40, height: 40 }}
                   />
                   <div className="ms-2" style={{ flex: 4 }}>
-                    <h6 className="mb-0">{item.scheme_name?.toLowerCase()
-                      .split(" ")
-                      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-                      .join(" ")}</h6>
+                    <h6 className="mb-0">{item.scheme_name}</h6>
                     <span className="text-secondary small">
                       Folio: <span className="fw-semibold">{item.folio_number || "N/A"}</span>
                     </span>
                   </div>
                 </div>
               </div>
-              <div className="col-lg-4 col-md-4 col-12 py-2 text-md-end text-start">
-                {failedString.includes(item.status) ? <span className="failed-badge">{item.status}</span> : pendingString.includes(item.status) ? <span className="pending-badge">{item.status}</span> : <span className="success-badge">{item.status}</span>}
-
-              </div>
+           <div className="col-lg-4 col-md-4 col-12 py-2 text-md-end text-start">
+               {failedString.includes(item.status)?<span className="failed-badge">{item.status?.charAt(0).toUpperCase() + item?.status.slice(1).toLowerCase()}</span>:pendingString.includes(item.status)?<span className="pending-badge">{item.status}</span>:<span className="success-badge">{item.status?.charAt(0).toUpperCase() + item?.status.slice(1).toLowerCase()}</span>}
+               
+             </div>
 
             </div>
             <hr className="text-secondary mt-2 mb-2" />
@@ -87,15 +85,15 @@ function OneTimeOrders() {
                 <br />
                 <span className="fw-semibold">{dateInStringNumber(item.order_date)}</span>
               </div>
-              {/* <div>
+               <div>
                 <span className="text-secondary small">Next SIP Date</span>
                 <br />
                 <span className="fw-semibold">{dateInStringNumber(item.next_sip_date)}</span>
-              </div> */}
+              </div>
               <div>
                 <span className="text-secondary small">Amount</span>
                 <br />
-                <span className="fw-semibold">₹{getValueInSort(Number(item.order_amount))}</span>
+                <span className="fw-semibold">₹{getValueInSort(Number(item.installment_amount))}</span>
               </div>
             </div>
           </div>
@@ -103,10 +101,10 @@ function OneTimeOrders() {
       ) : (
         <p className="text-center text-secondary">No records found</p>
       )}
-      <Paginations totalRecords={totalRecords} page={page} setPage={setPage} limit={limit} setLimit={setLimit} />
+    <Paginations totalRecords={totalRecords}  page={page} setPage={setPage}  limit={limit} setLimit={setLimit}/>
 
     </>
   );
 }
 
-export default OneTimeOrders;
+export default MonthlySIP;

@@ -58,10 +58,10 @@ import AboutUs from "./components/About-Us";
 import PrivacyPolicyComponent from "./components/privacyPolicy";
 import AddFamilyMemberC from "./components/Add-family-member";
 import AllOrders from "./components/All-orders";
-import OrderDetails from "./components/Order-details";
-import SIPOrderDetails from "./components/Sip-order-details";
-import STPOrderDetails from "./components/Stp-order-details";
-import SWPOrderDetails from "./components/SWP-ORDER-DETAILS";
+import OrderDetails from "./pages/orders/SipInstallmentDetails";
+import SIPOrderDetails from "./pages/orders/Sip-order-details";
+// import STPOrderDetails from "./pages/orders/Stp-order-details";
+import SWPOrderDetails from "./pages/orders/SwpOrderDetails";
 import LinkedBankAccount from "./components/Linked-BankAccount";
 import BankDetailsC from "./components/Bank-Details";
 import AddBankAccount from "./components/Add-bank-account";
@@ -76,20 +76,21 @@ import { LoaderProvider, useLoader } from "./context/LoaderContext";
 import { registerLoaderCallbacks } from "./services/Loader/LoaderController";
 import { useEffect } from "react";
 import StateFolioDetails from "./components/statement-folio-details";
-import NoFolioFounds from "./components/no-folio-found";
 import useAuthRedirect from "./services/user/useAuthRedirect";
 import SighnUp from "./pages/Sign-up";
 import SifFunds from "./pages/SifFunds";
 import FundWithh100 from "./pages/FundWith100";
-import PurchaseDetails from "./components/PurchaseDetails";
-import RedemptionDetails from "./components/RedemptionDetails";
+import PurchaseDetails from "./pages/orders/PurchaseDetails";
+import RedemptionDetails from "./pages/orders/RedemptionDetails";
+import SwpInstallmentDetails from "./pages/orders/SwpInstallmentDetails";
+import TransactionHistory from "./pages/orders/TransactionHistory";
 
 
 const LoaderHandler = () => {
   const { showLoader, hideLoader } = useLoader();
 
   useAuthRedirect()
- useEffect(() => {
+  useEffect(() => {
     registerLoaderCallbacks(showLoader, hideLoader);
   }, [showLoader, hideLoader]);
 
@@ -102,188 +103,192 @@ function App() {
   return (
     <>
 
-        <ToastContainer />
-        <LoaderProvider>
-          <LoaderHandler />
-          <Loader />
-          {/* rest of your app */}
-        </LoaderProvider>
-        <Routes>
+      <ToastContainer />
+      <LoaderProvider>
+        <LoaderHandler />
+        <Loader />
+        {/* rest of your app */}
+      </LoaderProvider>
+      <Routes>
 
-          <Route path="/" element={<Login />} />
-          <Route path="/folio-details" element={<Account Component={StateFolioDetails} />} />
-          <Route path="/no-folio-founs" element={<Account Component={NoFolioFounds} />} />
-          <Route path="/personal-details" element={<PersonalDetails />} />
-          <Route path="/pan-varification" element={<PanVarification />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/declaration" element={<Declaration />} />
-          <Route path="/address-details" element={<AddressDetails />} />
-          <Route path="/bank-details" element={<BankDetails />} />
-          <Route path="/nomination-details" element={<NominationDetails />} />
-          <Route path="/otp" element={<Otp />} />
-          <Route path="/proof-identity" element={<ProofIdentity />} />
-          <Route path="/proof-identity2" element={<ProofIdentity2 />} />
-          <Route path="/digital-signature" element={<DigitalSignature />} />
-          <Route path="/e-sign" element={<E_Sign />} />
-          <Route path="/congratulation" element={<SuccessPage />} />
-          <Route path="/emergency-funds" element={<EmergencyFunds />} />
-          <Route path="/recommended-funds" element={<RecommendedFunds />} />
-          <Route path="/tax-saving" element={<TaxSaving />} />
-          <Route path="/nfo-live" element={<NFOLive />} />
-          <Route path="/nfo-apply" element={<NFOApply />} />
-          <Route path="/terms-and-conditions" element={<TermsAndConditions/>} />
-          {/* <Route path="/add-family-member" element={<AddFamilyMember />} /> */}
-          <Route path="/portfolio-review" element={<PortfolioReview />} />
-          <Route path="/kyc-status-check" element={<KycStatusCheck />} />
-          <Route
-            path="/bank-details-varification"
-            element={<BankDetailsVarification />}
-          />
-          <Route path="/nomination-list" element={<NominationList />} />
+        <Route path="/" element={<Login />} />
+        <Route path="/folio-details" element={<Account Component={StateFolioDetails} />} />
+        <Route path="/personal-details" element={<PersonalDetails />} />
+        <Route path="/pan-varification" element={<PanVarification />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/declaration" element={<Declaration />} />
+        <Route path="/address-details" element={<AddressDetails />} />
+        <Route path="/bank-details" element={<BankDetails />} />
+        <Route path="/nomination-details" element={<NominationDetails />} />
+        <Route path="/otp" element={<Otp />} />
+        <Route path="/proof-identity" element={<ProofIdentity />} />
+        <Route path="/proof-identity2" element={<ProofIdentity2 />} />
+        <Route path="/digital-signature" element={<DigitalSignature />} />
+        <Route path="/e-sign" element={<E_Sign />} />
+        <Route path="/congratulation" element={<SuccessPage />} />
+        <Route path="/emergency-funds" element={<EmergencyFunds />} />
+        <Route path="/recommended-funds" element={<RecommendedFunds />} />
+        <Route path="/tax-saving" element={<TaxSaving />} />
+        <Route path="/nfo-live" element={<NFOLive />} />
+        <Route path="/nfo-apply" element={<NFOApply />} />
+        <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
+        {/* <Route path="/add-family-member" element={<AddFamilyMember />} /> */}
+        <Route path="/portfolio-review" element={<PortfolioReview />} />
+        <Route path="/kyc-status-check" element={<KycStatusCheck />} />
+        <Route
+          path="/bank-details-varification"
+          element={<BankDetailsVarification />}
+        />
+        <Route path="/nomination-list" element={<NominationList />} />
 
-          <Route path="/portfolio-import" element={<PortfolioImport />} />
-          <Route
-            path="/portfolio-under-review"
-            element={<PortfolioUnderReview />}
-          />
-          <Route path="/portfolio" element={<Portfolio />} />
+        <Route path="/portfolio-import" element={<PortfolioImport />} />
+        <Route
+          path="/portfolio-under-review"
+          element={<PortfolioUnderReview />}
+        />
+        <Route path="/portfolio" element={<Portfolio />} />
 
-          <Route path="/explore" element={<Explore />} />
-          <Route path="/all-mutual-funds" element={<AllMutualFunds />} />
-          <Route path="/fund-details" element={<FundDetails />} />
-          {/* <Route path="/select-folio" element={<SelectFolio />} /> */}
+        <Route path="/explore" element={<Explore />} />
+        <Route path="/all-mutual-funds" element={<AllMutualFunds />} />
+        <Route path="/fund-details" element={<FundDetails />} />
+        {/* <Route path="/select-folio" element={<SelectFolio />} /> */}
 
-          {/* account related pages */}
-          <Route path="/my-profile" element={<Account Component={Profile} />} />
-          <Route
-            path="/profile-details"
-            element={<Account Component={MyProfile} />}
-          />
-          <Route path="/locate-us" element={<Account Component={LocateUs} />} />
-          <Route path="/about-us" element={<Account Component={AboutUs} />} />
-          <Route
-            path="/add-family-member"
-            element={<Account Component={AddFamilyMemberC} />}
-          />
+        {/* account related pages */}
+        <Route path="/my-profile" element={<Account Component={Profile} />} />
+        <Route
+          path="/profile-details"
+          element={<Account Component={MyProfile} />}
+        />
+        <Route path="/locate-us" element={<Account Component={LocateUs} />} />
+        <Route path="/about-us" element={<Account Component={AboutUs} />} />
+        <Route
+          path="/add-family-member"
+          element={<Account Component={AddFamilyMemberC} />}
+        />
 
-          <Route
-            path="/all-orders"
-            element={<Account Component={AllOrders} />}
-          />
+        <Route
+          path="/all-orders"
+          element={<Account Component={AllOrders} />}
+        />
 
-          <Route
-            path="/order-timeline"
-            element={<Account Component={OrderDetails} />}
-          />
-           <Route
-            path="/purchase-details"
-            element={<Account Component={PurchaseDetails} />}
-          />
-           <Route
-            path="/redemption-details"
-            element={<Account Component={RedemptionDetails} />}
-          />
+        <Route
+          path="/order-timeline"
+          element={<Account Component={OrderDetails} />}
+        />
+        <Route
+          path="/swp-installmet-details"
+          element={<Account Component={SwpInstallmentDetails} />}
+        />
+        <Route
+          path="/purchase-details"
+          element={<Account Component={PurchaseDetails} />}
+        />
+        <Route
+          path="/redemption-details"
+          element={<Account Component={RedemptionDetails} />}
+        />
 
-          <Route
-            path="/sip-order"
-            element={<Account Component={SIPOrderDetails} />}
-          />
+        <Route
+          path="/sip-order"
+          element={<Account Component={SIPOrderDetails} />}
+        />
 
-          <Route
+        {/* <Route
             path="/stp-order"
             element={<Account Component={STPOrderDetails} />}
-          />
+          /> */}
 
-          <Route
-            path="/swp-order"
-            element={<Account Component={SWPOrderDetails} />}
-          />
+        <Route
+          path="/swp-order"
+          element={<Account Component={SWPOrderDetails} />}
+        />
 
-          <Route
-            path="/linked-bank-account"
-            element={<Account Component={LinkedBankAccount} />}
-          />
+        <Route
+          path="/linked-bank-account"
+          element={<Account Component={LinkedBankAccount} />}
+        />
 
-          <Route
-            path="/bank-details-show"
-            element={<Account Component={BankDetailsC} />}
-          />
+        <Route
+          path="/bank-details-show"
+          element={<Account Component={BankDetailsC} />}
+        />
 
-          <Route
-            path="/add-bank-account-list"
-            element={<Account Component={AddBankAccount} />}
-          />
+        <Route
+          path="/add-bank-account-list"
+          element={<Account Component={AddBankAccount} />}
+        />
 
-          <Route
-            path="/add-bank-details"
-            element={<Account Component={AddBankDetails} />}
-          />
+        <Route
+          path="/add-bank-details"
+          element={<Account Component={AddBankDetails} />}
+        />
 
-          <Route
-            path="/add-verification-details"
-            element={<Account Component={AddAccountVerification} />}
-          />
+        <Route
+          path="/add-verification-details"
+          element={<Account Component={AddAccountVerification} />}
+        />
 
-          <Route
-            path="/change-password"
-            element={<Account Component={ChangePassword} />}
-          />
+        <Route
+          path="/change-password"
+          element={<Account Component={ChangePassword} />}
+        />
 
-          <Route
-            path="/help&support"
-            element={<Account Component={HelpSupport} />}
-          />
+        <Route
+          path="/help&support"
+          element={<Account Component={HelpSupport} />}
+        />
 
-          <Route
-            path="/privacyPolicy"
-            element={<Account Component={PrivacyPolicyComponent} />}
-          />
+        <Route
+          path="/privacyPolicy"
+          element={<Account Component={PrivacyPolicyComponent} />}
+        />
 
 
-          <Route
-            path="/statements"
-            element={<Account Component={Statements} />}
-          />
+        <Route
+          path="/statements"
+          element={<Account Component={Statements} />}
+        />
 
-          {/* account related pages end */}
+        {/* account related pages end */}
+        <Route path="/transaction-history" element={<TransactionHistory />} />
+        
+        <Route path="/goal-planning" element={<GoalPlanning />} />
+        <Route path="/goal-summary" element={<GoalSummary />} />
+        <Route path="/goal" element={<Goal />} />
+        <Route path="/goal-result" element={<GoalResult />} />
+        <Route path="/calculator-list" element={<CalculatorList />} />
+        <Route path="/sip-calculator" element={<SipCalculator />} />
+        <Route path="/marriage-calculator" element={<MarriageCalculator />} />
+        <Route path="/sif-funds" element={<SifFunds />} />
+        <Route
+          path="/education-calculator"
+          element={<EducationCalculator />}
+        />
+        <Route
+          path="/future-value-calculator"
+          element={<FutureValueCalculator />}
+        />
+        <Route
+          path="/retirment-calculator"
+          element={<RetirementCalculator />}
+        />
+        <Route path="/emi-calculator" element={<EmiCalculator />} />
+        <Route path="/fund-with-100" element={<FundWithh100 />} />
+        <Route path="/fd-calculator" element={<FDCalculator />} />
+        <Route path="/elss-calculator" element={<ElssCalculator />} />
+        <Route path="/swp-calculator" element={<SWPCalculator />} />
+        <Route
+          path="/recommended-scheme-goal"
+          element={<RecommendedSchemeGoal />}
+        />
+        <Route path="/risk-profile" element={<RiskProfile />} />
+        <Route path="/risk-result" element={<RiskResult />} />
+        <Route path="/sign-up" element={<SighnUp />} />
 
-          <Route path="/goal-planning" element={<GoalPlanning />} />
-          <Route path="/goal-summary" element={<GoalSummary />} />
-          <Route path="/goal" element={<Goal />} />
-          <Route path="/goal-result" element={<GoalResult />} />
-          <Route path="/calculator-list" element={<CalculatorList />} />
-          <Route path="/sip-calculator" element={<SipCalculator />} />
-          <Route path="/marriage-calculator" element={<MarriageCalculator />} />
-          <Route path="/sif-funds" element={<SifFunds />} />
-          <Route
-            path="/education-calculator"
-            element={<EducationCalculator />}
-          />
-          <Route
-            path="/future-value-calculator"
-            element={<FutureValueCalculator />}
-          />
-          <Route
-            path="/retirment-calculator"
-            element={<RetirementCalculator />}
-          />
-          <Route path="/emi-calculator" element={<EmiCalculator />} />
-          <Route path="/fund-with-100" element={<FundWithh100 />} />
-          <Route path="/fd-calculator" element={<FDCalculator />} />
-          <Route path="/elss-calculator" element={<ElssCalculator />} />
-          <Route path="/swp-calculator" element={<SWPCalculator />} />
-          <Route
-            path="/recommended-scheme-goal"
-            element={<RecommendedSchemeGoal />}
-          />
-          <Route path="/risk-profile" element={<RiskProfile />} />
-          <Route path="/risk-result" element={<RiskResult />} />
-          <Route path="/sign-up" element={<SighnUp />} />
+        <Route path="/custom-goal" element={<CustomGoal />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
 
-          <Route path="/custom-goal" element={<CustomGoal />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-    
     </>
   );
 }

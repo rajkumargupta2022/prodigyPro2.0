@@ -1,10 +1,11 @@
 import { ArrowLeft } from "react-bootstrap-icons";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { postRequest } from "../services/Api/HandleApi";
-import { endPoints, imageUrl } from "../services/utils/urls";
-import {  purchaseDetailsKeys, purchaseDetailsRes } from "../pages/data-interfaces/orders";
-import { dateInStringNumber } from "../services/dates/dateFormater";
+import { postRequest } from "../../services/Api/HandleApi";
+import { endPoints, imageUrl } from "../../services/utils/urls";
+import {  purchaseDetailsKeys, purchaseDetailsRes } from "../data-interfaces/orders";
+import { dateInStringNumber } from "../../services/dates/dateFormater";
+import PortfolioEmpty from "../PortfolioEmpty";
 
 function RedemptionDetails() {
   const location = useLocation()
@@ -49,7 +50,7 @@ function RedemptionDetails() {
         Details
       </h4>
       <hr className="fw-light text-secondary " />
-
+{installmentDetails?.transaction_id?<>
       <div className="d-flex  mb-3 align-items-center">
         <img src={imageUrl+location.state?.accord_amc_code+".png"}  height={40} width={40} className="rounded" alt="image not found" />
         <span className="fw-bold ms-2">{location.state?.scheme_name}</span>
@@ -126,7 +127,7 @@ function RedemptionDetails() {
           <span className="text-secondary">FOLIO NUMBER</span>
           <span className="value-font2">{installmentDetails?.folio_number}</span>
         </div>
-      </div>
+      </div></>:<PortfolioEmpty title={"No Orders Yet"} body={"Your order history will appear here once you start investing. Begin your journey today!"} btnName={"Explore Funds"} btnUrl={"all-mutual-funds"} />}
     </main>
   );
 }

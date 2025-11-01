@@ -2,12 +2,12 @@ import { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import OtpInput from 'react-otp-input';
-import { useNavigate } from 'react-router-dom';
 import { postRequest } from '../services/Api/HandleApi';
 import { resendOtpRes, varifyOtpRes } from '../pages/data-interfaces/users';
 import { endPoints } from '../services/utils/urls';
 import { errorToast, successToast } from '../services/utils/toast';
 import { useAdminUser } from '../context/AdminContext';
+import { useNavigate } from 'react-router-dom';
 
 interface otpFieldProps {
   show: boolean;
@@ -17,20 +17,21 @@ interface otpFieldProps {
 }
 
 const OtpField: React.FC<otpFieldProps> = ({ show, setShow, requestId, mobile }) => {
-  const {fetchFamilyPortfoloData} = useAdminUser()
+  const navigate = useNavigate()
+  const { fetchFamilyPortfoloData, switchProfile } = useAdminUser()
   const [otp, setOtp] = useState<string>();
   const [counter, setCounter] = useState<number>(60);
 
   useEffect(() => {
-    if(show){
- let timer: number;
-    if (counter > 0) {
-      timer = setTimeout(() => setCounter(prev => prev - 1), 1000);
+    if (show) {
+      let timer: number;
+      if (counter > 0) {
+        timer = setTimeout(() => setCounter(prev => prev - 1), 1000);
+      }
+      return () => clearTimeout(timer);
     }
-    return () => clearTimeout(timer);
-    }
-   
-  }, [counter,show]);
+
+  }, [counter, show]);
 
   const handleClose = () => setShow(false);
   const handleVarifyOtp = async () => {
@@ -46,7 +47,12 @@ const OtpField: React.FC<otpFieldProps> = ({ show, setShow, requestId, mobile })
       const res = await postRequest<varifyOtpRes>(endPoints.verifyFamilyMemberOtp, reqBody)
       if (res.success) {
         localStorage.removeItem("familyList")
-      await  fetchFamilyPortfoloData()
+        await fetchFamilyPortfoloData()
+        let adminData: any = localStorage.getItem("familyList")
+        adminData = JSON.parse(adminData)
+        const result = adminData?.find((obj: any) => obj.ucc === res?.member_ucc);
+        switchProfile(result)
+        navigate("/")
         successToast(res.msg)
       } else {
         errorToast(res.msg)
@@ -57,22 +63,22 @@ const OtpField: React.FC<otpFieldProps> = ({ show, setShow, requestId, mobile })
     setShow(false)
     // navigate("/portfolio-under-review")
   };
-   const resendOtp = async () => {
-      try {
-        const res = await postRequest<resendOtpRes>(endPoints.resendFamilyMemberOtp, {
-          request_id: requestId,
-        });
-        if (res.success) {
-          successToast(res.msg);
-          setCounter(60)
-        } else {
-          errorToast(res);
-        }
-      } catch (err) {
-        errorToast(err);
+  const resendOtp = async () => {
+    try {
+      const res = await postRequest<resendOtpRes>(endPoints.resendFamilyMemberOtp, {
+        request_id: requestId,
+      });
+      if (res.success) {
+        successToast(res.msg);
+        setCounter(60)
+      } else {
+        errorToast(res);
       }
-  
-    };
+    } catch (err) {
+      errorToast(err);
+    }
+
+  };
 
   return (
     <>

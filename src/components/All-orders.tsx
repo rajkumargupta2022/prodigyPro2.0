@@ -1,9 +1,9 @@
 import { ArrowLeft } from "react-bootstrap-icons";
-import OneTime from "./OneTimeOrders";
-import MonthlySIP from "./MonthlySIP";
+import OneTime from "../pages/orders/OneTimeOrders";
+import MonthlySIP from "../pages/orders/MonthlySIP";
 import { useEffect, useState } from "react";
-import RedemptionOrders from "./RedumptionOrders";
-import SWPOrders from "./SWPOrders";
+import RedemptionOrders from "../pages/orders/RedumptionOrders";
+import SWPOrders from "../pages/orders/SWPOrders";
 import { keys } from "../services/utils/keys";
 
 function AllOrders() {
@@ -90,6 +90,7 @@ function AllOrders() {
               name="options"
               id="option3"
               autoComplete="off"
+              checked={active === "Redemption"}
               onChange={() => setActive("Redemption")}
             />
             <label
@@ -108,6 +109,7 @@ function AllOrders() {
               name="options"
               id="option4"
               autoComplete="off"
+              checked={active === keys.swp}
               onChange={() => setActive(keys.swp)}
             />
             <label

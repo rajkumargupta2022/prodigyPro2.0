@@ -1,13 +1,13 @@
 import { useNavigate } from "react-router-dom";
-import { postRequest } from "../services/Api/HandleApi";
-import { swpOrderKeys, swpOrderRes } from "../pages/data-interfaces/orders";
-import { endPoints, imageUrl } from "../services/utils/urls";
-import { fetchAdminUser } from "../services/user/adminUser";
+import { postRequest } from "../../services/Api/HandleApi";
+import { swpOrderKeys, swpOrderRes } from "../data-interfaces/orders";
+import { endPoints, imageUrl } from "../../services/utils/urls";
+import { fetchAdminUser } from "../../services/user/adminUser";
 import { useEffect, useState } from "react";
-import { dateInStringNumber } from "../services/dates/dateFormater";
-import { getValueInSort } from "../services/calculation/percentageCalculate";
-import { failedString, keys, pendingString } from "../services/utils/keys";
-import Paginations from "./Pagination";
+import { dateInStringNumber } from "../../services/dates/dateFormater";
+import { getValueInSort } from "../../services/calculation/percentageCalculate";
+import { failedString, pendingString } from "../../services/utils/keys";
+import Paginations from "../../components/Pagination";
 
 function SWPOrders() {
   const navigate = useNavigate();
@@ -36,17 +36,19 @@ function SWPOrders() {
     }
   };
 
-
+  const detailPage = (item: swpOrderKeys) => {
+    navigate("/swp-order", { state: item })
+  }
 
   return (
     <>
- 
+
       {swpOrderList?.length > 0 ? (
         swpOrderList?.map((item) => (
           <div
             key={item.folio_number + item.scheme_name}
-            className="p-4 shadow-sm bg-white border-0 rounded-4 mb-2"
-            onClick={() => navigate("/swp-order")}
+            className="p-4 shadow-sm bg-white border-0 rounded-4 mb-2 crPointer"
+            onClick={() => detailPage(item)}
           >
             <div className="row justify-content-between">
               <div className="col-lg-8 col-md-8 col-12 py-2">
@@ -65,10 +67,9 @@ function SWPOrders() {
                   </div>
                 </div>
               </div>
-            <div className="col-lg-4 col-md-4 col-12 py-2 text-md-end text-start">
-                            {failedString.includes(item.status) ? <span className="failed-badge">{item.status}</span> : pendingString.includes(item.status) ? <span className="pending-badge">{item.status}</span> : <span className="success-badge">{item.status}</span>}
-            
-                          </div>
+              <div className="col-lg-4 col-md-4 col-12 py-2 text-md-end text-start">
+               {failedString.includes(item.status)?<span className="failed-badge">{item.status?.charAt(0).toUpperCase() + item?.status.slice(1).toLowerCase()}</span>:pendingString.includes(item.status)?<span className="pending-badge">{item.status}</span>:<span className="success-badge">{item.status?.charAt(0).toUpperCase() + item?.status.slice(1).toLowerCase()}</span>}
+              </div>
             </div>
             <hr className="fw-light text-secondary mt-1 mb-1" />
             <div className="d-flex justify-content-between">
@@ -95,7 +96,7 @@ function SWPOrders() {
       ) : (
         <p className="text-center text-secondary">No records found</p>
       )}
-    <Paginations totalRecords={totalRecords}  page={page} setPage={setPage}  limit={limit} setLimit={setLimit}/>
+      <Paginations totalRecords={totalRecords} page={page} setPage={setPage} limit={limit} setLimit={setLimit} />
     </>
   );
 }

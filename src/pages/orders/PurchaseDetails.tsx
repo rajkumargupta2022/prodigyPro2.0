@@ -1,16 +1,16 @@
 import { ArrowLeft } from "react-bootstrap-icons";
-import HDFC from "../assets/img/icons/hdfc.svg";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { postRequest } from "../services/Api/HandleApi";
-import { endPoints, imageUrl } from "../services/utils/urls";
-import { installmentKeys, installmentRes } from "../pages/data-interfaces/orders";
-import { dateInStringNumber } from "../services/dates/dateFormater";
+import { postRequest } from "../../services/Api/HandleApi";
+import { endPoints, imageUrl } from "../../services/utils/urls";
+import {  purchaseDetailsKeys, purchaseDetailsRes } from "../data-interfaces/orders";
+import { dateInStringNumber } from "../../services/dates/dateFormater";
+import PortfolioEmpty from "../PortfolioEmpty";
 
-function OrderDetails() {
+function PurchaseDetails() {
   const location = useLocation()
   const navigate = useNavigate()
-  const [installmentDetails,setInstallmentDetails] = useState<installmentKeys>()
+  const [installmentDetails,setInstallmentDetails] = useState<purchaseDetailsKeys>()
   // const steps = [
   //   { title: "Order Placed", date: "13 Apr 2023, 08:31 AM", completed: true },
   //   { title: "Pending Order", date: "13 Apr 2023, 08:31 AM", completed: true },
@@ -31,13 +31,13 @@ function OrderDetails() {
 
   const fetchInstallmentDetails = async () => {
     const reqBody = {
-      installment_id: location.state.installment_id,
+      transaction_id: location.state.transaction_id,
       folio_number: location.state.folio_number,
       accord_product_code: location.state.accord_product_code,
-      page: 1,
-      limit: 10
+      // page: 1,
+      // limit: 10
     }
-    const res = await postRequest<installmentRes>(endPoints.getSipInstallmentDetails,reqBody)
+    const res = await postRequest<purchaseDetailsRes>(endPoints.getPurchaseOrdersDetails,reqBody)
     if(res.success){
       setInstallmentDetails(res.data)
     }
@@ -50,9 +50,10 @@ function OrderDetails() {
         Details
       </h4>
       <hr className="fw-light text-secondary " />
+      {installmentDetails?.transaction_id ? <>
 
       <div className="d-flex  mb-3 align-items-center">
-        <img src={imageUrl+location?.state?.accord_amc_code+".png"} alt="image not found" />
+        <img src={imageUrl+location.state?.accord_amc_code+".png"}  height={40} width={40} className="rounded" alt="image not found" />
         <span className="fw-bold ms-2">{location.state?.scheme_name}</span>
       </div>
 
@@ -89,7 +90,7 @@ function OrderDetails() {
         </div>
         <div className="d-flex justify-content-between mb-2">
           <span className="text-secondary">INVESTMENT VALUE</span>
-          <span className="value-font2">₹{installmentDetails?.installment_amount}</span>
+          <span className="value-font2">₹{installmentDetails?.order_amount??0}</span>
         </div>
         <div className="d-flex justify-content-between mb-2">
           <span className="text-secondary">INVESTMENT TYPE</span>
@@ -127,9 +128,10 @@ function OrderDetails() {
           <span className="text-secondary">FOLIO NUMBER</span>
           <span className="value-font2">{installmentDetails?.folio_number}</span>
         </div>
-      </div>
+        
+      </div></>:<div className="m-0"><PortfolioEmpty title={"No Orders Yet"} body={"Your order history will appear here once you start investing. Begin your journey today!"} btnName={"Explore Funds"} btnUrl={"all-mutual-funds"} /></div>}
     </main>
   );
 }
 
-export default OrderDetails;
+export default PurchaseDetails;

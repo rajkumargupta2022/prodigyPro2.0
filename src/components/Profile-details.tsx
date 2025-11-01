@@ -1,15 +1,17 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAdminUser } from "../context/AdminContext"
 import { dateInStringNumber } from "../services/dates/dateFormater";
+import { ArrowLeft } from "react-bootstrap-icons";
 
 
 function MyProfile() {
+  const navigate = useNavigate()
   const { adminUser } = useAdminUser()
 
 
   return (
     <main className="col-md-9 ms-sm-auto col-lg-9 px-md-4 py-4">
-      <h3>
+      <h3 onClick={()=>navigate("/my-profile")}><ArrowLeft className="crPointer" size={20} />
         My
         Profile
       </h3>

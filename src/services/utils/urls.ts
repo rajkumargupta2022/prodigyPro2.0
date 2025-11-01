@@ -69,4 +69,9 @@ export enum endPoints{
    getRedemptionOrderDetails="orders/get-redemption-order-details",
    getSipInstallmentDetails="orders/get-sip-installment-details",
    getPurchaseOrdersDetails="orders/get-purchase-orders-details",
+   getSwpOrdersDetails="orders/get-swp-orders-details",
+   getSwpInstallmentDetails="orders/get-swp-installment-details",
+   cancelXsipOrder="orders/cancel-xsip-order",
+   cancelSwpOrder="orders/cancel-swp-order",
+   getTransactionHistory="orders/get-transaction-history"
 }

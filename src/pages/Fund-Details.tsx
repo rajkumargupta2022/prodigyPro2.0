@@ -3,7 +3,7 @@ import MyNavbar from "../components/Navbar";
 import MyStackBar from "../components/Stack-bar";
 import { useEffect, useState } from "react";
 import { AiOutlineMore } from "react-icons/ai";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { postRequest } from "../services/Api/HandleApi";
 import { foliosResponse, navHistoryResponse, schemeDeatilDataKeys, schemeDetailType } from "./data-interfaces/transact";
 import { endPoints, imageUrl } from "../services/utils/urls";
@@ -290,8 +290,10 @@ const FundDetails = () => {
   }
 
   const handleMinAmount = () => {
+    console.log("schemeList",schemeList);
+    
     if (schemeList?.length > 0) {
-
+        
       const updatedSchemes = schemeList.map((scheme) => {
         const minAmount = schemeList[0]?.sipAllowed ? scheme.minSIPAmt : scheme.minLumSumAmt;
         return {
@@ -321,6 +323,9 @@ const FundDetails = () => {
     setOpenSwpModel(true)
      setShow(false)
   
+  }
+  const goTransactionHistory = (item:schemeDeatilDataKeys)=>{
+    navigate("/transaction-history",{state:{accord_product_code:item.accordSchemeCode,folio_number:location.state?.folio}})
   }
 
   return (
@@ -475,7 +480,7 @@ const FundDetails = () => {
                       {checkTransactionAllowed(schemeList, keys.redumption) && <li onClick={() => handleRedmptionModel()}>Redeem Fund</li>}
                       {checkTransactionAllowed(schemeList, keys.stp) && <li onClick={() => handleSwitch("STP")}>Systematic Transfer Plan (STP)</li>}
                      {checkTransactionAllowed(schemeList, keys.swp) && <li onClick={() => handleSwp()}>Systematic Withdrawal Plan (SWP)</li>}
-                      {/* <li>Transaction History</li> */}
+                      <li onClick={()=>goTransactionHistory(schemeList[0])}>Transaction History</li>
 
                     </ul>
                   </div>

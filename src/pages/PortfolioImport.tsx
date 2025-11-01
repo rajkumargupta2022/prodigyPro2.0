@@ -1,14 +1,14 @@
 import NavBar from "../components/Navbar";
 import sadFace from "../assets/img/sad-face.svg"
-import { useState } from "react";
-import OtpField from "../components/OtpField";
+// import { useState } from "react";
+// import OtpField from "../components/OtpField";
 
 const PortfolioImport = () => {
-  const [openOtpField, setOpenOtpField] = useState<boolean>(false)
+  // const [openOtpField, setOpenOtpField] = useState<boolean>(false)
 
-  const getOtp = () => {
-    setOpenOtpField(true)
-  }
+  // const getOtp = () => {
+  //   setOpenOtpField(true)
+  // }
 
   return (
     <>
@@ -30,7 +30,7 @@ const PortfolioImport = () => {
                     <button className="btn rounded border" type="button" >+91</button>
                     <input type="text" className="form-control mx-1 rounded" placeholder="Phone Number" />
                   </div>
-                  <button type="button"  className="customButton col-12" onClick={getOtp}>Get OTP</button>
+                  <button type="button"  className="customButton col-12" >Get OTP</button>
                   <p className="fs14px m-2">Any investments linked to this mobile number will be imported from MF Central</p>
               </div>
             </div>
@@ -40,7 +40,7 @@ const PortfolioImport = () => {
       </div>
 
 
-      <OtpField show={openOtpField} setShow={setOpenOtpField} />
+      {/* <OtpField show={openOtpField} setShow={setOpenOtpField} /> */}
     </>
   );
 };

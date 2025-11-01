@@ -1,20 +1,21 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { postRequest } from "../services/Api/HandleApi";
-import { oneTimeKeys, OneTimeRes, RedemptionKeys, RedemptionRes, } from "../pages/data-interfaces/orders";
-import { endPoints, imageUrl } from "../services/utils/urls";
-import { fetchAdminUser } from "../services/user/adminUser";
-import { getValueInSort } from "../services/calculation/percentageCalculate";
-import { failedString, pendingString } from "../services/utils/keys";
-import { dateInStringNumber } from "../services/dates/dateFormater";
-import Paginations from "./Pagination";
+import { postRequest } from "../../services/Api/HandleApi";
+import { oneTimeKeys, OneTimeRes, } from "../data-interfaces/orders";
+import { endPoints, imageUrl } from "../../services/utils/urls";
+import { fetchAdminUser } from "../../services/user/adminUser";
+import { getValueInSort } from "../../services/calculation/percentageCalculate";
+import { failedString, pendingString } from "../../services/utils/keys";
+import { dateInStringNumber } from "../../services/dates/dateFormater";
+import Paginations from "../../components/Pagination";
+import PortfolioEmpty from "../PortfolioEmpty";
 
 
 function OneTimeOrders() {
   const navigate = useNavigate();
   const [limit, setLimit] = useState<number>(20);
   const [page, setPage] = useState<number>(1);
-  const [redemptionList, setRedemptionList] = useState<RedemptionKeys[]>([]);
+  const [purchaseList, setPurchaseList] = useState<oneTimeKeys[]>([]);
   const [totalRecords, setTotalRecords] = useState<number>(0);
 
   useEffect(() => {
@@ -26,34 +27,33 @@ function OneTimeOrders() {
     if (adminUser?.ucc) {
       const reqBody = { ucc: "", page, limit };
       try {
-        const res = await postRequest<RedemptionRes>(endPoints.getAllRedemptionOrders, reqBody);
+        const res = await postRequest<OneTimeRes>(endPoints.purchaseOrders, reqBody);
         if (res.success) {
-          setRedemptionList(res.data);
+          setPurchaseList(res.data);
           setTotalRecords(res.totalRecords || 0);
         }
       } catch {
-        setRedemptionList([]);
+        setPurchaseList([]);
       }
     }
   };
 
 
 
-  const detailPage = (item: RedemptionKeys) => {
-    navigate("/redemption-details", { state: item })
+ const orderTimeLine = (item: oneTimeKeys) => {
+    navigate("/purchase-details", { state: item })
   }
-
   return (
     <>
       {/* ✅ Pagination Header Above */}
 
       {/* ✅ SIP Data List */}
-      {redemptionList?.length > 0 ? (
-        redemptionList?.map((item) => (
+      {purchaseList?.length > 0 ? (
+        purchaseList?.map((item) => (
           <div
             key={item.folio_number + item.scheme_name}
             className="p-4 shadow-sm bg-white border-0 rounded-4 mb-3 crPointer"
-            onClick={() => detailPage(item)}
+            onClick={() => orderTimeLine(item)}
           >
             <div className="row justify-content-between">
               <div className="col-lg-8 col-md-8 col-12 py-2">
@@ -76,8 +76,7 @@ function OneTimeOrders() {
                 </div>
               </div>
               <div className="col-lg-4 col-md-4 col-12 py-2 text-md-end text-start">
-                {failedString.includes(item.status) ? <span className="failed-badge">{item.status}</span> : pendingString.includes(item.status) ? <span className="pending-badge">{item.status}</span> : <span className="success-badge">{item.status}</span>}
-
+               {failedString.includes(item.status)?<span className="failed-badge">{item.status?.charAt(0).toUpperCase() + item?.status.slice(1).toLowerCase()}</span>:pendingString.includes(item.status)?<span className="pending-badge">{item.status}</span>:<span className="success-badge">{item.status?.charAt(0).toUpperCase() + item?.status.slice(1).toLowerCase()}</span>}
               </div>
 
             </div>
@@ -96,13 +95,13 @@ function OneTimeOrders() {
               <div>
                 <span className="text-secondary small">Amount</span>
                 <br />
-                <span className="fw-semibold">₹{getValueInSort(Number(item.redemption_amount))}</span>
+                <span className="fw-semibold">₹{getValueInSort(Number(item.order_amount))}</span>
               </div>
             </div>
           </div>
         ))
       ) : (
-        <p className="text-center text-secondary">No records found</p>
+       <div className="m-0"><PortfolioEmpty title={"No Orders Yet"} body={"Your order history will appear here once you start investing. Begin your journey today!"} btnName={"Explore Funds"} btnUrl={"all-mutual-funds"} /></div>
       )}
       <Paginations totalRecords={totalRecords} page={page} setPage={setPage} limit={limit} setLimit={setLimit} />
 
