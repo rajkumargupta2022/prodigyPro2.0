@@ -8,6 +8,7 @@ import { dateInStringNumber } from "../../services/dates/dateFormater";
 import { getValueInSort } from "../../services/calculation/percentageCalculate";
 import { failedString, pendingString } from "../../services/utils/keys";
 import Paginations from "../../components/Pagination";
+import PortfolioEmpty from "../PortfolioEmpty";
 
 function SWPOrders() {
   const navigate = useNavigate();
@@ -23,7 +24,7 @@ function SWPOrders() {
   const fetchOrderData = async () => {
     const adminUser = fetchAdminUser();
     if (adminUser?.ucc) {
-      const reqBody = { ucc: "", page, limit };
+      const reqBody = { ucc: adminUser?.ucc, page, limit };
       try {
         const res = await postRequest<swpOrderRes>(endPoints.getSwpOrders, reqBody);
         if (res.data) {
@@ -68,7 +69,7 @@ function SWPOrders() {
                 </div>
               </div>
               <div className="col-lg-4 col-md-4 col-12 py-2 text-md-end text-start">
-               {failedString.includes(item.status)?<span className="failed-badge">{item.status?.charAt(0).toUpperCase() + item?.status.slice(1).toLowerCase()}</span>:pendingString.includes(item.status)?<span className="pending-badge">{item.status}</span>:<span className="success-badge">{item.status?.charAt(0).toUpperCase() + item?.status.slice(1).toLowerCase()}</span>}
+                {failedString.includes(item.status) ? <span className="failed-badge">{item.status?.charAt(0).toUpperCase() + item?.status.slice(1).toLowerCase()}</span> : pendingString.includes(item.status) ? <span className="pending-badge">{item.status}</span> : <span className="success-badge">{item.status?.charAt(0).toUpperCase() + item?.status.slice(1).toLowerCase()}</span>}
               </div>
             </div>
             <hr className="fw-light text-secondary mt-1 mb-1" />
@@ -94,9 +95,11 @@ function SWPOrders() {
           </div>
         ))
       ) : (
-        <p className="text-center text-secondary">No records found</p>
+        <PortfolioEmpty title={"No Orders Yet"} body={"Your order history will appear here once you start investing. Begin your journey today!"} btnName={"Explore Funds"} btnUrl={"all-mutual-funds"} />
       )}
-      <Paginations totalRecords={totalRecords} page={page} setPage={setPage} limit={limit} setLimit={setLimit} />
+      {totalRecords > 9 ?
+        <Paginations totalRecords={totalRecords} page={page} setPage={setPage} limit={limit} setLimit={setLimit} />
+        : ""}
     </>
   );
 }

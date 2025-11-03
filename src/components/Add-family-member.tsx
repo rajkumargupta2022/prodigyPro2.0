@@ -123,7 +123,7 @@ function AddFamilyMember() {
                 className="customButton align-items-end px-3 mb-3 mt-3"
                 onClick={addFamilyMember}
               >
-                Verify Account
+                Varify Account
               </button>
             </div>
           ) : (

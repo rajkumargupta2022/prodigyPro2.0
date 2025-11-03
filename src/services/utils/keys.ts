@@ -1,5 +1,9 @@
 export enum keys {
+  SIP="SIP",
   sip = "sip",
+  Redemption="Redemption",
+  Purchase="Purchase",
+  SWP="SWP",
   purchase = "purchase",
   switch = "switch",
   Switch = "Switch",

@@ -25,7 +25,7 @@ function OneTimeOrders() {
   const fetchOrderData = async () => {
     const adminUser = fetchAdminUser();
     if (adminUser?.ucc) {
-      const reqBody = { ucc: "", page, limit };
+      const reqBody = { ucc: adminUser?.ucc, page, limit };
       try {
         const res = await postRequest<OneTimeRes>(endPoints.purchaseOrders, reqBody);
         if (res.success) {
@@ -103,7 +103,9 @@ function OneTimeOrders() {
       ) : (
        <div className="m-0"><PortfolioEmpty title={"No Orders Yet"} body={"Your order history will appear here once you start investing. Begin your journey today!"} btnName={"Explore Funds"} btnUrl={"all-mutual-funds"} /></div>
       )}
-      <Paginations totalRecords={totalRecords} page={page} setPage={setPage} limit={limit} setLimit={setLimit} />
+     {totalRecords>9?
+    <Paginations totalRecords={totalRecords}  page={page} setPage={setPage}  limit={limit} setLimit={setLimit}/>
+:""}
 
     </>
   );

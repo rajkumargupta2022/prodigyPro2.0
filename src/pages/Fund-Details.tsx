@@ -3,7 +3,7 @@ import MyNavbar from "../components/Navbar";
 import MyStackBar from "../components/Stack-bar";
 import { useEffect, useState } from "react";
 import { AiOutlineMore } from "react-icons/ai";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import {  useLocation, useNavigate } from "react-router-dom";
 import { postRequest } from "../services/Api/HandleApi";
 import { foliosResponse, navHistoryResponse, schemeDeatilDataKeys, schemeDetailType } from "./data-interfaces/transact";
 import { endPoints, imageUrl } from "../services/utils/urls";

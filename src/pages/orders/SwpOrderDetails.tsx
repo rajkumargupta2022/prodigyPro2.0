@@ -32,9 +32,7 @@ function SWPOrderDetails() {
       let data = location.state
       try {
         const reqBody = {
-          // TODO : replace blank with real ucc
-          ucc: "",
-          // transaction_id: data.transaction_id,
+          ucc: adminUser?.ucc,
           folio_number: data?.folio_number || "",
           accord_product_code: data?.accord_product_code,
           page: pageNumber,

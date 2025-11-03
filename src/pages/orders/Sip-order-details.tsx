@@ -32,9 +32,7 @@ function SIPOrderDetails() {
       let data = location.state
       try {
         const reqBody = {
-          // TODO : replace blank with real ucc
-          ucc: "",
-          // transaction_id: data.transaction_id,
+          ucc: adminUser?.ucc,
           folio_number: data?.folio_number || "",
           accord_product_code: data?.accord_product_code,
           page: pageNumber,
@@ -117,7 +115,7 @@ function SIPOrderDetails() {
             <span className="fw-bold">SIP Details</span>
             <div className="d-flex justify-content-between mb-2 mt-3">
               <span className="text-secondary">STATUS</span>
-              <span className="value-font2">{location.state?.status}</span>
+              <span className="value-font2">{location.state?.status||"Active"}</span>
             </div>
             <div className="d-flex justify-content-between mb-2">
               <span className="text-secondary">FOLIO NUMBER</span>

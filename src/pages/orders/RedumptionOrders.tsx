@@ -8,6 +8,7 @@ import { getValueInSort } from "../../services/calculation/percentageCalculate";
 import { failedString, pendingString } from "../../services/utils/keys";
 import { dateInStringNumber } from "../../services/dates/dateFormater";
 import Paginations from "../../components/Pagination";
+import PortfolioEmpty from "../PortfolioEmpty";
 
 
 function OneTimeOrders() {
@@ -24,7 +25,7 @@ function OneTimeOrders() {
   const fetchOrderData = async () => {
     const adminUser = fetchAdminUser();
     if (adminUser?.ucc) {
-      const reqBody = { ucc: "", page, limit };
+      const reqBody = { ucc: adminUser?.ucc, page, limit };
       try {
         const res = await postRequest<RedemptionRes>(endPoints.getAllRedemptionOrders, reqBody);
         if (res.success) {
@@ -101,9 +102,11 @@ function OneTimeOrders() {
           </div>
         ))
       ) : (
-        <p className="text-center text-secondary">No records found</p>
+       <PortfolioEmpty title={"No Orders Yet"} body={"Your order history will appear here once you start investing. Begin your journey today!"} btnName={"Explore Funds"} btnUrl={"all-mutual-funds"} />
       )}
-      <Paginations totalRecords={totalRecords} page={page} setPage={setPage} limit={limit} setLimit={setLimit} />
+    {totalRecords>9?
+    <Paginations totalRecords={totalRecords}  page={page} setPage={setPage}  limit={limit} setLimit={setLimit}/>
+:""}
 
     </>
   );

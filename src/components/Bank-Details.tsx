@@ -4,7 +4,7 @@ import CreateMandate from "./create-mandate";
 import { useLocation, useNavigate } from "react-router-dom";
 import { fetchAdminUser } from "../services/user/adminUser";
 import { postRequest } from "../services/Api/HandleApi";
-import { endPoints } from "../services/utils/urls";
+import { endPoints, imageUrl } from "../services/utils/urls";
 import { userBankDetailKeys, userMandateRes } from "../pages/data-interfaces/bank-and-mandate";
 import { dateInStringNumber } from "../services/dates/dateFormater";
 import { bankType } from "../services/utils/keys";
@@ -53,7 +53,9 @@ function BankDetails() {
 
       <div className="p-4 shadow-sm bg-white border-0 rounded-4 mb-2">
         <div className="d-flex justify-content-between">
-          <img className="align-self-start rounded" height={40} width={40} src={"https://bankamcimagesv2.s3.ap-southeast-1.amazonaws.com/demo-bank.png"} alt="Image not found" />
+          <img className="align-self-start rounded" height={40} width={40} src={imageUrl+ mandateList[0].bank_name?.trim()
+    .toLowerCase()
+    .replace(/\s+/g, '_')+".png"} alt="Image not found" />
           <div className="ms-2" style={{ flex: 1 }}>
             <h6 style={{ margin: 0 }}>{mandateList[0]?.bank_name}</h6>
             {mandateList[0]?.verified && <span style={{ color: "#06A358" }}>Verified</span>}

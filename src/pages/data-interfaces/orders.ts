@@ -198,15 +198,15 @@ export interface transactionHistoryRes {
 }
 
 export interface transactionHistoryKeys {
+  transaction_type: string;
   scheme_name: string;
   accord_product_code: number;
   accord_amc_code: number;
   folio_number: string;
-  order_date: string;
-  transaction_type: string;
-  order_amount: number;
+  sip_start_date: string;
+  next_sip_date: string;
+  installment_amount: number;
   transaction_id: string;
-  status: string;
-  nav_date: string;
-  nav_price: number;
+  sip_registration_no: string;
+  order_date: string;
 }
