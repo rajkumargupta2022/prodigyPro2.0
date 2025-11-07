@@ -35,42 +35,42 @@ const SwitchSchemeModel: React.FC<investmetProps> = ({ show, setShow, selectedAm
   }, [show])
 
   const handleSwitch = () => {
-if(selectedSchemes.length>0){
- mergeSchemes()
-    if (transactionType === keys.Switch) {
-      setOpenSwitchConfirmationModel(true)
-      setShow(false)
+    if (selectedSchemes.length > 0) {
+      mergeSchemes()
+      if (transactionType === keys.Switch) {
+        setOpenSwitchConfirmationModel(true)
+        setShow(false)
+      } else {
+        setOpenStpConfirmation(true)
+        setShow(false)
+      }
     } else {
-      setOpenStpConfirmation(true)
-      setShow(false)
+      errorToast("Please select scheme...")
     }
-}else{
-  errorToast("Please select scheme...")
-}
-   
+
 
 
   }
   const mergeSchemes = () => {
-    
-    
+console.log("selectedSchemes",selectedSchemes)
+
     let cartData = [
       {
         fromScheme: schemeList.scheme,
         toScheme: selectedSchemes[0]?.scheme,
         fromAccordProductCode: schemeList.accordSchemeCode.toString(),
-        stpDateList:selectedSchemes[0]?.stpDateList,
-        stpFrequency:selectedSchemes[0].stpFrequency,
-        fromAccordAMCCode:schemeList.accordAMCCode,
-        toAccordAMCCode:selectedSchemes[0].accordAMCCode,
-        frequency:"",
+        stpDateList: selectedSchemes[0]?.stpDateList,
+        stpFrequency: selectedSchemes[0].stpFrequency,
+        fromAccordAMCCode: schemeList.accordAMCCode,
+        toAccordAMCCode: selectedSchemes[0].accordAMCCode,
+        frequency: "",
         toAccordProductCode: selectedSchemes[0]?.accordSchemeCode,
         amount: 0,
         fromValue: Number(schemeList.currentvalue),
         fromUnit: Number(schemeList.unit),
         folioNumber: schemeList.folio,
         installment_units: Number(schemeList.unit),
-        from_date:"",
+        from_date: "",
         all_units: true
       }
     ]
@@ -94,20 +94,20 @@ if(selectedSchemes.length>0){
     }
   }
   const handleSchemeSelection = (item: filteredSchemesKeys) => {
-   
+
     checkIsSelected(item)
     fetchSchemeDetail(item.accordSchemeCode)
   }
-  const fetchSchemeDetail = async (data:number|string="") => {
-      try {
-        const res = await postRequest<schemeDetailType>(endPoints.getSchemeDetails, { productcode: data })
-        setSelectedSchemes(res.data)
-    
-      } catch (err) {
-        setSelectedSchemes([])
-  
-      }
+  const fetchSchemeDetail = async (data: number | string = "") => {
+    try {
+      const res = await postRequest<schemeDetailType>(endPoints.getSchemeDetails, { productcode: data })
+      setSelectedSchemes(res.data)
+
+    } catch (err) {
+      setSelectedSchemes([])
+
     }
+  }
   const checkIsSelected = (item: filteredSchemesKeys) => {
     return selectedSchemes.some(data => data.accordSchemeCode === item.accordSchemeCode)
   }

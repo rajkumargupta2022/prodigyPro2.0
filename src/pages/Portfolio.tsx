@@ -103,7 +103,7 @@ const Portfolio = () => {
                 <div className="d-flex justify-content-between">
                   <div className="d-flex">
                     <div className="prod_icon_img">
-                      <img src={`${imageUrl + item?.amcCode}.png`} className="logoRadius" height={40} width={40} alt="" />
+                      <img src={`${imageUrl + item?.accordAMCCode}.png`} className="logoRadius" height={40} width={40} alt="" />
                     </div>
                     <div className="ms-2 prod_icon_heading mt-1">
                       <h4>{item?.scheme}</h4>

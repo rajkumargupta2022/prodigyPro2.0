@@ -473,7 +473,7 @@ const SwitchSchemes: React.FC<SchemesProps> = ({
                     <div className="col-4">
                       <span className="text-secondary">Min. SIP</span>
                       <br />
-                      <span className="value-font2">₹{item.minSIPAmt}</span>
+                      <span className="value-font2">{item.minSIPAmt ?"₹"+item.minSIPAmt:"N/A"}</span>
                     </div>
                     <div className="col-4">
                       <span className="text-secondary">Fund Size</span>

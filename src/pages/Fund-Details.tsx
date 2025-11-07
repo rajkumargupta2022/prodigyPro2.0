@@ -18,10 +18,11 @@ import SelectFolioPopup from "../components/select-folio-popup";
 import InvestmentForm from "../components/InvestmentForm";
 import SwitchSchemeModel from "../components/SwitchStpSchemeModel";
 import RedumptionConfirmation from "../components/RedumptionConfirmation";
-import { checkTransactionAllowed } from "../services/utils/services";
+import { checkIsSIFScheme, checkTransactionAllowed } from "../services/utils/services";
 import { keys } from "../services/utils/keys";
 import { detailPortfolioSchemeType } from "./data-interfaces/portfolio";
 import SwpConfirmation from "../components/Swp-confirmation";
+import MsgModel from "../components/MsgModel";
 
 interface ChartState {
   options: ApexOptions;
@@ -36,6 +37,7 @@ const FundDetails = () => {
   const [openSwpModel, setOpenSwpModel] = useState<boolean>(false)
   const [openInvestPopup, setOpenInvestPopup] = useState(false)
   const [schemeList, setSchemeList] = useState<schemeDeatilDataKeys[]>([])
+  const [show, setShow] = useState(false);
   const [navDate, setNavDate] = useState<string[]>([])
   const [navValue, setNavValue] = useState<number[]>([])
   const [duration, setDuration] = useState<number>(12)
@@ -46,6 +48,7 @@ const FundDetails = () => {
   const [sipDateList, setSipDateList] = useState<number[]>([])
   const [openSwitchSchemeModel, setOpenSwitchSchemeModel] = useState<boolean>(false)
   const [openRedumptionModel, setOpenRedumptionModel] = useState<boolean>(false)
+    const [openMsgModel,setOpenMsgModel] = useState<boolean>(false)
 
 
 
@@ -232,7 +235,6 @@ const FundDetails = () => {
     }
 
   }
-  const [show, setShow] = useState(false);
 
   const handleClick = () => {
     setShow(!show);
@@ -316,8 +318,14 @@ const FundDetails = () => {
     setShow(false)
   }
   const handleRedmptionModel = () => {
-    setOpenRedumptionModel(true)
-    setShow(false)
+      const result = schemeList.find(item =>checkIsSIFScheme(item.scheme));
+    if(result){
+       setOpenMsgModel(true)
+       setShow(false)
+    }else{
+      setOpenRedumptionModel(true)
+      setShow(false)
+    }
   }
   const handleSwp = () => {
     setOpenSwpModel(true)
@@ -327,6 +335,8 @@ const FundDetails = () => {
   const goTransactionHistory = (item:schemeDeatilDataKeys)=>{
     navigate("/transaction-history",{state:{accord_product_code:item.accordSchemeCode,folio_number:location.state?.folio}})
   }
+
+   
 
   return (
     <>
@@ -477,7 +487,9 @@ const FundDetails = () => {
                 <div className="card mb-4 popup_card_steup_area">
                   <div className="p-3">
                     <ul className="ps-0 style-unerline-prodgy mb-0 crPointer">
-                      {checkTransactionAllowed(schemeList, keys.redumption) && <li onClick={() => handleRedmptionModel()}>Redeem Fund</li>}
+                       <li onClick={() => handleRedmptionModel()}>Redeem Fund</li>
+
+                      {/* {checkTransactionAllowed(schemeList, keys.redumption) && <li onClick={() => handleRedmptionModel()}>Redeem Fund</li>} */}
                       {checkTransactionAllowed(schemeList, keys.stp) && <li onClick={() => handleSwitch("STP")}>Systematic Transfer Plan (STP)</li>}
                      {checkTransactionAllowed(schemeList, keys.swp) && <li onClick={() => handleSwp()}>Systematic Withdrawal Plan (SWP)</li>}
                       <li onClick={()=>goTransactionHistory(schemeList[0])}>Transaction History</li>
@@ -550,6 +562,12 @@ const FundDetails = () => {
       <SwitchSchemeModel show={openSwitchSchemeModel} setShow={setOpenSwitchSchemeModel} selectedAmcCode={[schemeList[0]?.accordAMCCode]} schemeList={location.state} transactionType={transactionType} />
       <SwpConfirmation show={openSwpModel} setShow={setOpenSwpModel} swpList={schmeDetail} schemeList={schemeList} />
       <RedumptionConfirmation show={openRedumptionModel} setShow={setOpenRedumptionModel} redeemList={schmeDetail} setRedeemList={setSchmeDetail} />
+          <MsgModel show={openMsgModel} setShow={setOpenMsgModel} setNewModelShow={setOpenRedumptionModel} heading={"Redemption Guidelines"} msg={[
+                 "Redemption orders will be executed only on specific days as per the AMC’s SIF redemption guidelines.",
+                 "Redemption order may be rejected if the applicable NAV declines so that the value of balance units falls below the min threshold investment limit of Rs. 10 Lakhs.",
+
+              ]}
+              btn="OK"/>
       <Footer />
     </>
   );

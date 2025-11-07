@@ -2,6 +2,7 @@ import { useState } from "react";
 import { detailPortfolioSchemeType } from "../pages/data-interfaces/portfolio";
 import { imageUrl } from "../services/utils/urls";
 import { currentDateInStringNumber } from "../services/dates/dateFormater";
+import { checkIsSIFScheme } from "../services/utils/services";
 
 interface investmetProps {
   redeemList: detailPortfolioSchemeType[],
@@ -16,21 +17,34 @@ const RedumptionForm: React.FC<investmetProps> = ({ redeemList, setRedeemList })
 
 
 
-  const handleAmount = (e: React.ChangeEvent<HTMLInputElement>, index: number, item2: detailPortfolioSchemeType
-  ): void => {
+  const handleAmount = (e: React.ChangeEvent<HTMLInputElement>, index: number, item2: detailPortfolioSchemeType): void => {
     let value = Number(e.target.value.trim());
     let chechMax = isRedeemAmount ? item2.currentvalue : item2.unit;
+    if (checkIsSIFScheme(item2.scheme)&& (Number(item2.currentvalue) <= 1000000)) {
+    
+        setRedeemList((prev: any) =>
+          prev.map((item: detailPortfolioSchemeType, i: number) => {
+            if (i !== index) return item;
+            return {
+              ...item,
+              amount: item.currentvalue,
+              redemption_units: item.unit,
+              all_units: true,
+            };
+
+          })
+        );
+    }
+    else{
 
     setRedeemList((prev: any) =>
       prev.map((item: detailPortfolioSchemeType, i: number) => {
         if (i !== index) return item;
 
-        // If current is already max & new value is also max → no update
         if (item.all_units && value === Number(chechMax)) {
           return item;
         }
 
-        // Less than max → update normally
         if (value < Number(chechMax)) {
           return {
             ...item,
@@ -40,7 +54,6 @@ const RedumptionForm: React.FC<investmetProps> = ({ redeemList, setRedeemList })
           };
         }
 
-        // Equal to or more than max → set to max
         if (value >= Number(chechMax)) {
           return {
             ...item,
@@ -53,6 +66,8 @@ const RedumptionForm: React.FC<investmetProps> = ({ redeemList, setRedeemList })
         return item;
       })
     );
+    }
+
 
 
   };
@@ -65,8 +80,9 @@ const RedumptionForm: React.FC<investmetProps> = ({ redeemList, setRedeemList })
     );
   }
   const handleAllUnit = (e: React.ChangeEvent<HTMLInputElement>, allUnit: number, index: number) => {
+
     let value = e.target.value
-    
+
     setIsAllUnit(value === "true" ? "false" : "true")
     setRedeemList((prev: any) =>
       prev.map((item: detailPortfolioSchemeType, i: number) =>
@@ -76,6 +92,8 @@ const RedumptionForm: React.FC<investmetProps> = ({ redeemList, setRedeemList })
 
   }
 
+ 
+
   return (
     <>
       {redeemList?.length > 0 && redeemList.map((item, index) => {
@@ -84,7 +102,7 @@ const RedumptionForm: React.FC<investmetProps> = ({ redeemList, setRedeemList })
             <div className="d-flex justify-content-between">
               <div className="d-flex">
                 <div className="prod_icon_img">
-                  <img src={imageUrl + item.amcCode + ".png"} height={35} width={35} alt="" className="rounded" />
+                  <img src={imageUrl + item.accordAMCCode + ".png"} height={35} width={35} alt="" className="rounded" />
                 </div>
                 <div className="ms-2 prod_icon_heading">
                   <h4>{item.scheme}</h4>

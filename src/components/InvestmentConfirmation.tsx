@@ -321,22 +321,114 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
     setSchemeList(updatedList);
   };
 
-  const handleMinAmount = (type: boolean = isSipTransaction) => {
-    if (schemeList?.length > 0) {
-      let total = 0;
-      const updatedSchemes = schemeList.map((scheme) => {
-        const minAmount = type ? Number(scheme.minSIPAmt) : Number(scheme.minLumSumAmt);
-        total += minAmount;
+  // const handleMinAmount = (type: boolean = isSipTransaction) => {
+  //   if (schemeList?.length > 0) {
+  //     let total = 0;
+  //     const updatedSchemes = schemeList.map((scheme) => {
+  //       const minAmount = type ? Number(scheme.minSIPAmt) : Number(scheme.minLumSumAmt);
+  //       total += minAmount;
 
-        return {
-          ...scheme,
-          amount: minAmount,
-        };
-      });
-      setSchemeList(updatedSchemes);
-      setAmount(total);
+  //       return {
+  //         ...scheme,
+  //         amount: minAmount,
+  //       };
+  //     });
+  //     setSchemeList(updatedSchemes);
+  //     setAmount(total);
+  //   }
+  // };
+
+ const handleMinAmount = async (type: boolean = isSipTransaction) => {
+  if (!schemeList || schemeList.length === 0) return;
+
+  // regex stays the same
+  const regex = /\bSIF\b|\bQSIF\b|long[\s\-]*short/i;
+
+  // Build mapped promises (resolve all)
+  const updatedSchemesPromises = schemeList.map(async (scheme: any) => {
+    // ensure numeric values
+    const minSip = Number(scheme.minSIPAmt ?? 0);
+    const minLump = Number(scheme.minLumSumAmt ?? 0);
+
+    const minAmount = type ? minSip : minLump;
+
+    if (regex.test(String(scheme.scheme ?? ""))) {
+      // fetch whether folio or SIF exists for this product
+      const hasFolioOrSIF = await fetchFolioFOrSIF(scheme.accordSchemeCode);
+
+      // set values depending on fetch result
+      return {
+        ...scheme,
+        minSIPAmt: hasFolioOrSIF ? minSip : 0,
+        minLumSumAmt: hasFolioOrSIF ? 10000 : 1000000,
+        // keep amount consistent with chosen transaction type
+        amount: hasFolioOrSIF ? (type ? minSip : 10000) : 1000000,
+        start_date: daysAdded(30, sipDateList),
+      } as any;
+    } else {
+      return {
+        ...scheme,
+        amount: minAmount,
+        start_date: daysAdded(30, sipDateList),
+      } as any;
     }
+  });
+
+  // wait for all scheme updates to resolve
+  const updatedSchemes = await Promise.all(updatedSchemesPromises);
+
+  // compute total after resolving (sum of numeric 'amount' field)
+  const total = updatedSchemes.reduce((sum, s) => {
+    const amt = Number((s as any).amount ?? 0);
+    return sum + (isNaN(amt) ? 0 : amt);
+  }, 0);
+
+  // update state
+  setSchemeList(updatedSchemes);
+  setAmount(total);
+};
+
+// --- fetchFolioFOrSIF revised to not depend on schemeList and to always return boolean ---
+const fetchFolioFOrSIF = async (product_code: number): Promise<boolean> => {
+  const adminUser = fetchAdminUser();
+  if (!adminUser?.ucc) {
+    // no admin user — treat as "no folio" (or change behavior as you need)
+    setIsSipTransaction(false);
+    return false;
+  }
+
+  const reqBody = {
+    ucc: adminUser.ucc,
+    product_code,
   };
+
+  try {
+    const res = await postRequest<foliosResponse>(endPoints.getSchemeFolios, reqBody);
+
+    if (!res) {
+      setIsSipTransaction(false);
+      return false;
+    }
+
+    if (res.success && Array.isArray(res.data)) {
+      const total = res.data.reduce((sum, item) => sum + Number(item.invested_amt ?? 0), 0);
+      if (total >= 1000000) {
+        return true;
+      } else {
+        // If total < 1,000,000 we consider no folio/SIF and flip SIP transaction flag
+        setIsSipTransaction(false);
+        return false;
+      }
+    } else {
+      setIsSipTransaction(false);
+      return false;
+    }
+  } catch (error) {
+    // log error if you want
+    setIsSipTransaction(false);
+    return false;
+  }
+};
 
   const handleSipDeduction = () => {
       setMinimumDate(!schemeList[0].firstSIPToday ?  daysAdded(7, sipDateList): daysAdded(7, sipDateList))

@@ -44,8 +44,18 @@ const TransactionHistory = () => {
     }
   }
 
-const detailPage = (item:transactionHistoryKeys)=>{
-        navigate("/sip-order",{state:item})
+  const detailPage = (item: transactionHistoryKeys) => {
+    if (item.transaction_type === "SIP") {
+      navigate("/sip-order", { state: item })
+    } else if (item.transaction_type === "PURCHASE") {
+      navigate("/purchase-details", { state: item })
+    }
+    else if (item.transaction_type === "SWP") {
+      navigate("/swp-order", { state: item })
+    }
+    else {
+      navigate("/redemption-details", { state: item })
+    }
   }
 
 
@@ -64,7 +74,6 @@ const detailPage = (item:transactionHistoryKeys)=>{
           <div className="row">
             <div className=" col">
               <h4>Transaction History</h4>
-              <p className="fs14px">Seize the opportunity to invest in newly launched funds and diversify your portfolio from the start.</p>
             </div>
           </div>
 
@@ -74,7 +83,7 @@ const detailPage = (item:transactionHistoryKeys)=>{
             <div
               key={item.folio_number + item.scheme_name}
               className="p-4 m-4 shadow-sm bg-white border-0 rounded-4 mb-3 crPointer"
-            onClick={()=>detailPage(item)}
+              onClick={() => detailPage(item)}
             >
               <div className="row justify-content-between">
                 <div className="col-lg-8 col-md-8 col-12 py-2">
@@ -94,7 +103,7 @@ const detailPage = (item:transactionHistoryKeys)=>{
                   </div>
                 </div>
                 <div className="col-lg-4 col-md-4 col-12 py-2 text-md-end text-start">
-                <span className="success-badge">{item.transaction_type==="SIP"? "Monthly SIP":item.transaction_type==="Purchase" ? "One-time Purchase":item.transaction_type}</span>
+                  <span className="success-badge">{item.transaction_type === "SIP" ? "SIP" : item.transaction_type === "Purchase" ? "One-time Purchase" : item.transaction_type}</span>
 
                 </div>
 
@@ -102,12 +111,12 @@ const detailPage = (item:transactionHistoryKeys)=>{
               <hr className="text-secondary mt-2 mb-2" />
               <div className="d-flex justify-content-between">
                 <div>
-                  <span className="text-secondary small">Order Date</span>
+                  <span className="text-secondary small">Last Order </span>
                   <br />
                   <span className="fw-semibold">{dateInStringNumber(item.order_date)}</span>
                 </div>
                 <div>
-                  <span className="text-secondary small">Next SIP Date</span>
+                  <span className="text-secondary small">Next SIP </span>
                   <br />
                   <span className="fw-semibold">{dateInStringNumber(item.next_sip_date)}</span>
                 </div>
@@ -120,8 +129,8 @@ const detailPage = (item:transactionHistoryKeys)=>{
             </div>
           )
         }) : "No data availble"}
-        {transactionHistoryList.length> 9?
-        <Paginations totalRecords={transactionHistoryList.length} page={page} setPage={setPage} limit={limit} setLimit={setLimit} />:""}
+        {transactionHistoryList.length > 9 ?
+          <Paginations totalRecords={transactionHistoryList.length} page={page} setPage={setPage} limit={limit} setLimit={setLimit} /> : ""}
       </div>
 
     </>

@@ -34,8 +34,8 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
     ) {
 
 
-      handleMinAmount(true);
       fetchFolios();
+      handleMinAmount(true);
       setMinimumDate(daysAdded(7, sipDateList))
       setSchemeList((prev: any) =>
         prev.map((obj: any) => {
@@ -62,18 +62,18 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
 
 
 
-  const addAmount = (value: number,isMin:boolean=false) => {
+  const addAmount = (value: number, isMin: boolean = false) => {
     const updatedAmount = amount + value;
-    
+
     const updatedList = [
       {
         ...schemeList[0],
-        amount:isMin?value: updatedAmount,
+        amount: isMin ? value : updatedAmount,
       },
     ];
 
     setSchemeList(updatedList);
-    setAmount(isMin?value: updatedAmount);
+    setAmount(isMin ? value : updatedAmount);
   };
 
   const handleTransactionType = (type: boolean) => {
@@ -170,22 +170,69 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
 
     }
   };
-  const handleMinAmount = (type: boolean = isSipTransaction) => {
+  const handleMinAmount = async (type: boolean = isSipTransaction) => {
+    const regex = /\bSIF\b|\bQSIF\b|long[\s\-]*short/i;
+
     if (schemeList?.length > 0) {
+      // map returns promise array
+      const updatedSchemes = await Promise.all(
+        schemeList.map(async (scheme) => {
+          
+          if (regex.test(scheme.scheme)) {
+            const value = await fetchFolioFOrSIF(scheme.accordSchemeCode);
+            return {
+              ...scheme,
+              minSIPAmt: value ? scheme.minSIPAmt:0,
+              minLumSumAmt: value ? 10000:1000000,
+              amount: value?scheme.minSIPAmt:1000000,
+               start_date: daysAdded(30, sipDateList),
+            };
+          }
+          else {
+            const minAmount = type ? scheme.minSIPAmt : scheme.minLumSumAmt;
+            return {
+              ...scheme,
+              amount: minAmount,
+               start_date: daysAdded(30, sipDateList),
+            };
+          }
 
-      
-      const updatedSchemes = schemeList.map((scheme) => {
-        const minAmount = type ? scheme.minSIPAmt : scheme.minLumSumAmt;
-        
-        return {
-          ...scheme,
-          amount: minAmount,
-        };
-      });
-      
+        })
+      );
+
       setSchemeList(updatedSchemes);
-
     }
+  };
+
+
+
+
+  const fetchFolioFOrSIF = async (product_code: number) => {
+    const adminUser = fetchAdminUser();
+
+    if (!adminUser?.ucc || schemeList.length === 0) return;
+
+    const reqBody = {
+      ucc: adminUser.ucc,
+      product_code: product_code,
+    };
+
+    try {
+      const res = await postRequest<foliosResponse>(endPoints.getSchemeFolios, reqBody);
+      if (res?.success) {
+        const total = res.data?.reduce((sum, item) => sum + item.invested_amt, 0);
+        if (total >= 1000000) {
+          return true
+        } else {
+          setIsSipTransaction(false)
+          return false
+        }
+      }
+    } catch (error) {
+         setIsSipTransaction(false)
+      return false
+    }
+
   };
 
   const handleFolioSelection = () => {
@@ -227,12 +274,12 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
         <h5>Invest Now</h5>
         <hr />
         <div className="row text-center mt-2 ">
-          {checkTransactionAllowed(schemeList, keys.sip) &&
-            <div className="col-md-6 py-2 py-md-0">
+          {(checkTransactionAllowed(schemeList, keys.sip))&&
+            <div className={`col-md-6 py-2 py-md-0`}>
               <div className={`${isSipTransaction ? "text-white logobg_color" : "logoBlueColor"} w-100 border  text-center monthly_btn crPointer`} onClick={() => { handleTransactionType(true) }}> Monthly SIP</div>
             </div>}
           {checkTransactionAllowed(schemeList, keys.purchase) &&
-            <div className="col-md-6 py-2 py-md-0">
+            <div className={`col-md-6 py-2 py-md-0`}>
               <div className={`${!isSipTransaction ? "text-white logobg_color" : "logoBlueColor"} w-100 border  text-center monthly_btn crPointer`} onClick={() => { handleTransactionType(false) }}> One-Time </div>
             </div>}
         </div>
@@ -272,7 +319,7 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
           <input type="text" className="form-control" value={amount} onChange={(e) => handleAmount(e, 10000000, setAmount)} id="amountFor" aria-describedby="emailHelp" placeholder="Enter Amount" />
           <span className="errorColor"> {amount >= (isSipTransaction ? schemeList[0]?.minSIPAmt : schemeList[0]?.minLumSumAmt) ? "" : amountErrorMsg}</span>
           <div className=" mt-2">
-            <button type="button" className="btn shortcutValue" onClick={() => addAmount(isSipTransaction ? schemeList[0]?.minSIPAmt : schemeList[0]?.minLumSumAmt,true)}>Min.</button>
+            <button type="button" className="btn shortcutValue" onClick={() => addAmount(isSipTransaction ? schemeList[0]?.minSIPAmt : schemeList[0]?.minLumSumAmt, true)}>Min.</button>
             <button type="button" className="btn shortcutValue mx-1" onClick={() => addAmount(isSipTransaction ? schemeList[0]?.minSIPAmt * 2 : schemeList[0]?.minLumSumAmt * 2)}>+<CurrencyRupee className='mb-1' />{isSipTransaction ? schemeList[0]?.minSIPAmt * 2 : (schemeList[0]?.minLumSumAmt * 2).toLocaleString("en-In")}</button>
             <button type="button" className="btn shortcutValue mx-1" onClick={() => addAmount(isSipTransaction ? schemeList[0]?.minSIPAmt * 3 : schemeList[0]?.minLumSumAmt * 3)}>+<CurrencyRupee className='mb-1' />{isSipTransaction ? schemeList[0]?.minSIPAmt * 3 : (schemeList[0]?.minLumSumAmt * 3).toLocaleString("en-In")}</button>
             <button type="button" className="btn shortcutValue mx-1" onClick={() => addAmount(isSipTransaction ? schemeList[0]?.minSIPAmt * 5 : schemeList[0]?.minLumSumAmt * 5)}>+<CurrencyRupee className='mb-1' />{isSipTransaction ? schemeList[0]?.minSIPAmt * 5 : (schemeList[0]?.minLumSumAmt * 5).toLocaleString("en-In")}</button>

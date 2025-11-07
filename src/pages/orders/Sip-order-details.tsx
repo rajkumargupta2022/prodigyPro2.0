@@ -88,7 +88,7 @@ function SIPOrderDetails() {
   return (
     <main className="col-md-9 ms-sm-auto col-lg-9 px-md-4 py-4">
       <h4>
-        <ArrowLeft className="crPointer" size={20} onClick={() => navigate("/all-orders")} />
+        <ArrowLeft className="crPointer" size={20} onClick={() => navigate(-1)} />
         SIP Order Details
       </h4>
       <hr className="fw-light text-secondary " />

@@ -59,3 +59,9 @@ export const filterData = (arr: any[], key: string) => {
 
   return arr.filter((item: any) => item[key] > 0);
 };
+
+export const checkIsSIFScheme = (value: string): boolean =>{
+  const regex = /\bSIF\b|\bQSIF\b|long[\s\-]*short/i;
+  return regex.test(value);
+}
+

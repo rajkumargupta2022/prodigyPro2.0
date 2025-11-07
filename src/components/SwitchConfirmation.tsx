@@ -145,12 +145,13 @@ const SwitchConfirmation: React.FC<investmetProps> = ({ show, setShow, cartItem,
           {cartItem?.map((item, index) => {
             return <div className="borderColor p-3 headerRadius bg-white">
               <div className="d-flex justify-content-between">
-                <div className="d-flex">
+              
+                  <div className="d-flex">
                   <div className="prod_icon_img">
-                    <img src={imageUrl+item.fromAccordAMCCode+".png"} className='rounded' height={35} width={35} alt="" />
+                    <img src={imageUrl+item.toAccordAMCCode+".png"} className='rounded' height={35} width={35} alt="" />
                   </div>
                   <div className="ms-2 prod_icon_heading">
-                    <h4>{item.toScheme}</h4>
+                    <h4>{item.fromScheme}</h4>
                     <p>Selected fund 1</p>
                   </div>
                 </div>
@@ -164,10 +165,10 @@ const SwitchConfirmation: React.FC<investmetProps> = ({ show, setShow, cartItem,
               <div className="d-flex justify-content-between">
                 <div className="d-flex">
                   <div className="prod_icon_img">
-                    <img src={imageUrl+item.toAccordAMCCode+".png"} className='rounded' height={35} width={35} alt="" />
+                    <img src={imageUrl+item.fromAccordAMCCode+".png"} className='rounded' height={35} width={35} alt="" />
                   </div>
                   <div className="ms-2 prod_icon_heading">
-                    <h4>{item.fromScheme}</h4>
+                    <h4>{item.toScheme}</h4>
                     <p>Selected fund 1</p>
                   </div>
                 </div>

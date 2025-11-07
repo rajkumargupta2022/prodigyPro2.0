@@ -52,7 +52,6 @@ const fundDetails = (item: sifFundsKeys) => {
           <div className="row">
             <div className=" col">
               <h4>Start with ₹100</h4>
-              <p className="fs14px">Seize the opportunity to invest in newly launched funds and diversify your portfolio from the start.</p>
             </div>
           </div>
 

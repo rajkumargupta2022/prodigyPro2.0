@@ -73,5 +73,6 @@ export enum endPoints{
    getSwpInstallmentDetails="orders/get-swp-installment-details",
    cancelXsipOrder="orders/cancel-xsip-order",
    cancelSwpOrder="orders/cancel-swp-order",
-   getTransactionHistory="orders/get-transaction-history"
+   getTransactionHistory="orders/get-transaction-history",
+   getUnderwatchSchemes="portfolio-review/get-underwatch-schemes"
 }

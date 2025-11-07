@@ -5,8 +5,10 @@ import { useEffect, useState } from "react";
 import RedemptionOrders from "../pages/orders/RedumptionOrders";
 import SWPOrders from "../pages/orders/SWPOrders";
 import { keys } from "../services/utils/keys";
+import { useNavigate } from "react-router-dom";
 
 function AllOrders() {
+  const navigate = useNavigate()
   const [active, setActive] = useState("");
 
     useEffect(() => {
@@ -14,14 +16,14 @@ function AllOrders() {
     if (savedTab) {
       setActive(savedTab);
     }else{
-      setActive("Monthly Sip");
+      setActive("Sip");
     }
   }, [active]);
 
   
   const renderCompo = () => {
     switch (active) {
-      case "Monthly Sip":
+      case "Sip":
         localStorage.setItem("activeOrderTab", active);
         return <MonthlySIP />;
         case "One-time":
@@ -39,7 +41,7 @@ function AllOrders() {
   return (
     <main className="col-md-9 ms-sm-auto col-lg-9 px-md-4 py-4">
       <h4>
-        <ArrowLeft className="crPointer" size={15} /> My All Orders
+        <ArrowLeft className="crPointer" size={15} onClick={()=>navigate(-1)}/> My All Orders
       </h4>
       <hr className="fw-light text-secondary" />
       <div className="row justify-content-around mb-4">
@@ -51,14 +53,14 @@ function AllOrders() {
               name="options"
               id="option2"
               autoComplete="off"
-              checked={active === "Monthly Sip"}
-              onChange={() => setActive("Monthly Sip")}
+              checked={active === "Sip"}
+              onChange={() => setActive("Sip")}
             />
             <label
               className="btn btn-outline-primary declaration-button w-100 paddingLeftRight py-1"
               htmlFor="option2"
             >
-             Monthly SIP
+             SIP
             </label>
           </div>
         </div>
