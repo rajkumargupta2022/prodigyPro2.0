@@ -211,7 +211,7 @@ function AddBankDetails() {
             <Form.Control.Feedback type="invalid">Mandorty Field</Form.Control.Feedback>
           </Form.Group>
         </div>
-        <button type="submit" className={`customButton px-2 mt-2`}   >Craete e-Mandate</button>
+        <button type="submit" className={`customButton px-2 mt-2`}   >Save & Continue</button>
       </Form>
       <AlertModel show={openAlertModel} setShow={setOpenAlertModel} title={"Proceed"} msg={"The name on your UCC does not match with the bank name on your account. This can lead to possible rejections. \nDo you want to continue?"} apiFun={saveBank} />
       <CreateMandate show={openCreateMandate} setShow={setOpenCreateMandate} accountNumber={accountNumber} ifscCode={ifscCode} accountType={accountType}/>

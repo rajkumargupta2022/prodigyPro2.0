@@ -54,7 +54,7 @@ function BankList() {
           <div className="row justify-content-between crPointer">
             <div className="col-lg-8 col-md-8 col-12 py-2">
               <div className="d-flex">
-                <img className="align-self-start rounded" height={40} width={40} src={imageUrl+item.bank_name.trim()
+                <img className="align-self-start rounded" height={40} width={40} src={imageUrl+item?.bank_name?.trim()
                   .toLowerCase()
                   .replace(/\s+/g, '_')+".png" } alt="Image not found" />
                 <div className="ms-2" style={{ flex: 1 }}>

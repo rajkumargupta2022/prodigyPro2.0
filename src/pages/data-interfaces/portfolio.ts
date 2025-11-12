@@ -44,14 +44,14 @@ export interface detailPortfolioSchemeType {
   currentNavDiff: number;
   updated: string;
   gain: string;
-  amcCode:string;
- stpDateList?:number[]
-   schemeName?: string,
-  accordAMCCode: number,
-  amount?: number,
-  folioNumber?: string,
-  redemption_units?: number,
-  all_units?: boolean,
+  amcCode: string;
+  stpDateList?: number[];
+  schemeName?: string;
+  accordAMCCode: number;
+  amount?: number;
+  folioNumber?: string;
+  redemption_units?: number;
+  all_units?: boolean;
 }
 export interface detailPortfolioTotalTransactionType {
   TotalMarketValue: number;
@@ -69,4 +69,44 @@ export interface detailPortfolioType {
   success: boolean;
   msg: string;
   dataSent: detailPortfolioTotalTransactionType;
+}
+
+export interface portfolioReviewRes {
+  success: boolean;
+  data: portfolioReviewKeys[];
+}
+
+export interface portfolioReviewKeys {
+  folio: string;
+  accordSchemeCode: number;
+  accordAMCCode: number;
+  scheme: string;
+  nseProductCode: string;
+  nseAMCCode: string;
+  purchase: number;
+  currentvalue: number;
+  units: number;
+  target?: targetSchemesKeys;
+}
+
+export interface targetSchemesKeys {
+  accordSchemeCode: number;
+  accordAMCCode: number;
+  scheme: string;
+  nseProductCode: string;
+  nseAMCCode: string;
+}
+export interface portfolioSummaryRes {
+  success: boolean;
+  msg:string;
+  data: portfolioSummaryKeys[];
+}
+export interface portfolioSummaryKeys {
+  total: number;
+  performance_summary: summaryKeys[];
+}
+export interface summaryKeys {
+  name: string;
+  currentValue: number;
+  scheme_count: number;
 }

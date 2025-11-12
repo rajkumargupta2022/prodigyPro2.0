@@ -1,6 +1,6 @@
 import recomended from "../../assets/img/icons/Recommended Funds.svg"
 import taxSaving from "../../assets/img/icons/tax 1.svg"
-// import portfolio from "../../assets/img/icons/portfolio review.svg"
+import portfolio from "../../assets/img/icons/portfolio review.svg"
 import nfo from "../../assets/img/icons/nfo.svg"
 // import transact from "../../assets/img/icons/transcat.svg"
 import money from "../../assets/img/icons/rupee 1.svg"
@@ -17,8 +17,8 @@ const OurServices = () => {
           <div className="col-3 col-md-3 col-lg-3 py-1 text-center"> <Link to="/recommended-funds" className=" text-center " ><img src={recomended} alt="" className="" height={24} /><small className="d-block  adjustText">Recommended Funds</small></Link></div>
           <div className="col-3 col-md-3 col-lg-3 py-1 text-center"> <Link to="/tax-saving" className=" text-center " ><img src={taxSaving} alt="" className="" height={24} /><small className="d-block  adjustText">Tax Saving</small></Link></div>
           <div className="col-3 col-md-3 col-lg-3 py-1 text-center"> <Link to="/nfo-live" className=" text-center" ><img src={nfo} alt="" className="" height={24} /><small className="d-block  adjustText">NFO Live</small></Link></div>
-          {/* <div className="col-4 col-md-3 col-lg-2 py-1 text-center"> <Link to="/portfolio-review" className=" text-center" ><img src={portfolio} alt="" className="" height={24} /><small className="d-block  adjustText">Portfolio Review</small></Link></div>
-          <div className="col-4 col-md-3 col-lg-2 py-1 text-center"> <Link to="/emergency-funds" className=" text-center" ><img src={transact} alt="" className="" height={24} /><small className="d-block  adjustText">All Orders</small></Link></div> */}
+          <div className="col-4 col-md-3 col-lg-2 py-1 text-center"> <Link to="/portfolio-review" className=" text-center" ><img src={portfolio} alt="" className="" height={24} /><small className="d-block  adjustText">Portfolio Review</small></Link></div>
+          {/* <div className="col-4 col-md-3 col-lg-2 py-1 text-center"> <Link to="/emergency-funds" className=" text-center" ><img src={transact} alt="" className="" height={24} /><small className="d-block  adjustText">All Orders</small></Link></div> */}
         </div>
       </Card.Body>
     </Card>

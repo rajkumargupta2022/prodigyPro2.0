@@ -42,32 +42,6 @@ export interface filteredSchemeResponse {
   data: filteredSchemesKeys[];
 }
 export interface filteredSchemesKeys {
-  // accordAMCCode: number;
-  // scheme: string;
-  // nseAMCCode:string;
-  // nseProductCode:string;
-  // minLumSumAmt:string;
-  // equityType: string;
-  // fundSize: number;
-  // accordSchemeCode?: number;
-  // PURCHASE_ALLOWED: string;
-  // SIP_ALLOWED: string;
-  // AMC_CODE: string;
-  // PRODUCT_CODE: string;
-  // SIP_DATES: any;
-  // STP_DATES: any;
-  // SWP_DATES: any;
-  // REINVEST_TAG: string;
-  // oneyrret: number;
-  // twoyearret: number;
-  // minSIPAmt: string;
-  // threeYearCAGR: number;
-  // threeyearret: number | null;
-  // fouryearret: number | null;
-  // fiveyearret: number | null;
-  // sevenyearret: number | null;
-  // tenyearret: number | null;
-  // fifteenyearret: number | null;
 
   accordSchemeCode: number;
   scheme: string;

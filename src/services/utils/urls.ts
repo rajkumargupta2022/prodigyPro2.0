@@ -74,5 +74,9 @@ export enum endPoints{
    cancelXsipOrder="orders/cancel-xsip-order",
    cancelSwpOrder="orders/cancel-swp-order",
    getTransactionHistory="orders/get-transaction-history",
-   getUnderwatchSchemes="portfolio-review/get-underwatch-schemes"
+   getUnderwatchSchemes="portfolio-review/get-underwatch-schemes",
+   getRedemptionRecommendedSchemes="portfolio-review/get-redemption-recommended-schemes",
+   getSatisfactoryPerformanceSchemes="portfolio-review/get-satisfactory-performance-schemes",
+   getSwitchSchemes="portfolio-review/get-switch-schemes",
+   getSchemePerformanceSummary="portfolio-review/get-scheme-performance-summary"
 }

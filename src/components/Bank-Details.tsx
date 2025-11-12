@@ -16,6 +16,8 @@ function BankDetails() {
   const [openCreateMandate, setOpenCreateMandate] = useState(false);
   const [mandateList, setMandateList] = useState<userBankDetailKeys[]>([])
   useEffect(() => {
+    console.log("dfffffffg");
+
     fetchankDetail()
   }, [])
 
@@ -38,13 +40,13 @@ function BankDetails() {
     }
   }
   const createMandate = () => {
-       setOpenCreateMandate(true)
+    setOpenCreateMandate(true)
   }
 
 
   return (
     <main className="col-md-9 ms-sm-auto col-lg-9 px-md-4 py-4">
-      <CreateMandate show={openCreateMandate} setShow={setOpenCreateMandate} accountNumber={mandateList[0]?.account_number} ifscCode={mandateList[0]?.ifsc_code} accountType={mandateList[0]?.account_type}/>
+      <CreateMandate show={openCreateMandate} setShow={setOpenCreateMandate} accountNumber={mandateList[0]?.account_number} ifscCode={mandateList[0]?.ifsc_code} accountType={mandateList[0]?.account_type} />
       <h3>
         <ArrowLeft className="crPointer" size={25} onClick={() => navigate(-1)} />
         Bank Details
@@ -53,9 +55,9 @@ function BankDetails() {
 
       <div className="p-4 shadow-sm bg-white border-0 rounded-4 mb-2">
         <div className="d-flex justify-content-between">
-          <img className="align-self-start rounded" height={40} width={40} src={imageUrl+ mandateList[0].bank_name?.trim()
-    .toLowerCase()
-    .replace(/\s+/g, '_')+".png"} alt="Image not found" />
+          <img className="align-self-start rounded" height={40} width={40} src={imageUrl + mandateList[0]?.bank_name?.trim()
+            .toLowerCase()
+            .replace(/\s+/g, '_') + ".png"} alt="Image not found" />
           <div className="ms-2" style={{ flex: 1 }}>
             <h6 style={{ margin: 0 }}>{mandateList[0]?.bank_name}</h6>
             {mandateList[0]?.verified && <span style={{ color: "#06A358" }}>Verified</span>}
@@ -94,12 +96,12 @@ function BankDetails() {
       <h6 className="my-3">Existing Mandate</h6>
       {mandateList[0]?.mandates?.length > 0 ? mandateList[0]?.mandates?.map((item) => {
         return <div className="p-4 shadow-sm bg-white border-0 rounded-4 mb-2">
-          <p className="fs12px my-0">STATUS:{item.umrn_no===""||item.umrn_no===" "? <span className="text-danger"> NOT APPROVED</span>: <span className="text-success"> APPROVED</span>}</p>
+          <p className="fs12px my-0">STATUS:{item.umrn_no === "" || item.umrn_no === " " ? <span className="text-danger"> NOT APPROVED</span> : <span className="text-success"> APPROVED</span>}</p>
           <div className="row justify-content-between mt-2">
             <div className="col-lg-3 col-md-4 col-12 py-lg-0 py-1">
               <span className="text-secondary">URMN NO</span>
               <br />
-              <span className="value-font2">{item.umrn_no===""||item.umrn_no===" " ?"NA":maskString(item.umrn_no)}</span>
+              <span className="value-font2">{item.umrn_no === "" || item.umrn_no === " " ? "NA" : maskString(item.umrn_no)}</span>
             </div>
 
             <div className="col-lg-3 col-md-4 col-12 py-lg-0 py-1">
@@ -126,7 +128,7 @@ function BankDetails() {
       }) : <p className="text-center mt-3">No mandate available</p>}
 
 
-      <button type="submit" className={`customButton px-2 mt-2`} onClick={createMandate}>Craete e-Mandate</button>
+      <button type="submit" className={`customButton px-2 mt-2`} onClick={createMandate}>Create e-Mandate</button>
 
     </main>
   );
