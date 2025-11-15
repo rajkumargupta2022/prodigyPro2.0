@@ -186,6 +186,7 @@ const FundDetails = () => {
       setSchemeList([...updated])
 
       setSipDateList([...res.data[0].sipDateList])
+      
       handleNearSipDate(res.data[0].sipDateList)
       // setAmount(res.data[0].minSIPAmt)
 

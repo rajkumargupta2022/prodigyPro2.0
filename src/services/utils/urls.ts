@@ -78,5 +78,7 @@ export enum endPoints{
    getRedemptionRecommendedSchemes="portfolio-review/get-redemption-recommended-schemes",
    getSatisfactoryPerformanceSchemes="portfolio-review/get-satisfactory-performance-schemes",
    getSwitchSchemes="portfolio-review/get-switch-schemes",
-   getSchemePerformanceSummary="portfolio-review/get-scheme-performance-summary"
+   getSchemePerformanceSummary="portfolio-review/get-scheme-performance-summary",
+   getPortfolioExpert="portfolio-review/get-portfolio-expert",
+   getSchemesPerformance="portfolio-review/get-schemes-performance"
 }

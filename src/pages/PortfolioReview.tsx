@@ -1,23 +1,30 @@
 import NavBar from "../components/Navbar";
-import sbi from "../assets/img/bank-logo/sbi.png"
-import { ChevronRight, CurrencyRupee, Download, Envelope, Telephone } from "react-bootstrap-icons";
+import { ChevronRight, Download, Envelope, Telephone } from "react-bootstrap-icons";
 import { useEffect, useState } from "react";
 import SwitchFund from "../components/SwitchFund";
 import { fetchAdminUser } from "../services/user/adminUser";
-import { postRequest } from "../services/Api/HandleApi";
+import { getRequest, postRequest } from "../services/Api/HandleApi";
 import { endPoints, imageUrl } from "../services/utils/urls";
-import { portfolioReviewKeys, portfolioReviewRes, portfolioSummaryKeys, portfolioSummaryRes } from "./data-interfaces/portfolio";
+import { portfolioReviewKeys, portfolioReviewRes, summaryInsideKeys, portfolioSummaryRes, portfolioExpertRes, portfolioExpertKeys, detailPortfolioSchemeType } from "./data-interfaces/portfolio";
+import { getPercentageValue, getValueInSort } from "../services/calculation/percentageCalculate";
+import RedumptionConfirmation from "../components/RedumptionConfirmation";
+import InvestMoreScheme from "../components/Invest-more-scheme";
 
 const PortfolioReview = () => {
   const [openSwitchFund, setOpenSwitchFund] = useState<boolean>(false)
   const [satisfactoryList, setSatisfactoryList] = useState<portfolioReviewKeys[]>([])
   const [underWatchList, setUnderWatchList] = useState<portfolioReviewKeys[]>([])
-  const [redemptionList, setRedemptionList] = useState<portfolioReviewKeys[]>([])
+  const [redemptionList, setRedemptionList] = useState<detailPortfolioSchemeType[]>([])
   const [switchList, setSwitchList] = useState<portfolioReviewKeys[]>([])
-  const [portfolioSummaryList, setPortfolioSummaryList] = useState<portfolioSummaryKeys[]>([])
+  const [portfolioSummaryList, setPortfolioSummaryList] = useState<summaryInsideKeys[]>([])
+  const [totolInvested, setTotalInvested] = useState<number>(0)
+  const [portfolioExpertData, setPortfolioExpertData] = useState<portfolioExpertKeys | null>()
+  const [openRedumptionModel, setOpenRedumptionModel] = useState<boolean>(false)
+  const [openInvestMore, setOpenInvestMore] = useState<boolean>(false)
+  const [productCodes, setProductCodes] = useState<number[]>([])
 
   const handleSwitchFund = () => {
-    setOpenSwitchFund(true)
+    setOpenRedumptionModel(true)
   }
   useEffect(() => {
     fetchSatisfactorySchemes()
@@ -25,18 +32,30 @@ const PortfolioReview = () => {
     fetchRedemptionSchemes()
     fetchSwitchSchemes()
     fetchSchemePerformance()
+    fetchPortfolioExpert()
   }, [])
 
+  const fetchPortfolioExpert = async () => {
+    try {
+      const res = await getRequest<portfolioExpertRes>(endPoints.getPortfolioExpert)
+      if (res.success) {
+        setPortfolioExpertData(res.data)
+      }
+    } catch (err) {
+      setPortfolioExpertData(null)
+    }
+  }
   const fetchSchemePerformance = async () => {
     try {
       const adminUser = fetchAdminUser()
       if (adminUser?.ucc) {
         const reqBody = {
-          ucc: "5011030899"
+          ucc: adminUser?.ucc
         }
         const res = await postRequest<portfolioSummaryRes>(endPoints.getSchemePerformanceSummary, reqBody)
         if (res.success) {
-          setPortfolioSummaryList(res.data)
+          setPortfolioSummaryList(res.data?.performance_summary)
+          setTotalInvested(res.data?.total)
         } else {
           setPortfolioSummaryList([])
         }
@@ -51,11 +70,27 @@ const PortfolioReview = () => {
       const adminUser = fetchAdminUser()
       if (adminUser?.ucc) {
         const reqBody = {
-          ucc: "5011030899"
+          ucc: adminUser?.ucc
         }
-        const res = await postRequest<portfolioReviewRes>(endPoints.getSatisfactoryPerformanceSchemes, reqBody)
+        const res = await postRequest<any>(endPoints.getSatisfactoryPerformanceSchemes, reqBody)
         if (res.success) {
           setSatisfactoryList(res.data)
+          let products = res.data.map((item: any) => {
+            return item.accordSchemeCode
+          })
+          console.log("dddd", products);
+
+          setProductCodes(products)
+          setRedemptionList(res.data.map((item: any) => (
+            {
+              ...item,
+              redemption_units: item.unit,
+              amount: 0,
+              all_units: true,
+              isRedeemAmount: false,
+              id: crypto.randomUUID()
+            }
+          )))
         } else {
           setSatisfactoryList([])
         }
@@ -64,12 +99,12 @@ const PortfolioReview = () => {
       setSatisfactoryList([])
     }
   }
-    const fetchUnderWatchSchemes = async () => {
+  const fetchUnderWatchSchemes = async () => {
     try {
       const adminUser = fetchAdminUser()
       if (adminUser?.ucc) {
         const reqBody = {
-          ucc: "5011030899"
+          ucc: adminUser?.ucc
         }
         const res = await postRequest<portfolioReviewRes>(endPoints.getUnderwatchSchemes, reqBody)
         if (res.success) {
@@ -82,16 +117,17 @@ const PortfolioReview = () => {
       setUnderWatchList([])
     }
   }
-    const fetchRedemptionSchemes = async () => {
+
+  const fetchRedemptionSchemes = async () => {
     try {
       const adminUser = fetchAdminUser()
       if (adminUser?.ucc) {
         const reqBody = {
-          ucc: "5011030899"
+          ucc: adminUser?.ucc
         }
         const res = await postRequest<portfolioReviewRes>(endPoints.getRedemptionRecommendedSchemes, reqBody)
         if (res.success) {
-          setRedemptionList(res.data)
+          // setRedemptionList(res.data)
         } else {
           setRedemptionList([])
         }
@@ -100,12 +136,12 @@ const PortfolioReview = () => {
       setRedemptionList([])
     }
   }
-   const fetchSwitchSchemes = async () => {
+  const fetchSwitchSchemes = async () => {
     try {
       const adminUser = fetchAdminUser()
       if (adminUser?.ucc) {
         const reqBody = {
-          ucc: "5011030899"
+          ucc: adminUser?.ucc
         }
         const res = await postRequest<portfolioReviewRes>(endPoints.getSwitchSchemes, reqBody)
         if (res.success) {
@@ -118,8 +154,20 @@ const PortfolioReview = () => {
       setSwitchList([])
     }
   }
-   
 
+  const singlRedeem = (item: any) => {
+    setRedemptionList([item])
+    setOpenRedumptionModel(true)
+  }
+  const handleInvestMore = () => {
+    let products = satisfactoryList.map((item: any) => {
+      return item.accordSchemeCode
+    })
+    setProductCodes(products)
+
+    setOpenInvestMore(true)
+
+  }
 
   return (
     <>
@@ -132,49 +180,22 @@ const PortfolioReview = () => {
           <div className="col-md-8 col-sm-12 ">
             <div className="col-12 bg-white rounded-2 p-2 px-2 mt-4">
               <h5>Fund Performance Summary</h5>
-              <div className="mb-3">
-                <div className="d-flex justify-content-between">
-                  <span>Switch (2)</span>
-                  <span>₹2.51L</span>
-                </div>
-                <div className="progress height6px">
-                  <div className="progress-bar switchBgColor" style={{ width: "60%" }}></div>
-                </div>
-              </div>
 
-              {/* Satisfactory Performance */}
-              <div className="mb-3">
-                <div className="d-flex justify-content-between">
-                  <span>Satisfactory Performance (3)</span>
-                  <span>₹8.09K</span>
+              {portfolioSummaryList?.length > 0 ? portfolioSummaryList?.map((item) => {
+                return <div className="mb-3">
+                  <div className="d-flex justify-content-between">
+                    <span>{item.name} ({item.scheme_count})</span>
+                    <span>₹{getValueInSort(item.currentValue)}</span>
+                  </div>
+                  <div className="progress height6px">
+                    <div className={`progress-bar ${item.name?.replace(/\s+/g, '-')}`} style={{ width: getPercentageValue(totolInvested, item.currentValue) + "%" }}></div>
+                  </div>
                 </div>
-                <div className="progress height6px">
-                  <div className="progress-bar satisfactoryBg" style={{ width: "40%" }}></div>
-                </div>
-              </div>
+              }) : ""}
 
-              {/* Under Watch */}
-              <div className="mb-3">
-                <div className="d-flex justify-content-between">
-                  <span>Under Watch (2)</span>
-                  <span>₹62K</span>
-                </div>
-                <div className="progress height6px">
-                  <div className="progress-bar underwatchBg" style={{ width: "20%" }}></div>
-                </div>
-              </div>
 
-              {/* Redemption */}
-              <div className="mb-3">
-                <div className="d-flex justify-content-between">
-                  <span>Redemption (2)</span>
-                  <span>₹32K</span>
-                </div>
-                <div className="progress height6px">
-                  <div className="progress-bar redumptionBg" style={{ width: "10%" }}></div>
-                </div>
-              </div>
             </div>
+            {/* {switchList?.length >0&& */}
             <div className="col-12 bg-white rounded-2 p-2 px-2 my-3">
               <div className="row px-3 my-3">
                 <h5>Switch ({switchList.length} funds)</h5>
@@ -185,7 +206,7 @@ const PortfolioReview = () => {
                 {switchList?.length ? switchList.map((item: portfolioReviewKeys, i) => {
                   return <>
                     <div className="col-11 p-2 d-flex align-items-start" key={i}>
-                      <img src={`${imageUrl+item.accordAMCCode}.png`} alt=""  height={40} width={40} className="rounded"/>
+                      <img src={`${imageUrl + item.accordAMCCode}.png`} alt="" height={40} width={40} className="rounded" />
                       <div className="d-flex flex-column ps-3">
                         <small className="mb-0">{item.scheme}</small>
                         <small className="fs12px">Folio: {item.folio}</small>
@@ -196,99 +217,108 @@ const PortfolioReview = () => {
                     </div>
                   </>
                 }) : <p className="text-danger">No scheme availble</p>}
-                <div className="col text-start fs12px mt-2" onClick={handleSwitchFund}><button type="button" className="btn transactBtn">Switch All</button></div>
+                <div className="col text-start fs12px mt-2" onClick={() => setOpenSwitchFund(true)}><button type="button" className="btn transactBtn">Switch All</button></div>
               </div>
             </div>
+            {/* } */}
 
             {/* stisfactory performane****************************** */}
-            <div className="col-12 bg-white rounded-2 p-2 px-2 my-3">
-              <div className="row px-3 my-3">
-                <h5>Satisfactory Performance ({satisfactoryList.length} funds)</h5>
-                <div className="col-12">
-                  <p className="m-0 fs14px"> Keep these funds in your portfolio to benefit from their strong performance.</p>
-                </div>
-                <hr className="text-success border-2" />
-                {satisfactoryList?.length ? satisfactoryList.map((item: portfolioReviewKeys, i) => {
-                  return <>
-                    <div className="col-11 p-2  d-flex align-items-start" key={i}>
-                      <img src={`${imageUrl+item.accordAMCCode}.png`} alt=""  height={40} width={40} className="rounded"/>
-                      <div className="d-flex flex-column ps-3">
-                        <small className="mb-0">{item.scheme}</small>
-                        <small className="fs12px">Folio: {item.folio}</small>
+            {satisfactoryList?.length > 0 &&
+              <div className="col-12 bg-white rounded-2 p-2 px-2 my-3">
+                <div className="row px-3 my-3">
+                  <h5>Satisfactory Performance ({satisfactoryList.length} funds)</h5>
+                  <div className="col-12">
+                    <p className="m-0 fs14px"> Keep these funds in your portfolio to benefit from their strong performance.</p>
+                  </div>
+                  <hr className="text-success border-2" />
+                  {satisfactoryList?.length ? satisfactoryList.map((item: portfolioReviewKeys, i) => {
+                    return <>
+                      <div className="col-11 p-2  d-flex align-items-start" key={i}>
+                        <img src={`${imageUrl + item.accordAMCCode}.png`} alt="" height={40} width={40} className="rounded" />
+                        <div className="d-flex flex-column ps-3">
+                          <small className="mb-0">{item.scheme}</small>
+                          <small className="fs12px">Folio: {item.folio}</small>
+                        </div>
                       </div>
-                    </div>
-                    <div className="col-1">
-                      <ChevronRight className="text-secondary" />
-                    </div>
-                  </>
-                }) : <p className="text-danger">No scheme availble</p>}
+                      <div className="col-1">
+                        <ChevronRight className="text-secondary" />
+                      </div>
+                    </>
+                  }) : <p className="text-danger">No scheme availble</p>}
 
-                <div className="col text-start fs12px mt-2" onClick={handleSwitchFund} ><button type="button" className="btn transactBtn">Invest More</button></div>
-              </div>
-            </div>
+                  <div className="col text-start fs12px mt-2" onClick={handleInvestMore} ><button type="button" className="btn transactBtn">Invest More</button></div>
+                </div>
+              </div>}
 
             {/* Redemptione****************************** */}
-            <div className="col-12 bg-white rounded-2 p-2 px-2 my-3">
-              <div className="row px-3 my-3">
-                <h5>Redemption ({redemptionList.length} funds)</h5>
-                <div className="col-12 ">
-                  <p className="m-0 fs14px"> Exit these fund and reallocate to better-performing options.</p>
-                </div>
-                <hr className="text-danger border-2" />
-                {redemptionList?.length ? redemptionList.map((item: portfolioReviewKeys, i) => {
-                  return <>
-                    <div className="col-11 p-2 d-flex align-items-start" key={i}>
-                      <img src={`${imageUrl+item.accordAMCCode}.png`} alt=""  height={40} width={40} className="rounded"/>
-                      <div className="d-flex flex-column ps-3">
-                        <small className="mb-0">{item.scheme}</small>
-                        <small className="fs12px">Folio: {item.folio}</small>
+            {redemptionList?.length > 0 &&
+              <div className="col-12 bg-white rounded-2 p-2 px-2 my-3">
+                <div className="row px-3 my-3">
+                  <h5>Redemption ({redemptionList.length} funds)</h5>
+                  <div className="col-12 ">
+                    <p className="m-0 fs14px"> Exit these fund and reallocate to better-performing options.</p>
+                  </div>
+                  <hr className="text-danger border-2" />
+                  {redemptionList?.length ? redemptionList.map((item: any, i) => {
+                    return <>
+                      <div className="col-11 p-2 d-flex align-items-start" key={i}>
+                        <img src={`${imageUrl + item.accordAMCCode}.png`} alt="" height={40} width={40} className="rounded" />
+                        <div className="d-flex flex-column ps-3">
+                          <small className="mb-0">{item.scheme}</small>
+                          <small className="fs12px">Folio: {item.folio}</small>
+                        </div>
                       </div>
-                    </div>
-                    <div className="col-1">
-                      <ChevronRight className="text-secondary" />
-                    </div>
-                  </>
-                }) : <p className="text-danger">No scheme availble</p>}
-                <div className="col text-start fs12px mt-2" onClick={handleSwitchFund}><button type="button" className="btn transactBtn">Redeem All</button></div>
-              </div>
-            </div>
+                      <div className="col-1 crPointer" onClick={() => singlRedeem(item)}>
+                        <ChevronRight className="text-secondary" />
+                      </div>
+                    </>
+                  }) : <p className="text-danger">No scheme availble</p>}
+                  <div className="col text-start fs12px mt-2" onClick={handleSwitchFund}><button type="button" className="btn transactBtn">Redeem All</button></div>
+                </div>
+              </div>}
 
             {/* Under watch performane****************************** */}
-            <div className="col-12 bg-white rounded-2 p-2 px-2 my-3">
-              <div className="row px-3 my-3">
-                <h5>Under Watch ({underWatchList.length} funds)</h5>
-                <div className="col-12">
-                  <p className="m-0 fs14px">Monitor these funds closely for any potential changes.</p>
-                </div>
-                <hr className="text-secondary border-2" />
-                {underWatchList?.length ? underWatchList.map((item: portfolioReviewKeys, i) => {
-                  return <>
-                    <div className="col-11 p-2 d-flex align-items-start" key={i}>
-                      <img src={`${imageUrl+item.accordAMCCode}.png`} alt=""  height={40} width={40} className="rounded"/>
-                      <div className="d-flex flex-column ps-3">
-                        <small className="mb-0">{item.scheme}</small>
-                        <small className="fs12px">Folio: {item.folio}</small>
+            {underWatchList?.length > 0 &&
+              <div className="col-12 bg-white rounded-2 p-2 px-2 my-3">
+                <div className="row px-3 my-3">
+                  <h5>Under Watch ({underWatchList.length} funds)</h5>
+                  <div className="col-12">
+                    <p className="m-0 fs14px">Monitor these funds closely for any potential changes.</p>
+                  </div>
+                  <hr className="text-secondary border-2" />
+                  {underWatchList?.length ? underWatchList.map((item: portfolioReviewKeys, i) => {
+                    return <>
+                      <div className="col-11 p-2 d-flex align-items-start" key={i}>
+                        <img src={`${imageUrl + item.accordAMCCode}.png`} alt="" height={40} width={40} className="rounded" />
+                        <div className="d-flex flex-column ps-3">
+                          <small className="mb-0">{item.scheme}</small>
+                          <small className="fs12px">Folio: {item.folio}</small>
+                        </div>
                       </div>
-                    </div>
-                    <div className="col-1">
-                      <ChevronRight className="text-secondary" />
-                    </div>
-                  </>
-                }) : <p className="text-danger">No scheme availble</p>}
-                <div className="col text-start fs12px mt-2" onClick={handleSwitchFund}><button type="button" className="btn transactBtn">Under Watch</button></div>
-              </div>
-            </div>
+                      <div className="col-1">
+                        <ChevronRight className="text-secondary" />
+                      </div>
+                    </>
+                  }) : ""}
+                </div>
+              </div>}
           </div>
           <div className="col-md-4 col-sm-12">
             <div className="row  bg-white rounded-2 p-3 mt-4">
               <h5>For detailed analysis of your portfolio please reach out to our expert.</h5>
               <div className="col-12 d-flex align-items-start">
-                <img src={sbi} alt="" height={50} width={50} />
+                <img src={`${portfolioExpertData?.img}`} alt="" height={50} width={50} className="rounded-circle" />
                 <div className="d-flex flex-column ps-3">
-                  <small className="mb-0">R K Gupta</small>
-                  <small className="fs14px">Currenty managing  <CurrencyRupee />1.88Cr Aum</small>
-                  <small className="fs16px logoBlueColor"><Telephone /> +91 9956419878</small>
-                  <small className="fs16px logoBlueColor"><Envelope />  rajkumarbfcsofttech@gmail.com</small>
+                  <small className="mb-0">{portfolioExpertData?.name}</small>
+                  <small className="fs14px">{portfolioExpertData?.aum}</small>
+                  <a href={`tel:${portfolioExpertData?.phone}`} className="fs16px logoBlueColor d-block">
+                    <Telephone /> {portfolioExpertData?.phone}
+                  </a>
+
+                  <a href={`mailto:${portfolioExpertData?.email}`} className="fs16px logoBlueColor d-block">
+                    <Envelope /> {portfolioExpertData?.email}
+                  </a>
+
                 </div>
               </div>
             </div>
@@ -299,9 +329,10 @@ const PortfolioReview = () => {
           </div>
         </div>
       </div>
-
-
+      <InvestMoreScheme show={openInvestMore} setShow={setOpenInvestMore} productCodes={productCodes} />
       <SwitchFund show={openSwitchFund} setShow={setOpenSwitchFund} />
+      <RedumptionConfirmation show={openRedumptionModel} setShow={setOpenRedumptionModel} redeemList={redemptionList} setRedeemList={setRedemptionList} />
+
     </>
   );
 };

@@ -1,50 +1,53 @@
+import { schemeDeatilDataKeys } from "./transact";
+
 export interface detailPortfolioSchemeType {
   folio: string;
-  productcode: string;
+  id?: string;
+  productcode?: string;
   accordSchemeCode: number;
-  gpan: string | null;
-  name: string;
-  pan: string | null;
-  OminusOne: number;
-  absolute: number;
-  assettype: string;
-  cagr: string;
-  cnav: number;
+  gpan?: string | null;
+  name?: string;
+  pan?: string | null;
+  OminusOne?: number;
+  absolute?: number;
+  assettype?: string;
+  cagr?: string;
+  cnav?: number;
   currentvalue: string;
-  cvpv: number;
-  datediffvalue: number;
-  days: number;
-  days_by_365: number;
-  days_purchase: number;
-  debt: number;
-  equity: number;
-  finalcagr: string;
-  gold: number;
-  navdate: string;
-  one_by_m: number;
-  power: number;
-  prenavdate: string;
-  prevnav: number;
+  cvpv?: number;
+  datediffvalue?: number;
+  days?: number;
+  days_by_365?: number;
+  days_purchase?: number;
+  debt?: number;
+  equity?: number;
+  finalcagr?: string;
+  gold?: number;
+  navdate?: string;
+  one_by_m?: number;
+  power?: number;
+  prenavdate?: string;
+  prevnav?: number;
   purchase: string;
   scheme: string;
-  sum1: number;
-  sum2: number;
-  time: string;
+  sum1?: number;
+  sum2?: number;
+  time?: string;
   unit: string;
-  userid: string;
-  USER_ID: number;
-  rta: string;
-  currentDate: string;
-  RMID: string;
-  RM: string;
-  previousvalue: number;
-  oldunit: number;
-  oldnav: number;
-  ACCORD_STATUS: string;
-  currentNavDiff: number;
-  updated: string;
-  gain: string;
-  amcCode: string;
+  userid?: string;
+  USER_ID?: number;
+  rta?: string;
+  currentDate?: string;
+  RMID?: string;
+  RM?: string;
+  previousvalue?: number;
+  oldunit?: number;
+  oldnav?: number;
+  ACCORD_STATUS?: string;
+  currentNavDiff?: number;
+  updated?: string;
+  gain?: string;
+  amcCode?: string;
   stpDateList?: number[];
   schemeName?: string;
   accordAMCCode: number;
@@ -52,6 +55,7 @@ export interface detailPortfolioSchemeType {
   folioNumber?: string;
   redemption_units?: number;
   all_units?: boolean;
+  isRedeemAmount?: boolean;
 }
 export interface detailPortfolioTotalTransactionType {
   TotalMarketValue: number;
@@ -98,15 +102,50 @@ export interface targetSchemesKeys {
 }
 export interface portfolioSummaryRes {
   success: boolean;
-  msg:string;
-  data: portfolioSummaryKeys[];
+  msg: string;
+  data: portfolioSummaryKeys;
 }
 export interface portfolioSummaryKeys {
   total: number;
-  performance_summary: summaryKeys[];
+  performance_summary: summaryInsideKeys[];
 }
-export interface summaryKeys {
+export interface summaryInsideKeys {
   name: string;
   currentValue: number;
   scheme_count: number;
+}
+export interface portfolioExpertRes {
+  success: boolean;
+  data: portfolioExpertKeys;
+}
+export interface portfolioExpertKeys {
+  email: string;
+  name: string;
+  phone: string;
+  img: string;
+  aum: string;
+}
+
+export interface schemeSummaryRes {
+  success: boolean;
+  data: schemeSummaryKeys[];
+}
+export interface schemeSummaryKeys extends schemeDeatilDataKeys {
+  scheme: string;
+  accordProductCode: number;
+  accordAmcCode: number;
+  scheme_category: string;
+  scheme_sub_category: string;
+  ideal_investment_period: number;
+  fund_returns: number;
+  benchmark_returns: number;
+  category_returns: number;
+  negative_observations: number;
+  short_note: string;
+  long_note: string;
+  sip_allowed: boolean;
+  purchase_allowed: boolean;
+  min_purchase_amount: number;
+  sip_dates: number[];
+  min_sip_amount: number;
 }

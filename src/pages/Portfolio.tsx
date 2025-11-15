@@ -124,7 +124,7 @@ const Portfolio = () => {
                   </div>
                   <div className="col-4 col-md-4">
                     <small className="fs14px">Gain/Loss</small><br />
-                    <small> <CurrencyRupee className="mb-1" />{getValueInSort(Number(item?.gain))}</small> <small className={`fs12px ${Number(item?.finalcagr) > 0 ? "congratesColor" : "errorColor2"}`}>{getPercentageValue(Number(item?.purchase), item?.gain)}%</small>
+                    <small> <CurrencyRupee className="mb-1" />{getValueInSort(Number(item?.gain??0))}</small> <small className={`fs12px ${Number(item?.finalcagr??0) > 0 ? "congratesColor" : "errorColor2"}`}>{getPercentageValue(Number(item?.purchase), item?.gain??0)}%</small>
                   </div>
                 </div>
               </div>

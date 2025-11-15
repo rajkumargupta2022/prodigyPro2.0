@@ -1,8 +1,6 @@
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import Card from 'react-bootstrap/Card';
-
-import {  useState } from 'react';
+import { useEffect, useState } from 'react';
 import OrderPlaces from './order-places';
 import RedumptionForm from './RedumptionForm';
 import { detailPortfolioSchemeType } from '../pages/data-interfaces/portfolio';
@@ -20,10 +18,25 @@ interface investmetProps {
 const RedumptionConfirmation: React.FC<investmetProps> = ({ show, setShow, redeemList, setRedeemList }) => {
   const [openSuccess, setOpenSuccess] = useState(false)
   const [successData, setSuccessData] = useState<any[]>([])
+  const [selectedList, setSelectedList] = useState<any>(new Map())
 
 
+  useEffect(() => {
+    setSelectedList(JSON.parse(JSON.stringify(redeemList)))
+  }, [show])
   const handleSwitch = () => {
-    for (const item2 of redeemList) {
+    
+    const finalData =  redeemList.filter(rs=>{
+         return selectedList.some((ss:any)=>rs.id === ss.id);
+    });
+
+    if(finalData.length===0){
+       errorToast(`Please select at least one scheme for redeem`);
+       return
+    }
+
+
+    for (const item2 of finalData) {
 
       if (!item2.amount && !item2.redemption_units) {
         errorToast(`Please enter amount or units for ${item2.scheme}`);
@@ -31,7 +44,7 @@ const RedumptionConfirmation: React.FC<investmetProps> = ({ show, setShow, redee
       }
       if (checkIsSIFScheme(item2.scheme) && (!(item2.all_units ?? false))) {
         const tenLakh = 1000000
-        let inputAmount = item2.redemption_units ? item2.redemption_units * item2.cnav : (item2.amount ?? 0)
+        let inputAmount = item2.redemption_units ? item2.redemption_units??0 * (item2?.cnav??0) : (item2.amount ?? 0)
         let currentValue = Number(item2.currentvalue)
         let redeemableAmount = currentValue - tenLakh
         if (inputAmount > redeemableAmount) {
@@ -42,14 +55,16 @@ const RedumptionConfirmation: React.FC<investmetProps> = ({ show, setShow, redee
       }
     }
 
-    redeemTransaction(redeemList, "redemption", setSuccessData).then((res) => {
+    redeemTransaction(selectedList, "redemption", setSuccessData).then((res) => {
       console.log(res);
 
+      setOpenSuccess(true)
+      setShow(false)
+
     })
-    setOpenSuccess(true)
-    setShow(false)
+
   }
-  
+
 
 
 
@@ -67,8 +82,7 @@ const RedumptionConfirmation: React.FC<investmetProps> = ({ show, setShow, redee
           <Modal.Title>Redemption Confirmation</Modal.Title>
         </Modal.Header>
         <Modal.Body className='modal-bg'>
-          <RedumptionForm redeemList={redeemList} setRedeemList={setRedeemList} />
-          <Card.Header className='scheme-bg footerRadius px-3 py-2 fs12px'>Redemption orders once placed cannot be cancelled.</Card.Header>
+          <RedumptionForm redeemList={redeemList} setRedeemList={setRedeemList} selectedList={selectedList} setSelectedList={setSelectedList} />
 
         </Modal.Body>
         <small className='px-3 fs12px modal-bg text-center'>According to SEBI guidelines, redemption payouts are processed only to the bank account registered in the folio statement.</small>
@@ -77,7 +91,7 @@ const RedumptionConfirmation: React.FC<investmetProps> = ({ show, setShow, redee
         </Modal.Footer>
       </Modal>
       <OrderPlaces show={openSuccess} setShow={setOpenSuccess} successData={successData} />
-    
+
     </>
   );
 }

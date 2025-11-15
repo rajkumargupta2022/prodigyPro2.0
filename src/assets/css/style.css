@@ -241,19 +241,19 @@ span{
   height: 6px;
 }
 
-.switchBgColor {
+.Switch {
   background-color: #CB414E;
 }
 
-.satisfactoryBg {
+.Satisfactory-Performance {
   background-color: #06A358;
 }
 
-.underwatchBg {
+.Under-Watch {
   background-color: #12EA27;
 }
 
-.redumptionBg {
+.Redemption {
   background-color: #D05460;
 }
 
@@ -1844,4 +1844,33 @@ a{
 .d-flex.justify-content-between.mb-2{
   font-size: small;
   font-weight: 500;
+}
+
+.border011EFE{
+  border: 1px solid #011EFE;
+}
+
+.prodigy__selc1212  .form-check-input[type=checkbox] {
+    border-radius:50% !important;
+}
+
+input:checked ~ .checkmark {
+  background-color: #011EFE;
+}
+.performance-panel {
+  overflow: hidden;           /* important */
+}
+
+/* hidden state */
+.collapse-anim {
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 350ms ease, opacity 250ms ease;
+}
+
+/* shown state */
+.collapse-anim.open {
+  max-height: 1000px; /* should be larger than the content height */
+  opacity: 1;
+  transition: max-height 450ms ease, opacity 300ms ease;
 }
