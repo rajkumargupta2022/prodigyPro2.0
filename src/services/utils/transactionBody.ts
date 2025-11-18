@@ -58,7 +58,7 @@ export const switchFilterBody = (list: any[]) => {
       toAccordProductCode:item.toAccordProductCode,
       amount: item.amount??0,
       installment_units:item.installment_units??0,
-      all_units: item.installment_units??0===Number(item.installment_units) ? true:false,
+      all_units: item.all_units,
       folioNumber: item?.folioNumber,
       schemeName: item?.scheme,
       to_date:item.to_date

@@ -521,9 +521,9 @@ const fetchFolioFOrSIF = async (product_code: number): Promise<boolean> => {
               <span className='errorColor'>{amountErrorMsg}</span>
               <div className=" mt-2">
                 <button type="button" className="btn shortcutValue" onClick={() => handleMinAmount(isSipTransaction)}>Min.</button>
-                <button type="button" className="btn shortcutValue mx-1" onClick={() => addAmount(addAmountValues.first)}>+<CurrencyRupee className='mb-1' />{addAmountValues.first.toLocaleString("en-In")}</button>
-                <button type="button" className="btn shortcutValue mx-1" onClick={() => addAmount(addAmountValues.second)}>+<CurrencyRupee className='mb-1' />{addAmountValues.second.toLocaleString("en-In")}</button>
-                <button type="button" className="btn shortcutValue mx-1" onClick={() => addAmount(addAmountValues.third)}>+<CurrencyRupee className='mb-1' />{addAmountValues.third.toLocaleString("en-In")}</button>
+                <button type="button" className="btn shortcutValue mx-1" onClick={() => addAmount((schemeList[0]?.totalAmount??0)*2)}>+<CurrencyRupee className='mb-1' />{((schemeList[0]?.totalAmount??0)*2).toLocaleString("en-In")}</button>
+                <button type="button" className="btn shortcutValue mx-1" onClick={() => addAmount((schemeList[0]?.totalAmount??0)*3)}>+<CurrencyRupee className='mb-1' />{((schemeList[0]?.totalAmount??0)*3).toLocaleString("en-In")}</button>
+                <button type="button" className="btn shortcutValue mx-1" onClick={() => addAmount((schemeList[0]?.totalAmount??0)*5)}>+<CurrencyRupee className='mb-1' />{((schemeList[0]?.totalAmount??0)*5).toLocaleString("en-In")}</button>
               </div>
             </div>
             {from !== "portfolio" && <>

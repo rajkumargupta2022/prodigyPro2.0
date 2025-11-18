@@ -2,7 +2,7 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Card from 'react-bootstrap/Card';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import OrderPlaces from './order-places';
 import { ArrowDown } from 'react-bootstrap-icons';
 import { cartItemKey, switchKeys, switchResponse } from '../pages/data-interfaces/transact';
@@ -12,6 +12,7 @@ import { endPoints, imageUrl } from '../services/utils/urls';
 import { fetchAdminUser } from '../services/user/adminUser';
 import { errorToast } from '../services/utils/toast';
 import { switchFilterBody } from '../services/utils/transactionBody';
+import { Form } from 'react-bootstrap';
 // import { FaArrowLeftLong } from "react-icons/fa6";
 
 interface investmetProps {
@@ -25,23 +26,28 @@ interface investmetProps {
 const SwitchConfirmation: React.FC<investmetProps> = ({ show, setShow, cartItem, setCartItem }) => {
   const [openSuccess, setOpenSuccess] = useState(false)
   const [successData, setSuccessData] = useState<switchKeys[]>([])
-  const [isSwitchAmount, setIsSwitchAmount] = useState<boolean>(false)
+  const [finalCartData, setFinalCartData] = useState<cartItemKey[]>([])
 
+
+  useEffect(()=>{
+       setFinalCartData(cartItem)
+  },[show])
   const finalSwitch = async () => {
+
     const adminUser = fetchAdminUser()
-    if(!adminUser){
+    if (!adminUser) {
       errorToast("Something went wrong..")
       return
     }
-    if(!cartItem[0]?.amount && isSwitchAmount){
-     errorToast("Plaese enter amount...")
-     return
+    for (const item2 of finalCartData) {
+      if (!item2?.installment_units && (!item2.isSwitchAmount)) {
+        errorToast("Plaese enter units or amounts...")
+        return
+      }
+
     }
-    if(!cartItem[0]?.installment_units && (!isSwitchAmount) ){
-     errorToast("Plaese enter units...")
-     return
-    }
-      
+
+
     const reqBody = {
       ucc: adminUser?.ucc,
       cartItems: switchFilterBody(cartItem)
@@ -49,7 +55,7 @@ const SwitchConfirmation: React.FC<investmetProps> = ({ show, setShow, cartItem,
 
     try {
       const res = await postRequest<switchResponse>(endPoints.switch, reqBody)
- 
+
       if (res.data) {
 
         setSuccessData(res.data)
@@ -62,27 +68,30 @@ const SwitchConfirmation: React.FC<investmetProps> = ({ show, setShow, cartItem,
     }
 
   }
-  const handleSwitchAllUnit = (e: React.ChangeEvent<HTMLInputElement>, allUnit: number, index: number) => {
+  const handleSwitchAllUnit = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
     const checked = e.target.checked; // <-- boolean, correct way
+
     setCartItem((prev: any) =>
       prev.map((item: cartItemKey, i: number) =>
         i === index
           ? {
             ...item,
             amount: checked ? 0 : item.amount, // reset amount if all_units true
-            installment_units: checked ? allUnit : 0,
+            installment_units: checked ? item.fromUnit ?? 0 : 0,
             all_units: checked,
           }
           : item
       )
     );
+
+
   };
 
   const handleSwitchType = (value: boolean, allUnit: number, index: number) => {
-    setIsSwitchAmount(value)
+
     setCartItem((prev: any) =>
       prev.map((item: cartItemKey, i: number) =>
-        i === index ? { ...item, installment_units: !value ? allUnit : 0, all_units: !value, amount: 0 } : item
+        i === index ? { ...item, installment_units: !value ? allUnit : 0, all_units: !value, amount: 0, isSwitchAmount: value } : item
       )
     );
   }
@@ -90,7 +99,7 @@ const SwitchConfirmation: React.FC<investmetProps> = ({ show, setShow, cartItem,
   const handleAmount = (e: React.ChangeEvent<HTMLInputElement>, index: number, item2: cartItemKey
   ): void => {
     let value = Number(e.target.value.trim());
-    let chechMax = isSwitchAmount ? item2.fromValue : item2.fromUnit;
+    let chechMax = item2?.isSwitchAmount ? item2.fromValue : item2.fromUnit;
 
     setCartItem((prev: any) =>
       prev.map((item: cartItemKey, i: number) => {
@@ -105,8 +114,8 @@ const SwitchConfirmation: React.FC<investmetProps> = ({ show, setShow, cartItem,
         if (value < Number(chechMax)) {
           return {
             ...item,
-            amount: isSwitchAmount ? value : 0,
-            installment_units: isSwitchAmount ? 0 : value,
+            amount: item?.isSwitchAmount ? value : 0,
+            installment_units: item?.isSwitchAmount ? 0 : value,
             all_units: false,
           };
         }
@@ -115,8 +124,8 @@ const SwitchConfirmation: React.FC<investmetProps> = ({ show, setShow, cartItem,
         if (value >= Number(chechMax)) {
           return {
             ...item,
-            amount: isSwitchAmount ? item2.fromValue : 0,
-            installment_units: isSwitchAmount ? 0 : item2.fromUnit,
+            amount: item?.isSwitchAmount ? item2.fromValue : 0,
+            installment_units: item?.isSwitchAmount ? 0 : item2.fromUnit,
             all_units: true,
           };
         }
@@ -126,6 +135,18 @@ const SwitchConfirmation: React.FC<investmetProps> = ({ show, setShow, cartItem,
     );
 
 
+  };
+  const handleSelectedScheme = (item: any) => {
+    setFinalCartData((prev: any[]) => {
+      const exists = prev.some((s) => s.id === item.id);
+
+      if (exists) {
+        return prev.filter((s) => s.id !== item.id);
+      } else {
+        // Scheme is being selected
+        return [...prev, { ...item }];
+      }
+    });
   };
   return (
     <>
@@ -138,17 +159,35 @@ const SwitchConfirmation: React.FC<investmetProps> = ({ show, setShow, cartItem,
 
       >
         <Modal.Header closeButton className='modal-bg'>
-           {/* <FaArrowLeftLong onClick={()=>{setShow(false)}}/> */}
+          {/* <FaArrowLeftLong onClick={()=>{setShow(false)}}/> */}
           <Modal.Title>Switch Confirmation</Modal.Title>
         </Modal.Header>
         <Modal.Body className='modal-bg'>
           {cartItem?.map((item, index) => {
-            return <div className="borderColor p-3 headerRadius bg-white">
+             const checkSelected = finalCartData.some((s: any) => {
+                    return s.id === item.id;
+                  })
+            return <div className={`p-3 rounded-3 ${checkSelected&&"border011EFE"} bg-white mb-3`}>
+              <Form.Check
+                className="m-0 rounded-circle prodigy__selc1212"
+                inline
+                label="Select"
+                name="group1"
+                type="checkbox"
+                id={`checkbox-${index}`}
+                checked={checkSelected} // This will be false when unselected
+                onChange={() => handleSelectedScheme(item)}
+              />
+
+
+
+
+              <hr />
               <div className="d-flex justify-content-between">
-              
-                  <div className="d-flex">
+
+                <div className="d-flex">
                   <div className="prod_icon_img">
-                    <img src={imageUrl+item.toAccordAMCCode+".png"} className='rounded' height={35} width={35} alt="" />
+                    <img src={imageUrl + item.toAccordAMCCode + ".png"} className='rounded' height={35} width={35} alt="" />
                   </div>
                   <div className="ms-2 prod_icon_heading">
                     <h4>{item.fromScheme}</h4>
@@ -165,7 +204,7 @@ const SwitchConfirmation: React.FC<investmetProps> = ({ show, setShow, cartItem,
               <div className="d-flex justify-content-between">
                 <div className="d-flex">
                   <div className="prod_icon_img">
-                    <img src={imageUrl+item.fromAccordAMCCode+".png"} className='rounded' height={35} width={35} alt="" />
+                    <img src={imageUrl + item.fromAccordAMCCode + ".png"} className='rounded' height={35} width={35} alt="" />
                   </div>
                   <div className="ms-2 prod_icon_heading">
                     <h4>{item.toScheme}</h4>
@@ -177,10 +216,10 @@ const SwitchConfirmation: React.FC<investmetProps> = ({ show, setShow, cartItem,
               <hr />
               <div className="row text-center my-3">
                 <div className="col-md-6 py-2 py-md-0">
-                  <div className={`${isSwitchAmount ? "unitBtnActive" : "unitDeActiveBtn"}`} onClick={() => handleSwitchType(true, Number(item.fromUnit), index)}> Amount</div>
+                  <div className={`${item?.isSwitchAmount ? "unitBtnActive" : "unitDeActiveBtn"}`} onClick={() => handleSwitchType(true, Number(item.fromUnit), index)}> Amount</div>
                 </div>
                 <div className="col-md-6 py-2 py-md-0">
-                  <div className={`${isSwitchAmount ? "unitDeActiveBtn" : "unitBtnActive"}`} onClick={() => handleSwitchType(false, Number(item.fromUnit), index)}> Units </div>
+                  <div className={`${item?.isSwitchAmount ? "unitDeActiveBtn" : "unitBtnActive"}`} onClick={() => handleSwitchType(false, Number(item.fromUnit), index)}> Units </div>
                 </div>
               </div>
               <div className="row text-start my-2">
@@ -190,19 +229,19 @@ const SwitchConfirmation: React.FC<investmetProps> = ({ show, setShow, cartItem,
                 </div>
                 <div className="col-md-6">
                   <p className='mb-0 fs12px' > Total Units</p>
-                  <small className='fs16px'>{item.fromUnit}</small>
+                  <small className='fs16px'>{item.installment_units}</small>
                 </div>
               </div>
               <div className="form-group">
-                <label htmlFor="amountFor" className='fs12px'>SWITCH {isSwitchAmount ? "AMOUNT" : "UNIT"}</label>
-                <input type="text" value={isSwitchAmount ? item.amount : item.installment_units} className="form-control" id="amountFor" aria-describedby="emailHelp" placeholder={`${isSwitchAmount ? "Enter Amount" : "Enter Unit"}`} onChange={(e) => handleAmount(e, index, item)} />
-                {!isSwitchAmount &&
+                <label htmlFor="amountFor" className='fs12px'>SWITCH {item?.isSwitchAmount ? "AMOUNT" : "UNIT"}</label>
+                <input type="text" value={item?.isSwitchAmount ? item.amount : item.installment_units} className="form-control" id="amountFor" aria-describedby="emailHelp" placeholder={`${item?.isSwitchAmount ? "Enter Amount" : "Enter Unit"}`} onChange={(e) => handleAmount(e, index, item)} />
+                {!item?.isSwitchAmount &&
                   <div className=" mt-2 form-check form-switch">
                     <label className="form-check-label " htmlFor="flexSwitchCheckDefault">Switch All Units</label>
                     <input className="form-check-input"
                       type="checkbox"
                       checked={item.all_units}
-                      onChange={(e) => handleSwitchAllUnit(e, Number(item.fromUnit), index)} id={`switch-${index}`} />
+                      onChange={(e) => handleSwitchAllUnit(e, index)} id={`switch-${index}`} />
                   </div>}
               </div>
             </div>

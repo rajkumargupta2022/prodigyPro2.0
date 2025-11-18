@@ -5,7 +5,7 @@ import SwitchFund from "../components/SwitchFund";
 import { fetchAdminUser } from "../services/user/adminUser";
 import { getRequest, postRequest } from "../services/Api/HandleApi";
 import { endPoints, imageUrl } from "../services/utils/urls";
-import { portfolioReviewKeys, portfolioReviewRes, summaryInsideKeys, portfolioSummaryRes, portfolioExpertRes, portfolioExpertKeys, detailPortfolioSchemeType } from "./data-interfaces/portfolio";
+import { portfolioReviewKeys, portfolioReviewRes, summaryInsideKeys, portfolioSummaryRes, portfolioExpertRes, portfolioExpertKeys, detailPortfolioSchemeType, schemeSummaryKeys } from "./data-interfaces/portfolio";
 import { getPercentageValue, getValueInSort } from "../services/calculation/percentageCalculate";
 import RedumptionConfirmation from "../components/RedumptionConfirmation";
 import InvestMoreScheme from "../components/Invest-more-scheme";
@@ -168,6 +168,17 @@ const PortfolioReview = () => {
     setOpenInvestMore(true)
 
   }
+  const handleBulkSwitch = () => {
+    const products = new Set<number>();
+    switchList.forEach(element => {
+      products.add(element.accordSchemeCode)
+      products.add(element?.target?.accordProductCode ?? 0)
+    });
+    const uniqueProducts = Array.from(products);
+    setProductCodes(uniqueProducts)
+    setOpenSwitchFund(true)
+    console.log(products);
+  }
 
   return (
     <>
@@ -217,7 +228,7 @@ const PortfolioReview = () => {
                     </div>
                   </>
                 }) : <p className="text-danger">No scheme availble</p>}
-                <div className="col text-start fs12px mt-2" onClick={() => setOpenSwitchFund(true)}><button type="button" className="btn transactBtn">Switch All</button></div>
+                <div className="col text-start fs12px mt-2" onClick={handleBulkSwitch}><button type="button" className="btn transactBtn">Switch All</button></div>
               </div>
             </div>
             {/* } */}
@@ -330,7 +341,7 @@ const PortfolioReview = () => {
         </div>
       </div>
       <InvestMoreScheme show={openInvestMore} setShow={setOpenInvestMore} productCodes={productCodes} />
-      <SwitchFund show={openSwitchFund} setShow={setOpenSwitchFund} />
+      <SwitchFund show={openSwitchFund} setShow={setOpenSwitchFund}productCodes={productCodes} switchSchemeList={switchList}/>
       <RedumptionConfirmation show={openRedumptionModel} setShow={setOpenRedumptionModel} redeemList={redemptionList} setRedeemList={setRedemptionList} />
 
     </>

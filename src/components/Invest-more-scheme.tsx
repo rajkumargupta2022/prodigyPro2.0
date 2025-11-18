@@ -34,43 +34,55 @@ const InvestMoreScheme: React.FC<InvestMoreScheme> = ({ show, setShow, productCo
   const fetchPerformanceScheme = async () => {
     try {
       const adminUser = fetchAdminUser();
-      if (adminUser?.ucc) {
-        const reqBody = { product_codes: productCodes };
-        const res = await postRequest<schemeSummaryRes>(endPoints.getSchemesPerformance, reqBody);
-        if (res.success) {
-
-          const transformed = res.data.map((item: schemeSummaryKeys) => ({
-            ...item,
-            accordSchemeCode: item.accordProductCode,
-            accordAMCCode: item.accordAmcCode,
-            minSIPAmt: item.min_sip_amount,
-            minLumSumAmt: item.min_purchase_amount,
-            sipAllowed: item.sip_allowed,
-            sipDateList: item.sip_dates,
-            purchaseAllowed: item.purchase_allowed,
-            totalAmount: item.min_sip_amount + (item.totalAmount ?? 0)
-         
-          }));
-          console.log("transfao", transformed);
-
-          setSchemeList(transformed);
-          setSelectedSchemeList(transformed);
-          handleSipIntersection()
-        } else {
-          setSchemeList([]);
-          setSelectedSchemeList([]);
-        }
+      if (!adminUser?.ucc) {
+        setSchemeList([]);
+        setSelectedSchemeList([]);
+        return;
       }
+
+      const reqBody = { product_codes: productCodes };
+      const res = await postRequest<schemeSummaryRes>(endPoints.getSchemesPerformance, reqBody);
+
+      if (!res.success) {
+        setSchemeList([]);
+        setSelectedSchemeList([]);
+        return;
+      }
+      const total = res.data.reduce((sum, item) => sum + Number(item.min_sip_amount), 0);
+      const transformed = res.data.map((item: schemeSummaryKeys) => {
+        // ensure numeric values for arithmetic
+        const minSIP = Number(item.min_sip_amount ?? 0);
+
+        return {
+          ...item,
+          accordSchemeCode: item.accordProductCode,
+          accordAMCCode: item.accordAmcCode,
+          minSIPAmt: minSIP,
+          minLumSumAmt: Number(item.min_purchase_amount ?? 0),
+          sipAllowed: item.sip_allowed,
+          sipDateList: item.sip_dates,
+          purchaseAllowed: item.purchase_allowed,
+          totalAmount: total
+        };
+      });
+
+      console.log("transformed data", transformed);
+      setSchemeList(transformed);
+      setSelectedSchemeList(transformed);
+      handleSipIntersection(transformed);
+
     } catch (err) {
+      console.error(err);
       setSchemeList([]);
       setSelectedSchemeList([]);
     }
   };
+
   // const dataTrandForm = (data: any) => {
 
   // }
-  const handleSipIntersection = () => {
-    const sipIntersectionData = selectedSchemeList?.map(scheme => scheme.sipDateList)
+  const handleSipIntersection = (data: schemeSummaryKeys[]) => {
+    const sipIntersectionData = data?.map(scheme => scheme.sipDateList)
       .reduce((acc, curr) => acc.filter(date => curr.includes(date)))
     setSipDateList(sipIntersectionData)
 
@@ -91,7 +103,10 @@ const InvestMoreScheme: React.FC<InvestMoreScheme> = ({ show, setShow, productCo
   const toggleAtIndex = (index: number) => {
     setOpenIndex(prev => (prev === index ? null : index));
   };
-
+  const handleInvestMore = () => {
+    setOpenInvestMore(true)
+    setShow(false)
+  }
   return (
     <>
       <Modal
@@ -209,7 +224,7 @@ const InvestMoreScheme: React.FC<InvestMoreScheme> = ({ show, setShow, productCo
           })}
         </Modal.Body>
         <Modal.Footer className='modal-bg'>
-          <Button className='customButton ' onClick={() => setOpenInvestMore(true)}>Invest More</Button>
+          <Button className='customButton ' onClick={handleInvestMore}>Invest More</Button>
         </Modal.Footer>
       </Modal>
       <InvetmentConfirmation

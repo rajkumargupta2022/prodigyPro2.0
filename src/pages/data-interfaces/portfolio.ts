@@ -80,7 +80,7 @@ export interface portfolioReviewRes {
   data: portfolioReviewKeys[];
 }
 
-export interface portfolioReviewKeys {
+export interface portfolioReviewKeys extends schemeDeatilDataKeys {
   folio: string;
   accordSchemeCode: number;
   accordAMCCode: number;
@@ -94,8 +94,8 @@ export interface portfolioReviewKeys {
 }
 
 export interface targetSchemesKeys {
-  accordSchemeCode: number;
-  accordAMCCode: number;
+  accordProductCode: number;
+  accordAmcCode: number;
   scheme: string;
   nseProductCode: string;
   nseAMCCode: string;

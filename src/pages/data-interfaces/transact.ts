@@ -130,20 +130,23 @@ export interface swpResponse {
   data: swpKey[];
 }
 export interface cartItemKey {
-  fromAccordProductCode: string;
+  fromAccordProductCode: string|number;
   toAccordProductCode: string | number;
   amount: number;
   stpDateList?: number[];
   folioNumber: string;
   installment_units: number;
   stpFrequency?: any;
+  isSwitchAmount?:boolean;
   all_units: boolean;
+  redemption_units?:number;
   toScheme?: string;
   fromScheme?: string;
   fromValue?: number,
   fromUnit?: number,
   fromAccordAMCCode?: number,
   toAccordAMCCode?: number
+  id?:any
 }
 export interface switchResponse {
   success: boolean,
