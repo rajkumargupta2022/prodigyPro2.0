@@ -149,3 +149,18 @@ export interface schemeSummaryKeys extends schemeDeatilDataKeys {
   sip_dates: number[];
   min_sip_amount: number;
 }
+
+export interface notesRes {
+  success: boolean;
+  data: portfolioNoteKeys;
+}
+export interface portfolioNoteKeys {
+  switch: noteTypeKeys;
+  redemption: noteTypeKeys;
+  undwerwatch: noteTypeKeys;
+  satisfactory_performance: noteTypeKeys;
+}
+export interface noteTypeKeys {
+  short_note?: string;
+  long_note?: string;
+}

@@ -80,5 +80,6 @@ export enum endPoints{
    getSwitchSchemes="portfolio-review/get-switch-schemes",
    getSchemePerformanceSummary="portfolio-review/get-scheme-performance-summary",
    getPortfolioExpert="portfolio-review/get-portfolio-expert",
-   getSchemesPerformance="portfolio-review/get-schemes-performance"
+   getSchemesPerformance="portfolio-review/get-schemes-performance",
+   getNotes="portfolio-review/get-notes"
 }

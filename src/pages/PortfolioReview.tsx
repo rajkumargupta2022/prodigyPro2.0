@@ -25,7 +25,7 @@ const PortfolioReview = () => {
   const [openInvestMore, setOpenInvestMore] = useState<boolean>(false)
   const [productCodes, setProductCodes] = useState<number[]>([])
 
-  const handleSwitchFund = () => {
+  const handleRedemptionFund = () => {
     setOpenRedumptionModel(true)
   }
   useEffect(() => {
@@ -298,7 +298,7 @@ const PortfolioReview = () => {
                       </div>
                     </>
                   }) : <p className="logoBlueColor text-center">Loading...</p>}
-                  <div className="col text-start fs12px mt-2" onClick={handleSwitchFund}><button type="button" className="btn transactBtn">Redeem All</button></div>
+                  <div className="col text-start fs12px mt-2" onClick={handleRedemptionFund}><button type="button" className="btn transactBtn">Redeem All</button></div>
                 </div>
               </div>}
 

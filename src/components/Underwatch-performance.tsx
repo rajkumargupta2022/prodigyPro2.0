@@ -7,6 +7,8 @@ import { postRequest } from '../services/Api/HandleApi';
 import { fetchAdminUser } from '../services/user/adminUser';
 import { ChevronRight } from 'react-bootstrap-icons';
 import { useNavigate } from 'react-router-dom';
+import PortfolioNotes from './PortfolioNotes';
+
 
 
 
@@ -18,6 +20,7 @@ interface UnderWatchPerformance {
 
 const UnderWatchPerformance: React.FC<UnderWatchPerformance> = ({ show, setShow, productCodes }) => {
   const [schemeList, setSchemeList] = useState<schemeSummaryKeys[]>([]);
+  const [openMsgModel , setOpenMsgModel] = useState<boolean>(false)
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -65,8 +68,9 @@ const UnderWatchPerformance: React.FC<UnderWatchPerformance> = ({ show, setShow,
         </Modal.Header>
         <Modal.Body className='modal-bg'>
 
-          <div className="col-7 d-flex justify-content-end">
-            <p className='fs12px my-1 text-dark'>{schemeList[0]?.short_note} <small className='logoBlueColor crPointer'>Read more..</small></p>
+          <div className="col-12 d-flex justify-content-end">
+           <PortfolioNotes  portfolioType={"undwerwatch"}/>
+
           </div>
           {schemeList.map((item, index) => {
 
@@ -158,7 +162,6 @@ const UnderWatchPerformance: React.FC<UnderWatchPerformance> = ({ show, setShow,
         </Modal.Body>
 
       </Modal>
-
     </>
   );
 }
