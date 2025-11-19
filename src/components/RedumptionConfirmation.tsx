@@ -25,14 +25,14 @@ const RedumptionConfirmation: React.FC<investmetProps> = ({ show, setShow, redee
     setSelectedList(JSON.parse(JSON.stringify(redeemList)))
   }, [show])
   const handleSwitch = () => {
-    
-    const finalData =  redeemList.filter(rs=>{
-         return selectedList.some((ss:any)=>rs.id === ss.id);
+
+    const finalData = redeemList.filter(rs => {
+      return selectedList.some((ss: any) => rs.id === ss.id);
     });
 
-    if(finalData.length===0){
-       errorToast(`Please select at least one scheme for redeem`);
-       return
+    if (finalData.length === 0) {
+      errorToast(`Please select at least one scheme for redeem`);
+      return
     }
 
 
@@ -44,7 +44,7 @@ const RedumptionConfirmation: React.FC<investmetProps> = ({ show, setShow, redee
       }
       if (checkIsSIFScheme(item2.scheme) && (!(item2.all_units ?? false))) {
         const tenLakh = 1000000
-        let inputAmount = item2.redemption_units ? item2.redemption_units??0 * (item2?.cnav??0) : (item2.amount ?? 0)
+        let inputAmount = item2.redemption_units ? item2.redemption_units ?? 0 * (item2?.cnav ?? 0) : (item2.amount ?? 0)
         let currentValue = Number(item2.currentvalue)
         let redeemableAmount = currentValue - tenLakh
         if (inputAmount > redeemableAmount) {

@@ -1,9 +1,8 @@
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import Card from 'react-bootstrap/Card';
 import { useEffect, useState } from 'react';
 import { endPoints, imageUrl } from '../services/utils/urls';
-import { portfolioSummaryKeys, schemeSummaryKeys, schemeSummaryRes } from '../pages/data-interfaces/portfolio';
+import {  schemeSummaryKeys, schemeSummaryRes } from '../pages/data-interfaces/portfolio';
 import { postRequest } from '../services/Api/HandleApi';
 import { fetchAdminUser } from '../services/user/adminUser';
 import { ChevronRight } from 'react-bootstrap-icons';

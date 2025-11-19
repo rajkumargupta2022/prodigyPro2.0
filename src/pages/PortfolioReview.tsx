@@ -9,6 +9,7 @@ import { portfolioReviewKeys, portfolioReviewRes, summaryInsideKeys, portfolioSu
 import { getPercentageValue, getValueInSort } from "../services/calculation/percentageCalculate";
 import RedumptionConfirmation from "../components/RedumptionConfirmation";
 import InvestMoreScheme from "../components/Invest-more-scheme";
+import UnderWatchPerformance from "../components/Underwatch-performance";
 
 const PortfolioReview = () => {
   const [openSwitchFund, setOpenSwitchFund] = useState<boolean>(false)
@@ -20,6 +21,7 @@ const PortfolioReview = () => {
   const [totolInvested, setTotalInvested] = useState<number>(0)
   const [portfolioExpertData, setPortfolioExpertData] = useState<portfolioExpertKeys | null>()
   const [openRedumptionModel, setOpenRedumptionModel] = useState<boolean>(false)
+  const [openUnderwatchModel, setOpenUnderwatchModel] = useState<boolean>(false)
   const [openInvestMore, setOpenInvestMore] = useState<boolean>(false)
   const [productCodes, setProductCodes] = useState<number[]>([])
 
@@ -127,7 +129,16 @@ const PortfolioReview = () => {
         }
         const res = await postRequest<portfolioReviewRes>(endPoints.getRedemptionRecommendedSchemes, reqBody)
         if (res.success) {
-          // setRedemptionList(res.data)
+           setRedemptionList(res.data.map((item: any) => (
+            {
+              ...item,
+              redemption_units: item.unit,
+              amount: 0,
+              all_units: true,
+              isRedeemAmount: false,
+              id: crypto.randomUUID()
+            }
+          )))
         } else {
           setRedemptionList([])
         }
@@ -177,7 +188,10 @@ const PortfolioReview = () => {
     const uniqueProducts = Array.from(products);
     setProductCodes(uniqueProducts)
     setOpenSwitchFund(true)
-    console.log(products);
+  }
+  const handleUnderWatchPerformance = (product: number) => {
+    setProductCodes([product])
+    setOpenUnderwatchModel(true)
   }
 
   return (
@@ -202,7 +216,7 @@ const PortfolioReview = () => {
                     <div className={`progress-bar ${item.name?.replace(/\s+/g, '-')}`} style={{ width: getPercentageValue(totolInvested, item.currentValue) + "%" }}></div>
                   </div>
                 </div>
-              }) : ""}
+              }) : <p className="logoBlueColor text-center">Loading...</p>}
 
 
             </div>
@@ -227,7 +241,7 @@ const PortfolioReview = () => {
                       <ChevronRight className="text-secondary" />
                     </div>
                   </>
-                }) : <p className="text-danger">No scheme availble</p>}
+                }) : <p className="logoBlueColor text-center">Loading...</p>}
                 <div className="col text-start fs12px mt-2" onClick={handleBulkSwitch}><button type="button" className="btn transactBtn">Switch All</button></div>
               </div>
             </div>
@@ -255,7 +269,7 @@ const PortfolioReview = () => {
                         <ChevronRight className="text-secondary" />
                       </div>
                     </>
-                  }) : <p className="text-danger">No scheme availble</p>}
+                  }) : <p className="logoBlueColor text-center">Loading...</p>}
 
                   <div className="col text-start fs12px mt-2" onClick={handleInvestMore} ><button type="button" className="btn transactBtn">Invest More</button></div>
                 </div>
@@ -283,7 +297,7 @@ const PortfolioReview = () => {
                         <ChevronRight className="text-secondary" />
                       </div>
                     </>
-                  }) : <p className="text-danger">No scheme availble</p>}
+                  }) : <p className="logoBlueColor text-center">Loading...</p>}
                   <div className="col text-start fs12px mt-2" onClick={handleSwitchFund}><button type="button" className="btn transactBtn">Redeem All</button></div>
                 </div>
               </div>}
@@ -299,7 +313,7 @@ const PortfolioReview = () => {
                   <hr className="text-secondary border-2" />
                   {underWatchList?.length ? underWatchList.map((item: portfolioReviewKeys, i) => {
                     return <>
-                      <div className="col-11 p-2 d-flex align-items-start" key={i}>
+                      <div className="col-11 p-2 d-flex align-items-start crPointer" key={i} onClick={() => handleUnderWatchPerformance(item.accordSchemeCode)}>
                         <img src={`${imageUrl + item.accordAMCCode}.png`} alt="" height={40} width={40} className="rounded" />
                         <div className="d-flex flex-column ps-3">
                           <small className="mb-0">{item.scheme}</small>
@@ -310,7 +324,7 @@ const PortfolioReview = () => {
                         <ChevronRight className="text-secondary" />
                       </div>
                     </>
-                  }) : ""}
+                  }) : <p className="logoBlueColor text-center">Loading...</p>}
                 </div>
               </div>}
           </div>
@@ -341,9 +355,9 @@ const PortfolioReview = () => {
         </div>
       </div>
       <InvestMoreScheme show={openInvestMore} setShow={setOpenInvestMore} productCodes={productCodes} />
-      <SwitchFund show={openSwitchFund} setShow={setOpenSwitchFund}productCodes={productCodes} switchSchemeList={switchList}/>
+      <SwitchFund show={openSwitchFund} setShow={setOpenSwitchFund} productCodes={productCodes} switchSchemeList={switchList} />
       <RedumptionConfirmation show={openRedumptionModel} setShow={setOpenRedumptionModel} redeemList={redemptionList} setRedeemList={setRedemptionList} />
-
+      <UnderWatchPerformance show={openUnderwatchModel} setShow={setOpenUnderwatchModel} productCodes={productCodes} />
     </>
   );
 };
