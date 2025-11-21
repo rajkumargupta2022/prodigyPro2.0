@@ -9,6 +9,7 @@ import { endPoints, imageUrl } from '../services/utils/urls';
 import { postRequest } from '../services/Api/HandleApi';
 import SwitchConfirmation from './SwitchConfirmation';
 import DirectSchemeNote from '../components/DirectSchemeNote'
+import PortfolioNotes from './PortfolioNotes';
 
 interface SwitchFundProp {
   show: boolean;
@@ -158,6 +159,7 @@ const SwitchFund: React.FC<SwitchFundProp> = ({ show, setShow, productCodes, swi
           <Modal.Title>Switch-Fund Details</Modal.Title>
         </Modal.Header>
         <Modal.Body className='modal-bg '>
+           <PortfolioNotes portfolioType={"switch"} />
           {switchSchemeList.length > 0 ? switchSchemeList.map((item, index) => {
 
             const sourceData = schemeData[item?.accordSchemeCode] ?? null;

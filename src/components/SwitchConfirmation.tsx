@@ -229,7 +229,7 @@ const SwitchConfirmation: React.FC<investmetProps> = ({ show, setShow, cartItem,
                 </div>
                 <div className="col-md-6">
                   <p className='mb-0 fs12px' > Total Units</p>
-                  <small className='fs16px'>{item.installment_units}</small>
+                  <small className='fs16px'>{item.fromUnit}</small>
                 </div>
               </div>
               <div className="form-group">

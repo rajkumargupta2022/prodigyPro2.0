@@ -8,26 +8,30 @@ import { fetchAdminUser } from '../services/user/adminUser';
 import { ChevronRight } from 'react-bootstrap-icons';
 import SchemePerformanceGraph from './Scheme-performance-graph';
 import InvetmentConfirmation from './InvestmentConfirmation';
+import PortfolioNotes from './PortfolioNotes';
+import DirectSchemeNote from './DirectSchemeNote';
 // import SwitchConfirmation from './SwitchConfirmation';
 
 interface InvestMoreScheme {
   show: boolean;
   setShow: (show: boolean) => void;
-  productCodes: number[]
+  productCodes: number[];
+  number:string
 }
 
-const InvestMoreScheme: React.FC<InvestMoreScheme> = ({ show, setShow, productCodes }) => {
+const InvestMoreScheme: React.FC<InvestMoreScheme> = ({ show, setShow, productCodes ,number}) => {
   const [schemeList, setSchemeList] = useState<schemeSummaryKeys[]>([]);
   const [selectedSchemeList, setSelectedSchemeList] = useState<schemeSummaryKeys[]>([]);
   const [openSchemePerformanceGraph, setOpenSchemePerformanceGraph] = useState<boolean>(false);
   const [openInvestMore, setOpenInvestMore] = useState<boolean>(false);
   const [sipDateList, setSipDateList] = useState<number[]>([]);
+  const [openDirectNoteModel, setOpenDirectNoteModel] = useState<boolean>(false);
 
   // openIndex will store the index of the currently expanded scheme (or null)
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   useEffect(() => {
-    if(productCodes.length>0){
+    if (productCodes.length > 0) {
       fetchPerformanceScheme();
     }
   }, [productCodes]);
@@ -41,7 +45,7 @@ const InvestMoreScheme: React.FC<InvestMoreScheme> = ({ show, setShow, productCo
         return;
       }
 
-      const reqBody = { product_codes: productCodes };
+      const reqBody = { product_codes: [...productCodes, 48933, 37471] };
       const res = await postRequest<schemeSummaryRes>(endPoints.getSchemesPerformance, reqBody);
 
       if (!res.success) {
@@ -69,8 +73,11 @@ const InvestMoreScheme: React.FC<InvestMoreScheme> = ({ show, setShow, productCo
 
       console.log("transformed data", transformed);
       setSchemeList(transformed);
-      setSelectedSchemeList(transformed);
-      handleSipIntersection(transformed);
+      const filtered = transformed.filter((item: any) => {
+        return !item.scheme.toLowerCase().includes("direct")
+      })
+      setSelectedSchemeList(filtered);
+      handleSipIntersection(filtered);
 
     } catch (err) {
       console.error(err);
@@ -79,9 +86,7 @@ const InvestMoreScheme: React.FC<InvestMoreScheme> = ({ show, setShow, productCo
     }
   };
 
-  // const dataTrandForm = (data: any) => {
 
-  // }
   const handleSipIntersection = (data: schemeSummaryKeys[]) => {
     const sipIntersectionData = data?.map(scheme => scheme.sipDateList)
       .reduce((acc, curr) => acc.filter(date => curr.includes(date)))
@@ -90,14 +95,18 @@ const InvestMoreScheme: React.FC<InvestMoreScheme> = ({ show, setShow, productCo
   }
 
   const handleSelectedScheme = (item: schemeSummaryKeys) => {
-    setSelectedSchemeList(prev => {
-      const alreadySelected = prev.find(scheme => scheme.accordProductCode === item.accordProductCode);
-      if (alreadySelected) {
-        return prev.filter(scheme => scheme.accordProductCode !== item.accordProductCode);
-      } else {
-        return [...prev, item];
-      }
-    });
+
+    if (!item?.scheme?.toLowerCase().includes("direct")) {
+      setSelectedSchemeList(prev => {
+        const alreadySelected = prev.find(scheme => scheme.accordProductCode === item.accordProductCode);
+        if (alreadySelected) {
+          return prev.filter(scheme => scheme.accordProductCode !== item.accordProductCode);
+        } else {
+          return [...prev, item];
+        }
+      });
+    }
+
   };
 
   // toggles the panel for a specific index; only one open at a time
@@ -105,8 +114,25 @@ const InvestMoreScheme: React.FC<InvestMoreScheme> = ({ show, setShow, productCo
     setOpenIndex(prev => (prev === index ? null : index));
   };
   const handleInvestMore = () => {
+     const hasDirect = selectedSchemeList.some(item =>
+      item?.scheme?.toLowerCase()?.includes("direct")
+    );
+    if (hasDirect) {
+      setOpenDirectNoteModel(true)
+    }else{
     setOpenInvestMore(true)
     setShow(false)
+    }
+    
+  }
+   const removeDirectScheme = (type:string)=>{
+    if(type==="RM"){
+      window.location.href = `tel:${(number??"")}`
+         setShow(false)
+    }else{
+    setOpenInvestMore(true)
+    setShow(false)
+    }
   }
   return (
     <>
@@ -120,6 +146,7 @@ const InvestMoreScheme: React.FC<InvestMoreScheme> = ({ show, setShow, productCo
           <Modal.Title>Invest More</Modal.Title>
         </Modal.Header>
         <Modal.Body className='modal-bg'>
+          <PortfolioNotes portfolioType='satisfactory_performance' />
           {schemeList.map((item, index) => {
             const isChecked = selectedSchemeList?.some(scheme => scheme?.accordProductCode === item.accordProductCode);
             const panelId = `performance-panel-${item.accordProductCode ?? index}`;
@@ -133,16 +160,18 @@ const InvestMoreScheme: React.FC<InvestMoreScheme> = ({ show, setShow, productCo
                   onClick={() => toggleAtIndex(index)}
                 >
                   <div className="round col-11" >
-                    <input
-                      type="checkbox"
-                      id={checkboxId}
-                      checked={!!isChecked}
-                      // Stop row toggle when clicking checkbox
-                      onClick={(e) => e.stopPropagation()}
-                      onChange={() => handleSelectedScheme(item)}
-                    />
-                    <label htmlFor={checkboxId}></label>
-
+                    {!item?.scheme?.toLowerCase().includes("direct") && <>
+                      <input
+                        type="checkbox"
+                        id={checkboxId}
+                        checked={!!isChecked}
+                        // Stop row toggle when clicking checkbox
+                        onClick={(e) => e.stopPropagation()}
+                        onChange={() => handleSelectedScheme(item)}
+                      />
+                      <label htmlFor={checkboxId}></label>
+                    </>
+                    }
                     <img
                       src={`${imageUrl + item?.accordAmcCode}.png`}
                       className="rounded"
@@ -168,12 +197,13 @@ const InvestMoreScheme: React.FC<InvestMoreScheme> = ({ show, setShow, productCo
                   className={`performance-panel collapse-anim ${openIndex === index ? "open" : ""}`}
                 >
                   <div className="row">
-                    <div className="col-5 d-flex justify-content-end">
-                      <p className='fs12px my-1'>IDEAL INVESTMENT PERIOD</p>
-                    </div>
-                    <div className="col-7 d-flex justify-content-end">
-                      <p className='fs12px my-1 text-dark'>{item.ideal_investment_period} Years</p>
-                    </div>
+                    {item.ideal_investment_period && <>
+                      <div className="col-5 d-flex justify-content-end">
+                        <p className='fs12px my-1'>IDEAL INVESTMENT PERIOD</p>
+                      </div>
+                      <div className="col-7 d-flex justify-content-end">
+                        <p className='fs12px my-1 text-dark'>{item.ideal_investment_period} Years</p>
+                      </div></>}
                     {item.fund_returns && <>
                       <div className="col-5 d-flex justify-content-end mb-0">
                         <p className='fs12px my-1'>FUND 5Y CAGR</p>
@@ -207,15 +237,15 @@ const InvestMoreScheme: React.FC<InvestMoreScheme> = ({ show, setShow, productCo
                         <p className='fs12px my-1 text-dark'>{item.category_returns ?? 0}%</p>
                       </div>
                     </>}
-                    {item.negative_observations&&<>
-                    <div className="col-5 d-flex justify-content-end">
-                      <p className='fs12px my-1'>NEGATIVE OBSERVATIONS</p>
-                    </div>
-                    <div className="col-7 d-flex justify-content-end">
-                      <p className='fs12px my-1 text-dark'>{item.negative_observations ?? 0}</p>
-                    </div>
-</>}
-                   
+                    {item.negative_observations && <>
+                      <div className="col-5 d-flex justify-content-end">
+                        <p className='fs12px my-1'>NEGATIVE OBSERVATIONS</p>
+                      </div>
+                      <div className="col-7 d-flex justify-content-end">
+                        <p className='fs12px my-1 text-dark'>{item.negative_observations ?? 0}</p>
+                      </div>
+                    </>}
+
                   </div>
                 </div>
               </div>
@@ -236,6 +266,7 @@ const InvestMoreScheme: React.FC<InvestMoreScheme> = ({ show, setShow, productCo
 
       />
       <SchemePerformanceGraph show={openSchemePerformanceGraph} setShow={setOpenSchemePerformanceGraph} />
+       <DirectSchemeNote show={openDirectNoteModel} setShow={setOpenDirectNoteModel} msg={"Your portfolio contains Direct Plan schemes that cannot be transacted through our app. Please connect with our expert for guidance on further investments in these schemes."} removeDirectScheme={removeDirectScheme} />
     </>
   );
 }

@@ -93,11 +93,11 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
     if (foliosFetched) {
 
       if (schemeList[0]?.totalAmount) {
-        // distributeAmount(Number(schemeList[0]?.totalAmount))
+        distributeAmount(Number(schemeList[0]?.totalAmount))
         setAmount(Number(schemeList[0]?.totalAmount))
         setIsLumpsumTransaction(false)
-        handleMinAmount(true);
       } else {
+        handleMinAmount(true);
       }
       setFoliosFetched(false);
     }
@@ -292,6 +292,7 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
       ...item,
       amount: perScheme + (index === 0 ? remainder : 0)
     }));
+console.log("updatesss",updatedList);
 
     setSchemeList(updatedList);
   };

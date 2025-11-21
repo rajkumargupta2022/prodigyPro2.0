@@ -145,9 +145,20 @@ const PortfolioReview = () => {
     }
   }
 
-  const singlRedeem = (item: any) => {
-    setRedemptionList([item])
-    // setOpenRedumptionModel(true)
+  const singleInvest = (product:number,setter:(value:boolean)=>void) => {
+    setter(true)
+    setProductCodes([product])
+  }
+  const singleTransaction = (item: portfolioReviewKeys, setter: (value: boolean) => void,setterList:(value:portfolioReviewKeys[])=>void) => {
+    if (item?.target?.accordProductCode) {
+      setProductCodes([item.accordSchemeCode, item.target?.accordProductCode])
+    }else{
+      setProductCodes([item.accordSchemeCode])
+
+    }
+    setterList([item])
+    setter(true)
+
   }
   const handleInvestMore = () => {
     let products = satisfactoryList.map((item: any) => {
@@ -169,10 +180,7 @@ const PortfolioReview = () => {
     setOpenSwitchFund(true)
     analytics.track("bulk_scheme_switch_btn")
   }
-  const handleUnderWatchPerformance = (product: number) => {
-    setProductCodes([product])
-    setOpenUnderwatchModel(true)
-  }
+
   const redemptionPerformance = () => {
     let products = redemptionList.map((item: any) => {
       return item.accordSchemeCode
@@ -186,67 +194,39 @@ const PortfolioReview = () => {
       <NavBar />
       <div className="container px-4 mt-3" >
         <div className="row">
-          {portfolioSummaryList?.length> 0?<>
-          <div className="col-12 d-flex align-items-start">
-            <h4>Portfolio Review</h4>
-          </div>
-          <div className="col-md-8 col-sm-12 ">
-            <div className="col-12 bg-white rounded-2 p-2 px-2 mt-4">
-              <h5>Fund Performance Summary</h5>
-
-              {portfolioSummaryList?.length > 0 ? portfolioSummaryList?.map((item) => {
-                return <div className="mb-3">
-                  <div className="d-flex justify-content-between">
-                    <span>{item.name} ({item.scheme_count})</span>
-                    <span>₹{getValueInSort(item.currentValue)}</span>
-                  </div>
-                  <div className="progress height6px">
-                    <div className={`progress-bar ${item.name?.replace(/\s+/g, '-')}`} style={{ width: getPercentageValue(totolInvested, item.currentValue) + "%" }}></div>
-                  </div>
-                </div>
-              }) : <p className="logoBlueColor text-center">Loading...</p>}
-
-
+          {portfolioSummaryList?.length > 0 ? <>
+            <div className="col-12 d-flex align-items-start">
+              <h4>Portfolio Review</h4>
             </div>
-            {/* {switchList?.length >0&& */}
-            <div className="col-12 bg-white rounded-2 p-2 px-2 my-3">
-              <div className="row px-3 my-3">
-                <h5>Switch ({switchList.length} funds)</h5>
-                <div className="col-12">
-                  <p className="m-0 fs14px"> Consider reviewing or replacing these funds, as they are underperforming.</p>
-                </div>
-                <hr className="text-warning border-2" />
-                {switchList?.length ? switchList.map((item: portfolioReviewKeys, i) => {
-                  return <>
-                    <div className="col-11 p-2 d-flex align-items-start" key={i}>
-                      <img src={`${imageUrl + item.accordAMCCode}.png`} alt="" height={40} width={40} className="rounded" />
-                      <div className="d-flex flex-column ps-3">
-                        <small className="mb-0">{item.scheme}</small>
-                        <small className="fs12px">Folio: {item.folio}</small>
-                      </div>
+            <div className="col-md-8 col-sm-12 ">
+              <div className="col-12 bg-white rounded-2 p-2 px-2 mt-4">
+                <h5>Fund Performance Summary</h5>
+
+                {portfolioSummaryList?.length > 0 ? portfolioSummaryList?.map((item) => {
+                  return <div className="mb-3">
+                    <div className="d-flex justify-content-between">
+                      <span>{item.name} ({item.scheme_count})</span>
+                      <span>₹{getValueInSort(item.currentValue)}</span>
                     </div>
-                    <div className="col-1">
-                      <ChevronRight className="text-secondary" />
+                    <div className="progress height6px">
+                      <div className={`progress-bar ${item.name?.replace(/\s+/g, '-')}`} style={{ width: getPercentageValue(totolInvested, item.currentValue) + "%" }}></div>
                     </div>
-                  </>
+                  </div>
                 }) : <p className="logoBlueColor text-center">Loading...</p>}
-                <div className="col text-start fs12px mt-2" onClick={handleBulkSwitch}><button type="button" className="btn transactBtn">Switch All</button></div>
-              </div>
-            </div>
-            {/* } */}
 
-            {/* stisfactory performane****************************** */}
-            {satisfactoryList?.length > 0 &&
+
+              </div>
+              {/* {switchList?.length >0&& */}
               <div className="col-12 bg-white rounded-2 p-2 px-2 my-3">
                 <div className="row px-3 my-3">
-                  <h5>Satisfactory Performance ({satisfactoryList.length} funds)</h5>
+                  <h5>Switch ({switchList.length} funds)</h5>
                   <div className="col-12">
-                    <p className="m-0 fs14px"> Keep these funds in your portfolio to benefit from their strong performance.</p>
+                    <p className="m-0 fs14px"> Consider reviewing or replacing these funds, as they are underperforming.</p>
                   </div>
-                  <hr className="text-success border-2" />
-                  {satisfactoryList?.length ? satisfactoryList.map((item: portfolioReviewKeys, i) => {
+                  <hr className="text-warning border-2" />
+                  {switchList?.length ? switchList.map((item: portfolioReviewKeys, i) => {
                     return <>
-                      <div className="col-11 p-2  d-flex align-items-start" key={i}>
+                      <div className="col-11 p-2 d-flex align-items-start crPointer" key={i} onClick={() => singleTransaction(item, setOpenSwitchFund,setSwitchList)}>
                         <img src={`${imageUrl + item.accordAMCCode}.png`} alt="" height={40} width={40} className="rounded" />
                         <div className="d-flex flex-column ps-3">
                           <small className="mb-0">{item.scheme}</small>
@@ -258,94 +238,123 @@ const PortfolioReview = () => {
                       </div>
                     </>
                   }) : <p className="logoBlueColor text-center">Loading...</p>}
-
-                  <div className="col text-start fs12px mt-2" onClick={handleInvestMore} ><button type="button" className="btn transactBtn">Invest More</button></div>
-                </div>
-              </div>}
-
-            {/* Redemptione****************************** */}
-            {redemptionList?.length > 0 &&
-              <div className="col-12 bg-white rounded-2 p-2 px-2 my-3">
-                <div className="row px-3 my-3">
-                  <h5>Redemption ({redemptionList.length} funds)</h5>
-                  <div className="col-12 ">
-                    <p className="m-0 fs14px"> Exit these fund and reallocate to better-performing options.</p>
-                  </div>
-                  <hr className="text-danger border-2" />
-                  {redemptionList?.length ? redemptionList.map((item: any, i) => {
-                    return <>
-                      <div className="col-11 p-2 d-flex align-items-start" key={i}>
-                        <img src={`${imageUrl + item.accordAMCCode}.png`} alt="" height={40} width={40} className="rounded" />
-                        <div className="d-flex flex-column ps-3">
-                          <small className="mb-0">{item.scheme}</small>
-                          <small className="fs12px">Folio: {item.folio}</small>
-                        </div>
-                      </div>
-                      <div className="col-1 crPointer" onClick={() => singlRedeem(item)}>
-                        <ChevronRight className="text-secondary" />
-                      </div>
-                    </>
-                  }) : <p className="logoBlueColor text-center">Loading...</p>}
-                  <div className="col text-start fs12px mt-2" onClick={redemptionPerformance}><button type="button" className="btn transactBtn">Redeem All</button></div>
-                </div>
-              </div>}
-
-            {/* Under watch performane****************************** */}
-            {underWatchList?.length > 0 &&
-              <div className="col-12 bg-white rounded-2 p-2 px-2 my-3">
-                <div className="row px-3 my-3">
-                  <h5>Under Watch ({underWatchList.length} funds)</h5>
-                  <div className="col-12">
-                    <p className="m-0 fs14px">Monitor these funds closely for any potential changes.</p>
-                  </div>
-                  <hr className="text-secondary border-2" />
-                  {underWatchList?.length ? underWatchList.map((item: portfolioReviewKeys, i) => {
-                    return <>
-                      <div className="col-11 p-2 d-flex align-items-start crPointer" key={i} onClick={() => handleUnderWatchPerformance(item.accordSchemeCode)}>
-                        <img src={`${imageUrl + item.accordAMCCode}.png`} alt="" height={40} width={40} className="rounded" />
-                        <div className="d-flex flex-column ps-3">
-                          <small className="mb-0">{item.scheme}</small>
-                          <small className="fs12px">Folio: {item.folio}</small>
-                        </div>
-                      </div>
-                      <div className="col-1">
-                        <ChevronRight className="text-secondary" />
-                      </div>
-                    </>
-                  }) : <p className="logoBlueColor text-center">Loading...</p>}
-                </div>
-              </div>}
-          </div>
-          <div className="col-md-4 col-sm-12">
-            <div className="row  bg-white rounded-2 p-3 mt-4">
-              <h5>For detailed analysis of your portfolio please reach out to our expert.</h5>
-              <div className="col-12 d-flex align-items-start">
-                <img src={`${portfolioExpertData?.img}`} alt="" height={50} width={50} className="rounded-circle" />
-                <div className="d-flex flex-column ps-3">
-                  <small className="mb-0">{portfolioExpertData?.name}</small>
-                  <small className="fs14px">{portfolioExpertData?.aum}</small>
-                  <a href={`tel:${portfolioExpertData?.phone}`} className="fs16px logoBlueColor d-block">
-                    <Telephone /> {portfolioExpertData?.phone}
-                  </a>
-
-                  <a href={`mailto:${portfolioExpertData?.email}`} className="fs16px logoBlueColor d-block">
-                    <Envelope /> {portfolioExpertData?.email}
-                  </a>
-
+                  <div className="col text-start fs12px mt-2" onClick={handleBulkSwitch}><button type="button" className="btn transactBtn">Switch All</button></div>
                 </div>
               </div>
-            </div>
-            <div className="d-flex justify-content-center mt-3">
+              {/* } */}
 
-              <button type="button" className="customButton"><Download /> Review Report</button>
+              {/* stisfactory performane****************************** */}
+              {satisfactoryList?.length > 0 &&
+                <div className="col-12 bg-white rounded-2 p-2 px-2 my-3">
+                  <div className="row px-3 my-3">
+                    <h5>Satisfactory Performance ({satisfactoryList.length} funds)</h5>
+                    <div className="col-12">
+                      <p className="m-0 fs14px"> Keep these funds in your portfolio to benefit from their strong performance.</p>
+                    </div>
+                    <hr className="text-success border-2" />
+                    {satisfactoryList?.length ? satisfactoryList.map((item: portfolioReviewKeys, i) => {
+                      return <>
+                        <div className="col-11 p-2  d-flex align-items-start crPointer" key={i} onClick={() => singleInvest(item.accordSchemeCode, setOpenInvestMore)}>
+                          <img src={`${imageUrl + item.accordAMCCode}.png`} alt="" height={40} width={40} className="rounded" />
+                          <div className="d-flex flex-column ps-3">
+                            <small className="mb-0">{item.scheme}</small>
+                            <small className="fs12px">Folio: {item.folio}</small>
+                          </div>
+                        </div>
+                        <div className="col-1">
+                          <ChevronRight className="text-secondary" />
+                        </div>
+                      </>
+                    }) : <p className="logoBlueColor text-center">Loading...</p>}
+
+                    <div className="col text-start fs12px mt-2" onClick={handleInvestMore} ><button type="button" className="btn transactBtn">Invest More</button></div>
+                  </div>
+                </div>}
+
+              {/* Redemptione****************************** */}
+              {redemptionList?.length > 0 &&
+                <div className="col-12 bg-white rounded-2 p-2 px-2 my-3">
+                  <div className="row px-3 my-3">
+                    <h5>Redemption ({redemptionList.length} funds)</h5>
+                    <div className="col-12 ">
+                      <p className="m-0 fs14px"> Exit these fund and reallocate to better-performing options.</p>
+                    </div>
+                    <hr className="text-danger border-2" />
+                    {redemptionList?.length ? redemptionList.map((item: any, i) => {
+                      return <>
+                        <div className="col-11 p-2 d-flex align-items-start crPointer" key={i} onClick={() => singleTransaction(item, setOpenRedumptinPerformance,setRedemptionList)}>
+                          <img src={`${imageUrl + item.accordAMCCode}.png`} alt="" height={40} width={40} className="rounded" />
+                          <div className="d-flex flex-column ps-3">
+                            <small className="mb-0">{item.scheme}</small>
+                            <small className="fs12px">Folio: {item.folio}</small>
+                          </div>
+                        </div>
+                        <div className="col-1 crPointer" >
+                          <ChevronRight className="text-secondary" />
+                        </div>
+                      </>
+                    }) : <p className="logoBlueColor text-center">Loading...</p>}
+                    <div className="col text-start fs12px mt-2" onClick={redemptionPerformance}><button type="button" className="btn transactBtn">Redeem All</button></div>
+                  </div>
+                </div>}
+
+              {/* Under watch performane****************************** */}
+              {underWatchList?.length > 0 &&
+                <div className="col-12 bg-white rounded-2 p-2 px-2 my-3">
+                  <div className="row px-3 my-3">
+                    <h5>Under Watch ({underWatchList.length} funds)</h5>
+                    <div className="col-12">
+                      <p className="m-0 fs14px">Monitor these funds closely for any potential changes.</p>
+                    </div>
+                    <hr className="text-secondary border-2" />
+                    {underWatchList?.length ? underWatchList.map((item: portfolioReviewKeys, i) => {
+                      return <>
+                        <div className="col-11 p-2 d-flex align-items-start crPointer" key={i} onClick={() => singleInvest(item.accordSchemeCode, setOpenUnderwatchModel)}>
+                          <img src={`${imageUrl + item.accordAMCCode}.png`} alt="" height={40} width={40} className="rounded" />
+                          <div className="d-flex flex-column ps-3">
+                            <small className="mb-0">{item.scheme}</small>
+                            <small className="fs12px">Folio: {item.folio}</small>
+                          </div>
+                        </div>
+                        <div className="col-1">
+                          <ChevronRight className="text-secondary" />
+                        </div>
+                      </>
+                    }) : <p className="logoBlueColor text-center">Loading...</p>}
+                  </div>
+                </div>}
             </div>
-          </div></>:<PortfolioEmpty images={emptyImg} title="You Have No Investments Yet" body="Start investing today to build your portfolio and achieve your financial goals." btnName="Explore Funds" btnUrl="/all-mutual-funds"/>}
+            <div className="col-md-4 col-sm-12">
+              <div className="row  bg-white rounded-2 p-3 mt-4">
+                <h5>For detailed analysis of your portfolio please reach out to our expert.</h5>
+                <div className="col-12 d-flex align-items-start">
+                  <img src={`${portfolioExpertData?.img}`} alt="" height={50} width={50} className="rounded-circle" />
+                  <div className="d-flex flex-column ps-3">
+                    <small className="mb-0">{portfolioExpertData?.name}</small>
+                    <small className="fs14px">{portfolioExpertData?.aum}</small>
+                    <a href={`tel:${portfolioExpertData?.phone}`} className="fs16px logoBlueColor d-block">
+                      <Telephone /> {portfolioExpertData?.phone}
+                    </a>
+
+                    <a href={`mailto:${portfolioExpertData?.email}`} className="fs16px logoBlueColor d-block">
+                      <Envelope /> {portfolioExpertData?.email}
+                    </a>
+
+                  </div>
+                </div>
+              </div>
+              <div className="d-flex justify-content-center mt-3">
+
+                <button type="button" className="customButton"><Download /> Review Report</button>
+              </div>
+            </div></> : <PortfolioEmpty images={emptyImg} title="No investments yet" body=" Every goal needs a starting point
+                       make your first investment today!" btnName="Build My Portfolio" btnUrl="/all-mutual-funds" />}
         </div>
-       
+
       </div>
-      <InvestMoreScheme show={openInvestMore} setShow={setOpenInvestMore} productCodes={productCodes} />
-      <SwitchFund show={openSwitchFund} setShow={setOpenSwitchFund} productCodes={productCodes} switchSchemeList={switchList} number={portfolioExpertData?.phone??""}/>
-      <RedemptionPerformance show={openRedumptinPerformance} setShow={setOpenRedumptinPerformance} productCodes={productCodes} redemptionList={redemptionList} number={portfolioExpertData?.phone??""}/>
+      <InvestMoreScheme show={openInvestMore} setShow={setOpenInvestMore} productCodes={productCodes} number={portfolioExpertData?.phone ?? ""} />
+      <SwitchFund show={openSwitchFund} setShow={setOpenSwitchFund} productCodes={productCodes} switchSchemeList={switchList} number={portfolioExpertData?.phone ?? ""} />
+      <RedemptionPerformance show={openRedumptinPerformance} setShow={setOpenRedumptinPerformance} productCodes={productCodes} redemptionList={redemptionList} number={portfolioExpertData?.phone ?? ""} />
       <UnderWatchPerformance show={openUnderwatchModel} setShow={setOpenUnderwatchModel} productCodes={productCodes} />
     </>
   );
