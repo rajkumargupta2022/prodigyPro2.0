@@ -2,7 +2,7 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { useEffect, useState } from 'react';
 import { endPoints, imageUrl } from '../services/utils/urls';
-import {  schemeSummaryKeys, schemeSummaryRes } from '../pages/data-interfaces/portfolio';
+import { schemeSummaryKeys, schemeSummaryRes } from '../pages/data-interfaces/portfolio';
 import { postRequest } from '../services/Api/HandleApi';
 import { fetchAdminUser } from '../services/user/adminUser';
 import { ChevronRight } from 'react-bootstrap-icons';
@@ -27,7 +27,9 @@ const InvestMoreScheme: React.FC<InvestMoreScheme> = ({ show, setShow, productCo
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   useEffect(() => {
-    fetchPerformanceScheme();
+    if(productCodes.length>0){
+      fetchPerformanceScheme();
+    }
   }, [productCodes]);
 
   const fetchPerformanceScheme = async () => {
@@ -167,55 +169,53 @@ const InvestMoreScheme: React.FC<InvestMoreScheme> = ({ show, setShow, productCo
                 >
                   <div className="row">
                     <div className="col-5 d-flex justify-content-end">
-                      <p className='fs12px my-1'>IDEAL INVEST. HORIZEN</p>
+                      <p className='fs12px my-1'>IDEAL INVESTMENT PERIOD</p>
                     </div>
                     <div className="col-7 d-flex justify-content-end">
                       <p className='fs12px my-1 text-dark'>{item.ideal_investment_period} Years</p>
                     </div>
-
-                    <div className="col-5 d-flex justify-content-end mb-0">
-                      <p className='fs12px my-1'>FUND RETURN</p>
-                    </div>
-                    <div className="col-5 progress sqrBar mb-0 bg-white">
-                      <div className="progress-bar logobg_color " style={{ width: (item.fund_returns ?? 0) + "%" }}></div>
-                    </div>
-                    <div className="col-2 d-flex justify-content-end ">
-                      <p className='fs12px my-1 text-dark'>{item.fund_returns ?? 0}%</p>
-                    </div>
-
-                    <div className="col-5 d-flex justify-content-end ">
-                      <p className='fs12px my-1'>BENCHMARK RETURN</p>
-                    </div>
-                    <div className="col-5 progress sqrBar bg-white mb-0">
-                      <div className="progress-bar orangeBg " style={{ width: ((item.benchmark_returns ?? 0) + "%") }}></div>
-                    </div>
-                    <div className="col-2 d-flex justify-content-end ">
-                      <p className='fs12px my-1 text-dark'>{item.benchmark_returns ?? 0}%</p>
-                    </div>
-
-                    <div className="col-5 d-flex justify-content-end bg-white ">
-                      <p className='fs12px my-1'>CATEGORY RETURN</p>
-                    </div>
-                    <div className="col-5 progress sqrBar bg-white mb-0">
-                      <div className="progress-bar orangeBg " style={{ width: (item.category_returns ?? 0) + "%" }}></div>
-                    </div>
-                    <div className="col-2 d-flex justify-content-end">
-                      <p className='fs12px my-1 text-dark'>{item.category_returns ?? 0}%</p>
-                    </div>
-
+                    {item.fund_returns && <>
+                      <div className="col-5 d-flex justify-content-end mb-0">
+                        <p className='fs12px my-1'>FUND 5Y CAGR</p>
+                      </div>
+                      <div className="col-5 progress sqrBar mb-0 bg-white">
+                        <div className="progress-bar logobg_color " style={{ width: (item.fund_returns ?? 0) + "%" }}></div>
+                      </div>
+                      <div className="col-2 d-flex justify-content-end ">
+                        <p className='fs12px my-1 text-dark'>{item.fund_returns ?? 0}%</p>
+                      </div>
+                    </>}
+                    {item.benchmark_returns && <>
+                      <div className="col-5 d-flex justify-content-end ">
+                        <p className='fs12px my-1'>BENCHMARK 5Y CAGR</p>
+                      </div>
+                      <div className="col-5 progress sqrBar bg-white mb-0">
+                        <div className="progress-bar orangeBg " style={{ width: ((item.benchmark_returns ?? 0) + "%") }}></div>
+                      </div>
+                      <div className="col-2 d-flex justify-content-end ">
+                        <p className='fs12px my-1 text-dark'>{item.benchmark_returns ?? 0}%</p>
+                      </div>
+                    </>}
+                    {item.category_returns && <>
+                      <div className="col-5 d-flex justify-content-end bg-white ">
+                        <p className='fs12px my-1'>CATEGORY 5Y CAGR</p>
+                      </div>
+                      <div className="col-5 progress sqrBar bg-white mb-0">
+                        <div className="progress-bar orangeBg " style={{ width: (item.category_returns ?? 0) + "%" }}></div>
+                      </div>
+                      <div className="col-2 d-flex justify-content-end">
+                        <p className='fs12px my-1 text-dark'>{item.category_returns ?? 0}%</p>
+                      </div>
+                    </>}
+                    {item.negative_observations&&<>
                     <div className="col-5 d-flex justify-content-end">
                       <p className='fs12px my-1'>NEGATIVE OBSERVATIONS</p>
                     </div>
                     <div className="col-7 d-flex justify-content-end">
                       <p className='fs12px my-1 text-dark'>{item.negative_observations ?? 0}</p>
                     </div>
-
-                    <div className="col-5 d-flex justify-content-end">
-                      <p className='fs12px my-1'>NOTE</p>
-                    </div>
-                    <div className="col-7 d-flex justify-content-end">
-                      <p className='fs12px my-1 text-dark'>{item.short_note}</p>
-                    </div>
+</>}
+                   
                   </div>
                 </div>
               </div>

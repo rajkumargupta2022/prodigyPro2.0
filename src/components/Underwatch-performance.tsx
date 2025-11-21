@@ -20,11 +20,12 @@ interface UnderWatchPerformance {
 
 const UnderWatchPerformance: React.FC<UnderWatchPerformance> = ({ show, setShow, productCodes }) => {
   const [schemeList, setSchemeList] = useState<schemeSummaryKeys[]>([]);
-  const [openMsgModel , setOpenMsgModel] = useState<boolean>(false)
   const navigate = useNavigate()
 
   useEffect(() => {
-    fetchPerformanceScheme();
+    if (productCodes.length > 0) {
+      fetchPerformanceScheme();
+    }
   }, [productCodes]);
 
   const fetchPerformanceScheme = async () => {
@@ -69,7 +70,7 @@ const UnderWatchPerformance: React.FC<UnderWatchPerformance> = ({ show, setShow,
         <Modal.Body className='modal-bg'>
 
           <div className="col-12 d-flex justify-content-end">
-           <PortfolioNotes  portfolioType={"undwerwatch"}/>
+            <PortfolioNotes portfolioType={"undwerwatch"} />
 
           </div>
           {schemeList.map((item, index) => {
@@ -105,12 +106,13 @@ const UnderWatchPerformance: React.FC<UnderWatchPerformance> = ({ show, setShow,
                   className={`performance-panel collapse-anim open`}
                 >
                   <div className="row">
+                    {item.ideal_investment_period&&<>
                     <div className="col-5 d-flex justify-content-end">
                       <p className='fs12px my-1'>COMPARISON PERIOD</p>
                     </div>
                     <div className="col-7 d-flex justify-content-end">
                       <p className='fs12px my-1 text-dark'>{item.ideal_investment_period} Years</p>
-                    </div>
+                    </div></>}
                     {item?.fund_returns && <>
                       <div className="col-5 d-flex justify-content-end mb-0">
                         <p className='fs12px my-1'>FUND 5Y CAGR</p>

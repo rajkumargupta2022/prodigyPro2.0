@@ -92,6 +92,14 @@ span{
   height: 33px;
   font-size: 12px;
 }
+.customButtonNoBg {
+  color: #011EFE;
+  background-color: #fff !important;
+  border-radius: 9px;
+  border-color: #011EFE;
+  height: 33px;
+  font-size: 12px;
+}
 
 .customButton:hover {
   color: #FFF;

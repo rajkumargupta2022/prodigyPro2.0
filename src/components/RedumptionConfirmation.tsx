@@ -3,14 +3,13 @@ import Modal from 'react-bootstrap/Modal';
 import { useEffect, useState } from 'react';
 import OrderPlaces from './order-places';
 import RedumptionForm from './RedumptionForm';
-import { detailPortfolioSchemeType } from '../pages/data-interfaces/portfolio';
 import { redeemTransaction } from '../services/utils/transactionApi';
 import { errorToast } from '../services/utils/toast';
 import { checkIsSIFScheme } from '../services/utils/services';
 interface investmetProps {
   show: boolean;
   setShow: (show: boolean) => void;
-  redeemList: detailPortfolioSchemeType[],
+  redeemList: any[],
   setRedeemList: (date: any) => void;
 }
 
@@ -55,7 +54,7 @@ const RedumptionConfirmation: React.FC<investmetProps> = ({ show, setShow, redee
       }
     }
 
-    redeemTransaction(selectedList, "redemption", setSuccessData).then((res) => {
+    redeemTransaction(finalData, "redemption", setSuccessData).then((res) => {
       console.log(res);
 
       setOpenSuccess(true)

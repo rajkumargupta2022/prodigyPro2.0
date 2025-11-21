@@ -36,7 +36,7 @@ const RedumptionForm: React.FC<investmetProps> = ({ redeemList, setRedeemList, s
     }
     else {
 
-      console.log("value4444", selectedList)
+      console.log("handleAmonut", selectedList)
       setRedeemList?.((prev: any) =>
         prev.map((item: detailPortfolioSchemeType, i: number) => {
           if (i !== index) return item;
@@ -49,6 +49,7 @@ const RedumptionForm: React.FC<investmetProps> = ({ redeemList, setRedeemList, s
             console.log("value8888", item.redemption_units, item.all_units)
             return {
               ...item,
+              
               amount: item.isRedeemAmount ? value : 0,
               redemption_units: item.isRedeemAmount ? 0 : value,
               all_units: false,
@@ -74,8 +75,7 @@ const RedumptionForm: React.FC<investmetProps> = ({ redeemList, setRedeemList, s
 
   };
   const handleRedemptionType = (value: boolean, allUnit: number, index: number) => {
-    console.log("sdsdd", selectedList);
-
+   
     setRedeemList?.((prev: any) =>
       prev.map((item: any, i: number) =>
         i === index ? { ...item, redemption_units: !value ? allUnit : 0, all_units: !value, amount: 0, isRedeemAmount: value } : item
@@ -87,14 +87,13 @@ const RedumptionForm: React.FC<investmetProps> = ({ redeemList, setRedeemList, s
     index: number
   ) => {
     const checked = e.target.checked;
-    console.log(checked);
 
     setRedeemList?.((prev: any) =>
       prev.map((item: detailPortfolioSchemeType, i: number) =>
         i === index
           ? {
             ...item,
-            amount: checked ? 0 : item.amount,
+            amount: checked ? 0 : item?.currentvalue,
             redemption_units: checked ? item.unit : 0,
             all_units: checked,
           }

@@ -51,12 +51,7 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
   const [dateErrorMsg, setDateErrorMsg] = useState<string>("")
   const [minimumDate, setMinimumDate] = useState<Date>()
   const [foliosFetched, setFoliosFetched] = useState(false);
-  const [addAmountValues, setAddAmountValues] = useState<addAmountKeys>({
-    min: 1000,
-    first: 2000,
-    second: 3000,
-    third: 5000
-  })
+
   useEffect(() => {
     fetchFolios()
     defaultTransactionType()
@@ -98,11 +93,11 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
     if (foliosFetched) {
 
       if (schemeList[0]?.totalAmount) {
-        distributeAmount(Number(schemeList[0]?.totalAmount))
+        // distributeAmount(Number(schemeList[0]?.totalAmount))
         setAmount(Number(schemeList[0]?.totalAmount))
         setIsLumpsumTransaction(false)
-      } else {
         handleMinAmount(true);
+      } else {
       }
       setFoliosFetched(false);
     }
@@ -113,22 +108,12 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
     if(isSipTransaction){
  let data = checkTransactionAllowed(schemeList, keys.sip) ? true : false
     if (!data) {
-      setAddAmountValues({
-        min: 5000,
-        first: 10000,
-        second: 15000,
-        third: 25000
-      })
+     
       setAmount(5000);
       distributeAmount(5000);
     } else {
       setIsSipTransaction(data)
-      setAddAmountValues({
-        min: 1000,
-        first: 2000,
-        second: 3000,
-        third: 5000
-      })
+      
       setAmount(1000);
       distributeAmount(1000);
     }
@@ -250,20 +235,10 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
   const handleTransactionType = (type: boolean) => {
     setIsSipTransaction(type)
     if (type) {
-      setAddAmountValues({
-        min: 1000,
-        first: 2000,
-        second: 3000,
-        third: 5000
-      })
+  
       setAmount(1000)
     } else {
-      setAddAmountValues({
-        min: 5000,
-        first: 10000,
-        second: 15000,
-        third: 25000
-      })
+     
       setAmount(5000)
     }
     handleMinAmount(type)
@@ -360,9 +335,9 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
       return {
         ...scheme,
         minSIPAmt: hasFolioOrSIF ? minSip : 0,
-        minLumSumAmt: hasFolioOrSIF ? 10000 : 1000000,
+        minLumSumAmt: hasFolioOrSIF ? minLump : 1000000,
         // keep amount consistent with chosen transaction type
-        amount: hasFolioOrSIF ? (type ? minSip : 10000) : 1000000,
+        amount: hasFolioOrSIF ? (type ? minSip : minLump) : 1000000,
         start_date: daysAdded(30, sipDateList),
       } as any;
     } else {
@@ -559,7 +534,7 @@ const fetchFolioFOrSIF = async (product_code: number): Promise<boolean> => {
                   className="circle-checkbox textColor"
                   onChange={handleSipDeduction}
                   checked={schemeList[0]?.firstSIPToday ?? true}
-                  label="First instalment will be deducted today."
+                  label="First instalment will be deducted T+2 days."
                   name="Sip deduction"
                 />
               </div>}

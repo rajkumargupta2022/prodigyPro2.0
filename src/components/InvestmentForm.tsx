@@ -333,7 +333,7 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
               className="circle-checkbox textColor"
               onChange={handleSipDeduction}
               checked={schemeList[0]?.firstSIPToday ?? true}
-              label="First instalment will be deducted today."
+              label="First instalment will be deducted T+2 days."
               name="Sip deduction"
             />
           </div>}

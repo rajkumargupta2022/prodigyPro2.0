@@ -7,34 +7,31 @@ import { getRequest, postRequest } from "../services/Api/HandleApi";
 import { endPoints, imageUrl } from "../services/utils/urls";
 import { portfolioReviewKeys, portfolioReviewRes, summaryInsideKeys, portfolioSummaryRes, portfolioExpertRes, portfolioExpertKeys, detailPortfolioSchemeType, schemeSummaryKeys } from "./data-interfaces/portfolio";
 import { getPercentageValue, getValueInSort } from "../services/calculation/percentageCalculate";
-import RedumptionConfirmation from "../components/RedumptionConfirmation";
 import InvestMoreScheme from "../components/Invest-more-scheme";
 import UnderWatchPerformance from "../components/Underwatch-performance";
+import RedemptionPerformance from "../components/Redemption-performance";
+import { analytics } from "../services/utils/eventsKeys";
+import PortfolioEmpty from "./PortfolioEmpty";
+import emptyImg from "../assets/img/empty-img.svg"
 
 const PortfolioReview = () => {
   const [openSwitchFund, setOpenSwitchFund] = useState<boolean>(false)
   const [satisfactoryList, setSatisfactoryList] = useState<portfolioReviewKeys[]>([])
   const [underWatchList, setUnderWatchList] = useState<portfolioReviewKeys[]>([])
-  const [redemptionList, setRedemptionList] = useState<detailPortfolioSchemeType[]>([])
+  const [redemptionList, setRedemptionList] = useState<portfolioReviewKeys[]>([])
   const [switchList, setSwitchList] = useState<portfolioReviewKeys[]>([])
   const [portfolioSummaryList, setPortfolioSummaryList] = useState<summaryInsideKeys[]>([])
   const [totolInvested, setTotalInvested] = useState<number>(0)
   const [portfolioExpertData, setPortfolioExpertData] = useState<portfolioExpertKeys | null>()
-  const [openRedumptionModel, setOpenRedumptionModel] = useState<boolean>(false)
+  const [openRedumptinPerformance, setOpenRedumptinPerformance] = useState<boolean>(false)
   const [openUnderwatchModel, setOpenUnderwatchModel] = useState<boolean>(false)
   const [openInvestMore, setOpenInvestMore] = useState<boolean>(false)
   const [productCodes, setProductCodes] = useState<number[]>([])
 
-  const handleRedemptionFund = () => {
-    setOpenRedumptionModel(true)
-  }
+
   useEffect(() => {
-    fetchSatisfactorySchemes()
-    fetchUnderWatchSchemes()
-    fetchRedemptionSchemes()
-    fetchSwitchSchemes()
+
     fetchSchemePerformance()
-    fetchPortfolioExpert()
   }, [])
 
   const fetchPortfolioExpert = async () => {
@@ -58,6 +55,12 @@ const PortfolioReview = () => {
         if (res.success) {
           setPortfolioSummaryList(res.data?.performance_summary)
           setTotalInvested(res.data?.total)
+          fetchSatisfactorySchemes()
+          fetchUnderWatchSchemes()
+          fetchRedemptionSchemes()
+          fetchSwitchSchemes()
+          fetchPortfolioExpert()
+
         } else {
           setPortfolioSummaryList([])
         }
@@ -77,22 +80,7 @@ const PortfolioReview = () => {
         const res = await postRequest<any>(endPoints.getSatisfactoryPerformanceSchemes, reqBody)
         if (res.success) {
           setSatisfactoryList(res.data)
-          let products = res.data.map((item: any) => {
-            return item.accordSchemeCode
-          })
-          console.log("dddd", products);
 
-          setProductCodes(products)
-          setRedemptionList(res.data.map((item: any) => (
-            {
-              ...item,
-              redemption_units: item.unit,
-              amount: 0,
-              all_units: true,
-              isRedeemAmount: false,
-              id: crypto.randomUUID()
-            }
-          )))
         } else {
           setSatisfactoryList([])
         }
@@ -129,16 +117,7 @@ const PortfolioReview = () => {
         }
         const res = await postRequest<portfolioReviewRes>(endPoints.getRedemptionRecommendedSchemes, reqBody)
         if (res.success) {
-           setRedemptionList(res.data.map((item: any) => (
-            {
-              ...item,
-              redemption_units: item.unit,
-              amount: 0,
-              all_units: true,
-              isRedeemAmount: false,
-              id: crypto.randomUUID()
-            }
-          )))
+          setRedemptionList(res.data)
         } else {
           setRedemptionList([])
         }
@@ -168,14 +147,14 @@ const PortfolioReview = () => {
 
   const singlRedeem = (item: any) => {
     setRedemptionList([item])
-    setOpenRedumptionModel(true)
+    // setOpenRedumptionModel(true)
   }
   const handleInvestMore = () => {
     let products = satisfactoryList.map((item: any) => {
       return item.accordSchemeCode
     })
     setProductCodes(products)
-
+    analytics.track("invest_more_btn")
     setOpenInvestMore(true)
 
   }
@@ -188,17 +167,26 @@ const PortfolioReview = () => {
     const uniqueProducts = Array.from(products);
     setProductCodes(uniqueProducts)
     setOpenSwitchFund(true)
+    analytics.track("bulk_scheme_switch_btn")
   }
   const handleUnderWatchPerformance = (product: number) => {
     setProductCodes([product])
     setOpenUnderwatchModel(true)
   }
-
+  const redemptionPerformance = () => {
+    let products = redemptionList.map((item: any) => {
+      return item.accordSchemeCode
+    })
+    analytics.track("redeem_scheme_btn")
+    setProductCodes(products)
+    setOpenRedumptinPerformance(true)
+  }
   return (
     <>
       <NavBar />
       <div className="container px-4 mt-3" >
         <div className="row">
+          {portfolioSummaryList?.length> 0?<>
           <div className="col-12 d-flex align-items-start">
             <h4>Portfolio Review</h4>
           </div>
@@ -298,7 +286,7 @@ const PortfolioReview = () => {
                       </div>
                     </>
                   }) : <p className="logoBlueColor text-center">Loading...</p>}
-                  <div className="col text-start fs12px mt-2" onClick={handleRedemptionFund}><button type="button" className="btn transactBtn">Redeem All</button></div>
+                  <div className="col text-start fs12px mt-2" onClick={redemptionPerformance}><button type="button" className="btn transactBtn">Redeem All</button></div>
                 </div>
               </div>}
 
@@ -351,12 +339,13 @@ const PortfolioReview = () => {
 
               <button type="button" className="customButton"><Download /> Review Report</button>
             </div>
-          </div>
+          </div></>:<PortfolioEmpty images={emptyImg} title="You Have No Investments Yet" body="Start investing today to build your portfolio and achieve your financial goals." btnName="Explore Funds" btnUrl="/all-mutual-funds"/>}
         </div>
+       
       </div>
       <InvestMoreScheme show={openInvestMore} setShow={setOpenInvestMore} productCodes={productCodes} />
-      <SwitchFund show={openSwitchFund} setShow={setOpenSwitchFund} productCodes={productCodes} switchSchemeList={switchList} />
-      <RedumptionConfirmation show={openRedumptionModel} setShow={setOpenRedumptionModel} redeemList={redemptionList} setRedeemList={setRedemptionList} />
+      <SwitchFund show={openSwitchFund} setShow={setOpenSwitchFund} productCodes={productCodes} switchSchemeList={switchList} number={portfolioExpertData?.phone??""}/>
+      <RedemptionPerformance show={openRedumptinPerformance} setShow={setOpenRedumptinPerformance} productCodes={productCodes} redemptionList={redemptionList} number={portfolioExpertData?.phone??""}/>
       <UnderWatchPerformance show={openUnderwatchModel} setShow={setOpenUnderwatchModel} productCodes={productCodes} />
     </>
   );

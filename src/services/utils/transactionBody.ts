@@ -43,7 +43,8 @@ export const redeemFilterBody = (redeemList: detailPortfolioSchemeType[]) => {
       accordProductCode: item.accordSchemeCode,
       amount: Math.round(Number(item.amount))??0,
       redemption_units:item.redemption_units??0,
-      all_units: item.redemption_units??0===Number(item.unit) ? true:false,
+      all_units: item.all_units??false,
+      // all_units: (item.redemption_units??0)===Number(item.unit) ? true:false,
       folioNumber: item?.folio,
       schemeName: item?.scheme,
     }));

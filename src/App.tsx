@@ -85,7 +85,6 @@ import RedemptionDetails from "./pages/orders/RedemptionDetails";
 import SwpInstallmentDetails from "./pages/orders/SwpInstallmentDetails";
 import TransactionHistory from "./pages/orders/TransactionHistory";
 
-
 const LoaderHandler = () => {
   const { showLoader, hideLoader } = useLoader();
 
