@@ -2,27 +2,37 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { useEffect, useState } from 'react';
 import { endPoints, imageUrl } from '../services/utils/urls';
-import { schemeSummaryKeys, schemeSummaryRes } from '../pages/data-interfaces/portfolio';
+import {
+  portfolioReviewKeys,
+  schemeSummaryKeys,
+  schemeSummaryRes
+} from '../pages/data-interfaces/portfolio';
 import { postRequest } from '../services/Api/HandleApi';
 import { fetchAdminUser } from '../services/user/adminUser';
 import { ChevronRight } from 'react-bootstrap-icons';
-import SchemePerformanceGraph from './Scheme-performance-graph';
 import InvetmentConfirmation from './InvestmentConfirmation';
 import PortfolioNotes from './PortfolioNotes';
 import DirectSchemeNote from './DirectSchemeNote';
-// import SwitchConfirmation from './SwitchConfirmation';
+import { filterDirectScheme, filterDirectSchemeForInvest } from '../services/utils/services';
 
 interface InvestMoreScheme {
   show: boolean;
   setShow: (show: boolean) => void;
   productCodes: number[];
-  number:string
+  satisfactorySchemeList?: portfolioReviewKeys[];
+  number: string;
 }
 
-const InvestMoreScheme: React.FC<InvestMoreScheme> = ({ show, setShow, productCodes ,number}) => {
+const InvestMoreScheme: React.FC<InvestMoreScheme> = ({
+  show,
+  setShow,
+  productCodes,
+  satisfactorySchemeList,
+  number
+}) => {
   const [schemeList, setSchemeList] = useState<schemeSummaryKeys[]>([]);
   const [selectedSchemeList, setSelectedSchemeList] = useState<schemeSummaryKeys[]>([]);
-  const [openSchemePerformanceGraph, setOpenSchemePerformanceGraph] = useState<boolean>(false);
+
   const [openInvestMore, setOpenInvestMore] = useState<boolean>(false);
   const [sipDateList, setSipDateList] = useState<number[]>([]);
   const [openDirectNoteModel, setOpenDirectNoteModel] = useState<boolean>(false);
@@ -30,9 +40,13 @@ const InvestMoreScheme: React.FC<InvestMoreScheme> = ({ show, setShow, productCo
   // openIndex will store the index of the currently expanded scheme (or null)
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
+  // 👉 If there are 2 or fewer schemes, keep all performance panels open
+  const openAll = schemeList.length <= 2;
+
   useEffect(() => {
     if (productCodes.length > 0) {
       fetchPerformanceScheme();
+
     }
   }, [productCodes]);
 
@@ -45,18 +59,29 @@ const InvestMoreScheme: React.FC<InvestMoreScheme> = ({ show, setShow, productCo
         return;
       }
 
-      const reqBody = { product_codes: [...productCodes, 48933, 37471] };
-      const res = await postRequest<schemeSummaryRes>(endPoints.getSchemesPerformance, reqBody);
+      const reqBody = { product_codes: productCodes };
+      const res = await postRequest<schemeSummaryRes>(
+        endPoints.getSchemesPerformance,
+        reqBody
+      );
 
       if (!res.success) {
         setSchemeList([]);
         setSelectedSchemeList([]);
         return;
       }
-      const total = res.data.reduce((sum, item) => sum + Number(item.min_sip_amount), 0);
+
+      const total = res.data.reduce(
+        (sum, item) => sum + Number(item.min_sip_amount),
+        0
+      );
+
       const transformed = res.data.map((item: schemeSummaryKeys) => {
         // ensure numeric values for arithmetic
         const minSIP = Number(item.min_sip_amount ?? 0);
+        const match = satisfactorySchemeList?.find(
+          (s: any) => s.accordSchemeCode === item.accordProductCode
+        );
 
         return {
           ...item,
@@ -67,18 +92,18 @@ const InvestMoreScheme: React.FC<InvestMoreScheme> = ({ show, setShow, productCo
           sipAllowed: item.sip_allowed,
           sipDateList: item.sip_dates,
           purchaseAllowed: item.purchase_allowed,
-          totalAmount: total
+          totalAmount: total,
+          folio: match?.folio ?? ''
         };
       });
 
-      console.log("transformed data", transformed);
       setSchemeList(transformed);
+
       const filtered = transformed.filter((item: any) => {
-        return !item.scheme.toLowerCase().includes("direct")
-      })
+        return !item.scheme.toLowerCase().includes('direct');
+      });
       setSelectedSchemeList(filtered);
       handleSipIntersection(filtered);
-
     } catch (err) {
       console.error(err);
       setSchemeList([]);
@@ -86,54 +111,59 @@ const InvestMoreScheme: React.FC<InvestMoreScheme> = ({ show, setShow, productCo
     }
   };
 
-
   const handleSipIntersection = (data: schemeSummaryKeys[]) => {
-    const sipIntersectionData = data?.map(scheme => scheme.sipDateList)
-      .reduce((acc, curr) => acc.filter(date => curr.includes(date)))
-    setSipDateList(sipIntersectionData)
-
-  }
+    const sipIntersectionData = data
+      ?.map((scheme) => scheme.sipDateList)
+      .reduce((acc, curr) => acc.filter((date) => curr.includes(date)));
+    setSipDateList(sipIntersectionData);
+  };
 
   const handleSelectedScheme = (item: schemeSummaryKeys) => {
-
-    if (!item?.scheme?.toLowerCase().includes("direct")) {
-      setSelectedSchemeList(prev => {
-        const alreadySelected = prev.find(scheme => scheme.accordProductCode === item.accordProductCode);
+    if (!item?.scheme?.toLowerCase().includes('direct')) {
+      setSelectedSchemeList((prev) => {
+        const alreadySelected = prev.find(
+          (scheme) => scheme.accordProductCode === item.accordProductCode
+        );
         if (alreadySelected) {
-          return prev.filter(scheme => scheme.accordProductCode !== item.accordProductCode);
+          return prev.filter(
+            (scheme) => scheme.accordProductCode !== item.accordProductCode
+          );
         } else {
           return [...prev, item];
         }
       });
     }
-
   };
 
-  // toggles the panel for a specific index; only one open at a time
+  // toggles the panel for a specific index; only one open at a time (when not openAll)
   const toggleAtIndex = (index: number) => {
-    setOpenIndex(prev => (prev === index ? null : index));
+    if (openAll) return; // 👉 do nothing when all must stay open
+    setOpenIndex((prev) => (prev === index ? null : index));
   };
+
   const handleInvestMore = () => {
-     const hasDirect = selectedSchemeList.some(item =>
-      item?.scheme?.toLowerCase()?.includes("direct")
+    const hasDirect = selectedSchemeList.some((item) =>
+      item?.scheme?.toLowerCase()?.includes('direct')
     );
+    setSelectedSchemeList(filterDirectSchemeForInvest(selectedSchemeList));
     if (hasDirect) {
-      setOpenDirectNoteModel(true)
-    }else{
-    setOpenInvestMore(true)
-    setShow(false)
+      setOpenDirectNoteModel(true);
+    } else {
+      setOpenInvestMore(true);
+      setShow(false);
     }
-    
-  }
-   const removeDirectScheme = (type:string)=>{
-    if(type==="RM"){
-      window.location.href = `tel:${(number??"")}`
-         setShow(false)
-    }else{
-    setOpenInvestMore(true)
-    setShow(false)
+  };
+
+  const removeDirectScheme = (type: string) => {
+    if (type === 'RM') {
+      window.location.href = `tel:${number ?? ''}`;
+      setShow(false);
+    } else {
+      setOpenInvestMore(true);
+      setShow(false);
     }
-  }
+  };
+
   return (
     <>
       <Modal
@@ -142,36 +172,49 @@ const InvestMoreScheme: React.FC<InvestMoreScheme> = ({ show, setShow, productCo
         backdrop="static"
         keyboard={false}
       >
-        <Modal.Header closeButton className='modal-bg'>
+        <Modal.Header closeButton className="modal-bg">
           <Modal.Title>Invest More</Modal.Title>
         </Modal.Header>
-        <Modal.Body className='modal-bg'>
-          <PortfolioNotes portfolioType='satisfactory_performance' />
+        <Modal.Body className="modal-bg">
+          <PortfolioNotes portfolioType="satisfactory_performance" />
+
           {schemeList.map((item, index) => {
-            const isChecked = selectedSchemeList?.some(scheme => scheme?.accordProductCode === item.accordProductCode);
+            const isChecked = selectedSchemeList?.some(
+              (scheme) => scheme?.accordProductCode === item.accordProductCode
+            );
             const panelId = `performance-panel-${item.accordProductCode ?? index}`;
             const checkboxId = `checkbox-${item.accordProductCode ?? index}`;
+            const idDirect = !item?.scheme?.toLowerCase().includes('direct');
+
+            const isPanelOpen = openAll || openIndex === index;
 
             return (
-              <div className="bg-white px-4 my-2 rounded form_shadow" key={item.accordProductCode ?? index}>
-                {/* Row click toggles ONLY this panel */}
+              <div
+                className="bg-white my-2 rounded-4 form_shadow"
+                key={item.accordProductCode ?? index}
+              >
+                {/* Row click toggles ONLY this panel (unless openAll) */}
                 <div
-                  className="row borderColor py-2 crPointer"
-                  onClick={() => toggleAtIndex(index)}
+                  className="row borderColor py-2 px-4 crPointer"
+                  onClick={() => {
+                    if (!openAll) toggleAtIndex(index);
+                  }}
                 >
-                  <div className="round col-11" >
-                    {!item?.scheme?.toLowerCase().includes("direct") && <>
-                      <input
-                        type="checkbox"
-                        id={checkboxId}
-                        checked={!!isChecked}
-                        // Stop row toggle when clicking checkbox
-                        onClick={(e) => e.stopPropagation()}
-                        onChange={() => handleSelectedScheme(item)}
-                      />
-                      <label htmlFor={checkboxId}></label>
-                    </>
-                    }
+                  <div className="round col-11">
+                    {idDirect && (
+                      <>
+                        <input
+                          type="checkbox"
+                          id={checkboxId}
+                          checked={!!isChecked}
+                          // Stop row toggle when clicking checkbox
+                          onClick={(e) => e.stopPropagation()}
+                          onChange={() => handleSelectedScheme(item)}
+                        />
+                        <label htmlFor={checkboxId}></label>
+                      </>
+                    )}
+
                     <img
                       src={`${imageUrl + item?.accordAmcCode}.png`}
                       className="rounded"
@@ -179,96 +222,165 @@ const InvestMoreScheme: React.FC<InvestMoreScheme> = ({ show, setShow, productCo
                       width={30}
                       alt=""
                     />
-                    <small className="mx-2">{item.scheme}</small>
+                    <div className="">
+                      <small className="mx-2">{item.scheme}</small>
+                      <p className="fs12px my-0 mx-2">
+                        Folio: {item.folio ?? 'NA'}
+                      </p>
+                    </div>
                   </div>
 
                   <div
                     className="col-1 adjustText pb-2 crPointer text-end"
-                    // prevent the chevron click from bubbling (optional)
-                    onClick={(e) => { e.stopPropagation(); toggleAtIndex(index); }}
+                    // prevent the chevron click from bubbling
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (!openAll) toggleAtIndex(index);
+                    }}
                   >
-                    <ChevronRight />
+                    <ChevronRight
+                      style={{
+                        transform: isPanelOpen ? 'rotate(90deg)' : 'rotate(0deg)',
+                        transition: 'transform 0.2s'
+                      }}
+                    />
                   </div>
                 </div>
 
-                {/* Panel: only open if this index === openIndex */}
+                {/* Panel: open if openAll or this index === openIndex */}
                 <div
                   id={panelId}
-                  className={`performance-panel collapse-anim ${openIndex === index ? "open" : ""}`}
+                  className={`performance-panel collapse-anim ${
+                    isPanelOpen ? 'open' : ''
+                  }`}
                 >
-                  <div className="row">
-                    {item.ideal_investment_period && <>
-                      <div className="col-5 d-flex justify-content-end">
-                        <p className='fs12px my-1'>IDEAL INVESTMENT PERIOD</p>
-                      </div>
-                      <div className="col-7 d-flex justify-content-end">
-                        <p className='fs12px my-1 text-dark'>{item.ideal_investment_period} Years</p>
-                      </div></>}
-                    {item.fund_returns && <>
-                      <div className="col-5 d-flex justify-content-end mb-0">
-                        <p className='fs12px my-1'>FUND 5Y CAGR</p>
-                      </div>
-                      <div className="col-5 progress sqrBar mb-0 bg-white">
-                        <div className="progress-bar logobg_color " style={{ width: (item.fund_returns ?? 0) + "%" }}></div>
-                      </div>
-                      <div className="col-2 d-flex justify-content-end ">
-                        <p className='fs12px my-1 text-dark'>{item.fund_returns ?? 0}%</p>
-                      </div>
-                    </>}
-                    {item.benchmark_returns && <>
-                      <div className="col-5 d-flex justify-content-end ">
-                        <p className='fs12px my-1'>BENCHMARK 5Y CAGR</p>
-                      </div>
-                      <div className="col-5 progress sqrBar bg-white mb-0">
-                        <div className="progress-bar orangeBg " style={{ width: ((item.benchmark_returns ?? 0) + "%") }}></div>
-                      </div>
-                      <div className="col-2 d-flex justify-content-end ">
-                        <p className='fs12px my-1 text-dark'>{item.benchmark_returns ?? 0}%</p>
-                      </div>
-                    </>}
-                    {item.category_returns && <>
-                      <div className="col-5 d-flex justify-content-end bg-white ">
-                        <p className='fs12px my-1'>CATEGORY 5Y CAGR</p>
-                      </div>
-                      <div className="col-5 progress sqrBar bg-white mb-0">
-                        <div className="progress-bar orangeBg " style={{ width: (item.category_returns ?? 0) + "%" }}></div>
-                      </div>
-                      <div className="col-2 d-flex justify-content-end">
-                        <p className='fs12px my-1 text-dark'>{item.category_returns ?? 0}%</p>
-                      </div>
-                    </>}
-                    {item.negative_observations && <>
-                      <div className="col-5 d-flex justify-content-end">
-                        <p className='fs12px my-1'>NEGATIVE OBSERVATIONS</p>
-                      </div>
-                      <div className="col-7 d-flex justify-content-end">
-                        <p className='fs12px my-1 text-dark'>{item.negative_observations ?? 0}</p>
-                      </div>
-                    </>}
-
+                  <div className="row px-4">
+                    {item.ideal_investment_period && (
+                      <>
+                        <div className="col-5 d-flex justify-content-end">
+                          <p className="fs12px my-1">IDEAL INVESTMENT PERIOD</p>
+                        </div>
+                        <div className="col-7 d-flex justify-content-end">
+                          <p className="fs12px my-1 text-dark">
+                            {item.ideal_investment_period} Years
+                          </p>
+                        </div>
+                      </>
+                    )}
+                    {item.fund_returns && (
+                      <>
+                        <div className="col-5 d-flex justify-content-end mb-0">
+                          <p className="fs12px my-1">FUND 5Y CAGR</p>
+                        </div>
+                        <div className="col-5 progress sqrBar mb-0 bg-white">
+                          <div
+                            className="progress-bar logobg_color "
+                            style={{
+                              width: (item.fund_returns ?? 0) + '%'
+                            }}
+                          ></div>
+                        </div>
+                        <div className="col-2 d-flex justify-content-end ">
+                          <p className="fs12px my-1 text-dark">
+                            {item.fund_returns ?? 0}%
+                          </p>
+                        </div>
+                      </>
+                    )}
+                    {item.benchmark_returns && (
+                      <>
+                        <div className="col-5 d-flex justify-content-end ">
+                          <p className="fs12px my-1">BENCHMARK 5Y CAGR</p>
+                        </div>
+                        <div className="col-5 progress sqrBar bg-white mb-0">
+                          <div
+                            className="progress-bar orangeBg "
+                            style={{
+                              width: (item.benchmark_returns ?? 0) + '%'
+                            }}
+                          ></div>
+                        </div>
+                        <div className="col-2 d-flex justify-content-end ">
+                          <p className="fs12px my-1 text-dark">
+                            {item.benchmark_returns ?? 0}%
+                          </p>
+                        </div>
+                      </>
+                    )}
+                    {item.category_returns && (
+                      <>
+                        <div className="col-5 d-flex justify-content-end bg-white ">
+                          <p className="fs12px my-1">CATEGORY 5Y CAGR</p>
+                        </div>
+                        <div className="col-5 progress sqrBar bg-white mb-0">
+                          <div
+                            className="progress-bar orangeBg "
+                            style={{
+                              width: (item.category_returns ?? 0) + '%'
+                            }}
+                          ></div>
+                        </div>
+                        <div className="col-2 d-flex justify-content-end">
+                          <p className="fs12px my-1 text-dark">
+                            {item.category_returns ?? 0}%
+                          </p>
+                        </div>
+                      </>
+                    )}
+                    {item.negative_observations && (
+                      <>
+                        <div className="col-5 d-flex justify-content-end">
+                          <p className="fs12px my-1">NEGATIVE OBSERVATIONS</p>
+                        </div>
+                        <div className="col-7 d-flex justify-content-end">
+                          <p className="fs12px my-1 text-dark">
+                            {item.negative_observations ?? 0}
+                          </p>
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
+
+                {!idDirect && (
+                  <div className="directNoteBg rounded-4 m-0 px-3 fs12px text-dark">
+                    Transaction not permitted for direct schemes.
+                  </div>
+                )}
               </div>
             );
           })}
         </Modal.Body>
-        <Modal.Footer className='modal-bg'>
-          <Button className='customButton ' onClick={handleInvestMore}>Invest More</Button>
+        <Modal.Footer className="modal-bg">
+          <Button className="customButton " onClick={handleInvestMore}>
+            Invest More
+          </Button>
         </Modal.Footer>
       </Modal>
+
       <InvetmentConfirmation
         show={openInvestMore}
         setShow={setOpenInvestMore}
         schemeList={selectedSchemeList}
         setSchemeList={setSelectedSchemeList}
         sipDateList={sipDateList}
-        from={"Portfolio Review"}
+        from={'Portfolio Review'}
+      />
+
+      
+
+      <DirectSchemeNote
+        show={openDirectNoteModel}
+        setShow={setOpenDirectNoteModel}
+        msg={
+          'Your portfolio contains Direct Plan schemes that cannot be transacted through our app. Please connect with our expert for guidance on further investments in these schemes.'
+        }
+        removeDirectScheme={removeDirectScheme}
+        schemeLength={selectedSchemeList.length}
 
       />
-      <SchemePerformanceGraph show={openSchemePerformanceGraph} setShow={setOpenSchemePerformanceGraph} />
-       <DirectSchemeNote show={openDirectNoteModel} setShow={setOpenDirectNoteModel} msg={"Your portfolio contains Direct Plan schemes that cannot be transacted through our app. Please connect with our expert for guidance on further investments in these schemes."} removeDirectScheme={removeDirectScheme} />
     </>
   );
-}
+};
 
 export default InvestMoreScheme;

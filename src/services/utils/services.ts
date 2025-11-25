@@ -65,3 +65,16 @@ export const checkIsSIFScheme = (value: string): boolean =>{
   return regex.test(value);
 }
 
+export const filterDirectScheme = (data:any)=>{
+ const filtered = data.filter((item: any) => {
+      return !item.fromScheme.toLowerCase().includes('direct');
+    });
+    return filtered;
+}
+export const filterDirectSchemeForInvest = (data:any)=>{
+ const filtered = data.filter((item: any) => {
+      return !item.scheme.toLowerCase().includes('direct');
+    });
+    return filtered;
+}
+

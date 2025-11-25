@@ -10,6 +10,7 @@ import { postRequest } from '../services/Api/HandleApi';
 import RedumptionConfirmation from './RedumptionConfirmation';
 import PortfolioNotes from './PortfolioNotes';
 import DirectSchemeNote from './DirectSchemeNote';
+import { filterDirectSchemeForInvest } from '../services/utils/services';
 
 interface RedemptionPerformanceProp {
   show: boolean;
@@ -32,6 +33,7 @@ const RedemptionPerformance: React.FC<RedemptionPerformanceProp> = ({ show, setS
       fetchPerformanceScheme();
     }
   }, [productCodes]);
+  
 
   const fetchPerformanceScheme = async () => {
     try {
@@ -121,6 +123,7 @@ const RedemptionPerformance: React.FC<RedemptionPerformanceProp> = ({ show, setS
       const hasDirect = selectedSchemeList.some(item =>
       item?.scheme?.toLowerCase()?.includes("direct")
     );
+    setSelectedSchemeList(filterDirectSchemeForInvest(selectedSchemeList))
     if (hasDirect) {
       setOpenDirectNoteModel(true)
     }else{
@@ -242,7 +245,7 @@ const RedemptionPerformance: React.FC<RedemptionPerformanceProp> = ({ show, setS
         </Modal.Footer>
       </Modal>
       <RedumptionConfirmation show={openRedemptionCOnfirmationModel} setShow={setOpenRedemptionCOnfirmationModel} redeemList={selectedSchemeList} setRedeemList={setSelectedSchemeList} />
-            <DirectSchemeNote show={openDirectNoteModel} setShow={setOpenDirectNoteModel} msg={"Your portfolio includes a few investments under the Direct Plan, which cannot be transacted through our app. You may proceed with the Regular Plan schemes or connect with our expert for guidance."} removeDirectScheme={removeDirectScheme} />
+            <DirectSchemeNote show={openDirectNoteModel} setShow={setOpenDirectNoteModel} msg={"Your portfolio includes a few investments under the Direct Plan, which cannot be transacted through our app. You may proceed with the Regular Plan schemes or connect with our expert for guidance."} removeDirectScheme={removeDirectScheme} schemeLength={selectedSchemeList.length}/>
     </>
   );
 }

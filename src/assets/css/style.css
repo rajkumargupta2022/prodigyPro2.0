@@ -1339,6 +1339,9 @@ input[type="number"] {
   background-color: #011EFE !important;
   color: #f1f1f1 !important;
 }
+.directNoteBg{
+  background-color: rgba(204, 210, 255, 1);
+}
 
 .btn-check:checked+.btn {
   background-color: #011EFE !important;

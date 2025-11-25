@@ -155,6 +155,8 @@ const FundDetails = () => {
 
 
   useEffect(() => {
+    console.log("pppp",location.state);
+    
     if (location?.state?.accordSchemeCode) {
       fetchSchemeDetail()
       fetchNavHistory(12)
@@ -188,7 +190,6 @@ const FundDetails = () => {
       setSipDateList([...res.data[0].sipDateList])
       
       handleNearSipDate(res.data[0].sipDateList)
-      // setAmount(res.data[0].minSIPAmt)
 
     } catch (err) {
       setSipDateList([])
@@ -293,7 +294,6 @@ const FundDetails = () => {
   }
 
   const handleMinAmount = () => {
-    console.log("schemeList",schemeList);
     
     if (schemeList?.length > 0) {
         
@@ -424,7 +424,7 @@ const FundDetails = () => {
                 </div>
                 <div className="col-6 py-2">
                   <span className="text-secondary text-uppercase fs-7">Min. Investment</span>
-                  <h4 className="fs-6">₹{schemeList[0]?.minSIPAmt}</h4>
+                  <h4 className="fs-6">₹{schemeList[0]?.minSIPAmt??0}</h4>
                 </div>
                 <div className="col-6 py-2">
                   <span className="text-secondary text-uppercase fs-7">Exit Load</span>
@@ -535,12 +535,13 @@ const FundDetails = () => {
                       </div>
                       <div className="col-6 py-2">
                         <span className="text-secondary text-uppercase fs-7">Gain/Loss</span>
-                        <h4 className="fs-6">{getPercentageValue(Number(location.state?.purchase), location.state?.gain)}%</h4>
+                        <h4 className="fs-6">{location.state?.gain? getPercentageValue(Number(location.state?.purchase), location.state?.gain):getPercentageValue(Number(location.state?.purchase),Number(location.state?.currentvalue)-Number(location.state?.purchase))}%</h4>
                       </div>
+                      {location.state?.days&&
                       <div className="col-6 py-2">
                         <span className="text-secondary text-uppercase fs-7">Avg. Days</span>
                         <h4 className="fs-6">{location.state?.days}</h4>
-                      </div>
+                      </div>}
                     </div>
                   </div>
                 </div>

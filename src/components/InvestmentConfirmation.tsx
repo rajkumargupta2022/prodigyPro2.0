@@ -36,7 +36,6 @@ interface addAmountKeys {
   third: number
 }
 
-
 const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, schemeList, setSchemeList, sipDateList, from }) => {
   const [openSelectFolio, setOpenSelectFolio] = useState(false)
   const [openBankMandate, setOpenBankMandate] = useState(false)
@@ -52,11 +51,14 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
   const [minimumDate, setMinimumDate] = useState<Date>()
   const [foliosFetched, setFoliosFetched] = useState(false);
 
+  // ✅ Fixed shortcut button values (they won't follow `amount` changes)
+  const [shortcutValues, setShortcutValues] = useState<number[]>([0, 0, 0]);
+
   useEffect(() => {
     fetchFolios()
     defaultTransactionType()
-    setMinimumDate(daysAdded(7,sipDateList))
- 
+    setMinimumDate(daysAdded(7, sipDateList))
+
     const updated = schemeList.map(obj => ({
       ...obj,
       firstSIPToday: true,
@@ -70,14 +72,13 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
   }, [show]);
 
   const dateHandle = (e: Date | null) => {
-
     setSchemeList((prev: any) =>
       prev.map((obj: any) => ({
         ...obj,
         start_date: e,
-      })))
+      }))
+    )
 
-    // Clear date error when user selects a date
     if (e) {
       setDateErrorMsg("")
     }
@@ -91,34 +92,37 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
 
   useEffect(() => {
     if (foliosFetched) {
-
       if (schemeList[0]?.totalAmount) {
-        distributeAmount(Number(schemeList[0]?.totalAmount))
-        setAmount(Number(schemeList[0]?.totalAmount))
-        setIsLumpsumTransaction(false)
+        const total = Number(schemeList[0]?.totalAmount);
+        distributeAmount(total);
+        setAmount(total);
+        setIsLumpsumTransaction(false);
+
+        // ✅ base = default amount (here: totalAmount)
+        const base = isNaN(total) || total <= 0 ? 0 : total;
+        if (base > 0) {
+          setShortcutValues([base * 2, base * 3, base * 5]);
+        }
       } else {
+        // this will internally set amount & shortcutValues using min amounts
         handleMinAmount(true);
       }
       setFoliosFetched(false);
     }
-    
   }, [foliosFetched]);
 
   const defaultTransactionType = () => {
-    if(isSipTransaction){
- let data = checkTransactionAllowed(schemeList, keys.sip) ? true : false
-    if (!data) {
-     
-      setAmount(5000);
-      distributeAmount(5000);
-    } else {
-      setIsSipTransaction(data)
-      
-      setAmount(1000);
-      distributeAmount(1000);
+    if (isSipTransaction) {
+      let data = checkTransactionAllowed(schemeList, keys.sip) ? true : false
+      if (!data) {
+        setAmount(5000);
+        distributeAmount(5000);
+      } else {
+        setIsSipTransaction(data)
+        setAmount(1000);
+        distributeAmount(1000);
+      }
     }
-    }
-   
   }
 
   const fetchFolios = async () => {
@@ -155,8 +159,6 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
         }
       })
     ).then(updatedSchemeList => {
-
-
       setSchemeList(updatedSchemeList);
       setFoliosFetched(true);
     }).catch(err => {
@@ -171,8 +173,6 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
       const minAmount = scheme.amount ?? 0; // use 0 if undefined
       return acc + minAmount;
     }, 0);
-
-
 
     const minTotal = schemeList.reduce((acc, scheme) => {
       const minAmount = isSipTransaction ? Number(scheme.minSIPAmt) : Number(scheme.minLumSumAmt);
@@ -215,7 +215,6 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
         setOpenSuccess(true)
         setShow(false)
         console.log(res);
-
         return
       })
 
@@ -235,10 +234,8 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
   const handleTransactionType = (type: boolean) => {
     setIsSipTransaction(type)
     if (type) {
-  
       setAmount(1000)
     } else {
-     
       setAmount(5000)
     }
     handleMinAmount(type)
@@ -292,132 +289,105 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
       ...item,
       amount: perScheme + (index === 0 ? remainder : 0)
     }));
-console.log("updatesss",updatedList);
-
     setSchemeList(updatedList);
   };
 
-  // const handleMinAmount = (type: boolean = isSipTransaction) => {
-  //   if (schemeList?.length > 0) {
-  //     let total = 0;
-  //     const updatedSchemes = schemeList.map((scheme) => {
-  //       const minAmount = type ? Number(scheme.minSIPAmt) : Number(scheme.minLumSumAmt);
-  //       total += minAmount;
+  const handleMinAmount = async (type: boolean = isSipTransaction) => {
+    if (!schemeList || schemeList.length === 0) return;
 
-  //       return {
-  //         ...scheme,
-  //         amount: minAmount,
-  //       };
-  //     });
-  //     setSchemeList(updatedSchemes);
-  //     setAmount(total);
-  //   }
-  // };
+    const regex = /\bSIF\b|\bQSIF\b|long[\s\-]*short/i;
 
- const handleMinAmount = async (type: boolean = isSipTransaction) => {
-  if (!schemeList || schemeList.length === 0) return;
+    const updatedSchemesPromises = schemeList.map(async (scheme: any) => {
+      const minSip = Number(scheme.minSIPAmt ?? 0);
+      const minLump = Number(scheme.minLumSumAmt ?? 0);
 
-  // regex stays the same
-  const regex = /\bSIF\b|\bQSIF\b|long[\s\-]*short/i;
+      const minAmount = type ? minSip : minLump;
 
-  // Build mapped promises (resolve all)
-  const updatedSchemesPromises = schemeList.map(async (scheme: any) => {
-    // ensure numeric values
-    const minSip = Number(scheme.minSIPAmt ?? 0);
-    const minLump = Number(scheme.minLumSumAmt ?? 0);
+      if (regex.test(String(scheme.scheme ?? ""))) {
+        const hasFolioOrSIF = await fetchFolioFOrSIF(scheme.accordSchemeCode);
 
-    const minAmount = type ? minSip : minLump;
+        return {
+          ...scheme,
+          minSIPAmt: hasFolioOrSIF ? minSip : 0,
+          minLumSumAmt: hasFolioOrSIF ? minLump : 1000000,
+          amount: hasFolioOrSIF ? (type ? minSip : minLump) : 1000000,
+          start_date: daysAdded(30, sipDateList),
+        } as any;
+      } else {
+        return {
+          ...scheme,
+          amount: minAmount,
+          start_date: daysAdded(30, sipDateList),
+        } as any;
+      }
+    });
 
-    if (regex.test(String(scheme.scheme ?? ""))) {
-      // fetch whether folio or SIF exists for this product
-      const hasFolioOrSIF = await fetchFolioFOrSIF(scheme.accordSchemeCode);
+    const updatedSchemes = await Promise.all(updatedSchemesPromises);
 
-      // set values depending on fetch result
-      return {
-        ...scheme,
-        minSIPAmt: hasFolioOrSIF ? minSip : 0,
-        minLumSumAmt: hasFolioOrSIF ? minLump : 1000000,
-        // keep amount consistent with chosen transaction type
-        amount: hasFolioOrSIF ? (type ? minSip : minLump) : 1000000,
-        start_date: daysAdded(30, sipDateList),
-      } as any;
-    } else {
-      return {
-        ...scheme,
-        amount: minAmount,
-        start_date: daysAdded(30, sipDateList),
-      } as any;
+    const total = updatedSchemes.reduce((sum, s) => {
+      const amt = Number((s as any).amount ?? 0);
+      return sum + (isNaN(amt) ? 0 : amt);
+    }, 0);
+
+    // ✅ base = this min total (default amount shown in input)
+    setSchemeList(updatedSchemes);
+    setAmount(total);
+
+    if (total > 0) {
+      setShortcutValues([total * 2, total * 3, total * 5]);
     }
-  });
-
-  // wait for all scheme updates to resolve
-  const updatedSchemes = await Promise.all(updatedSchemesPromises);
-
-  // compute total after resolving (sum of numeric 'amount' field)
-  const total = updatedSchemes.reduce((sum, s) => {
-    const amt = Number((s as any).amount ?? 0);
-    return sum + (isNaN(amt) ? 0 : amt);
-  }, 0);
-
-  // update state
-  setSchemeList(updatedSchemes);
-  setAmount(total);
-};
-
-// --- fetchFolioFOrSIF revised to not depend on schemeList and to always return boolean ---
-const fetchFolioFOrSIF = async (product_code: number): Promise<boolean> => {
-  const adminUser = fetchAdminUser();
-  if (!adminUser?.ucc) {
-    // no admin user — treat as "no folio" (or change behavior as you need)
-    setIsSipTransaction(false);
-    return false;
-  }
-
-  const reqBody = {
-    ucc: adminUser.ucc,
-    product_code,
   };
 
-  try {
-    const res = await postRequest<foliosResponse>(endPoints.getSchemeFolios, reqBody);
-
-    if (!res) {
+  const fetchFolioFOrSIF = async (product_code: number): Promise<boolean> => {
+    const adminUser = fetchAdminUser();
+    if (!adminUser?.ucc) {
       setIsSipTransaction(false);
       return false;
     }
 
-    if (res.success && Array.isArray(res.data)) {
-      const total = res.data.reduce((sum, item) => sum + Number(item.invested_amt ?? 0), 0);
-      if (total >= 1000000) {
-        return true;
-      } else {
-        // If total < 1,000,000 we consider no folio/SIF and flip SIP transaction flag
+    const reqBody = {
+      ucc: adminUser.ucc,
+      product_code,
+    };
+
+    try {
+      const res = await postRequest<foliosResponse>(endPoints.getSchemeFolios, reqBody);
+
+      if (!res) {
         setIsSipTransaction(false);
         return false;
       }
-    } else {
+
+      if (res.success && Array.isArray(res.data)) {
+        const total = res.data.reduce((sum, item) => sum + Number(item.invested_amt ?? 0), 0);
+        if (total >= 1000000) {
+          return true;
+        } else {
+          setIsSipTransaction(false);
+          return false;
+        }
+      } else {
+        setIsSipTransaction(false);
+        return false;
+      }
+    } catch (error) {
       setIsSipTransaction(false);
       return false;
     }
-  } catch (error) {
-    // log error if you want
-    setIsSipTransaction(false);
-    return false;
-  }
-};
+  };
 
   const handleSipDeduction = () => {
-      setMinimumDate(!schemeList[0].firstSIPToday ?  daysAdded(7, sipDateList): daysAdded(7, sipDateList))
+    setMinimumDate(!schemeList[0].firstSIPToday ? daysAdded(7, sipDateList) : daysAdded(7, sipDateList))
     setSchemeList((prev: any) =>
       prev.map((obj: any, index: number) =>
         index === 0
-          ? { ...obj, firstSIPToday: !obj.firstSIPToday,} // Toggle the value
+          ? { ...obj, firstSIPToday: !obj.firstSIPToday, } // Toggle the value
           : obj
       )
     );
   };
-  const handleTerms =()=>{
-     window.open("/terms-and-conditions", "_blank");
+  const handleTerms = () => {
+    window.open("/terms-and-conditions", "_blank");
   }
 
   return (
@@ -428,10 +398,8 @@ const fetchFolioFOrSIF = async (product_code: number): Promise<boolean> => {
         onHide={() => setShow(false)}
         backdrop={true}
         keyboard={false}
-
       >
         <Modal.Header closeButton className='modal-bg'>
-
           <Modal.Title>Investment Confirmation</Modal.Title>
         </Modal.Header>
         <Modal.Body className='modal-bg'>
@@ -446,7 +414,6 @@ const fetchFolioFOrSIF = async (product_code: number): Promise<boolean> => {
                   <p>Selected fund {schemeList?.length}</p>
                 </div>
               </div>
-
             </div>
             <hr />
             <div className="row text-center mt-2">
@@ -456,22 +423,19 @@ const fetchFolioFOrSIF = async (product_code: number): Promise<boolean> => {
                 </div>}
 
               {(checkTransactionAllowed(schemeList, keys.purchase) && isLumpsumTransaction) &&
-
                 <div className="col py-2 py-md-0">
                   <div className={`${!isSipTransaction ? "text-white logobg_color" : "logoBlueColor"} w-100 border  text-center monthly_btn crPointer`} onClick={() => { handleTransactionType(false) }}> One-Time </div>
                 </div>}
             </div>
 
             {isSipTransaction && <>
-
               <div className="form-group mt-3">
                 <label className='fs12px'>Date of SIP</label>
                 <div className="position-relative">
                   <div className="d-flex justify-content-between crPointer form-control date-picker-container" onClick={() => {
                     const dateInput = document.querySelector('.focus_datepickers121') as HTMLInputElement | null;
                     dateInput?.click();
-                  }}
-                  >
+                  }}>
                     <DatePicker
                       selected={schemeList[0]?.start_date}
                       onChange={(e) => dateHandle(e)}
@@ -485,7 +449,6 @@ const fetchFolioFOrSIF = async (product_code: number): Promise<boolean> => {
                       <div className="crPointer dateIcon"><Calendar4 className='' /></div>
                     </div>
                   </div>
-
                 </div>
               </div>
               <span className='errorColor'>{dateErrorMsg}</span>
@@ -493,40 +456,82 @@ const fetchFolioFOrSIF = async (product_code: number): Promise<boolean> => {
 
             <div className="form-group mt-1">
               <label htmlFor="amountFor" className='fs12px'>INVESTMENT AMOUNT</label>
-              <input type="text" className="form-control" value={amount} onChange={(e) => handleAmount(e, 1000000, setAmount)} id="amountFor" aria-describedby="emailHelp" placeholder="Enter Amount" />
+              <input
+                type="text"
+                className="form-control"
+                value={amount}
+                onChange={(e) => handleAmount(e, 1000000, setAmount)}
+                id="amountFor"
+                placeholder="Enter Amount"
+              />
               <span className='errorColor'>{amountErrorMsg}</span>
-              <div className=" mt-2">
-                <button type="button" className="btn shortcutValue" onClick={() => handleMinAmount(isSipTransaction)}>Min.</button>
-                <button type="button" className="btn shortcutValue mx-1" onClick={() => addAmount((schemeList[0]?.totalAmount??0)*2)}>+<CurrencyRupee className='mb-1' />{((schemeList[0]?.totalAmount??0)*2).toLocaleString("en-In")}</button>
-                <button type="button" className="btn shortcutValue mx-1" onClick={() => addAmount((schemeList[0]?.totalAmount??0)*3)}>+<CurrencyRupee className='mb-1' />{((schemeList[0]?.totalAmount??0)*3).toLocaleString("en-In")}</button>
-                <button type="button" className="btn shortcutValue mx-1" onClick={() => addAmount((schemeList[0]?.totalAmount??0)*5)}>+<CurrencyRupee className='mb-1' />{((schemeList[0]?.totalAmount??0)*5).toLocaleString("en-In")}</button>
+              <div className="mt-2">
+                <button
+                  type="button"
+                  className="btn shortcutValue"
+                  onClick={() => handleMinAmount(isSipTransaction)}
+                >
+                  Min.
+                </button>
+                <button
+                  type="button"
+                  className="btn shortcutValue mx-1"
+                  onClick={() => addAmount(shortcutValues[0] || 0)}
+                >
+                  +<CurrencyRupee className='mb-1' />
+                  {(shortcutValues[0] || 0).toLocaleString("en-IN")}
+                </button>
+                <button
+                  type="button"
+                  className="btn shortcutValue mx-1"
+                  onClick={() => addAmount(shortcutValues[1] || 0)}
+                >
+                  +<CurrencyRupee className='mb-1' />
+                  {(shortcutValues[1] || 0).toLocaleString("en-IN")}
+                </button>
+                <button
+                  type="button"
+                  className="btn shortcutValue mx-1"
+                  onClick={() => addAmount(shortcutValues[2] || 0)}
+                >
+                  +<CurrencyRupee className='mb-1' />
+                  {(shortcutValues[2] || 0).toLocaleString("en-IN")}
+                </button>
               </div>
             </div>
-            {from !== "portfolio" && <>
 
+            {from !== "portfolio" && <>
               <p className='sip_amount_breakup12 fs14px mb-0'>Sip amount breakup</p>
               {schemeList?.map((item, index) => {
-                return <div key={index} className="d-flex justify-content-between midpodgy_invest_conf py-1">
-                  <div className="">
-                    <span>{item?.scheme}</span>
+                return (
+                  <div key={index} className="d-flex justify-content-between midpodgy_invest_conf py-1">
+                    <div>
+                      <span>{item?.scheme}</span>
+                    </div>
+                    <div>
+                      <input
+                        className=''
+                        type="text"
+                        placeholder='0'
+                        value={item?.amount}
+                        onChange={(e) => handleMultipleAmount(e, index)}
+                      /><br />
+                      <span className="errorColor">
+                        {isSipTransaction
+                          ? ((item?.amount ?? 0) < item.minSIPAmt
+                            ? "Min amount " + item.minSIPAmt
+                            : "")
+                          : ((item?.amount ?? 0) < item.minLumSumAmt
+                            ? "Min amount " + item.minLumSumAmt
+                            : "")
+                        }
+                      </span>
+                    </div>
                   </div>
-                  <div>
-                    <input className='' type="text" placeholder='0' value={item?.amount} onChange={(e) => handleMultipleAmount(e, index)} /><br />
-                    <span className="errorColor">
-                      {isSipTransaction
-                        ? ((item?.amount ?? 0) < item.minSIPAmt
-                          ? "Min amount " + item.minSIPAmt
-                          : "")
-                        : ((item?.amount ?? 0) < item.minLumSumAmt
-                          ? "Min amount " + item.minLumSumAmt
-                          : "")
-                      }
-                    </span>
-                  </div>
-                </div>
+                )
               })}
-            </>
-            }
+            </>}
+
             {isSipTransaction &&
               <div className="d-flex justify-content-center align-items-center mt-2 mb-0">
                 <Form.Check
@@ -539,11 +544,12 @@ const fetchFolioFOrSIF = async (product_code: number): Promise<boolean> => {
                   name="Sip deduction"
                 />
               </div>}
-
           </div>
-          <Card.Header className='scheme-bg footerRadius px-3 py-2 fs12px'>Units allotment is subject to realization of funds in AMC's A/c.</Card.Header>
-
+          <Card.Header className='scheme-bg footerRadius px-3 py-2 fs12px'>
+            Units allotment is subject to realization of funds in AMC's A/c.
+          </Card.Header>
         </Modal.Body>
+
         <small className="fs12px modal-bg text-center">
           By continuing, I agree with the <Disclaimer linkRef={disclaimerRef} /> and{' '}
           <div className='logoBlueColor crPointer' onClick={handleTerms}>Terms & Conditions</div>
@@ -553,9 +559,26 @@ const fetchFolioFOrSIF = async (product_code: number): Promise<boolean> => {
         </Modal.Footer>
       </Modal>
 
-      <SelectFolioPopup show={openSelectFolio} setShow={setOpenSelectFolio} schemeList={schemeList} setSchemeList={setSchemeList} isSipTransaction={isSipTransaction} />
-      <BankMandate show={openBankMandate} setShow={setOpenBankMandate} schemeList={schemeList} setSchemeList={setSchemeList} isSipTransaction={isSipTransaction} additionalPurchase={true} />
-      <OrderPlaces show={openSuccess} setShow={setOpenSuccess} successData={successData} />
+      <SelectFolioPopup
+        show={openSelectFolio}
+        setShow={setOpenSelectFolio}
+        schemeList={schemeList}
+        setSchemeList={setSchemeList}
+        isSipTransaction={isSipTransaction}
+      />
+      <BankMandate
+        show={openBankMandate}
+        setShow={setOpenBankMandate}
+        schemeList={schemeList}
+        setSchemeList={setSchemeList}
+        isSipTransaction={isSipTransaction}
+        additionalPurchase={true}
+      />
+      <OrderPlaces
+        show={openSuccess}
+        setShow={setOpenSuccess}
+        successData={successData}
+      />
     </>
   );
 }

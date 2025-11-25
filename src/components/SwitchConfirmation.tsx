@@ -30,16 +30,22 @@ const SwitchConfirmation: React.FC<investmetProps> = ({ show, setShow, cartItem,
 
 
   useEffect(()=>{
+    console.log("cartItem",cartItem);
+    
        setFinalCartData(cartItem)
   },[show])
   const finalSwitch = async () => {
+     
+const ids2 = new Set(finalCartData.map(item => item.id));
+
+const finalData = cartItem.filter(item => ids2.has(item.id));
 
     const adminUser = fetchAdminUser()
     if (!adminUser) {
       errorToast("Something went wrong..")
       return
     }
-    for (const item2 of finalCartData) {
+    for (const item2 of finalData) {
       if (!item2?.installment_units && (!item2.isSwitchAmount)) {
         errorToast("Plaese enter units or amounts...")
         return
@@ -50,7 +56,7 @@ const SwitchConfirmation: React.FC<investmetProps> = ({ show, setShow, cartItem,
 
     const reqBody = {
       ucc: adminUser?.ucc,
-      cartItems: switchFilterBody(cartItem)
+      cartItems: switchFilterBody(finalData)
     }
 
     try {
@@ -229,7 +235,7 @@ const SwitchConfirmation: React.FC<investmetProps> = ({ show, setShow, cartItem,
                 </div>
                 <div className="col-md-6">
                   <p className='mb-0 fs12px' > Total Units</p>
-                  <small className='fs16px'>{item.fromUnit}</small>
+                  <small className='fs16px'>{item?.unit}</small>
                 </div>
               </div>
               <div className="form-group">

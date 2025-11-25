@@ -133,7 +133,7 @@ const SwpConfirmation: React.FC<investmetProps> = ({ show, setShow, swpList, sch
             <div className="d-flex justify-content-between">
               <div className="d-flex">
                 <div className="prod_icon_img">
-                  <img src={imageUrl + swpList[0]?.amcCode + ".png"} height={35} width={35} alt="" className="rounded" />
+                  <img src={imageUrl + swpList[0]?.accordAMCCode + ".png"} height={35} width={35} alt="" className="rounded" />
                 </div>
                 <div className="ms-2 prod_icon_heading">
                   <h4>{swpList[0]?.scheme}</h4>

@@ -1,5 +1,5 @@
 import NavBar from "../components/Navbar";
-import { ChevronRight, Download, Envelope, Telephone } from "react-bootstrap-icons";
+import { ChevronRight, Envelope, Telephone } from "react-bootstrap-icons";
 import { useEffect, useState } from "react";
 import SwitchFund from "../components/SwitchFund";
 import { fetchAdminUser } from "../services/user/adminUser";
@@ -17,9 +17,12 @@ import emptyImg from "../assets/img/empty-img.svg"
 const PortfolioReview = () => {
   const [openSwitchFund, setOpenSwitchFund] = useState<boolean>(false)
   const [satisfactoryList, setSatisfactoryList] = useState<portfolioReviewKeys[]>([])
+  const [satisfactoryListProps, setSatisfactoryListProps] = useState<portfolioReviewKeys[]>([])
   const [underWatchList, setUnderWatchList] = useState<portfolioReviewKeys[]>([])
   const [redemptionList, setRedemptionList] = useState<portfolioReviewKeys[]>([])
+  const [redemptionListProps, setRedemptionListProps] = useState<portfolioReviewKeys[]>([])
   const [switchList, setSwitchList] = useState<portfolioReviewKeys[]>([])
+  const [switchListForProps, setSwitchListForProps] = useState<portfolioReviewKeys[]>([])
   const [portfolioSummaryList, setPortfolioSummaryList] = useState<summaryInsideKeys[]>([])
   const [totolInvested, setTotalInvested] = useState<number>(0)
   const [portfolioExpertData, setPortfolioExpertData] = useState<portfolioExpertKeys | null>()
@@ -27,6 +30,7 @@ const PortfolioReview = () => {
   const [openUnderwatchModel, setOpenUnderwatchModel] = useState<boolean>(false)
   const [openInvestMore, setOpenInvestMore] = useState<boolean>(false)
   const [productCodes, setProductCodes] = useState<number[]>([])
+  const [underWatchDetail, setUnderWatchDetail] = useState<portfolioReviewKeys | null>(null)
 
 
   useEffect(() => {
@@ -145,19 +149,18 @@ const PortfolioReview = () => {
     }
   }
 
-  const singleInvest = (product:number,setter:(value:boolean)=>void) => {
-    setter(true)
-    setProductCodes([product])
-  }
-  const singleTransaction = (item: portfolioReviewKeys, setter: (value: boolean) => void,setterList:(value:portfolioReviewKeys[])=>void) => {
-    if (item?.target?.accordProductCode) {
-      setProductCodes([item.accordSchemeCode, item.target?.accordProductCode])
-    }else{
-      setProductCodes([item.accordSchemeCode])
+  const singleSatisfactoryInvest = (item:portfolioReviewKeys) => {
+    setProductCodes([item.accordSchemeCode])
+    setSatisfactoryListProps([item])
+    setOpenInvestMore(true)
 
-    }
-    setterList([item])
-    setter(true)
+  }
+  const singleSwitcTransaction = (item: portfolioReviewKeys) => {
+  
+      setProductCodes([item.accordSchemeCode, item.target?.accordProductCode??0])
+    
+    setSwitchListForProps([item])
+    setOpenSwitchFund(true)
 
   }
   const handleInvestMore = () => {
@@ -167,9 +170,12 @@ const PortfolioReview = () => {
     setProductCodes(products)
     analytics.track("invest_more_btn")
     setOpenInvestMore(true)
+    setSatisfactoryListProps(satisfactoryList)
 
   }
   const handleBulkSwitch = () => {
+    setSwitchListForProps(switchList)
+
     const products = new Set<number>();
     switchList.forEach(element => {
       products.add(element.accordSchemeCode)
@@ -188,6 +194,18 @@ const PortfolioReview = () => {
     analytics.track("redeem_scheme_btn")
     setProductCodes(products)
     setOpenRedumptinPerformance(true)
+    setRedemptionListProps(redemptionList)
+  }
+  const underWatchPerformnace = (item: portfolioReviewKeys) => {
+    let products = [item.accordSchemeCode]
+    setProductCodes(products)
+    setOpenUnderwatchModel(true)
+    setUnderWatchDetail(item)
+  }
+  const singleRedemption = (item: portfolioReviewKeys) => {
+    setProductCodes([item.accordSchemeCode])
+    setOpenRedumptinPerformance(true)
+    setRedemptionListProps([item])
   }
   return (
     <>
@@ -226,7 +244,7 @@ const PortfolioReview = () => {
                   <hr className="text-warning border-2" />
                   {switchList?.length ? switchList.map((item: portfolioReviewKeys, i) => {
                     return <>
-                      <div className="col-11 p-2 d-flex align-items-start crPointer" key={i} onClick={() => singleTransaction(item, setOpenSwitchFund,setSwitchList)}>
+                      <div className="col-11 p-2 d-flex align-items-start crPointer" key={i} onClick={() => singleSwitcTransaction(item)}>
                         <img src={`${imageUrl + item.accordAMCCode}.png`} alt="" height={40} width={40} className="rounded" />
                         <div className="d-flex flex-column ps-3">
                           <small className="mb-0">{item.scheme}</small>
@@ -254,7 +272,7 @@ const PortfolioReview = () => {
                     <hr className="text-success border-2" />
                     {satisfactoryList?.length ? satisfactoryList.map((item: portfolioReviewKeys, i) => {
                       return <>
-                        <div className="col-11 p-2  d-flex align-items-start crPointer" key={i} onClick={() => singleInvest(item.accordSchemeCode, setOpenInvestMore)}>
+                        <div className="col-11 p-2  d-flex align-items-start crPointer" key={i} onClick={() => singleSatisfactoryInvest(item)}>
                           <img src={`${imageUrl + item.accordAMCCode}.png`} alt="" height={40} width={40} className="rounded" />
                           <div className="d-flex flex-column ps-3">
                             <small className="mb-0">{item.scheme}</small>
@@ -282,7 +300,7 @@ const PortfolioReview = () => {
                     <hr className="text-danger border-2" />
                     {redemptionList?.length ? redemptionList.map((item: any, i) => {
                       return <>
-                        <div className="col-11 p-2 d-flex align-items-start crPointer" key={i} onClick={() => singleTransaction(item, setOpenRedumptinPerformance,setRedemptionList)}>
+                        <div className="col-11 p-2 d-flex align-items-start crPointer" key={i} onClick={() => singleRedemption(item)}>
                           <img src={`${imageUrl + item.accordAMCCode}.png`} alt="" height={40} width={40} className="rounded" />
                           <div className="d-flex flex-column ps-3">
                             <small className="mb-0">{item.scheme}</small>
@@ -309,11 +327,11 @@ const PortfolioReview = () => {
                     <hr className="text-secondary border-2" />
                     {underWatchList?.length ? underWatchList.map((item: portfolioReviewKeys, i) => {
                       return <>
-                        <div className="col-11 p-2 d-flex align-items-start crPointer" key={i} onClick={() => singleInvest(item.accordSchemeCode, setOpenUnderwatchModel)}>
+                        <div className="col-11 p-2 d-flex align-items-start crPointer" key={i} onClick={() => underWatchPerformnace(item)}>
                           <img src={`${imageUrl + item.accordAMCCode}.png`} alt="" height={40} width={40} className="rounded" />
                           <div className="d-flex flex-column ps-3">
                             <small className="mb-0">{item.scheme}</small>
-                            <small className="fs12px">Folio: {item.folio}</small>
+                            <small className="fs12px">Folio : {item.folio}</small>
                           </div>
                         </div>
                         <div className="col-1">
@@ -331,6 +349,7 @@ const PortfolioReview = () => {
                   <img src={`${portfolioExpertData?.img}`} alt="" height={50} width={50} className="rounded-circle" />
                   <div className="d-flex flex-column ps-3">
                     <small className="mb-0">{portfolioExpertData?.name}</small>
+                    <small className="fs14px">({portfolioExpertData?.designation})</small>
                     <small className="fs14px">{portfolioExpertData?.aum}</small>
                     <a href={`tel:${portfolioExpertData?.phone}`} className="fs16px logoBlueColor d-block">
                       <Telephone /> {portfolioExpertData?.phone}
@@ -343,19 +362,19 @@ const PortfolioReview = () => {
                   </div>
                 </div>
               </div>
-              <div className="d-flex justify-content-center mt-3">
+              {/* <div className="d-flex justify-content-center mt-3">
 
                 <button type="button" className="customButton"><Download /> Review Report</button>
-              </div>
+              </div> */}
             </div></> : <PortfolioEmpty images={emptyImg} title="No investments yet" body=" Every goal needs a starting point
                        make your first investment today!" btnName="Build My Portfolio" btnUrl="/all-mutual-funds" />}
         </div>
 
       </div>
-      <InvestMoreScheme show={openInvestMore} setShow={setOpenInvestMore} productCodes={productCodes} number={portfolioExpertData?.phone ?? ""} />
-      <SwitchFund show={openSwitchFund} setShow={setOpenSwitchFund} productCodes={productCodes} switchSchemeList={switchList} number={portfolioExpertData?.phone ?? ""} />
-      <RedemptionPerformance show={openRedumptinPerformance} setShow={setOpenRedumptinPerformance} productCodes={productCodes} redemptionList={redemptionList} number={portfolioExpertData?.phone ?? ""} />
-      <UnderWatchPerformance show={openUnderwatchModel} setShow={setOpenUnderwatchModel} productCodes={productCodes} />
+      <InvestMoreScheme show={openInvestMore} setShow={setOpenInvestMore} productCodes={productCodes}satisfactorySchemeList={satisfactoryListProps}  number={portfolioExpertData?.phone ?? ""} />
+      <SwitchFund show={openSwitchFund} setShow={setOpenSwitchFund} productCodes={productCodes} switchSchemeList={switchListForProps} number={portfolioExpertData?.phone ?? ""} />
+      <RedemptionPerformance show={openRedumptinPerformance} setShow={setOpenRedumptinPerformance} productCodes={productCodes} redemptionList={redemptionListProps} number={portfolioExpertData?.phone ?? ""} />
+      <UnderWatchPerformance show={openUnderwatchModel} setShow={setOpenUnderwatchModel} productCodes={productCodes} underWatchDetail={underWatchDetail} />
     </>
   );
 };

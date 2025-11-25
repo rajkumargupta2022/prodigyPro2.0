@@ -64,6 +64,7 @@ console.log("selectedSchemes",selectedSchemes)
         fromAccordAMCCode: schemeList.accordAMCCode,
         toAccordAMCCode: selectedSchemes[0].accordAMCCode,
         frequency: "",
+        unit:Number(schemeList.unit),
         toAccordProductCode: selectedSchemes[0]?.accordSchemeCode,
         amount: 0,
         fromValue: Number(schemeList.currentvalue),

@@ -2,7 +2,7 @@
 import Modal from 'react-bootstrap/Modal';
 import { useEffect, useState } from 'react';
 import { endPoints, imageUrl } from '../services/utils/urls';
-import { schemeSummaryKeys, schemeSummaryRes } from '../pages/data-interfaces/portfolio';
+import { portfolioReviewKeys, schemeSummaryKeys, schemeSummaryRes } from '../pages/data-interfaces/portfolio';
 import { postRequest } from '../services/Api/HandleApi';
 import { fetchAdminUser } from '../services/user/adminUser';
 import { ChevronRight } from 'react-bootstrap-icons';
@@ -15,10 +15,12 @@ import PortfolioNotes from './PortfolioNotes';
 interface UnderWatchPerformance {
   show: boolean;
   setShow: (show: boolean) => void;
-  productCodes: number[]
+  productCodes: number[];
+  underWatchDetail: portfolioReviewKeys|null;
+  
 }
 
-const UnderWatchPerformance: React.FC<UnderWatchPerformance> = ({ show, setShow, productCodes }) => {
+const UnderWatchPerformance: React.FC<UnderWatchPerformance> = ({ show, setShow, productCodes,underWatchDetail }) => {
   const [schemeList, setSchemeList] = useState<schemeSummaryKeys[]>([]);
   const navigate = useNavigate()
 
@@ -52,7 +54,20 @@ const UnderWatchPerformance: React.FC<UnderWatchPerformance> = ({ show, setShow,
   };
 
   const fundDetails = (accordSchemeCode: number) => {
-    navigate("/fund-details", { state: { accordSchemeCode, fromPortfolio: false } })
+   
+    let data = {
+      scheme: underWatchDetail?.scheme,
+      accordSchemeCode: underWatchDetail?.accordSchemeCode,
+      accordAMCCode: underWatchDetail?.accordAMCCode,
+      folio: underWatchDetail?.folio,
+      amcCode: underWatchDetail?.nseAMCCode,
+      productcode: underWatchDetail?.nseProductCode,
+      purchase: underWatchDetail?.purchase,
+      unit: underWatchDetail?.unit,
+      currentvalue: underWatchDetail?.currentvalue,
+    }
+   
+    navigate("/fund-details", { state: { ...data,accordSchemeCode, fromPortfolio: true } })
   }
 
 

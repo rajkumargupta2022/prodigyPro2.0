@@ -36,7 +36,6 @@ const RedumptionForm: React.FC<investmetProps> = ({ redeemList, setRedeemList, s
     }
     else {
 
-      console.log("handleAmonut", selectedList)
       setRedeemList?.((prev: any) =>
         prev.map((item: detailPortfolioSchemeType, i: number) => {
           if (i !== index) return item;
@@ -46,7 +45,6 @@ const RedumptionForm: React.FC<investmetProps> = ({ redeemList, setRedeemList, s
           }
 
           if (value < Number(chechMax)) {
-            console.log("value8888", item.redemption_units, item.all_units)
             return {
               ...item,
               
@@ -57,7 +55,6 @@ const RedumptionForm: React.FC<investmetProps> = ({ redeemList, setRedeemList, s
           }
 
           if (value >= Number(chechMax)) {
-            console.log("value2", value)
             return {
               ...item,
               amount: item.isRedeemAmount ? item2.currentvalue : 0,

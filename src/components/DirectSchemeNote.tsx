@@ -5,14 +5,15 @@ interface DirectSchemeNoteProps {
   setShow: (value: boolean) => void;
   msg?: string;
   removeDirectScheme: (value: string) => void;
+  schemeLength: number;
 
 }
 
-function DirectSchemeNote({ show, setShow, msg, removeDirectScheme }: DirectSchemeNoteProps) {
+function DirectSchemeNote({ show, setShow, msg, removeDirectScheme,schemeLength }: DirectSchemeNoteProps) {
 
   const handleBtn = (value: string) => {
+
       removeDirectScheme(value)
-   
     setShow(false)
   }
   return (
@@ -37,7 +38,7 @@ function DirectSchemeNote({ show, setShow, msg, removeDirectScheme }: DirectSche
       <Modal.Footer>
 
         <button type="button" className="customButtonNoBg px-4 mx-auto d-block" onClick={() => handleBtn("RM")}>{"Connect to our experts"}</button>
-        <button type="button" className="customButton px-4 mx-auto d-block" onClick={() => handleBtn("Proceed")}>{"Proceed With Regular Schemes"}</button>
+      {schemeLength>0&& <button type="button" className="customButton px-4 mx-auto d-block" onClick={() => handleBtn("Proceed")}>{"Proceed With Regular Schemes"}</button>}
       </Modal.Footer>
     </Modal>
   );

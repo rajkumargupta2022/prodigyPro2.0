@@ -139,6 +139,7 @@ export interface cartItemKey {
   stpFrequency?: any;
   isSwitchAmount?:boolean;
   all_units: boolean;
+  unit?: number;
   redemption_units?:number;
   toScheme?: string;
   fromScheme?: string;

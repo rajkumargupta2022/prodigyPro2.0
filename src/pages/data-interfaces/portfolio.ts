@@ -89,7 +89,7 @@ export interface portfolioReviewKeys extends schemeDeatilDataKeys {
   nseAMCCode: string;
   purchase: number;
   currentvalue: number;
-  units: number;
+  unit: number;
   target?: targetSchemesKeys;
 }
 
@@ -122,6 +122,7 @@ export interface portfolioExpertKeys {
   email: string;
   name: string;
   phone: string;
+  designation:string
   img: string;
   aum: string;
 }
@@ -148,6 +149,7 @@ export interface schemeSummaryKeys extends schemeDeatilDataKeys {
   min_purchase_amount: number;
   sip_dates: number[];
   min_sip_amount: number;
+  folio?: string;
 }
 
 export interface notesRes {

@@ -46,7 +46,7 @@ const Portfolio = () => {
     setSortDirection(sortDirection === "asc" ? "desc" : "asc");
   };
   const fundDetails = (item:detailPortfolioSchemeType)=>{
-    
+ 
      navigate("/fund-details",{state:{...item,fromPortfolio:true}}) 
   }
 
