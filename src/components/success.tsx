@@ -36,7 +36,7 @@ const SuccessModel: React.FC<SuccessModelProps> = ({ show, setShow }) => {
                 />
               </div>
 
-              <h3 className="mb-3">Rate submit succcessfully</h3>
+              <h3 className="mb-3">Rate submit successfully</h3>
 
               {/* <p className="text-white">We will get back to you soon</p> */}
               <Link

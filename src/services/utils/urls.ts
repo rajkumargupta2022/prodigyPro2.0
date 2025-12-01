@@ -81,5 +81,8 @@ export enum endPoints{
    getSchemePerformanceSummary="portfolio-review/get-scheme-performance-summary",
    getPortfolioExpert="portfolio-review/get-portfolio-expert",
    getSchemesPerformance="portfolio-review/get-schemes-performance",
-   getNotes="portfolio-review/get-notes"
+   getNotes="portfolio-review/get-notes",
+   hasEmergencyPortfolio="bajaj-insta-redeem/has-emergency-portfolio",
+  getEmergencyPortfolioSnapshot="bajaj-insta-redeem/get-emergency-portfolio-snapshot",
+  getDetailedEmergencyPortfolio="bajaj-insta-redeem/get-detailed-emergency-portfolio"
 }

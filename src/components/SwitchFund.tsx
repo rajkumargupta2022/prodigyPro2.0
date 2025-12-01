@@ -173,7 +173,7 @@ const SwitchFund: React.FC<SwitchFundProp> = ({
     );
   
     setSelectedSchemeList(filterDirectScheme(selectedSchemeList));
-    if (hasDirect) {
+    if (hasDirect || selectedSchemeList.length === 0) {
       setOpenDirectNoteModel(true);
     } else {
       setShow(false);
@@ -325,7 +325,7 @@ const SwitchFund: React.FC<SwitchFundProp> = ({
                     <div className="d-flex align-items-center">
                       <hr className="flex-grow-1 ms-4" />
                       <div className="rounded-4 lightTrxBtn">
-                        <ArrowDown /> SWITCH
+                        <ArrowDown /> SWITCH TO
                       </div>
                       <hr className="flex-grow-1 me-4" />
                     </div>

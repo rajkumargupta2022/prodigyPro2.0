@@ -15,6 +15,7 @@ export enum keys {
   pending = "Pending",
   active = "Active",
   failed = "Failed",
+  bajaj="bajaj"
 }
 export enum riskKey {
   aggressive = 3,

@@ -84,6 +84,7 @@ import PurchaseDetails from "./pages/orders/PurchaseDetails";
 import RedemptionDetails from "./pages/orders/RedemptionDetails";
 import SwpInstallmentDetails from "./pages/orders/SwpInstallmentDetails";
 import TransactionHistory from "./pages/orders/TransactionHistory";
+import WhatIsMfSavings from "./pages/mfSavings/What-is-mf-savings";
 
 const LoaderHandler = () => {
   const { showLoader, hideLoader } = useLoader();
@@ -281,6 +282,7 @@ function App() {
           element={<RecommendedSchemeGoal />}
         />
         <Route path="/risk-profile" element={<RiskProfile />} />
+        <Route path="/what-is-mf-savings" element={<WhatIsMfSavings />} />
         <Route path="/risk-result" element={<RiskResult />} />
         <Route path="/sign-up" element={<SighnUp />} />
 

@@ -124,7 +124,7 @@ const RedemptionPerformance: React.FC<RedemptionPerformanceProp> = ({ show, setS
       item?.scheme?.toLowerCase()?.includes("direct")
     );
     setSelectedSchemeList(filterDirectSchemeForInvest(selectedSchemeList))
-    if (hasDirect) {
+    if (hasDirect|| selectedSchemeList.length===0){ 
       setOpenDirectNoteModel(true)
     }else{
       setShow(false)

@@ -5,7 +5,7 @@ import SwitchFund from "../components/SwitchFund";
 import { fetchAdminUser } from "../services/user/adminUser";
 import { getRequest, postRequest } from "../services/Api/HandleApi";
 import { endPoints, imageUrl } from "../services/utils/urls";
-import { portfolioReviewKeys, portfolioReviewRes, summaryInsideKeys, portfolioSummaryRes, portfolioExpertRes, portfolioExpertKeys, detailPortfolioSchemeType, schemeSummaryKeys } from "./data-interfaces/portfolio";
+import { portfolioReviewKeys, portfolioReviewRes, summaryInsideKeys, portfolioSummaryRes, portfolioExpertRes, portfolioExpertKeys } from "./data-interfaces/portfolio";
 import { getPercentageValue, getValueInSort } from "../services/calculation/percentageCalculate";
 import InvestMoreScheme from "../components/Invest-more-scheme";
 import UnderWatchPerformance from "../components/Underwatch-performance";
@@ -234,7 +234,7 @@ const PortfolioReview = () => {
 
 
               </div>
-              {/* {switchList?.length >0&& */}
+              {switchList?.length >0&&
               <div className="col-12 bg-white rounded-2 p-2 px-2 my-3">
                 <div className="row px-3 my-3">
                   <h5>Switch ({switchList.length} funds)</h5>
@@ -251,7 +251,7 @@ const PortfolioReview = () => {
                           <small className="fs12px">Folio: {item.folio}</small>
                         </div>
                       </div>
-                      <div className="col-1">
+                      <div className="col-1"  onClick={() => singleSwitcTransaction(item)}>
                         <ChevronRight className="text-secondary" />
                       </div>
                     </>
@@ -259,7 +259,7 @@ const PortfolioReview = () => {
                   <div className="col text-start fs12px mt-2" onClick={handleBulkSwitch}><button type="button" className="btn transactBtn">Switch All</button></div>
                 </div>
               </div>
-              {/* } */}
+}
 
               {/* stisfactory performane****************************** */}
               {satisfactoryList?.length > 0 &&
@@ -279,11 +279,11 @@ const PortfolioReview = () => {
                             <small className="fs12px">Folio: {item.folio}</small>
                           </div>
                         </div>
-                        <div className="col-1">
+                        <div className="col-1" onClick={() => singleSatisfactoryInvest(item)}>
                           <ChevronRight className="text-secondary" />
                         </div>
                       </>
-                    }) : <p className="logoBlueColor text-center">Loading...</p>}
+                    }) : ""}
 
                     <div className="col text-start fs12px mt-2" onClick={handleInvestMore} ><button type="button" className="btn transactBtn">Invest More</button></div>
                   </div>
@@ -307,11 +307,11 @@ const PortfolioReview = () => {
                             <small className="fs12px">Folio: {item.folio}</small>
                           </div>
                         </div>
-                        <div className="col-1 crPointer" >
+                        <div className="col-1 crPointer" onClick={() => singleRedemption(item)}>
                           <ChevronRight className="text-secondary" />
                         </div>
                       </>
-                    }) : <p className="logoBlueColor text-center">Loading...</p>}
+                    }) : ""}
                     <div className="col text-start fs12px mt-2" onClick={redemptionPerformance}><button type="button" className="btn transactBtn">Redeem All</button></div>
                   </div>
                 </div>}
@@ -334,11 +334,11 @@ const PortfolioReview = () => {
                             <small className="fs12px">Folio : {item.folio}</small>
                           </div>
                         </div>
-                        <div className="col-1">
+                        <div className="col-1" onClick={() => underWatchPerformnace(item)}>
                           <ChevronRight className="text-secondary" />
                         </div>
                       </>
-                    }) : <p className="logoBlueColor text-center">Loading...</p>}
+                    }) : ""}
                   </div>
                 </div>}
             </div>

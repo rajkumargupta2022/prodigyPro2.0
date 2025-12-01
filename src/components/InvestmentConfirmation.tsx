@@ -29,12 +29,7 @@ interface investmetProps {
   sipDateList: number[],
   from: string
 }
-interface addAmountKeys {
-  min: number,
-  first: number;
-  second: number;
-  third: number
-}
+
 
 const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, schemeList, setSchemeList, sipDateList, from }) => {
   const [openSelectFolio, setOpenSelectFolio] = useState(false)
@@ -407,10 +402,10 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
             <div className="d-flex justify-content-between">
               <div className="d-flex">
                 <div className="prod_icon_img">
-                  <img src={from === "portfolio" ? imageUrl + schemeList[0]?.accordAMCCode + ".png" : money} height={35} width={35} alt="" className='rounded-2' />
+                  <img src={(from === "portfolio"&& schemeList.length===1) ? imageUrl + schemeList[0]?.accordAMCCode + ".png" : money} height={35} width={35} alt="" className='rounded-2' />
                 </div>
                 <div className="ms-2 prod_icon_heading">
-                  <h4>{from === "portfolio" ? schemeList[0]?.scheme : from}</h4>
+                  <h4>{(from === "portfolio"&& schemeList.length===1) ? schemeList[0]?.scheme : from.charAt(0).toUpperCase() + from?.slice(1) + " Funds"}</h4>
                   <p>Selected fund {schemeList?.length}</p>
                 </div>
               </div>
@@ -500,7 +495,7 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
               </div>
             </div>
 
-            {from !== "portfolio" && <>
+          
               <p className='sip_amount_breakup12 fs14px mb-0'>Sip amount breakup</p>
               {schemeList?.map((item, index) => {
                 return (
@@ -530,7 +525,7 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
                   </div>
                 )
               })}
-            </>}
+
 
             {isSipTransaction &&
               <div className="d-flex justify-content-center align-items-center mt-2 mb-0">

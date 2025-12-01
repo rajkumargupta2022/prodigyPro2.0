@@ -7,7 +7,7 @@ export const sipFilterBody = (schemeList: schemeDeatilDataKeys[],additionalPurch
   if (schemeList?.length > 0) {
  
     const data = schemeList.map((item: schemeDeatilDataKeys) => ({
-      NSEProductCode: item.nseProductCode,
+      NSEProductCode: item?.nseProductCode,
       NSEAmcCode: item.nseAMCCode, // make sure this is a string or a defined constant
       start_date: dateForApi(item.start_date),
       from_date: item.from_date,

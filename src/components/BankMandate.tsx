@@ -87,6 +87,7 @@ const BankMandate: React.FC<bankMandate> = ({ show, setShow, schemeList, setSche
 
 
   const handleTransaction = () => {
+
     finalTransaction(tempData, isSipTransaction ? keys.sip : keys.purchase, setSuccessData, additionalPurchase).then((res) => {
       console.log(res);
 

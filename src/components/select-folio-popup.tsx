@@ -27,7 +27,6 @@ const SelectFolioPopup: React.FC<SchemeDetailsProps> = ({ show, setShow, schemeL
   const sip = isSipTransaction
   useEffect(() => {
     defaultSelectFolio()
-    console.log("schemeList===",schemeList);
     
   }, [show])
   const defaultSelectFolio = () => {

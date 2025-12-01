@@ -3,7 +3,7 @@ import MyNavbar from "../components/Navbar";
 import MyStackBar from "../components/Stack-bar";
 import { useEffect, useState } from "react";
 import { AiOutlineMore } from "react-icons/ai";
-import {  useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { postRequest } from "../services/Api/HandleApi";
 import { foliosResponse, navHistoryResponse, schemeDeatilDataKeys, schemeDetailType } from "./data-interfaces/transact";
 import { endPoints, imageUrl } from "../services/utils/urls";
@@ -23,6 +23,7 @@ import { keys } from "../services/utils/keys";
 import { detailPortfolioSchemeType } from "./data-interfaces/portfolio";
 import SwpConfirmation from "../components/Swp-confirmation";
 import MsgModel from "../components/MsgModel";
+import InstaRedeem from "./mfSavings/InstaRedeem";
 
 interface ChartState {
   options: ApexOptions;
@@ -48,7 +49,8 @@ const FundDetails = () => {
   const [sipDateList, setSipDateList] = useState<number[]>([])
   const [openSwitchSchemeModel, setOpenSwitchSchemeModel] = useState<boolean>(false)
   const [openRedumptionModel, setOpenRedumptionModel] = useState<boolean>(false)
-    const [openMsgModel,setOpenMsgModel] = useState<boolean>(false)
+  const [openMsgModel, setOpenMsgModel] = useState<boolean>(false)
+  const [openInstaRedeem, setOpenInstaRedeem] = useState<boolean>(false)
 
 
 
@@ -61,7 +63,7 @@ const FundDetails = () => {
     ],
     options: {
       chart: {
-        
+
         height: 350,
         type: "area",
         background: "transparent",
@@ -155,8 +157,8 @@ const FundDetails = () => {
 
 
   useEffect(() => {
-    console.log("pppp",location.state);
-    
+    console.log("pppp", location.state.from===keys.bajaj);
+
     if (location?.state?.accordSchemeCode) {
       fetchSchemeDetail()
       fetchNavHistory(12)
@@ -178,17 +180,17 @@ const FundDetails = () => {
       const updated = res.data.map(obj => ({
         ...obj,
         firstSIPToday: true,
-        to_date:"",
-        from_date:"",
-        mandateId:"",
-        amount:0,
-        totalAmount:0
+        to_date: "",
+        from_date: "",
+        mandateId: "",
+        amount: 0,
+        totalAmount: 0
       }));
-      
+
       setSchemeList([...updated])
 
       setSipDateList([...res.data[0].sipDateList])
-      
+
       handleNearSipDate(res.data[0].sipDateList)
 
     } catch (err) {
@@ -294,9 +296,9 @@ const FundDetails = () => {
   }
 
   const handleMinAmount = () => {
-    
+
     if (schemeList?.length > 0) {
-        
+
       const updatedSchemes = schemeList.map((scheme) => {
         const minAmount = schemeList[0]?.sipAllowed ? scheme.minSIPAmt : scheme.minLumSumAmt;
         return {
@@ -306,7 +308,7 @@ const FundDetails = () => {
       });
       setSchemeList([...updatedSchemes]);
     }
-    
+
   };
 
   const handleInvestMore = () => {
@@ -319,25 +321,27 @@ const FundDetails = () => {
     setShow(false)
   }
   const handleRedmptionModel = () => {
-      const result = schemeList.find(item =>checkIsSIFScheme(item.scheme));
-    if(result){
-       setOpenMsgModel(true)
-       setShow(false)
-    }else{
+    const result = schemeList.find(item => checkIsSIFScheme(item.scheme));
+    if (result) {
+      setOpenMsgModel(true)
+      setShow(false)
+    } else {
       setOpenRedumptionModel(true)
       setShow(false)
     }
   }
   const handleSwp = () => {
     setOpenSwpModel(true)
-     setShow(false)
-  
-  }
-  const goTransactionHistory = (item:schemeDeatilDataKeys)=>{
-    navigate("/transaction-history",{state:{accord_product_code:item.accordSchemeCode,folio_number:location.state?.folio}})
-  }
+    setShow(false)
 
-   
+  }
+  const goTransactionHistory = (item: schemeDeatilDataKeys) => {
+    navigate("/transaction-history", { state: { accord_product_code: item.accordSchemeCode, folio_number: location.state?.folio } })
+  }
+const handleInstaRedeem = () => { 
+  setOpenInstaRedeem(true)
+}
+
 
   return (
     <>
@@ -424,7 +428,7 @@ const FundDetails = () => {
                 </div>
                 <div className="col-6 py-2">
                   <span className="text-secondary text-uppercase fs-7">Min. Investment</span>
-                  <h4 className="fs-6">₹{schemeList[0]?.minSIPAmt??0}</h4>
+                  <h4 className="fs-6">₹{schemeList[0]?.minSIPAmt ?? 0}</h4>
                 </div>
                 <div className="col-6 py-2">
                   <span className="text-secondary text-uppercase fs-7">Exit Load</span>
@@ -461,24 +465,33 @@ const FundDetails = () => {
                           Invest More
                         </label>
                       </div>}
-                    {checkTransactionAllowed(schemeList, keys.switch) &&
-                      <div onClick={() => handleSwitch("Switch")} >
-                        <label
-                          className="btn_colorfull rounded-3 declaration-button w-100 paddingLeftRight px-4 py-2 mobile-fontset crPointer"
-                          htmlFor="option1"
-                        >
-                          Switch
-                        </label>
-                      </div>}
+                    {location.state?.from === keys.bajaj ?
+                      <div onClick={handleInstaRedeem} >
+                            <label
+                              className="btn_colorfull rounded-3 declaration-button w-100 paddingLeftRight px-4 py-2 mobile-fontset crPointer"
+                              htmlFor="option1"
+                            >
+                              Insta Redeem
+                            </label>
+                          </div> : <>
+                        {checkTransactionAllowed(schemeList, keys.switch) &&
+                          <div onClick={() => handleSwitch("Switch")} >
+                            <label
+                              className="btn_colorfull rounded-3 declaration-button w-100 paddingLeftRight px-4 py-2 mobile-fontset crPointer"
+                              htmlFor="option1"
+                            >
+                              Switch
+                            </label>
+                          </div>}
 
-                    <div onClick={handleClick} >
-                      <label
-                        className="btn_colorfull dotted_sip_prodyg rounded-3 declaration-button w-100 paddingLeftRight px-4 py-2 mobile-fontset crPointer"
-                        htmlFor="option1"
-                      >
-                        <AiOutlineMore />
-                      </label>
-                    </div>
+                        <div onClick={handleClick} >
+                          <label
+                            className="btn_colorfull dotted_sip_prodyg rounded-3 declaration-button w-100 paddingLeftRight px-4 py-2 mobile-fontset crPointer"
+                            htmlFor="option1"
+                          >
+                            <AiOutlineMore />
+                          </label>
+                        </div></>}
                   </div>
                 </div>
 
@@ -488,12 +501,12 @@ const FundDetails = () => {
                 <div className="card mb-4 popup_card_steup_area">
                   <div className="p-3">
                     <ul className="ps-0 style-unerline-prodgy mb-0 crPointer">
-                       <li onClick={() => handleRedmptionModel()}>Redeem Fund</li>
+                      <li onClick={() => handleRedmptionModel()}>Redeem Fund</li>
 
                       {/* {checkTransactionAllowed(schemeList, keys.redumption) && <li onClick={() => handleRedmptionModel()}>Redeem Fund</li>} */}
                       {checkTransactionAllowed(schemeList, keys.stp) && <li onClick={() => handleSwitch("STP")}>Systematic Transfer Plan (STP)</li>}
-                     {checkTransactionAllowed(schemeList, keys.swp) && <li onClick={() => handleSwp()}>Systematic Withdrawal Plan (SWP)</li>}
-                      <li onClick={()=>goTransactionHistory(schemeList[0])}>Transaction History</li>
+                      {checkTransactionAllowed(schemeList, keys.swp) && <li onClick={() => handleSwp()}>Systematic Withdrawal Plan (SWP)</li>}
+                      <li onClick={() => goTransactionHistory(schemeList[0])}>Transaction History</li>
 
                     </ul>
                   </div>
@@ -535,20 +548,20 @@ const FundDetails = () => {
                       </div>
                       <div className="col-6 py-2">
                         <span className="text-secondary text-uppercase fs-7">Gain/Loss</span>
-                        <h4 className="fs-6">{location.state?.gain? getPercentageValue(Number(location.state?.purchase), location.state?.gain):getPercentageValue(Number(location.state?.purchase),Number(location.state?.currentvalue)-Number(location.state?.purchase))}%</h4>
+                        <h4 className="fs-6">{location.state?.gain ? getPercentageValue(Number(location.state?.purchase), location.state?.gain) : getPercentageValue(Number(location.state?.purchase), Number(location.state?.currentvalue) - Number(location.state?.purchase))}%</h4>
                       </div>
-                      {location.state?.days&&
-                      <div className="col-6 py-2">
-                        <span className="text-secondary text-uppercase fs-7">Avg. Days</span>
-                        <h4 className="fs-6">{location.state?.days}</h4>
-                      </div>}
+                      {location.state?.days &&
+                        <div className="col-6 py-2">
+                          <span className="text-secondary text-uppercase fs-7">Avg. Days</span>
+                          <h4 className="fs-6">{location.state?.days}</h4>
+                        </div>}
                     </div>
                   </div>
                 </div>
 
               </div>
 
-            </div> : (schemeList[0]?.sipAllowed || schemeList[0]?.purchaseAllowed) && <InvestmentForm schemeList={schemeList} setSchemeList={setSchemeList} sipDateList={sipDateList}/>}
+            </div> : (schemeList[0]?.sipAllowed || schemeList[0]?.purchaseAllowed) && <InvestmentForm schemeList={schemeList} setSchemeList={setSchemeList} sipDateList={sipDateList} />}
         </div>
 
       </Container>
@@ -560,16 +573,17 @@ const FundDetails = () => {
         sipDateList={sipDateList}
         from={"portfolio"}
       />
+      <InstaRedeem show={openInstaRedeem} setShow={setOpenInstaRedeem} redeemList={location.state} />
       <SelectFolioPopup show={openSelectFolio} setShow={setOpenSelectFolio} schemeList={schemeList} setSchemeList={setSchemeList} isSipTransaction={true} />
       <SwitchSchemeModel show={openSwitchSchemeModel} setShow={setOpenSwitchSchemeModel} selectedAmcCode={[schemeList[0]?.accordAMCCode]} schemeList={location.state} transactionType={transactionType} />
       <SwpConfirmation show={openSwpModel} setShow={setOpenSwpModel} swpList={schmeDetail} schemeList={schemeList} />
       <RedumptionConfirmation show={openRedumptionModel} setShow={setOpenRedumptionModel} redeemList={schmeDetail} setRedeemList={setSchmeDetail} />
-          <MsgModel show={openMsgModel} setShow={setOpenMsgModel} setNewModelShow={setOpenRedumptionModel} heading={"Redemption Guidelines"} msg={[
-                 "Redemption orders will be executed only on specific days as per the AMC’s SIF redemption guidelines.",
-                 "Redemption order may be rejected if the applicable NAV declines so that the value of balance units falls below the min threshold investment limit of Rs. 10 Lakhs.",
+      <MsgModel show={openMsgModel} setShow={setOpenMsgModel} setNewModelShow={setOpenRedumptionModel} heading={"Redemption Guidelines"} msg={[
+        "Redemption orders will be executed only on specific days as per the AMC’s SIF redemption guidelines.",
+        "Redemption order may be rejected if the applicable NAV declines so that the value of balance units falls below the min threshold investment limit of Rs. 10 Lakhs.",
 
-              ]}
-              btn="OK"/>
+      ]}
+        btn="OK" />
       <Footer />
     </>
   );

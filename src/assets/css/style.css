@@ -90,15 +90,17 @@ span{
   border-radius: 9px;
   border: none;
   height: 33px;
-  font-size: 12px;
+  font-size: 14px;
 }
 .customButtonNoBg {
   color: #011EFE;
   background-color: #fff !important;
   border-radius: 9px;
-  border-color: #011EFE;
+  /* border-color: #011EFE; */
+  
+  border: 2px solid #D0DBEA;
   height: 33px;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .customButton:hover {
@@ -107,7 +109,7 @@ span{
   border-radius: 9px;
   border: none;
   height: 33px;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .customCancelButton {
@@ -1294,7 +1296,6 @@ input[type="number"] {
   left: 0;
   width: 100vw;
   height: 100vh;
-  /* background-color: white; */
   background-color: white;
   /* background-color: rgba(255, 255, 255, 0.6); */
   /* Light white and transparent */
@@ -1885,3 +1886,5 @@ input:checked ~ .checkmark {
   opacity: 1;
   transition: max-height 450ms ease, opacity 300ms ease;
 }
+
+

@@ -13,7 +13,7 @@ import { ChevronRight } from 'react-bootstrap-icons';
 import InvetmentConfirmation from './InvestmentConfirmation';
 import PortfolioNotes from './PortfolioNotes';
 import DirectSchemeNote from './DirectSchemeNote';
-import { filterDirectScheme, filterDirectSchemeForInvest } from '../services/utils/services';
+import {  filterDirectSchemeForInvest } from '../services/utils/services';
 
 interface InvestMoreScheme {
   show: boolean;
@@ -46,7 +46,6 @@ const InvestMoreScheme: React.FC<InvestMoreScheme> = ({
   useEffect(() => {
     if (productCodes.length > 0) {
       fetchPerformanceScheme();
-
     }
   }, [productCodes]);
 
@@ -54,8 +53,6 @@ const InvestMoreScheme: React.FC<InvestMoreScheme> = ({
     try {
       const adminUser = fetchAdminUser();
       if (!adminUser?.ucc) {
-        setSchemeList([]);
-        setSelectedSchemeList([]);
         return;
       }
 
@@ -83,10 +80,13 @@ const InvestMoreScheme: React.FC<InvestMoreScheme> = ({
           (s: any) => s.accordSchemeCode === item.accordProductCode
         );
 
+
         return {
           ...item,
           accordSchemeCode: item.accordProductCode,
           accordAMCCode: item.accordAmcCode,
+          nseProductCode:match?.nseProductCode??"",
+          nseAMCCode:match?.nseAMCCode??"",
           minSIPAmt: minSIP,
           minLumSumAmt: Number(item.min_purchase_amount ?? 0),
           sipAllowed: item.sip_allowed,
@@ -102,6 +102,8 @@ const InvestMoreScheme: React.FC<InvestMoreScheme> = ({
       const filtered = transformed.filter((item: any) => {
         return !item.scheme.toLowerCase().includes('direct');
       });
+      console.log("filtered",filtered);
+      
       setSelectedSchemeList(filtered);
       handleSipIntersection(filtered);
     } catch (err) {
@@ -111,12 +113,26 @@ const InvestMoreScheme: React.FC<InvestMoreScheme> = ({
     }
   };
 
-  const handleSipIntersection = (data: schemeSummaryKeys[]) => {
-    const sipIntersectionData = data
-      ?.map((scheme) => scheme.sipDateList)
-      .reduce((acc, curr) => acc.filter((date) => curr.includes(date)));
-    setSipDateList(sipIntersectionData);
-  };
+ const handleSipIntersection = (data: schemeSummaryKeys[] = []) => {
+  if (!data || data.length === 0) {
+    setSipDateList([]);
+    return;
+  }
+
+  // map to arrays (ensure arrays) then reduce from first array
+  const lists = data.map((scheme) => scheme.sipDateList ?? []);
+  if (lists.length === 0) {
+    setSipDateList([]);
+    return;
+  }
+
+  const intersection = lists.reduce((acc, curr) =>
+    acc.filter((date) => curr.includes(date))
+  );
+
+  setSipDateList(intersection);
+};
+
 
   const handleSelectedScheme = (item: schemeSummaryKeys) => {
     if (!item?.scheme?.toLowerCase().includes('direct')) {
@@ -142,9 +158,10 @@ const InvestMoreScheme: React.FC<InvestMoreScheme> = ({
   };
 
   const handleInvestMore = () => {
-    const hasDirect = selectedSchemeList.some((item) =>
+    const hasDirect = schemeList.some((item) =>
       item?.scheme?.toLowerCase()?.includes('direct')
     );
+
     setSelectedSchemeList(filterDirectSchemeForInvest(selectedSchemeList));
     if (hasDirect) {
       setOpenDirectNoteModel(true);
@@ -178,7 +195,8 @@ const InvestMoreScheme: React.FC<InvestMoreScheme> = ({
         <Modal.Body className="modal-bg">
           <PortfolioNotes portfolioType="satisfactory_performance" />
 
-          {schemeList.map((item, index) => {
+          {schemeList?.map((item, index) => {
+            
             const isChecked = selectedSchemeList?.some(
               (scheme) => scheme?.accordProductCode === item.accordProductCode
             );
@@ -364,7 +382,7 @@ const InvestMoreScheme: React.FC<InvestMoreScheme> = ({
         schemeList={selectedSchemeList}
         setSchemeList={setSelectedSchemeList}
         sipDateList={sipDateList}
-        from={'Portfolio Review'}
+        from={'portfolio'}
       />
 
       
