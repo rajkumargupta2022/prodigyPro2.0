@@ -50,6 +50,7 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
   const [shortcutValues, setShortcutValues] = useState<number[]>([0, 0, 0]);
 
   useEffect(() => {
+     if (!show) return;
     fetchFolios()
     defaultTransactionType()
     setMinimumDate(daysAdded(7, sipDateList))
@@ -86,20 +87,18 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
   };
 
   useEffect(() => {
+     if (!show) return;
     if (foliosFetched) {
       if (schemeList[0]?.totalAmount) {
         const total = Number(schemeList[0]?.totalAmount);
         distributeAmount(total);
         setAmount(total);
         setIsLumpsumTransaction(false);
-
-        // ✅ base = default amount (here: totalAmount)
         const base = isNaN(total) || total <= 0 ? 0 : total;
         if (base > 0) {
           setShortcutValues([base * 2, base * 3, base * 5]);
         }
       } else {
-        // this will internally set amount & shortcutValues using min amounts
         handleMinAmount(true);
       }
       setFoliosFetched(false);

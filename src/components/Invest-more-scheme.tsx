@@ -300,7 +300,7 @@ const InvestMoreScheme: React.FC<InvestMoreScheme> = ({
                         </div>
                         <div className="col-2 d-flex justify-content-end ">
                           <p className="fs12px my-1 text-dark">
-                            {item.fund_returns ?? 0}%
+                            {item.fund_returns?.toFixed(2) ?? 0}%
                           </p>
                         </div>
                       </>
@@ -320,7 +320,7 @@ const InvestMoreScheme: React.FC<InvestMoreScheme> = ({
                         </div>
                         <div className="col-2 d-flex justify-content-end ">
                           <p className="fs12px my-1 text-dark">
-                            {item.benchmark_returns ?? 0}%
+                            {item.benchmark_returns?.toFixed(2) ?? 0}%
                           </p>
                         </div>
                       </>
@@ -340,7 +340,7 @@ const InvestMoreScheme: React.FC<InvestMoreScheme> = ({
                         </div>
                         <div className="col-2 d-flex justify-content-end">
                           <p className="fs12px my-1 text-dark">
-                            {item.category_returns ?? 0}%
+                            {item?.category_returns?.toFixed(2) ?? 0}%
                           </p>
                         </div>
                       </>

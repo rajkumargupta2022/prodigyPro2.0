@@ -29,6 +29,10 @@ interface ChartState {
   options: ApexOptions;
   series: { name: string; data: number[] }[];
 }
+interface monthKeys {
+  value: number;
+  lebel: string;
+}
 
 const FundDetails = () => {
   const location = useLocation()
@@ -51,6 +55,7 @@ const FundDetails = () => {
   const [openRedumptionModel, setOpenRedumptionModel] = useState<boolean>(false)
   const [openMsgModel, setOpenMsgModel] = useState<boolean>(false)
   const [openInstaRedeem, setOpenInstaRedeem] = useState<boolean>(false)
+  const [monthList, setMonthList] = useState<monthKeys[]>([])
 
 
 
@@ -157,7 +162,7 @@ const FundDetails = () => {
 
 
   useEffect(() => {
-    console.log("pppp", location.state.from===keys.bajaj);
+    console.log("pppp", location.state.from === keys.bajaj);
 
     if (location?.state?.accordSchemeCode) {
       fetchSchemeDetail()
@@ -190,7 +195,19 @@ const FundDetails = () => {
       setSchemeList([...updated])
 
       setSipDateList([...res.data[0].sipDateList])
+      const monthForMap = [1, 3, 6, 12, 36, 60]
+      let monthData: monthKeys[] = []
+      const month = getMonthsSinceLaunch(res.data[0].launchDate)
+      monthForMap.forEach((item) => {
+        if (month >= item) {
+          monthData.push({ value: item, lebel: (item >= 12 ? (item / 12) + "Y" : item + "M") })
+        }
+      })
+      monthData.push({ value: -1, lebel: "Max" })
+      setDuration(monthData[monthData.length - 1].value)
+      console.log("monthData[monthData.length - 1].value", monthData[monthData.length - 1].value, monthData[0].value);
 
+      setMonthList(monthData)
       handleNearSipDate(res.data[0].sipDateList)
 
     } catch (err) {
@@ -199,6 +216,24 @@ const FundDetails = () => {
 
     }
   }
+
+  function getMonthsSinceLaunch(launchDateStr: string): number {
+    const launchDate = new Date(launchDateStr);
+    const today = new Date();
+
+    let years = today.getFullYear() - launchDate.getFullYear();
+    let months = today.getMonth() - launchDate.getMonth();
+
+    let totalMonths = years * 12 + months;
+
+    // If today's date is before launch day within the month, subtract 1
+    if (today.getDate() < launchDate.getDate()) {
+      totalMonths -= 1;
+    }
+
+    return totalMonths < 0 ? 0 : totalMonths; // never negative
+  }
+
   const fetchNavHistory = async (durationMonth: number) => {
     try {
       const res = await postRequest<navHistoryResponse>(endPoints.getNavHistory, { productcode: location.state.accordSchemeCode, duration: durationMonth })
@@ -338,9 +373,9 @@ const FundDetails = () => {
   const goTransactionHistory = (item: schemeDeatilDataKeys) => {
     navigate("/transaction-history", { state: { accord_product_code: item.accordSchemeCode, folio_number: location.state?.folio } })
   }
-const handleInstaRedeem = () => { 
-  setOpenInstaRedeem(true)
-}
+  const handleInstaRedeem = () => {
+    setOpenInstaRedeem(true)
+  }
 
 
   return (
@@ -366,7 +401,7 @@ const handleInstaRedeem = () => {
                   <p className="fs16px">₹{schemeList[0]?.cnav?.toFixed(2)}</p>
                 </div>
                 <div className="col-6">
-                  <p className="fs12px mb-0"> Last {durarinInYear} CAGR</p>
+                  <p className="fs12px mb-0"> Last {monthList[0]?.lebel} CAGR</p>
                   <h5 className={`sf12px  ${cagr > 0 ? "congratesColor" : "errorColor2"}`}>{cagr}%</h5>
                 </div>
               </div>
@@ -381,13 +416,9 @@ const handleInstaRedeem = () => {
               </div>
 
               <div className="d-flex justify-content-between align-items-center mx-4 mt-0 crPointer" >
-                <p className={`${duration === 1 && "activeDuratin"}`} onClick={() => fetchNavHistory(1)}>1M</p>
-                <p className={`${duration === 3 && "activeDuratin"}`} onClick={() => fetchNavHistory(3)}>3M</p>
-                <p className={`${duration === 6 && "activeDuratin"}`} onClick={() => fetchNavHistory(6)}>6M</p>
-                <p className={`${duration === 12 && "activeDuratin"}`} onClick={() => fetchNavHistory(12)}>1Y</p>
-                <p className={`${duration === 36 && "activeDuratin"}`} onClick={() => fetchNavHistory(36)}>3Y</p>
-                <p className={`${duration === 60 && "activeDuratin"}`} onClick={() => fetchNavHistory(60)}>5Y</p>
-                <p className={`${duration === -1 && "activeDuratin"}`} onClick={() => fetchNavHistory(-1)}>Max</p>
+                {monthList.map((item: monthKeys) => {
+                  return <p className={`${duration === item.value && "activeDuratin"}`} onClick={() => fetchNavHistory(item.value)}>{item.lebel}</p>
+                })}
               </div>
             </div>
 
@@ -442,7 +473,7 @@ const handleInstaRedeem = () => {
               </div>
             </div>
 
-            <MyStackBar schemeData={schemeList[0]} />
+            {monthList.length >= 4 && <MyStackBar schemeData={schemeList[0]} />}
 
           </div>
 
@@ -467,13 +498,13 @@ const handleInstaRedeem = () => {
                       </div>}
                     {location.state?.from === keys.bajaj ?
                       <div onClick={handleInstaRedeem} >
-                            <label
-                              className="btn_colorfull rounded-3 declaration-button w-100 paddingLeftRight px-4 py-2 mobile-fontset crPointer"
-                              htmlFor="option1"
-                            >
-                              Insta Redeem
-                            </label>
-                          </div> : <>
+                        <label
+                          className="btn_colorfull rounded-3 declaration-button w-100 paddingLeftRight px-4 py-2 mobile-fontset crPointer"
+                          htmlFor="option1"
+                        >
+                          Insta Redeem
+                        </label>
+                      </div> : <>
                         {checkTransactionAllowed(schemeList, keys.switch) &&
                           <div onClick={() => handleSwitch("Switch")} >
                             <label

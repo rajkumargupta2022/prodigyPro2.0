@@ -5,11 +5,13 @@ import { useEffect, useState } from "react";
 import OrderPlaces from "./order-places";
 import { postRequest } from "../services/Api/HandleApi";
 import { bankMandateKeys, bankMandateResponse, schemeDeatilDataKeys } from "../pages/data-interfaces/transact";
-import { endPoints } from "../services/utils/urls";
+import { endPoints, imageUrl } from "../services/utils/urls";
 import { finalTransaction } from "../services/utils/transactionApi";
 import { keys } from "../services/utils/keys";
 import { fetchAdminUser } from "../services/user/adminUser";
 import { errorToast } from "../services/utils/toast";
+import PortfolioEmpty from "../pages/PortfolioEmpty";
+import noBankImg from "../assets/img/no-bank.png"
 interface bankMandate {
   show: boolean;
   setShow: (show: boolean) => void;
@@ -23,14 +25,14 @@ const BankMandate: React.FC<bankMandate> = ({ show, setShow, schemeList, setSche
   // const [openCreateFolio,setOpenCreateFolio] = useState<boolean>(false)
   const [openSuccess, setOpenSuccess] = useState(false)
   const [mandateList, setMandateList] = useState<bankMandateKeys[]>([])
-  const [tempData, setTempData] = useState<any[]>([])
   const [successData, setSuccessData] = useState<any[]>([])
 
 
   useEffect(() => {
-
+    if (!show) return;
     if (show) {
       fetchMandateList()
+
     }
 
   }, [show])
@@ -42,26 +44,38 @@ const BankMandate: React.FC<bankMandate> = ({ show, setShow, schemeList, setSche
       errorToast("Something went wrong")
       return
     }
-    
+
 
     try {
       const res = await postRequest<bankMandateResponse>(
         endPoints.getMandateList,
         { ucc: adminUser?.ucc }
       );
+      const total = schemeList.reduce((sum, item) => sum + (item.amount ?? 0), 0);
+      let filteredMandates = res.mandates.filter(mandate => {
+        const toDate = new Date(mandate.to_date);   
+        const today = new Date();                   
 
-      setMandateList(res.mandates);
-      setSelectedUrn(res.mandates[0]?.umrn_no);
-    
+        return (
+          Number(mandate.amount) >= total &&       
+          toDate >= today                          
+        );
+      });
+
+      setMandateList(filteredMandates);
+      setSelectedUrn(filteredMandates[0]?.umrn_no);
+      console.log("Prepraing Schemelist", schemeList);
+
       let update = schemeList.map((scheme: any) => (
+
         {
           ...scheme,
           mandateId: res.mandates[0]?.umrn_no,
           from_date: res.mandates[0]?.from_date.replace("T", " ").replace("Z", ""),
           to_date: res.mandates[0]?.to_date.replace("T", " ").replace("Z", "")
         }))
-        
-      setTempData([...update])
+
+      setSchemeList([...update])
     } catch (err) {
       setMandateList([])
     }
@@ -80,15 +94,14 @@ const BankMandate: React.FC<bankMandate> = ({ show, setShow, schemeList, setSche
         // ✅ only update urn_no
       }));
 
-    setTempData([...updatedSchemes]);
+    setSchemeList([...updatedSchemes]);
   };
 
 
 
 
   const handleTransaction = () => {
-
-    finalTransaction(tempData, isSipTransaction ? keys.sip : keys.purchase, setSuccessData, additionalPurchase).then((res) => {
+    finalTransaction(schemeList, isSipTransaction ? keys.sip : keys.purchase, setSuccessData, additionalPurchase).then((res) => {
       console.log(res);
 
       setOpenSuccess(true)
@@ -110,13 +123,15 @@ const BankMandate: React.FC<bankMandate> = ({ show, setShow, schemeList, setSche
           <Modal.Title>Select Bank Mandate</Modal.Title>
         </Modal.Header>
         <Modal.Body className="modal-bg">
-          {mandateList?.map((item, index) => {
+          {mandateList.length>0?mandateList?.map((item, index) => {
             const isChecked = selectedUrn === item.umrn_no;
             return <div key={item.umrn_no} className="borderColor p-3 rounded bg-white m-2">
               <div className="d-flex justify-content-between" onClick={() => handleMandate(item.umrn_no, item.from_date, item.to_date)}>
                 <div className="d-flex">
                   <div className="prod_icon_img">
-                    <img src={"https://bankamcimagesv2.s3.ap-southeast-1.amazonaws.com/demo-bank.png"} height={40} width={40} className="rounded" alt="bank-logo" />
+                    <img src={imageUrl + item?.bank_name?.trim()
+                      .toLowerCase()
+                      .replace(/\s+/g, '_') + ".png"} height={35} width={35} className="rounded" alt="bank-logo" />
                   </div>
                   <div className="ms-2 prod_icon_heading">
                     <h4>{item.bank_name}</h4>
@@ -146,18 +161,18 @@ const BankMandate: React.FC<bankMandate> = ({ show, setShow, schemeList, setSche
                   <div className="fs12px">MAX LIMIT</div>
                   <div className="fs12px text-dark fw-bold">
                     <CurrencyRupee />
-                    {item.amount}
+                    {Number(item.amount)?.toLocaleString("en-IN")}
                   </div>
                 </div>
               </div>
             </div>
-          })}
+          }):<PortfolioEmpty images={noBankImg} title={"No Mandate found"} body={"Please create a new mandate upto ₹2,00,00,00,000 to continue with this transaction"} btnName={"Create New Mandate"} btnUrl={"/linked-bank-account"} />}
 
 
         </Modal.Body>
-        <Modal.Footer className="modal-bg ">
-          <Button className="customButton buttunCenter" onClick={handleTransaction}>Continue</Button>
-        </Modal.Footer>
+      {mandateList.length>0&&  <Modal.Footer className="modal-bg ">
+          <Button className="customButton buttunCenter"  onClick={handleTransaction}>Continue</Button>
+        </Modal.Footer>}
       </Modal>
       <OrderPlaces show={openSuccess} setShow={setOpenSuccess} successData={successData} />
     </>

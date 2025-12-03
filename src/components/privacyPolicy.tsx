@@ -16,27 +16,43 @@ const PrivacyPolicyComponent: React.FC = () => {
     fetchPrivacyPolicy();
   }, []);
 
-  const fetchPrivacyPolicy = async () => {
-    try {
-      setLoading(true);
-      setError(null);
+const fetchPrivacyPolicy = async () => {
+  try {
+    setLoading(true);
+    setError(null);
 
-      const response = await getRequest<PrivacyPolicyResponse>(endPoints.getPrivacyPolicy);
+    const response = await getRequest<PrivacyPolicyResponse>(endPoints.getPrivacyPolicy);
 
-      if (typeof response === "string") {
-        setHtmlContent(response);
-      } else if (response?.data) {
-        setHtmlContent(response.data);
-      } else {
-        setError("No content available");
-      }
-    } catch (err) {
-      console.log(err);
-      setError("Failed to fetch Privacy Policy");
-    } finally {
-      setLoading(false);
+    let html = "";
+
+    if (typeof response === "string") {
+      html = response;
+    } else if (response?.data) {
+      html = response.data;
     }
-  };
+
+    // 👇 convert headings
+    html = convertHeadings(html);
+
+    setHtmlContent(html);
+  } catch (err) {
+    console.log(err);
+    setError("Failed to fetch Privacy Policy");
+  } finally {
+    setLoading(false);
+  }
+};
+
+  const convertHeadings = (html: string) => {
+  return html
+    .replace(/<h3>/g, "<h4>")
+    .replace(/<\/h3>/g, "</h4>")
+    .replace(/<h2>/g, "<h3>")
+    .replace(/<\/h2>/g, "</h3>")
+    .replace(/<h1>/g, "<h2>")
+    .replace(/<\/h1>/g, "</h2>");
+};
+
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;

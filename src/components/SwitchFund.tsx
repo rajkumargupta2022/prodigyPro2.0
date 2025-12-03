@@ -261,7 +261,7 @@ const SwitchFund: React.FC<SwitchFundProp> = ({
                               </div>
                               <div className="col-2 d-flex justify-content-end mb-0">
                                 <p className="fs12px text-dark">
-                                  {sourceData?.fund_returns ?? 0}%
+                                  {sourceData?.fund_returns?.toFixed(2) ?? 0}%
                                 </p>
                               </div>
                             </>
@@ -281,7 +281,7 @@ const SwitchFund: React.FC<SwitchFundProp> = ({
                               </div>
                               <div className="col-2 d-flex justify-content-end mb-0">
                                 <p className="fs12px text-dark">
-                                  {sourceData?.benchmark_returns ?? 0}%
+                                  {sourceData?.benchmark_returns?.toFixed(2) ?? 0}%
                                 </p>
                               </div>
                             </>
@@ -301,7 +301,7 @@ const SwitchFund: React.FC<SwitchFundProp> = ({
                               </div>
                               <div className="col-2 d-flex justify-content-end">
                                 <p className="fs12px text-dark">
-                                  {sourceData?.category_returns ?? 0}%
+                                  {sourceData?.category_returns?.toFixed(2) ?? 0}%
                                 </p>
                               </div>
                             </>
@@ -370,7 +370,7 @@ const SwitchFund: React.FC<SwitchFundProp> = ({
                               </div>
                               <div className="col-2 d-flex justify-content-end mb-0">
                                 <p className="fs12px text-dark">
-                                  {targetData?.fund_returns ?? 0}%
+                                  {targetData?.fund_returns?.toFixed(2) ?? 0}%
                                 </p>
                               </div>
                             </>
@@ -390,7 +390,7 @@ const SwitchFund: React.FC<SwitchFundProp> = ({
                               </div>
                               <div className="col-2 d-flex justify-content-end mb-0">
                                 <p className="fs12px text-dark">
-                                  {targetData?.benchmark_returns ?? 0}%
+                                  {targetData?.benchmark_returns?.toFixed(2) ?? 0}%
                                 </p>
                               </div>
                             </>
@@ -410,7 +410,7 @@ const SwitchFund: React.FC<SwitchFundProp> = ({
                               </div>
                               <div className="col-2 d-flex justify-content-end">
                                 <p className="fs12px text-dark">
-                                  {targetData?.category_returns ?? 0}%
+                                  {targetData?.category_returns?.toFixed(2) ?? 0}%
                                 </p>
                               </div>
                             </>
