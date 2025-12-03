@@ -31,7 +31,7 @@ interface ChartState {
 }
 interface monthKeys {
   value: number;
-  lebel: string;
+  label: string;
 }
 
 const FundDetails = () => {
@@ -166,7 +166,6 @@ const FundDetails = () => {
 
     if (location?.state?.accordSchemeCode) {
       fetchSchemeDetail()
-      fetchNavHistory(12)
       handleMinAmount()
       fetchFolios()
     } else {
@@ -198,15 +197,15 @@ const FundDetails = () => {
       const monthForMap = [1, 3, 6, 12, 36, 60]
       let monthData: monthKeys[] = []
       const month = getMonthsSinceLaunch(res.data[0].launchDate)
+      console.log("111");
+      
       monthForMap.forEach((item) => {
         if (month >= item) {
-          monthData.push({ value: item, lebel: (item >= 12 ? (item / 12) + "Y" : item + "M") })
+          monthData.push({ value: item, label: (item >= 12 ? (item / 12) + "Y" : item + "M") })
         }
       })
-      monthData.push({ value: -1, lebel: "Max" })
-      setDuration(monthData[monthData.length - 1].value)
-      console.log("monthData[monthData.length - 1].value", monthData[monthData.length - 1].value, monthData[0].value);
-
+      monthData.push({ value: -1, label: "Max" })
+      fetchNavHistory(monthData[Math.floor(monthData.length/2)]?.value)
       setMonthList(monthData)
       handleNearSipDate(res.data[0].sipDateList)
 
@@ -239,41 +238,14 @@ const FundDetails = () => {
       const res = await postRequest<navHistoryResponse>(endPoints.getNavHistory, { productcode: location.state.accordSchemeCode, duration: durationMonth })
       setCagr(res.cagr)
       setNavDate(res.history.map(item => item.date))
-
+     setDuration(durationMonth)
       setNavValue(res.history.map(item => parseFloat(Number(item.nav).toFixed(2))))
-      setDuration(durationMonth)
-      yearInString(durationMonth)
-
     } catch (err) {
       setNavDate([])
 
     }
   }
-  const yearInString = (year: number) => {
-    switch (year) {
-      case 1:
-        setDurarinInYear("1M")
-        break;
-      case 3:
-        setDurarinInYear("3M")
-        break;
-      case 6:
-        setDurarinInYear("6M")
-        break;
-      case 12:
-        setDurarinInYear("1Y")
-        break;
-      case 36:
-        setDurarinInYear("3Y")
-        break;
-      case 60:
-        setDurarinInYear("5Y")
-        break;
-      default:
-        setDurarinInYear("Max")
-    }
 
-  }
 
   const handleClick = () => {
     setShow(!show);
@@ -401,8 +373,8 @@ const FundDetails = () => {
                   <p className="fs16px">₹{schemeList[0]?.cnav?.toFixed(2)}</p>
                 </div>
                 <div className="col-6">
-                  <p className="fs12px mb-0"> Last {monthList[0]?.lebel} CAGR</p>
-                  <h5 className={`sf12px  ${cagr > 0 ? "congratesColor" : "errorColor2"}`}>{cagr}%</h5>
+                  <p className="fs12px mb-0">  Last {monthList.find((m) => m.value === duration)?.label} CAGR</p>
+                  <h5 className={`  ${cagr > 0 ? "congratesColor" : "errorColor2"}`}>{cagr}%</h5>
                 </div>
               </div>
 
@@ -417,7 +389,7 @@ const FundDetails = () => {
 
               <div className="d-flex justify-content-between align-items-center mx-4 mt-0 crPointer" >
                 {monthList.map((item: monthKeys) => {
-                  return <p className={`${duration === item.value && "activeDuratin"}`} onClick={() => fetchNavHistory(item.value)}>{item.lebel}</p>
+                  return <p className={`${duration === item.value && "activeDuratin"}`} onClick={() => fetchNavHistory(item.value)}>{item.label}</p>
                 })}
               </div>
             </div>
