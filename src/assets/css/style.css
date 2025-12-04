@@ -1887,4 +1887,35 @@ input:checked ~ .checkmark {
   transition: max-height 450ms ease, opacity 300ms ease;
 }
 
+ #mfSlider .carousel-indicators {
+            bottom: 80px;
+          }
+
+          /* Hide prev arrow */
+          #mfSlider .carousel-control-prev {
+            display: none !important;
+          }
+
+          /* Bottom centered NEXT button */
+          #mfSlider .carousel-control-next {
+            width: auto;
+            top: auto;
+            bottom: 20px;
+            left: 50%;
+            right: auto;
+            transform: translateX(-50%);
+            opacity: 1 !important;
+          }
+
+          /* Remove default Bootstrap arrow icon */
+          .carousel-control-next-icon {
+            display: none !important;
+          }
+
+          /* Style for your arrow image */
+          .next-arrow-img {
+            width: 40px;  
+            height: 70px;
+            object-fit: contain;
+          }
 

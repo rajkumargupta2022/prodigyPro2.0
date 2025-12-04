@@ -11,42 +11,6 @@ import mfMoney from "../../assets/img/mf_savings/mfMoney.svg";
 const WhatIsMfSavings = () => {
   return (
     <>
-      <style>
-        {`
-          /* Place dots slightly above button */
-          #mfSlider .carousel-indicators {
-            bottom: 80px;
-          }
-
-          /* Hide prev arrow */
-          #mfSlider .carousel-control-prev {
-            display: none !important;
-          }
-
-          /* Bottom centered NEXT button */
-          #mfSlider .carousel-control-next {
-            width: auto;
-            top: auto;
-            bottom: 20px;
-            left: 50%;
-            right: auto;
-            transform: translateX(-50%);
-            opacity: 1 !important;
-          }
-
-          /* Remove default Bootstrap arrow icon */
-          .carousel-control-next-icon {
-            display: none !important;
-          }
-
-          /* Style for your arrow image */
-          .next-arrow-img {
-            width: 70px;  
-            height: 70px;
-            object-fit: contain;
-          }
-        `}
-      </style>
 
       <MyNavbar />
 

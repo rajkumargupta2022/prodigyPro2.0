@@ -47,7 +47,6 @@ const FundDetails = () => {
   const [navValue, setNavValue] = useState<number[]>([])
   const [duration, setDuration] = useState<number>(12)
   const [cagr, setCagr] = useState<number>(0)
-  const [durarinInYear, setDurarinInYear] = useState<string>("")
   const [schmeDetail, setSchmeDetail] = useState<detailPortfolioSchemeType[]>([location.state])
 
   const [sipDateList, setSipDateList] = useState<number[]>([])
@@ -162,8 +161,6 @@ const FundDetails = () => {
 
 
   useEffect(() => {
-    console.log("pppp", location.state.from === keys.bajaj);
-
     if (location?.state?.accordSchemeCode) {
       fetchSchemeDetail()
       handleMinAmount()
@@ -504,9 +501,9 @@ const FundDetails = () => {
                 <div className="card mb-4 popup_card_steup_area">
                   <div className="p-3">
                     <ul className="ps-0 style-unerline-prodgy mb-0 crPointer">
-                      <li onClick={() => handleRedmptionModel()}>Redeem Fund</li>
+                      {/* <li onClick={() => handleRedmptionModel()}>Redeem Fund</li> */}
 
-                      {/* {checkTransactionAllowed(schemeList, keys.redumption) && <li onClick={() => handleRedmptionModel()}>Redeem Fund</li>} */}
+                      {checkTransactionAllowed(schemeList, keys.redumption) && <li onClick={() => handleRedmptionModel()}>Redeem Fund</li>}
                       {checkTransactionAllowed(schemeList, keys.stp) && <li onClick={() => handleSwitch("STP")}>Systematic Transfer Plan (STP)</li>}
                       {checkTransactionAllowed(schemeList, keys.swp) && <li onClick={() => handleSwp()}>Systematic Withdrawal Plan (SWP)</li>}
                       <li onClick={() => goTransactionHistory(schemeList[0])}>Transaction History</li>

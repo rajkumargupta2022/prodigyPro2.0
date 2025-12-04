@@ -29,15 +29,15 @@ const BankMandate: React.FC<bankMandate> = ({ show, setShow, schemeList, setSche
 
 
   useEffect(() => {
-    if (!show) return;
     if (show) {
       fetchMandateList()
-
+      
     }
 
   }, [show])
 
   const fetchMandateList = async () => {
+
     setSchemeList(schemeList)
     const adminUser = fetchAdminUser()
     if (!adminUser) {
@@ -64,8 +64,6 @@ const BankMandate: React.FC<bankMandate> = ({ show, setShow, schemeList, setSche
 
       setMandateList(filteredMandates);
       setSelectedUrn(filteredMandates[0]?.umrn_no);
-      console.log("Prepraing Schemelist", schemeList);
-
       let update = schemeList.map((scheme: any) => (
 
         {
@@ -76,6 +74,7 @@ const BankMandate: React.FC<bankMandate> = ({ show, setShow, schemeList, setSche
         }))
 
       setSchemeList([...update])
+      
     } catch (err) {
       setMandateList([])
     }
@@ -101,6 +100,7 @@ const BankMandate: React.FC<bankMandate> = ({ show, setShow, schemeList, setSche
 
 
   const handleTransaction = () => {
+
     finalTransaction(schemeList, isSipTransaction ? keys.sip : keys.purchase, setSuccessData, additionalPurchase).then((res) => {
       console.log(res);
 

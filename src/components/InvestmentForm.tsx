@@ -27,9 +27,10 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
   const [minimumDate, setMinimumDate] = useState<Date>()
 
   useEffect(() => {
+  
     if (
       schemeList.length > 0 &&
-      schemeList[0].folioList === undefined && // Run only if folioList is not yet fetched
+      schemeList[0].folioList === undefined && 
       schemeList[0].sipDateList?.length > 0
     ) {
 

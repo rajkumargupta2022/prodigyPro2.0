@@ -26,7 +26,9 @@ const SelectFolioPopup: React.FC<SchemeDetailsProps> = ({ show, setShow, schemeL
   const [tempSchemeList, setTempSchemeList] = useState<schemeDeatilDataKeys[]>([])
   const sip = isSipTransaction
   useEffect(() => {
+    if (!show) return;
     defaultSelectFolio()
+    console.log("from folio");
     
   }, [show])
   const defaultSelectFolio = () => {
