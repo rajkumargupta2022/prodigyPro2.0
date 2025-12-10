@@ -22,3 +22,7 @@ export interface emergencyPortfolioListRes {
   data: detailPortfolioSchemeType[];
   msg: string;
 }
+export interface bajanjInstaRedeemRes {
+  success: boolean;
+  transaction_reference_no: string;
+}

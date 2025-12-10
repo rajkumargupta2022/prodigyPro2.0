@@ -1,5 +1,5 @@
-// export const baseUrl:string = "https://prodigypro-new.bfcsofttech.in/api/v2/"
-export const baseUrl:string = "http://192.168.18.109:8080/api/v2/"
+export const baseUrl:string = "https://prodigypro-new.bfcsofttech.in/api/v2/"
+// export const baseUrl:string = "http://192.168.18.109:8080/api/v2/"
 export const imageUrl:string ="https://bankamcimagesv2.s3.ap-southeast-1.amazonaws.com/"
 
 export enum endPoints{
@@ -84,5 +84,7 @@ export enum endPoints{
    getNotes="portfolio-review/get-notes",
    hasEmergencyPortfolio="bajaj-insta-redeem/has-emergency-portfolio",
   getEmergencyPortfolioSnapshot="bajaj-insta-redeem/get-emergency-portfolio-snapshot",
-  getDetailedEmergencyPortfolio="bajaj-insta-redeem/get-detailed-emergency-portfolio"
+  getDetailedEmergencyPortfolio="bajaj-insta-redeem/get-detailed-emergency-portfolio",
+  initiateInstaRedeem="bajaj-insta-redeem/initiate-insta-redeem",
+  confirmInstaRedeemOtp="bajaj-insta-redeem/confirm-insta-redeem-otp"
 }

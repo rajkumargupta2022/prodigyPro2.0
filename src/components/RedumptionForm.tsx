@@ -137,9 +137,6 @@ const RedumptionForm: React.FC<investmetProps> = ({ redeemList, setRedeemList, s
                   onChange={() => handleSelectedScheme(item)}
                 />
 
-
-
-
                 <hr />
                 <div className="d-flex justify-content-between">
 

@@ -21,30 +21,25 @@ interface bankMandate {
   additionalPurchase: boolean
 }
 
-const BankMandate: React.FC<bankMandate> = ({ show, setShow, schemeList, setSchemeList, isSipTransaction, additionalPurchase }) => {
-  // const [openCreateFolio,setOpenCreateFolio] = useState<boolean>(false)
+ // const [openCreateFolio,setOpenCreateFolio] = useState<boolean>(false)
+ const BankMandate: React.FC<bankMandate> = ({ show, setShow, schemeList, setSchemeList, isSipTransaction, additionalPurchase }) => {
   const [openSuccess, setOpenSuccess] = useState(false)
   const [mandateList, setMandateList] = useState<bankMandateKeys[]>([])
   const [successData, setSuccessData] = useState<any[]>([])
-
+  const [updatedSchemeList, setUpdatedSchemeList] = useState<any[]>([])  // ✅ Track updated list
 
   useEffect(() => {
     if (show) {
       fetchMandateList()
-      
     }
-
   }, [show])
 
   const fetchMandateList = async () => {
-
-    setSchemeList(schemeList)
     const adminUser = fetchAdminUser()
     if (!adminUser) {
       errorToast("Something went wrong")
       return
     }
-
 
     try {
       const res = await postRequest<bankMandateResponse>(
@@ -55,7 +50,6 @@ const BankMandate: React.FC<bankMandate> = ({ show, setShow, schemeList, setSche
       let filteredMandates = res.mandates.filter(mandate => {
         const toDate = new Date(mandate.to_date);   
         const today = new Date();                   
-
         return (
           Number(mandate.amount) >= total &&       
           toDate >= today                          
@@ -64,53 +58,47 @@ const BankMandate: React.FC<bankMandate> = ({ show, setShow, schemeList, setSche
 
       setMandateList(filteredMandates);
       setSelectedUrn(filteredMandates[0]?.umrn_no);
-      let update = schemeList.map((scheme: any) => (
-
-        {
-          ...scheme,
-          mandateId: res.mandates[0]?.umrn_no,
-          from_date: res.mandates[0]?.from_date.replace("T", " ").replace("Z", ""),
-          to_date: res.mandates[0]?.to_date.replace("T", " ").replace("Z", "")
-        }))
-
+      
+      let update = schemeList.map((scheme: any) => ({
+        ...scheme,
+        mandateId: res.mandates[0]?.umrn_no,
+        from_date: res.mandates[0]?.from_date.replace("T", " ").replace("Z", ""),
+        to_date: res.mandates[0]?.to_date.replace("T", " ").replace("Z", "")
+      }))
+      
+      console.log("mandates", update);
+      setUpdatedSchemeList(update);  // ✅ Store in local state
       setSchemeList([...update])
       
     } catch (err) {
       setMandateList([])
     }
   }
+
   const [selectedUrn, setSelectedUrn] = useState<string | null>(null);
 
   const handleMandate = async (urn: string, from_date: string, to_date: string) => {
     setSelectedUrn(urn);
-    const updatedSchemes = schemeList.map((scheme) => (
-      {
+    const updatedSchemes = updatedSchemeList.map((scheme) => ({  // ✅ Use updatedSchemeList
+      ...scheme,
+      mandateId: urn,
+      from_date: from_date.replace("T", " ").replace("Z", ""),
+      to_date: to_date.replace("T", " ").replace("Z", "")
+    }));
 
-        ...scheme,
-        mandateId: urn,
-        from_date: from_date.replace("T", " ").replace("Z", ""),
-        to_date: to_date.replace("T", " ").replace("Z", "")
-        // ✅ only update urn_no
-      }));
-
+    setUpdatedSchemeList(updatedSchemes);  // ✅ Update local state
     setSchemeList([...updatedSchemes]);
   };
 
-
-
-
   const handleTransaction = () => {
-
-    finalTransaction(schemeList, isSipTransaction ? keys.sip : keys.purchase, setSuccessData, additionalPurchase).then((res) => {
+    console.log("schelist", updatedSchemeList);  // ✅ Use local state with fresh data
+    
+    finalTransaction(updatedSchemeList, isSipTransaction ? keys.sip : keys.purchase, setSuccessData, additionalPurchase).then((res) => {
       console.log(res);
-
       setOpenSuccess(true)
       setShow(false)
     })
-
-
   }
-
   return (
     <>
       <Modal

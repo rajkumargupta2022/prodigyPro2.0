@@ -173,7 +173,7 @@ const FundDetails = () => {
       }
     }
 
-  }, [])
+  }, [location?.state?.accordSchemeCode])
 
   const fetchSchemeDetail = async () => {
     try {

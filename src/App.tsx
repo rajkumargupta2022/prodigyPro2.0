@@ -87,6 +87,8 @@ import RedemptionDetails from "./pages/orders/RedemptionDetails";
 import SwpInstallmentDetails from "./pages/orders/SwpInstallmentDetails";
 import TransactionHistory from "./pages/orders/TransactionHistory";
 import WhatIsMfSavings from "./pages/mfSavings/What-is-mf-savings";
+import ManualSurplusCalculator from "./pages/mfSavings/ManualSurplusCalculator";
+import ManualSurplusResult from "./pages/mfSavings/ManualSurplusResult";
 
 const LoaderHandler = () => {
   const { showLoader, hideLoader } = useLoader();
@@ -262,6 +264,14 @@ function App() {
         <Route path="/sip-calculator" element={<SipCalculator />} />
         <Route path="/marriage-calculator" element={<MarriageCalculator />} />
         <Route path="/sif-funds" element={<SifFunds />} />
+        <Route
+          path="/manual-surplus-calculator"
+          element={<ManualSurplusCalculator />}
+        />
+         <Route
+          path="/manual-surplus-result"
+          element={<ManualSurplusResult />}
+        />
         <Route
           path="/education-calculator"
           element={<EducationCalculator />}

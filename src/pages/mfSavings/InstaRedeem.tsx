@@ -4,40 +4,64 @@ import Modal from 'react-bootstrap/Modal';
 import { Card } from 'react-bootstrap';
 import { currentDateInStringNumber } from '../../services/dates/dateFormater';
 import { detailPortfolioSchemeType } from '../data-interfaces/portfolio';
-import { imageUrl } from '../../services/utils/urls';
+import { endPoints, imageUrl } from '../../services/utils/urls';
 import { useEffect, useState } from 'react';
+import { fetchAdminUser } from '../../services/user/adminUser';
+import { postRequest } from '../../services/Api/HandleApi';
+import { errorToast } from '../../services/utils/toast';
+import { bajanjInstaRedeemRes } from '../data-interfaces/emergency-portfolio';
+import InstaRedeemOtp from './InstaRedeemOtp';
 interface investmetProps {
   show: boolean;
   setShow: (show: boolean) => void;
   redeemList: detailPortfolioSchemeType,
-  
+
 
 }
 
 
 const InstaRedeem: React.FC<investmetProps> = ({ show, setShow, redeemList }) => {
   const [redemptionDetail, setRedemptionDetail] = useState<detailPortfolioSchemeType>(redeemList)
-    useEffect(() => { 
-      setRedemptionDetail(redeemList) 
-    }, [show])
+  const [openOtmpModel, setOpenOtmpModel] = useState<boolean>(false)
+  const [transactionReferenceNo, setTransactionReferenceNo] = useState<string>("ajhdgf545d4d")
+  useEffect(() => {
+    setRedemptionDetail(redeemList)
+  }, [show])
 
 
-    const amonutHandle = (e: React.ChangeEvent<HTMLInputElement>) => { 
-      let value = Number(e.target.value.trim());
-      if(value > Number(redemptionDetail.currentvalue)){
-        value = Number(redemptionDetail.currentvalue);
-      }
-      setRedemptionDetail((prev) => ({
-        ...prev,
-        amount: value,
-      }));
+  const amonutHandle = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = Number(e.target.value.trim());
+    if (value > Number(redemptionDetail.currentvalue)) {
+      value = Number(redemptionDetail.currentvalue);
     }
-      
-    const handleFinalRedeem = () => { 
-       console.log(redemptionDetail);
-       
+    setRedemptionDetail((prev) => ({
+      ...prev,
+      amount: value,
+    }));
+  }
 
+  const handleFinalRedeem = async () => {
+    console.log(redemptionDetail);
+    const adminUser = fetchAdminUser()
+    const reqBody = {
+      ucc: adminUser?.ucc,
+      folio_number: redemptionDetail.folio,
+      accord_product_code: redemptionDetail.accordSchemeCode,
+      scheme_name: redemptionDetail.scheme,
+      amount: redemptionDetail.amount,
     }
+    try {
+      // const res = await postRequest<bajanjInstaRedeemRes>(endPoints.initiateInstaRedeem, reqBody);
+      // if (res.success) {
+        setOpenOtmpModel(true)
+        setShow(false)
+        // setTransactionReferenceNo(res.transaction_reference_no)
+      // }
+    } catch (err) {
+      errorToast(err)
+    }
+
+  }
   return (
     <>
 
@@ -97,6 +121,7 @@ const InstaRedeem: React.FC<investmetProps> = ({ show, setShow, redeemList }) =>
           <Button className='customButton buttunCenter' onClick={handleFinalRedeem}>Redeem</Button>
         </Modal.Footer>
       </Modal>
+      <InstaRedeemOtp show={openOtmpModel} setShow={setOpenOtmpModel} requestId={transactionReferenceNo} />
 
     </>
   );
