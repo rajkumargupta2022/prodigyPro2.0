@@ -1,14 +1,9 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import NavBar from "../../components/Navbar";
-import RangeBar from "../calculator/RangeBar";
 import { useState } from "react";
-import { FV, pmtvalue } from "../../services/utils/calculatorsFs";
 
 const ManualSurplusCalculator = () => {
 
-  const [currentAccountBalance, setCurrentAccountBalance] = useState<Number>(500000)
-  const [monthlyInflows, setMonthlyInflows] = useState<Number>(200000)
-  const [monthlyOutFlows, setMonthlyOutFlows] = useState<Number>(4500000)
   const navigate = useNavigate()
 
 

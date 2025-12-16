@@ -1,6 +1,6 @@
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-import { CurrencyRupee, XCircle } from "react-bootstrap-icons";
+import { XCircle } from "react-bootstrap-icons";
 
 import PortfolioEmpty from "../../../pages/PortfolioEmpty";
 import noBankImg from "../../../assets/img/no-bank.png"
@@ -55,7 +55,7 @@ interface ManageBankAccounts {
           <Modal.Title>Manage Bank Accounts</Modal.Title>
         </Modal.Header>
         <Modal.Body className="modal-bg">
-          {mandateList.length>0?mandateList?.map((item, index) => {
+          {mandateList.length>0?mandateList?.map((item) => {
          
             return <div key={item.umrn_no} className="borderColor p-3 rounded bg-white m-2">
               <div className="d-flex justify-content-between" >

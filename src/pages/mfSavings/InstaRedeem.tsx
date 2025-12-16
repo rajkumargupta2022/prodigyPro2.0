@@ -11,6 +11,7 @@ import { postRequest } from '../../services/Api/HandleApi';
 import { errorToast } from '../../services/utils/toast';
 import { bajanjInstaRedeemRes } from '../data-interfaces/emergency-portfolio';
 import InstaRedeemOtp from './InstaRedeemOtp';
+import RedumptionConfirmation from '../../components/RedumptionConfirmation';
 interface investmetProps {
   show: boolean;
   setShow: (show: boolean) => void;
@@ -21,46 +22,87 @@ interface investmetProps {
 
 
 const InstaRedeem: React.FC<investmetProps> = ({ show, setShow, redeemList }) => {
-  const [redemptionDetail, setRedemptionDetail] = useState<detailPortfolioSchemeType>(redeemList)
+  const [redemptionDetail, setRedemptionDetail] = useState<detailPortfolioSchemeType[]>([redeemList])
   const [openOtmpModel, setOpenOtmpModel] = useState<boolean>(false)
   const [transactionReferenceNo, setTransactionReferenceNo] = useState<string>("ajhdgf545d4d")
+  const [openRedumptionModel, setOpenRedumptionModel] = useState<boolean>(false)
+  const [amountMsg,setAmountMsg] = useState<string>("")
   useEffect(() => {
-    setRedemptionDetail(redeemList)
+    setRedemptionDetail([redeemList])
+    console.log(redeemList);
+    
   }, [show])
 
 
-  const amonutHandle = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let value = Number(e.target.value.trim());
-    if (value > Number(redemptionDetail.currentvalue)) {
-      value = Number(redemptionDetail.currentvalue);
-    }
-    setRedemptionDetail((prev) => ({
-      ...prev,
-      amount: value,
-    }));
+function getMaxRedeemableAmount(currentValue:number, maxRedeemableAmount:number) {
+  if (currentValue === 0) {
+    return 0;
   }
 
+  const maxFromCurrentValue = 0.9 * currentValue; // 90% of current value
+
+  return Math.floor(
+    maxFromCurrentValue < maxRedeemableAmount
+      ? maxFromCurrentValue
+      : maxRedeemableAmount
+  );
+}
+
+  const amountHandle = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const inputValue = e.target.value;
+   setAmountMsg("");
+
+
+  let value = Number(inputValue);
+  if (Number.isNaN(value)) return;
+
+  const maxAmount = getMaxRedeemableAmount(Number(redemptionDetail[0]?.currentvalue)??0, 50000);
+
+  if (value > maxAmount) {
+    value = maxAmount;
+    setAmountMsg(`Maximum redeemable amount is ₹${maxAmount.toLocaleString("en-IN")}`);
+  }
+
+  setRedemptionDetail(prev => {
+    const updated = [...prev];
+    updated[0] = {
+      ...updated[0],
+      amount: value
+    };
+    return updated;
+  });
+};
+
+
   const handleFinalRedeem = async () => {
-    console.log(redemptionDetail);
+    if (!redemptionDetail[0]?.amount) {
+      errorToast("Please enter amount")
+      return
+    }
     const adminUser = fetchAdminUser()
     const reqBody = {
       ucc: adminUser?.ucc,
-      folio_number: redemptionDetail.folio,
-      accord_product_code: redemptionDetail.accordSchemeCode,
-      scheme_name: redemptionDetail.scheme,
-      amount: redemptionDetail.amount,
+      folio_number: "71010671504",
+      accord_product_code: redemptionDetail[0].accordSchemeCode,
+      scheme_name: redemptionDetail[0].scheme,
+      amount: redemptionDetail[0].amount,
     }
     try {
-      // const res = await postRequest<bajanjInstaRedeemRes>(endPoints.initiateInstaRedeem, reqBody);
-      // if (res.success) {
+
+      const res = await postRequest<bajanjInstaRedeemRes>(endPoints.initiateInstaRedeem, reqBody);
+      if (res.success) {
         setOpenOtmpModel(true)
         setShow(false)
-        // setTransactionReferenceNo(res.transaction_reference_no)
-      // }
+        setTransactionReferenceNo(res.transaction_reference_no)
+      }
     } catch (err) {
       errorToast(err)
     }
 
+  }
+  const normalRedeem  = ()=>{
+     setShow(false)
+     setOpenRedumptionModel(true)
   }
   return (
     <>
@@ -83,30 +125,30 @@ const InstaRedeem: React.FC<investmetProps> = ({ show, setShow, redeemList }) =>
               <div className="d-flex">
                 <div className="prod_icon_img">
 
-                  <img src={imageUrl + redemptionDetail.accordAMCCode + ".png"} height={35} width={35} alt="" className="rounded" />
+                  <img src={imageUrl + redemptionDetail[0].accordAMCCode + ".png"} height={35} width={35} alt="" className="rounded" />
                 </div>
                 <div className="ms-2 prod_icon_heading">
-                  <h4>{redemptionDetail.scheme}</h4>
-                  {redemptionDetail.equity ? <p>Equity: {redemptionDetail.equity}</p> : ""}
+                  <h4>{redemptionDetail[0].scheme}</h4>
+                  {redemptionDetail[0].folio ? <p>Folio: {redemptionDetail[0].folio}</p> : ""}
                 </div>
               </div>
             </div>
             <hr />
 
-            <div className="row text-start my-2">
+            <div className="row text-start ">
               <div className="col-md-6">
                 <p className='mb-0 fs12px'> Current Value (As on {currentDateInStringNumber()})</p>
-                <small className='fs16px'>₹{Number(redemptionDetail?.currentvalue)?.toLocaleString("en-IN")}</small>
+                <small className='fs16px'>₹{Number(redemptionDetail[0]?.currentvalue)?.toLocaleString("en-IN")}</small>
               </div>
               <div className="col-md-6">
                 <p className='mb-0 fs12px'> Total Units</p>
-                <small className='fs16px'>{Number(redemptionDetail?.unit)?.toLocaleString("en-IN")}</small>
+                <small className='fs16px'>{Number(redemptionDetail[0]?.unit)?.toLocaleString("en-IN")}</small>
               </div>
             </div>
             <div className="form-group">
               <label htmlFor="amountFor" className='fs12px'>REDUMPTION AMOUNT</label>
-              <input type="text" className="form-control" value={redemptionDetail.amount ?? 0} id="amountFor" onChange={amonutHandle} aria-describedby="emailHelp" placeholder={`${"Enter Amount"}`} />
-
+              <input type="text" className="form-control" value={redemptionDetail[0].amount ?? 0} id="amountFor" onChange={amountHandle} aria-describedby="emailHelp" placeholder={`${"Enter Amount"}`} />
+              {amountMsg && <small className='text-danger'>{amountMsg}</small>}
             </div>
 
 
@@ -116,12 +158,18 @@ const InstaRedeem: React.FC<investmetProps> = ({ show, setShow, redeemList }) =>
 
 
         </Modal.Body>
-        <small className='px-3 fs12px modal-bg text-center'>According to SEBI guidelines, redemption payouts are processed only to the bank account registered in the folio statement.</small>
+        <small className='px-3 fs12px modal-bg text-center'>Insta Redeem allows you to withdraw money instantly.
+          Through this feature, the money will be redeemed within a few seconds directly from the AMC up to the prescribed limit.</small>
         <Modal.Footer className='modal-bg '>
           <Button className='customButton buttunCenter' onClick={handleFinalRedeem}>Redeem</Button>
         </Modal.Footer>
+        <small className='mt-0 mb-3 fs12px modal-bg text-center' >To redeem an amount beyond the prescribed limit, <small className='crPointer logoBlueColor' onClick={normalRedeem}>click here
+        </small> .</small>
       </Modal>
+
       <InstaRedeemOtp show={openOtmpModel} setShow={setOpenOtmpModel} requestId={transactionReferenceNo} />
+      <RedumptionConfirmation show={openRedumptionModel} setShow={setOpenRedumptionModel} redeemList={redemptionDetail} setRedeemList={setRedemptionDetail} />
+
 
     </>
   );

@@ -1,4 +1,3 @@
-import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 
 import PortfolioEmpty from "../../../pages/PortfolioEmpty";
@@ -82,7 +81,7 @@ const ChooseAccountToLink: React.FC<ChooseAccountToLink> = ({ show, setShow }) =
             <div className="col-md-6 col-lg-6">
               <button
                 type="button"
-                className={`${true ? "customButton" : "customButtonNoBg"} w-100 px-4 mb-1`}
+                className={`customButton w-100 px-4 mb-1`}
               >
                 Link Bank Account
               </button>
@@ -91,7 +90,7 @@ const ChooseAccountToLink: React.FC<ChooseAccountToLink> = ({ show, setShow }) =
             <div className="col-md-6 col-lg-6">
               <button
                 type="button"
-                className={`${true ? "customButtonNoBg" : "customButton"} w-100 px-4 mb-1`}
+                className={`customButtonNoBg w-100 px-4 mb-1`}
               >
                 Close
               </button>

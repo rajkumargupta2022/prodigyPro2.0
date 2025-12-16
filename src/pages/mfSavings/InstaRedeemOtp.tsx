@@ -1,12 +1,12 @@
-import { useEffect, useState } from 'react';
+import {  useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import OtpInput from 'react-otp-input';
 import { postRequest } from '../../services/Api/HandleApi';
-import { resendOtpRes } from '../../pages/data-interfaces/users';
 import { endPoints } from '../../services/utils/urls';
 import { errorToast, successToast } from '../../services/utils/toast';
 import { fetchAdminUser } from '../../services/user/adminUser';
+import OrderPlaces from '../../components/order-places';
 
 interface InstaRedeemOtpProps {
   show: boolean;
@@ -17,23 +17,15 @@ interface InstaRedeemOtpProps {
 const InstaRedeemOtp: React.FC<InstaRedeemOtpProps> = ({ show, setShow, requestId }) => {
   
   const [otp, setOtp] = useState<string>();
-  const [counter, setCounter] = useState<number>(60);
+  const [openSuccess, setOpenSuccess] = useState<boolean>(false);
+  const [successData, setSuccessData] = useState<any[]>([]);
 
-  useEffect(() => {
-    if (show) {
-      let timer: number;
-      if (counter > 0) {
-        timer = setTimeout(() => setCounter(prev => prev - 1), 1000);
-      }
-      return () => clearTimeout(timer);
-    }
-
-  }, [counter, show]);
+ 
 
   const handleClose = () => setShow(false);
   const handleVarifyOtp = async () => {
-    if (!otp || otp.trim().length !== 4 || isNaN(Number(otp))) {
-      errorToast("Please enter a valid 4-digit OTP");
+    if (!otp || otp.trim().length !== 6 || isNaN(Number(otp))) {
+      errorToast("Please enter a valid 6-digit OTP");
       return;
     }
     try {
@@ -45,7 +37,8 @@ const InstaRedeemOtp: React.FC<InstaRedeemOtpProps> = ({ show, setShow, requestI
       }
       const res = await postRequest<any>(endPoints.confirmInstaRedeemOtp, reqBody)
       if (res.success) {
-         
+          setSuccessData(res.data)
+          setOpenSuccess(true)
         successToast(res.msg)
       } else {
         errorToast(res.msg)
@@ -56,22 +49,7 @@ const InstaRedeemOtp: React.FC<InstaRedeemOtpProps> = ({ show, setShow, requestI
     setShow(false)
     // navigate("/portfolio-under-review")
   };
-  const resendOtp = async () => {
-    try {
-      const res = await postRequest<resendOtpRes>(endPoints.initiateInstaRedeem, {
-        transaction_reference_no: requestId,
-      });
-      if (res.success) {
-        successToast(res.msg);
-        setCounter(60)
-      } else {
-        errorToast(res);
-      }
-    } catch (err) {
-      errorToast(err);
-    }
-
-  };
+ 
 
   return (
     <>
@@ -93,7 +71,7 @@ const InstaRedeemOtp: React.FC<InstaRedeemOtpProps> = ({ show, setShow, requestI
               value={otp}
               inputStyle="col otpBox"
               onChange={setOtp}
-              numInputs={4}
+              numInputs={6}
               renderSeparator={<span></span>}
               renderInput={(props) => <input {...props} />}
             />
@@ -102,8 +80,8 @@ const InstaRedeemOtp: React.FC<InstaRedeemOtpProps> = ({ show, setShow, requestI
         <Modal.Footer className='modal-bg justify-content-center'>
           <Button className='customButton' onClick={handleVarifyOtp}>Varify OTP</Button>
         </Modal.Footer>
-        <p className="fs12px text-center"> Don’t receive the OTP? {counter}<button className={`${counter === 0 && "logoBlueColor"} crPointer fs12px border-0 bg-transparent`} disabled={(counter > 0)} onClick={resendOtp}>Resend OTP</button></p>
       </Modal>
+          <OrderPlaces show={openSuccess} setShow={setOpenSuccess} successData={successData} />
     </>
   );
 }

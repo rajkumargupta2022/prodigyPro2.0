@@ -1,7 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Login from "./pages/Login";
 import TermsAndConditions from "./components/TermsAndConditions";
 import PersonalDetails from "./pages/Personal-details";
@@ -299,7 +299,7 @@ function App() {
         <Route path="/sign-up" element={<SighnUp />} />
 
         <Route path="/custom-goal" element={<CustomGoal />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
+        {/* <Route path="*" element={<Navigate to="/" replace />} /> */}
       </Routes>
 
     </>
