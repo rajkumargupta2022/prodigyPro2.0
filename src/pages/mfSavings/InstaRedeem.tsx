@@ -24,14 +24,25 @@ interface investmetProps {
 const InstaRedeem: React.FC<investmetProps> = ({ show, setShow, redeemList }) => {
   const [redemptionDetail, setRedemptionDetail] = useState<detailPortfolioSchemeType[]>([redeemList])
   const [openOtmpModel, setOpenOtmpModel] = useState<boolean>(false)
-  const [transactionReferenceNo, setTransactionReferenceNo] = useState<string>("ajhdgf545d4d")
+  const [transactionReferenceNo, setTransactionReferenceNo] = useState<string>("")
   const [openRedumptionModel, setOpenRedumptionModel] = useState<boolean>(false)
   const [amountMsg,setAmountMsg] = useState<string>("")
   useEffect(() => {
     setRedemptionDetail([redeemList])
-    console.log(redeemList);
+    updateDefaultAmount()
     
   }, [show])
+  const updateDefaultAmount = () => {
+    const maxAmount = getMaxRedeemableAmount(Number(redemptionDetail[0]?.currentvalue) ?? 0, 50000);  
+     setRedemptionDetail(prev => {
+    const updated = [...prev];
+    updated[0] = {
+      ...updated[0],
+      amount: maxAmount
+    };
+    return updated;
+  });
+  }
 
 
 function getMaxRedeemableAmount(currentValue:number, maxRedeemableAmount:number) {
@@ -84,8 +95,8 @@ function getMaxRedeemableAmount(currentValue:number, maxRedeemableAmount:number)
       ucc: adminUser?.ucc,
       folio_number: "71010671504",
       accord_product_code: redemptionDetail[0].accordSchemeCode,
-      scheme_name: redemptionDetail[0].scheme,
-      amount: redemptionDetail[0].amount,
+      scheme_name: redemptionDetail[0]?.scheme,
+      amount: redemptionDetail[0]?.amount,
     }
     try {
 

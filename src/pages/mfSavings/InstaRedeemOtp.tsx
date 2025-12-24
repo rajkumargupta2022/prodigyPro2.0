@@ -64,8 +64,8 @@ const InstaRedeemOtp: React.FC<InstaRedeemOtpProps> = ({ show, setShow, requestI
         <Modal.Header closeButton >
           <Modal.Title>Verify OTP</Modal.Title>
         </Modal.Header>
-        <Modal.Body >
-          <p className='fs14px'>OTP sent to +91 XXXXXXX{"9956419878".slice(-3)}</p>
+        <Modal.Body > 
+          <p className='fs14px'>An OTP has been sent to your registered mobile number for redemption confirmation.</p>
           <div className="mb-2">
             <OtpInput
               value={otp}

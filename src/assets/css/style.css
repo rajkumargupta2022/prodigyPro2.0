@@ -1918,6 +1918,11 @@ input:checked ~ .checkmark {
             height: 70px;
             object-fit: contain;
           }
-
+          .text-light-white{
+            color: #E9E9E9;
+          }
+.lightGreenColor{
+  background-color: #CDEDDE;
+}
 
           

@@ -13,7 +13,7 @@ const EmergencyFund = () => {
   //  const isEmergencyFund = true
   const handleTransactionType = (value: boolean) => {
     setIsEmergencyFund(value);
-
+ 
   }
 
 
@@ -33,7 +33,7 @@ const EmergencyFund = () => {
               <button type="button" className={`mx-3 ${isEmergencyFund ? "customButtonNoBg" : "customButton"} px-4 mb-1`} onClick={() => handleTransactionType(false)}>Emergency Portfolio</button>
               {isEmergencyFund &&
                 <p className="small">Park your surplus money in liquid/overnight funds for flexibility, safety, liquidity, and better returns than your traditional savings account. Ideal for short-term goals and emergency funds.
-With the Insta redemption feature, you can get an instant redemption from these funds up to ₹50,000 or 90% of your investment value, whichever is lower.</p>}
+                  With the Insta redemption feature, you can get an instant redemption from these funds up to ₹50,000 or 90% of your investment value, whichever is lower.</p>}
             </div>
           </div>
         </div>
@@ -41,8 +41,6 @@ With the Insta redemption feature, you can get an instant redemption from these 
       {
         isEmergencyFund ? <RecomendedSchemes from={"Emergency"} url={endPoints.getEmergencyFunds} /> : <EmergencyInvestments />
       }
-
-
       <Footer />
     </>
   );

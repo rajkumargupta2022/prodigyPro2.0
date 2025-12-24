@@ -1,30 +1,58 @@
 import {  useNavigate } from "react-router-dom";
 import NavBar from "../../components/Navbar";
 import { useState } from "react";
+import { amountHandler } from "../../services/utils/calculatorsFs";
+import { errorToast } from "../../services/utils/toast";
+import { fetchAdminUser } from "../../services/user/adminUser";
+import { endPoints } from "../../services/utils/urls";
+import { calculateManualInsightsKeys, calculateManualInsightsRes } from "../data-interfaces/mf-savings";
+import { postRequest } from "../../services/Api/HandleApi";
 
 const ManualSurplusCalculator = () => {
 
   const navigate = useNavigate()
-
-
-  const [amount, setAmount] = useState("2500000")
+  const [currentBalance, setCurrentBalance]  = useState<number>(100000)
+  const [monthlyInflows, setMonthlyInflows]  = useState<number>(120000)
+  const [monthlyOutFlows, setMonthlyOutFlows]  = useState<number>(50000)
+  const [result,setResult] = useState<calculateManualInsightsKeys>()
   const [error, setError] = useState("")
 
   const calculateResult = async () => {
-    navigate("/manual-surplus-result")
-    if (amount.trim() === "") {
-      setError("Plaese enter amount..."); // 🔹 show error below input
-      return;
+    if(!currentBalance){
+      errorToast("Please enter current balance")
+      return
     }
+      if(!monthlyInflows){
+      errorToast("Please enter current monthly inflows")
+      return
+    }
+      if(!monthlyOutFlows){
+      errorToast("Please enter current monthly outflows")
+      return
+    }
+    const adminUser = fetchAdminUser()
+  const reqBody = {
+      ucc: adminUser?.ucc,
+      current_balance: currentBalance,
+      monthly_inflows: monthlyInflows,
+      monthly_outflows: monthlyOutFlows,
+    }
+    try {
+      const res = await postRequest<calculateManualInsightsRes>(endPoints.calculateManualInsights,reqBody)
+      if (res.success) {
+        setResult(res.data)
+        navigate("/manual-surplus-result",{state:result})
+      }
+    } catch (err) {
+      console.log(err);
+
+    }
+
+
+
 
   };
 
-
-  const handleAmount = (e: any) => {
-    if (!isNaN(Number(e.target.value))) {
-      setAmount(e.target.value)
-    }
-  }
 
 
 
@@ -57,13 +85,13 @@ const ManualSurplusCalculator = () => {
                   <p className=" fs18px my-0 fw-normal">Estimate Your Investable Surplus</p>
                   <p className="fs12px mt-0"> Enter your details to see how much more you could earn with Savings+.</p>
                   <label htmlFor="exampleInputEmail1" className="form-label fs12px mb-0">CURRENT ACCOUNT BALANCE</label>
-                  <input type="text" className={`form-control ${error ? "is-invalid" : ""}`} placeholder="₹5,00,000" id="exampleInputEmail1" aria-describedby="emailHelp" value={amount} onChange={handleAmount} />
+                  <input type="text" className={`form-control ${error ? "is-invalid" : ""}`} placeholder="₹5,00,000" id="exampleInputEmail1" aria-describedby="emailHelp" value={currentBalance} onChange={(e)=>amountHandler(e,10000000,setCurrentBalance)} />
                   {error && <div className="invalid-feedback">{error}</div>}
                   <label htmlFor="exampleInputEmail1" className="form-label fs12px mt-2 mb-0">MONTHLY INFLOWS </label>
-                  <input type="text" className={`form-control ${error ? "is-invalid" : ""}`} placeholder="₹2,00,000" id="exampleInputEmail1" aria-describedby="emailHelp" value={amount} onChange={handleAmount} />
+                  <input type="text" className={`form-control ${error ? "is-invalid" : ""}`} placeholder="₹2,00,000" id="exampleInputEmail1" aria-describedby="emailHelp" value={monthlyInflows} onChange={(e)=>amountHandler(e,10000000,setMonthlyInflows)} />
                   {error && <div className="invalid-feedback">{error}</div>}
                   <label htmlFor="exampleInputEmail1" className="form-label fs12px mt-2 mb-0">MONTHLY OUTFLOWS</label>
-                  <input type="text" className={`form-control ${error ? "is-invalid" : ""}`} placeholder="₹4,50,000" id="exampleInputEmail1" aria-describedby="emailHelp" value={amount} onChange={handleAmount} />
+                  <input type="text" className={`form-control ${error ? "is-invalid" : ""}`} placeholder="₹4,50,000" id="exampleInputEmail1" aria-describedby="emailHelp" value={monthlyOutFlows} onChange={(e)=>amountHandler(e,10000000,setMonthlyOutFlows)} />
                   {error && <div className="invalid-feedback">{error}</div>}
                 </div>
               </div>

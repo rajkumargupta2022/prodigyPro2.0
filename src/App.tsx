@@ -89,6 +89,7 @@ import TransactionHistory from "./pages/orders/TransactionHistory";
 import WhatIsMfSavings from "./pages/mfSavings/What-is-mf-savings";
 import ManualSurplusCalculator from "./pages/mfSavings/ManualSurplusCalculator";
 import ManualSurplusResult from "./pages/mfSavings/ManualSurplusResult";
+import MfSavingAccount from "./pages/mfSavings/MfSavingAccount";
 
 const LoaderHandler = () => {
   const { showLoader, hideLoader } = useLoader();
@@ -149,6 +150,10 @@ function App() {
         <Route
           path="/portfolio-under-review"
           element={<PortfolioUnderReview />}
+        />
+          <Route
+          path="/mf-saving-account"
+          element={<MfSavingAccount />}
         />
         <Route path="/portfolio" element={<Portfolio />} />
 
