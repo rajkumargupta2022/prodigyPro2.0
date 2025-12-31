@@ -8,6 +8,10 @@ import ring from "../../assets/img/icons/engagement-ring 1.svg"
 import SipIcon from "../../assets/img/icons/SIP calculator.svg"
 import fdIcon from "../../assets/img/icons/wealth cal 1.svg"
 import emiIcon from "../../assets/img/icons/EMI calculator 1.svg"
+import targetAmount from "../../assets/img/calculator/target-amount-sip.svg"
+import annualSip from "../../assets/img/calculator/annual-sip.svg"
+import delayInvestment from "../../assets/img/calculator/cost-delay.svg"  
+import sipWithAnnual from "../../assets/img/calculator/sip-with-anual.svg"
 import { Link } from "react-router-dom";
 
 const CalculatorList = () => {
@@ -104,6 +108,42 @@ const CalculatorList = () => {
             </Link>
           </div>
          
+         <div className="col-lg-3 mb-3">
+            <Link to="/target-amount-sip-calculator" className="card border-0 shadow rounded-3" >
+              <div className="card-body border-0 card px-3">
+                <img src={targetAmount} className="" alt="..." height={44} width={44} />
+                <p className="fs18pxHeading mb-0 mt-2">Target Amount SIP</p>
+                <p className="fs14px mb-0">Find the monthly SIP needed to reach your financial goal.</p>
+              </div>
+            </Link>
+          </div>
+          <div className="col-lg-3 mb-3">
+            <Link to="/sip-with-annual-increase-calculator" className="card border-0 shadow rounded-3" >
+              <div className="card-body border-0 card px-3">
+                <img src={sipWithAnnual} className="" alt="..." height={44} width={44} />
+                <p className="fs18pxHeading mb-0 mt-2">SIP with Annual Increase</p>
+                <p className="fs14px mb-0">See how yearly SIP step-ups accelerate your wealth creation.</p>
+              </div>
+            </Link>
+          </div>
+          <div className="col-lg-3 mb-3">
+            <Link to="/annual-sip-calculator" className="card border-0 shadow rounded-3" >
+              <div className="card-body border-0 card px-3">
+                <img src={annualSip} className="" alt="..." height={44} width={44} />
+                <p className="fs18pxHeading mb-0 mt-2">Annual SIP Calculator</p>
+                <p className="fs14px mb-0">Calculate your investment growth with yearly SIP contributions.</p>
+              </div>
+            </Link>
+          </div>
+          <div className="col-lg-3 mb-3">
+            <Link to="/cost-of-delay-in-sip-calculator" className="card border-0 shadow rounded-3" >
+              <div className="card-body border-0 card px-3">
+                <img src={delayInvestment} className="" alt="..." height={44} width={44} />
+                <p className="fs18pxHeading mb-0 mt-2">Cost of Investment Delay</p>
+                <p className="fs14px mb-0">Understand how postponing your investment affects your long-term wealth.</p>
+              </div>
+            </Link>
+          </div>
 
         </div>
       </div>

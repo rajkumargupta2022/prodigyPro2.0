@@ -90,6 +90,10 @@ import WhatIsMfSavings from "./pages/mfSavings/What-is-mf-savings";
 import ManualSurplusCalculator from "./pages/mfSavings/ManualSurplusCalculator";
 import ManualSurplusResult from "./pages/mfSavings/ManualSurplusResult";
 import MfSavingAccount from "./pages/mfSavings/MfSavingAccount";
+import TargetAmountSIPCalculator from "./pages/calculator/TargetAmountCalculator";
+import SipWithAnnualIncrease from "./pages/calculator/SipWithAnnualIncrease";
+import AnnualSipCalculator from "./pages/calculator/AnnualSipCalculator";
+import CostOfDelayInSipCalculator from "./pages/calculator/CostOfDelayInSipCalculator";
 
 const LoaderHandler = () => {
   const { showLoader, hideLoader } = useLoader();
@@ -294,6 +298,10 @@ function App() {
         <Route path="/fd-calculator" element={<FDCalculator />} />
         <Route path="/elss-calculator" element={<ElssCalculator />} />
         <Route path="/swp-calculator" element={<SWPCalculator />} />
+        <Route path="/target-amount-sip-calculator" element={<TargetAmountSIPCalculator />} />
+        <Route path="/sip-with-annual-increase-calculator" element={<SipWithAnnualIncrease />} />
+        <Route path="/annual-sip-calculator" element={<AnnualSipCalculator />} />
+        <Route path="/cost-of-delay-in-sip-calculator" element={<CostOfDelayInSipCalculator />} />
         <Route
           path="/recommended-scheme-goal"
           element={<RecommendedSchemeGoal />}
