@@ -55,6 +55,7 @@ export enum endPoints {
      CALCULATORS
   ========================== */
   swpCalculator = "calculators/swp",
+  sipWithAnnualIncrease = "calculators/sip-with-annual-increase",
 
   /* =========================
      PRODUCT

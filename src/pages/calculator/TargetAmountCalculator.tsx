@@ -1,5 +1,4 @@
 import NavBar from "../../components/Navbar";
-import Chart from "react-apexcharts";
 import { useRef, useState } from "react";
 import RangeBar from "./RangeBar";
 import ValidatedInput from "../../services/Validated-inputs/inputs";
@@ -9,11 +8,11 @@ import { amountHandler, percentageHandler } from "../../services/utils/calculato
 
 const TargetAmountSIPCalculator = () => {
   const [investmentPeriod, setInvestmentPeriod] = useState<number>(10);
-  const [targetAmount, setTargetAmount] = useState<number>(1000000);
-  const [expectedRateOfReturn, setExpectedRateOfReturn] = useState<number>(9.8);
-  const [monthySip, setMonthySip] = useState<number>(13214.85);
-  const [oneTimeInvestment, setOneTimeInvestment] = useState<number>(1000000);
-  const [totalTargetAmount, setTotalTargetAmount] = useState<number>(1000000);
+  const [targetAmount, setTargetAmount] = useState<number>(2500000);
+  const [expectedRateOfReturn, setExpectedRateOfReturn] = useState<number>(12);
+  const [monthySip, setMonthySip] = useState<number>(10868);
+  const [oneTimeInvestment, setOneTimeInvestment] = useState<number>(804933);
+  const [totalTargetAmount, setTotalTargetAmount] = useState<number>(2500000);
 
   const totalTargetAmountRef = useRef<{
     validate: (value: number) => boolean;

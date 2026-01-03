@@ -17,7 +17,7 @@ const RangeBar: React.FC<BarNameValueProp> = ({label,maxLimit=30,value,setValue}
         <div className="d-flex justify-content-between">
 
         <label className="form-label text-muted fs12px">{label}</label>
-        <label className="form-label text-end fs16px mb-0">{value} yrs</label>
+        <label className="form-label text-end fs16px mb-0">{value} {maxLimit===240 ? "Months" : "yrs"}</label>
         </div>
         <div className="position-relative">
           <input
@@ -33,8 +33,8 @@ const RangeBar: React.FC<BarNameValueProp> = ({label,maxLimit=30,value,setValue}
             }}
           />
           <div className="range-labels d-flex justify-content-between mt-2">
-            <span className="text-muted fs12px">1 Yr</span>
-            <span className="text-muted fs12px">{maxLimit} Yrs</span>
+            <span className="text-muted fs12px">1 {maxLimit===240 ? "Months" : "yrs"}</span>
+            <span className="text-muted fs12px">{maxLimit} {maxLimit===240 ? "Months" : "yrs"}</span>
           </div>
         </div>
       </div>

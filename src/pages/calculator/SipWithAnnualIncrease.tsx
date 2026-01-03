@@ -5,6 +5,10 @@ import RangeBar from "./RangeBar";
 import ValidatedInput from "../../services/Validated-inputs/inputs";
 import { isNotEmpty } from "../../services/Validated-inputs/validations";
 import { amountHandler, percentageHandler } from "../../services/utils/calculatorsFs";
+import { postRequest } from "../../services/Api/HandleApi";
+import { sipWithAnnualIncreaseRes } from "../data-interfaces/calculators";
+import {  endPoints } from "../../services/utils/urls";
+import { getValueInSort } from "../../services/calculation/percentageCalculate";
 interface ChartState {
   options: object;
   series: number[];
@@ -13,20 +17,25 @@ interface ChartState {
 }
 
 const SipWithAnnualIncrease = () => {
-  const [investmentPeriod, setInvestmentPeriod] = useState<number>(10);
-  const [loanAmount, setLoanAmount] = useState<number>(1000000);
-  const [interest, setInterest] = useState<number>(9.8);
-  const [monthyEmi, setMonthyEmi] = useState<number>(13214.85);
-  const [principal, setPrincipal] = useState<number>(1000000);
-  const [totalinterest, setTotalInterest] = useState<number>(585782);
-  const [totalAmount, setTotalAmount] = useState<number>(1585800);
-  const [resultLoanAmount, setResultLoanAmount] = useState<number>(1000000);
+  const [investmentPeriod, setInvestmentPeriod] = useState<number>(115);
+  const [monthlySip, setMonthlySip] = useState<number>(25000);
+  const [expectedReturn, setExpectedReturn] = useState<number>(12.5);
+  const [annualSipIncrease, setAnnualSipIncrease] = useState<number>(12);
+  const [totalSipInvestedWithOutAnnualIncrease, setTotalSipInvestedWithOutAnnualIncrease] = useState<number>(2875000);
+  const [totalGrowthWithOutAnnualIncrease, setTotalGrowthWithOutAnnualIncrease] = useState<number>(2479127);
+  const [totalFutureValueNoAnnualIncrease, setTotalFutureValueNoAnnualIncrease] = useState<number>(5354127);
+  const [totalSipAmountInvestedWithAnnualIncrease, setTotalSipAmountInvestedWithAnnualIncrease] = useState<number>(4432696);
+  const [totalGrowthWithAnnualIncrease, setTotalGrowthWithAnnualIncrease] = useState<number>(2825546);
+  const [totalFutureValueSipAndWithAnnualIncrease, setTotalFutureValueSipAndWithAnnualIncrease] = useState<number>(7258243);
 
-  const loanAmountRef = useRef<{
+  const monthlySipRef = useRef<{
     validate: (value: number) => boolean;
   }>(null);
 
-  const interestRef = useRef<{
+  const expectedReturnRef = useRef<{
+    validate: (value: number) => boolean;
+  }>(null);
+    const annualSipIncreaseRef = useRef<{
     validate: (value: number) => boolean;
   }>(null);
 
@@ -35,11 +44,11 @@ const SipWithAnnualIncrease = () => {
       dataLabels: {
         enabled: false, // Disable percentage or value labels
       },
-      colors: ["#CCD2FF", "#1A35FE"],
+      colors: ["#1A35FE","#CCD2FF" ],
       tooltip: {
         enabled: false, // Disable hover tooltip
       },
-      labels: [`Total Interest (${totalinterest.toLocaleString("en-IN")})`, `Principal Amount (${principal.toLocaleString("en-IN")})`,],
+      labels: [`Total SIP Amount Invested (${getValueInSort(totalSipInvestedWithOutAnnualIncrease )})`, `Total Growth (${getValueInSort(totalFutureValueSipAndWithAnnualIncrease)})`,],
       legend: {
         show: true,
         position: 'bottom', // ✅ Legend at bottom
@@ -67,33 +76,41 @@ const SipWithAnnualIncrease = () => {
       },
 
     },
-    series: [resultLoanAmount, totalinterest,],
-    colors: ["#fff", "#FF4560"],
+    series: [totalSipInvestedWithOutAnnualIncrease,totalFutureValueSipAndWithAnnualIncrease],
+    colors: ["#1A35FE","#CCD2FF" ],
   };
 
-  const submit = (e: React.FormEvent) => {
+  const submit =async (e: React.FormEvent) => {
     e.preventDefault();
 
     const isValidated = [
-      loanAmountRef.current?.validate(loanAmount),
-      interestRef.current?.validate(interest),
+      monthlySipRef.current?.validate(monthlySip),
+      expectedReturnRef.current?.validate(expectedReturn),
+      annualSipIncreaseRef.current?.validate(annualSipIncrease),
     ].every((value) => value === true);
 
     if (isValidated) {
-      let totalMonths: number = investmentPeriod * 12;
-      let monthlyRate = (interest / 12) / 100;
+        try{
+          const reqBody = {
+            monthlySip,
+            totalMonth:investmentPeriod,  
+            expectedReturn,
+            annualSipIncrease
+          }
+            const res = await postRequest<sipWithAnnualIncreaseRes>(endPoints.sipWithAnnualIncrease, reqBody)
+            if(res.success){
+                setTotalSipInvestedWithOutAnnualIncrease(res.data.invested_amount);
+                setTotalGrowthWithOutAnnualIncrease(res.data.growth_value);
+                setTotalFutureValueNoAnnualIncrease(res.data.maturity_amount);
+                setTotalSipAmountInvestedWithAnnualIncrease(res.data.stepup_invested_amount);
+                setTotalGrowthWithAnnualIncrease(res.data.stepup_growth_value);
+                setTotalFutureValueSipAndWithAnnualIncrease(res.data.stepup_maturity_amount);
+            }
 
-      let monthlyEmiAmount: number =
-        (loanAmount * monthlyRate * Math.pow(1 + monthlyRate, totalMonths)) /
-        (Math.pow(1 + monthlyRate, totalMonths) - 1);
-
-      let totalAmount: number = monthlyEmiAmount * totalMonths;
-      let totalInterest: number = totalAmount - loanAmount;
-      setMonthyEmi(Math.trunc(monthlyEmiAmount))
-      setPrincipal(loanAmount)
-      setTotalInterest(Math.trunc(totalInterest))
-      setTotalAmount(Math.trunc(totalAmount))
-      setResultLoanAmount(loanAmount)
+        }catch(err){
+          console.log(err);
+          
+        }
     }
   };
 
@@ -119,52 +136,52 @@ const SipWithAnnualIncrease = () => {
                         HOW MUCH YOU CAN INVEST THROUGH MONTHLY SIP?
                       </label>
                       <ValidatedInput
-                        ref={loanAmountRef}
+                        ref={monthlySipRef}
                         type="text"
                         className="form-control"
                         id="exampleInputEmail1"
                         aria-describedby="emailHelp"
                         placeholder="₹ 100,000"
-                        value={loanAmount}
+                        value={monthlySip}
                         onChange={(e) =>
-                          amountHandler(e, 100000, setLoanAmount)
+                          amountHandler(e, 100000000, setMonthlySip)
                         }
                         validate={isNotEmpty}
                       />
                     </div>
                      <RangeBar
                       label={"HOW MANY MONTHS WILL YOU CONTINUE THE SIP?"}
-                      maxLimit={30}
+                      maxLimit={240}
                       value={investmentPeriod}
                       setValue={setInvestmentPeriod}
                     />
                     <div className="form-group">
                       <label htmlFor="exampleInputPassword1" className="fs12px">
-                       EXPECTED SIP RETURN RATE (% p.a)
+                       EXPECTED SIP RETURN RATE (%P.A)
                       </label>
                       <ValidatedInput
-                        ref={interestRef}
+                        ref={expectedReturnRef}
                         type="number"
                         className="form-control"
                         id="exampleInputPassword1"
                         placeholder="12"
-                        value={interest}
-                        onChange={(e) => percentageHandler(e, 100, setInterest)}
+                        value={expectedReturn}
+                        onChange={(e) => percentageHandler(e, 100, setExpectedReturn)}
                         validate={isNotEmpty}
                       />
                     </div>
                     <div className="form-group">
                       <label htmlFor="exampleInputPassword1" className="fs12px">
-                       HOW MUCH ANNUALLY INCREASE MONTHLY SIP? (% p.a)
+                       HOW MUCH ANNUALLY INCREASE MONTHLY SIP? (%P.A)
                       </label>
                       <ValidatedInput
-                        ref={interestRef}
+                        ref={annualSipIncreaseRef}
                         type="number"
                         className="form-control"
                         id="exampleInputPassword1"
                         placeholder="12"
-                        value={interest}
-                        onChange={(e) => percentageHandler(e, 100, setInterest)}
+                        value={annualSipIncrease}
+                        onChange={(e) => percentageHandler(e, 100, setAnnualSipIncrease)}
                         validate={isNotEmpty}
                       />
                     </div>
@@ -183,27 +200,27 @@ const SipWithAnnualIncrease = () => {
                   <div className="row">
                     <div className="col-6">
                       <p className="fs12px mb-0 mt-3">TOTAL  SIP AMOUNT INVESTED WITHOUT ANNUAL INCREASE</p>
-                      <h6 className="mt-1">₹{monthyEmi.toLocaleString('en-IN')}</h6>
+                      <h6 className="mt-1">₹{totalSipInvestedWithOutAnnualIncrease.toLocaleString('en-IN')}</h6>
                     </div>
                     <div className="col-6">
                       <p className="fs12px mb-0 mt-3">TOTAL GROWTH WITH OUT ANNUAL INCREASE</p>
-                      <h6 className="mt-1">₹{principal.toLocaleString('en-IN')}</h6>
+                      <h6 className="mt-1">₹{totalGrowthWithOutAnnualIncrease.toLocaleString('en-IN')}</h6>
                     </div>
                     <div className="col-6">
                       <p className="fs12px mb-0 mt-3">TOTAL FUTURE VALUE (SIP INVESTMENT + RETIRNS, NO ANNUAL INCREASE)</p>
-                      <h6 className="mt-1">₹{totalinterest.toLocaleString('en-IN')}</h6>
+                      <h6 className="mt-1">₹{totalFutureValueNoAnnualIncrease.toLocaleString('en-IN')}</h6>
                     </div>
                     <div className="col-6">
                       <p className="fs12px mb-0 mt-3">TOTAL  SIP AMOUNT INVESTED WITH ANNUAL INCREASE</p>
-                      <h6 className="mt-1">₹{totalAmount.toLocaleString('en-IN')}</h6>
+                      <h6 className="mt-1">₹{totalSipAmountInvestedWithAnnualIncrease.toLocaleString('en-IN')}</h6>
                     </div>
                      <div className="col-6">
                       <p className="fs12px mb-0 mt-3">TOTAL GROWTH WITH ANNUAL INCREASE</p>
-                      <h6 className="mt-1">₹{totalinterest.toLocaleString('en-IN')}</h6>
+                      <h6 className="mt-1">₹{totalGrowthWithAnnualIncrease.toLocaleString('en-IN')}</h6>
                     </div>
                     <div className="col-6">
                       <p className="fs12px mb-0 mt-3">TOTAL FUTURE VALUE (SIP + GROWTH, WITH ANNUAL INCREASE)</p>
-                      <h6 className="mt-1">₹{totalAmount.toLocaleString('en-IN')}</h6>
+                      <h6 className="mt-1">₹{totalFutureValueSipAndWithAnnualIncrease.toLocaleString('en-IN')}</h6>
                     </div>
                   </div>
                 </div>

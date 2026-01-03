@@ -5,72 +5,64 @@ import ValidatedInput from "../../services/Validated-inputs/inputs";
 import {
   isNotEmpty,
   minAmount,
-  minEduAge,
 } from "../../services/Validated-inputs/validations";
-import { amountHandler, percentageHandler, pmtvalue } from "../../services/utils/calculatorsFs";
-import { errorToast } from "../../services/utils/toast";
+import { amountHandler, percentageHandler } from "../../services/utils/calculatorsFs";
 import { useNavigate } from "react-router-dom";
 
 const CostOfDelayInSipCalculator = () => {
   const navigate = useNavigate()
-  const [childAge, setChildAge] = useState<number>(10);
-  const [startCollegeAge, setStartCollegeAge] = useState<number>(18);
-  const [durationOfEducation, setDurationOfEducation] = useState<number>(3);
-  const [costPerYear, setCostPerYear] = useState<number>(500000);
-  const [expectedRateofReturn, setExpectedRateofReturn] = useState<number>(12);
-  const [expectedInflation, setExpectedInflation] = useState<number>(6);
-  const [corpusRequired, setCorpusRequired] = useState<number>(2143352);
-  const [oneTimeInvestmentRequired, setOneTimeInvestmentRequired] = useState<number>(904167);
-  const [monthlyInvestmentRequired, setMonthlyInvestmentRequired] = useState<number>(13185);
+  const [myCurrentAgeIs, setMyCurrentAgeIs] = useState<number>(25);
+  const [startSipOf, setStartSipOf] = useState<number>(10000);
+  const [investTillIAm, setInvestTillIAm] = useState<number>(60);
+  const [expectedRateOfReturn, setExpectedRateOfReturn] = useState<number>(12.5);
+  const [ifIDelayStartingMySipBy, setIfIDelayStartingMySipBy] = useState<number>(10);
 
-  const costPerYearRef = useRef<{
+  const [realProfit, setRealProfit] = useState<number>(500000);
+  const [fakeProfit, setFakeProfit] = useState<number>(500000);
+  const [difference, setDifference] = useState<number>(500000);
+  const [realTotalInvestment, setRealTotalInvestment] = useState<number>(500000);
+  const [fakeTotalInvestment, setFakeTotalInvestment] = useState<number>(500000);
+
+  const startSipOfRef = useRef<{
     validate: (value: number) => boolean;
   }>(null);
 
-  const expectedRateofReturnRef = useRef<{
+  const expectedRateOfReturnRef = useRef<{
     validate: (value: number) => boolean;
   }>(null);
 
-  const expectedInflationRef = useRef<{
-    validate: (value: number) => boolean;
-  }>(null);
+
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const isValidated = [
-      costPerYearRef.current?.validate(costPerYear),
-      expectedRateofReturnRef.current?.validate(expectedRateofReturn),
-      expectedInflationRef.current?.validate(expectedInflation),
+      startSipOfRef.current?.validate(startSipOf),
+      expectedRateOfReturnRef.current?.validate(expectedRateOfReturn),
+
     ].every((value) => value === true);
 
-    const ageValidation = minEduAge(childAge, startCollegeAge);
 
-    if (ageValidation) {
-      errorToast(ageValidation);
-      return;
-    }
+
+
 
     if (isValidated) {
-      var yearleft: number = startCollegeAge - childAge;
-      var rate: number = expectedRateofReturn * 0.01;
-      var i: number = 0.01 * expectedInflation;
-      var FV: number = costPerYear * (Math.pow((1 + i), yearleft));
-      var er: number = expectedRateofReturn * 0.01;
-      var ei: number = expectedInflation * 0.01;
-      var Tot: number = (1 + er) / (1 + ei) - 1;
-      // var firstot: number = (1 + er) / (1 + er)
-      var nomialRate: number = 12.0 * (Math.pow((1 + rate), (1 / 12.0)) - 1);
+      const P = startSipOf;
+      const n = (investTillIAm - myCurrentAgeIs) * 12;
+      const r = expectedRateOfReturn / 100 / 12;
 
-      var totalAmtRequired = (FV * ((1 - (Math.pow((1 + Tot), (-durationOfEducation)))) / Tot));
+      // FV = P * ((1+r)^n - 1) / r * (1+r)
+      const fv = P * ((Math.pow(1 + r, n) - 1) / r) * (1 + r);
 
-      var lumpsum: number = (totalAmtRequired * (1 / (Math.pow((1 + nomialRate), yearleft))));
-      var nominalRateMonthly: number = parseFloat((nomialRate / 12).toFixed(6))
-      var monthleft: number = yearleft * 12
-      let newsipamt: number = await pmtvalue(nominalRateMonthly, monthleft, 0, -Math.round(totalAmtRequired), 0)
-      setCorpusRequired(Math.round(totalAmtRequired))
-      setOneTimeInvestmentRequired(Math.round(lumpsum))
-      setMonthlyInvestmentRequired(Math.round(newsipamt))
+      setRealProfit(fv);
+      const ni = (investTillIAm - myCurrentAgeIs - ifIDelayStartingMySipBy) * 12;
+
+      const fv1 = P * ((Math.pow(1 + r, ni) - 1) / r) * (1 + r);
+
+      setFakeProfit(fv1);
+      setDifference(fv - fv1);
+      setRealTotalInvestment(startSipOf * n);
+      setFakeTotalInvestment(startSipOf * ni);
     }
   };
 
@@ -82,7 +74,7 @@ const CostOfDelayInSipCalculator = () => {
           <div className="col-12 align-items-start mb-3">
             <h4>Cost of Delay in SIP Calculator</h4>
             <p className="fs14px">
-             Calculate the difference in portfolio value over time between starting an SIP immediately and at a later date. Understand the consequences of delaying your SIP.
+              Calculate the difference in portfolio value over time between starting an SIP immediately and at a later date. Understand the consequences of delaying your SIP.
             </p>
           </div>
 
@@ -93,83 +85,62 @@ const CostOfDelayInSipCalculator = () => {
                   <div className="card-body">
                     <form onSubmit={onSubmit}>
                       <RangeBar
-                        label={"CHILD AGE TODAY (YEARS)"}
-                        maxLimit={30}
-                        value={childAge}
-                        setValue={setChildAge}
-                      />
-                      <RangeBar
-                        label={"COLLEGE START AT AGE"}
-                        maxLimit={30}
-                        value={startCollegeAge}
-                        setValue={setStartCollegeAge}
-                      />
-                      <RangeBar
-                        label={"DURATION OF EDUCATION"}
-                        maxLimit={8}
-                        value={durationOfEducation}
-                        setValue={setDurationOfEducation}
+                        label={"MY CURRENT AGE IS"}
+                        maxLimit={65}
+                        value={myCurrentAgeIs}
+                        setValue={setMyCurrentAgeIs}
                       />
                       <div className="form-group my-2">
                         <label htmlFor="exampleInputEmail1" className="fs12px">
-                          APPROX CURRENT COST PER YEAR
+                          I WANT TO START A MONTHLY SIP OF
                         </label>
                         <ValidatedInput
-                          ref={costPerYearRef}
+                          ref={startSipOfRef}
                           type="text"
                           className="form-control"
                           id="exampleInputEmail1"
                           aria-describedby="emailHelp"
                           placeholder="₹5,00,000"
-                          value={costPerYear}
+                          value={startSipOf}
                           onChange={(e) =>
-                            amountHandler(e, 100000000, setCostPerYear)
+                            amountHandler(e, 100000000, setStartSipOf)
                           }
                           validate={[isNotEmpty, minAmount(100)]}
                         />
                       </div>
-                      <div className="form-group my-2">
-                        <label
-                          htmlFor="exampleInputPassword1"
-                          className="fs12px"
-                        >
-                          EXPECTED RATE OF RETURNS (%)
+                      <RangeBar
+                        label={"INVEST TILL I AM"}
+                        maxLimit={80}
+                        value={investTillIAm}
+                        setValue={setInvestTillIAm}
+                      />    <div className="form-group my-2">
+                        <label htmlFor="exampleInputEmail1" className="fs12px">
+                          EXPECTED RATE OF RETURN (%P.A)
                         </label>
                         <ValidatedInput
-                          ref={expectedRateofReturnRef}
+                          ref={expectedRateOfReturnRef}
                           type="number"
                           className="form-control"
                           id="exampleInputPassword1"
                           placeholder="12"
-                          value={expectedRateofReturn}
+                          value={expectedRateOfReturn}
                           onChange={(e) =>
-                            percentageHandler(e, 50, setExpectedRateofReturn)
+                            percentageHandler(e, 50, setExpectedRateOfReturn)
                           }
                           validate={[isNotEmpty, minAmount(1)]}
                         />
                       </div>
-                      <div className="form-group my-2">
-                        <label
-                          htmlFor="exampleInputPassword1"
-                          className="fs12px"
-                        >
-                          EXPECTED INFLATION (%)
-                        </label>
-                        <ValidatedInput
-                          ref={expectedInflationRef}
-                          type="number"
-                          className="form-control"
-                          id="exampleInputPassword1"
-                          placeholder="6"
-                          value={expectedInflation}
-                          onChange={(e) =>
-                            percentageHandler(e, 50, setExpectedInflation)
-                          }
-                          validate={[isNotEmpty, minAmount(1)]}
-                        />
-                      </div>
+                      <RangeBar
+                        label={"IF I DELAY STARTING MY SIP BY"}
+                        maxLimit={40}
+                        value={ifIDelayStartingMySipBy}
+                        setValue={setIfIDelayStartingMySipBy}
+                      />
+
+
+
                       <button type="submit" className="customButton px-3 mt-3">
-                        Calculate
+                        Check Impact
                       </button>
                     </form>
                   </div>
@@ -177,27 +148,52 @@ const CostOfDelayInSipCalculator = () => {
               </div>
               <div className="col-lg-6 co-sm-12 col-md-12 mTopForMobile">
                 <div className="card border-0 shadow p-2">
-                  <div className="card-body">
-                    <h5 className=" fw-semi-bold mb-1">Result</h5>
-                    <p className="fs12px mb-0 mt-3">
-                      CORPUS REQUIRED AT START OF COLLEGE
-                    </p>
-                    <h6 className="mt-1">₹{corpusRequired.toLocaleString('en-IN')}</h6>
-                    <hr />
-                    <h6>To meet this goal your must invest:</h6>
-                    <p className="fs12px mb-0 mt-3">
-                      ONE TIME INVESTMENT REQUIRED
-                    </p>
-                    <h6 className="mt-1">₹{oneTimeInvestmentRequired.toLocaleString('en-IN')}</h6>
-                    <p className="fs12px">OR</p>
-                    <p className="fs12px mb-0 mt-3">
-                      MONTHLY INVESTMENT REQUIRED
-                    </p>
-                    <h6 className="mt-1">₹{monthlyInvestmentRequired.toLocaleString('en-IN')}</h6>
+                  <div className="sip-calculate-results mb-4" data-aos="fade-left">
+                   <h2>Result</h2>
+
+                  <div className="row pt-3">
+                    <div className="col-md-6">
+                      <div className="border border-2 rounded-4 p-3 cost-investment-cards">
+                       <span className="rounded-pill cacl-bg-green"> 👍 Start Age : {myCurrentAgeIs}</span>
+                        <p>Final Value of Investment</p>
+                        <h3 className="cost-invet-green">₹{realProfit.toLocaleString("en-IN")}</h3>
+                        <p>Total Investment:₹ {realTotalInvestment.toLocaleString("en-IN")}</p>
+                      </div>
+                    </div>
+                    <div className="col-md-6">
+                      <div className="border border-2 rounded-4 p-3 cost-investment-cards">
+                       <span className="rounded-pill cacl-bg-red"> 👎 Start Age : {Number(ifIDelayStartingMySipBy)+Number(myCurrentAgeIs)}</span>
+                        <p>Final Value of Investment</p>
+                        <h3 className="cost-invet-red">₹{fakeProfit.toLocaleString("en-IN")}</h3>
+                        <p>Total Investment:₹ {fakeTotalInvestment.toLocaleString("en-IN")}</p>
+                      </div>
+                    </div>
                   </div>
+                  <div className="pt-4">
+                    <div className="text-center">
+                      <span className="">Loss Due to Delay in Investment</span>
+                      <h2 className="cost-invet-red py-2">₹{difference.toLocaleString("en-IN")}</h2>
+                    </div>
+                    <p className="">
+                      Starting a{" "}
+                      <strong>
+                        ₹{startSipOf.toLocaleString("en-IN")}
+                      </strong>{" "}
+                      monthly SIP at age {myCurrentAgeIs} grows to{" "}
+                      <strong >₹{realProfit.toLocaleString("en-IN")}</strong> by
+                      age {investTillIAm}, while delaying it by {ifIDelayStartingMySipBy}{" "}
+                      years reduces the corpus to{" "}
+                      <strong>₹{fakeProfit.toLocaleString("en-IN")} </strong>
+                      causing a loss of{" "}
+                      <strong>₹{difference.toLocaleString("en-IN")}</strong>
+                      {/* ; to bridge this gap, you would need to invest <strong></strong> per month instead of {monthlySIP} */}
+                    </p>
+                    </div>
+                  </div>
+
                 </div>
-                <button type="button" className="btn investBtn mt-2 shadow-lg" onClick={()=>{navigate("/all-mutual-funds")}}>
-                  Invest
+                <button type="button" className="btn investBtn mt-2 shadow-lg" onClick={() => { navigate("/all-mutual-funds") }}>
+                  Start Investing
                 </button>
               </div>
             </div>

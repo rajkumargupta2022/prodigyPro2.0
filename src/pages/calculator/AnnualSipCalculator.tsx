@@ -17,13 +17,13 @@ import { useNavigate } from "react-router-dom";
 
 const AnnualSipCalculator = () => {
   const navigate = useNavigate()
-  const [investmentPeriod, setInvestmentPeriod] = useState<number>(10);
+  const [investmentPeriod, setInvestmentPeriod] = useState<number>(12);
 
   const [investAmount, setInvestAmount] = useState<number>(50000);
   const [rateOfReturn, setRateOfReturn] = useState<number>(12);
-  const [resultInvestment, setResultInvestment] = useState<number>(50000);
-  const [gains, setGains] = useState<number>(155292);
-  const [resultPeriod, setResultPeriod] = useState<number>(10);
+  const [resultInvestment, setResultInvestment] = useState<number>(500000);
+  const [gains, setGains] = useState<number>(982729.164);
+  const [resultPeriod, setResultPeriod] = useState<number>(12);
   const [resultReturn, setResultReturn] = useState<number>(12);
 
   const investAmountRef = useRef<{
@@ -43,32 +43,51 @@ const AnnualSipCalculator = () => {
     ].every((value) => value === true);
 
     if (isValidated) {
-      let lumpsums: number = investAmount * Math.pow((1 + rateOfReturn / 100), investmentPeriod);
-      let lumpsum: number = Math.round(lumpsums)
-      setResultInvestment(investAmount);
-      setGains(lumpsum);
-      setResultReturn(rateOfReturn)
-      setResultPeriod(investmentPeriod)
+      const P = investAmount;
+      const n = investmentPeriod;
+      const r = rateOfReturn / 100;
+      const fv = P * ((Math.pow(1 + r, n) - 1) / r) * (1 + r);
+
+
+      setResultInvestment(investAmount * investmentPeriod);
+      setGains(fv);
+      setResultPeriod(investmentPeriod);
+      setResultReturn(rateOfReturn);
+
     }
   };
   // Build correct invested (start-of-year) and gain (this year) arrays
-  const buildYearSeries = (principal: number, rate: number, years: number) => {
-    const invested: number[] = [];
-    const gain: number[] = [];
-    for (let i = 1; i <= years; i++) {
-      const startOfYear = Math.round(principal * Math.pow(1 + rate / 100, i - 1));
-      const endOfYear = Math.round(principal * Math.pow(1 + rate / 100, i));
-      invested.push(startOfYear);
-      gain.push(endOfYear - startOfYear);
-    }
-    return { invested, gain };
-  };
+const buildYearSeries = (
+  yearlyInvestment: number,
+  rate: number,
+  years: number
+) => {
+  const invested: number[] = [];
+  const gain: number[] = [];
 
-  const { invested: investedArr, gain: gainArr } = buildYearSeries(
-    resultInvestment,
-    resultReturn,
-    resultPeriod
-  );
+  const r = rate / 100;
+
+  for (let i = 1; i <= years; i++) {
+    const investedTillNow = yearlyInvestment * i;
+
+    const fvTillNow =
+      yearlyInvestment *
+      ((Math.pow(1 + r, i) - 1) / r) *
+      (1 + r);
+
+    invested.push(Math.round(investedTillNow));
+    gain.push(Math.round(fvTillNow - investedTillNow));
+  }
+
+  return { invested, gain };
+};
+
+
+const { invested: investedArr, gain: gainArr } = buildYearSeries(
+  investAmount,     // yearly SIP amount
+  resultReturn,
+  resultPeriod
+);
 
   const yearsArray: number[] = Array.from({ length: resultPeriod }, (_, i) => i + 1);
 
@@ -93,32 +112,33 @@ const AnnualSipCalculator = () => {
           horizontal: false,
         },
       },
-      tooltip: {
-        shared: true,
-        intersect: false,
-        custom: function ({ series, dataPointIndex }: any) {
-          const investedVal = series[0][dataPointIndex] ?? 0;
-          const gain = series[1][dataPointIndex] ?? 0;
-          const current = investedVal + gain;
-          const year = yearsArray[dataPointIndex];
+     tooltip: {
+  shared: true,
+  intersect: false,
+  custom: function ({ series, dataPointIndex }: any) {
+    const investedVal = series[0][dataPointIndex] ?? 0;
+    const gainVal = series[1][dataPointIndex] ?? 0;
+    const currentVal = investedVal + gainVal;
+    const year = yearsArray[dataPointIndex];
 
-          const formatValue = (v: number) => {
-            if (v >= 10000000) return `₹${(v / 10000000).toFixed(2)}Cr`;
-            if (v >= 100000) return `₹${(v / 100000).toFixed(2)}L`;
-            if (v >= 1000) return `₹${(v / 1000).toFixed(2)}K`;
-            return `₹${v.toLocaleString("en-IN")}`;
-          };
+    const formatValue = (v: number) => {
+      if (v >= 10000000) return `₹${(v / 10000000).toFixed(2)} Cr`;
+      if (v >= 100000) return `₹${(v / 100000).toFixed(2)} L`;
+      if (v >= 1000) return `₹${(v / 1000).toFixed(2)} K`;
+      return `₹${v.toLocaleString("en-IN")}`;
+    };
 
-          return `
-          <div style="padding:8px; border-radius:8px; border:1px solid #e6e9ff; background:#fff;">
-            <div><b>Year: ${year}</b></div>
-            <div>Current Value: ${formatValue(current)}</div>
-            <div>Invested Value: ${formatValue(investedVal)}</div>
-            <div>Gain: <span style="color:green;">${formatValue(gain)}</span></div>
-          </div>
-        `;
-        },
-      },
+    return `
+      <div style="padding:8px;border-radius:8px;border:1px solid #e6e9ff;background:#fff;">
+        <div><b>Year ${year}</b></div>
+        <div>Total Invested: ${formatValue(investedVal)}</div>
+        <div>Portfolio Value: ${formatValue(currentVal)}</div>
+        <div>Gain: <span style="color:green;">${formatValue(gainVal)}</span></div>
+      </div>
+    `;
+  },
+},
+
       xaxis: { categories: yearsArray, axisTicks: { show: false } },
       yaxis: { labels: { show: false } },
       grid: { show: false },
@@ -198,9 +218,14 @@ const AnnualSipCalculator = () => {
                 <div className="card-body">
                   <h5 className=" fw-normal mb-1">Result</h5>
                   <p className=" fs12px">
-                  AMOUNT INVESTED  <br/>
+                    AMOUNT INVESTED  <br />
+                    <h6 className="fw600 text-dark">₹{resultInvestment.toLocaleString("en-IN")}</h6>
+                  </p>
+                  <p className=" fs12px">
+                    FUTURE  VALUE OF INVESTMENT <br />
                     <h6 className="fw600 text-dark">₹{gains.toLocaleString("en-IN")}</h6>
                   </p>
+                  
                 </div>
               </div>
               <div className="row mt-2">
@@ -218,7 +243,7 @@ const AnnualSipCalculator = () => {
                 </div>
               </div>
               <button type="button" className="btn investBtn mt-2 shadow-lg" onClick={() => { navigate("/all-mutual-funds") }}>
-               Start Investing
+                Start Investing
               </button>
             </div>
           </div>
