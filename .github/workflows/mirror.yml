@@ -1,0 +1,32 @@
+name: Mirror to Deployment Repo
+
+on:
+  push:
+    branches:
+      - raj
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Start SSH agent and add key
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.MIRROR_SSH_KEY }}
+
+      - name: Add GitHub to known_hosts
+        run: ssh-keyscan github.com >> ~/.ssh/known_hosts
+
+      - name: Push to mirror repo
+        run: |
+          git config user.name "mirror-bot"
+          git config user.email "mirror@github.com"
+          git remote remove mirror || true
+          git remote add mirror git@github.com:rajkumargupta2022/prodigyPro2.0.git
+          git push mirror raj --force
