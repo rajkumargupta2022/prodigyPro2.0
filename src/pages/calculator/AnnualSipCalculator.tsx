@@ -22,7 +22,7 @@ const AnnualSipCalculator = () => {
   const [investAmount, setInvestAmount] = useState<number>(50000);
   const [rateOfReturn, setRateOfReturn] = useState<number>(12);
   const [resultInvestment, setResultInvestment] = useState<number>(500000);
-  const [gains, setGains] = useState<number>(982729.164);
+  const [gains, setGains] = useState<number>(1351455.463);
   const [resultPeriod, setResultPeriod] = useState<number>(12);
   const [resultReturn, setResultReturn] = useState<number>(12);
 

@@ -17,11 +17,11 @@ const CostOfDelayInSipCalculator = () => {
   const [expectedRateOfReturn, setExpectedRateOfReturn] = useState<number>(12.5);
   const [ifIDelayStartingMySipBy, setIfIDelayStartingMySipBy] = useState<number>(10);
 
-  const [realProfit, setRealProfit] = useState<number>(500000);
-  const [fakeProfit, setFakeProfit] = useState<number>(500000);
-  const [difference, setDifference] = useState<number>(500000);
-  const [realTotalInvestment, setRealTotalInvestment] = useState<number>(500000);
-  const [fakeTotalInvestment, setFakeTotalInvestment] = useState<number>(500000);
+  const [realProfit, setRealProfit] = useState<number>(74362477.314);
+  const [fakeProfit, setFakeProfit] = useState<number>(20753115.048);
+  const [difference, setDifference] = useState<number>(53609362.266);
+  const [realTotalInvestment, setRealTotalInvestment] = useState<number>(4200000);
+  const [fakeTotalInvestment, setFakeTotalInvestment] = useState<number>(3000000);
 
   const startSipOfRef = useRef<{
     validate: (value: number) => boolean;
