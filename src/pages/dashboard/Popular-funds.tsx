@@ -1,7 +1,6 @@
 
 import Card from 'react-bootstrap/Card';
 
-import { CurrencyRupee } from "react-bootstrap-icons";
 import { filteredSchemeResponse, filteredSchemesKeys } from "../data-interfaces/explore";
 import { endPoints, imageUrl } from "../../services/utils/urls";
 import { postRequest } from "../../services/Api/HandleApi";

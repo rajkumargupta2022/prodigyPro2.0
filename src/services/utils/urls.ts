@@ -56,7 +56,7 @@ export enum endPoints {
   ========================== */
   swpCalculator = "calculators/swp",
   sipWithAnnualIncrease = "calculators/sip-with-annual-increase",
-
+  goalPlanningSchemes = "goal-planning/get-goal-planning-schemes",
   /* =========================
      PRODUCT
   ========================== */
@@ -110,6 +110,7 @@ export enum endPoints {
   cancelXsipOrder = "orders/cancel-xsip-order",
   cancelSwpOrder = "orders/cancel-swp-order",
   getTransactionHistory = "orders/get-transaction-history",
+  getPurchaseOrders = "orders/get-purchase-orders",
 
   /* =========================
      REPORTS

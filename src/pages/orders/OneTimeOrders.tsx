@@ -27,7 +27,7 @@ function OneTimeOrders() {
     if (adminUser?.ucc) {
       const reqBody = { ucc: adminUser?.ucc, page, limit };
       try {
-        const res = await postRequest<OneTimeRes>(endPoints.purchaseOrders, reqBody);
+        const res = await postRequest<OneTimeRes>(endPoints.getPurchaseOrders, reqBody);
         if (res.success) {
           setPurchaseList(res.data);
           setTotalRecords(res.totalRecords || 0);

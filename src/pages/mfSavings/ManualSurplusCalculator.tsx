@@ -15,7 +15,7 @@ const ManualSurplusCalculator = () => {
   const [monthlyInflows, setMonthlyInflows]  = useState<number>(120000)
   const [monthlyOutFlows, setMonthlyOutFlows]  = useState<number>(50000)
   const [result,setResult] = useState<calculateManualInsightsKeys>()
-  const [error, setError] = useState("")
+  const error= ""
 
   const calculateResult = async () => {
     if(!currentBalance){
