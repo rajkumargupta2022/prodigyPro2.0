@@ -5,7 +5,7 @@ const Footer = () => {
         <div className='container-xxl py-md-2 py-1'>
             <footer className="footer row px-md-5 py-2">
                 <div className="col-md-6 py-1 text-md-start text-center">
-                    Copyright © 2025 BFC Capital. All Rights Reserved
+                    Copyright © {new Date().getFullYear()} BFC Capital. All Rights Reserved
                 </div>
                 <div className="col-md-6 text-md-end text-center py-1">
                     <Link to={"/privacyPolicy"}>Privacy Policy</Link>

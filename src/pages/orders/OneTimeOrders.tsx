@@ -50,6 +50,7 @@ function OneTimeOrders() {
       {/* ✅ SIP Data List */}
       {purchaseList?.length > 0 ? (
         purchaseList?.map((item) => (
+          
           <div
             key={item.folio_number + item.scheme_name}
             className="p-4 shadow-sm bg-white border-0 rounded-4 mb-3 crPointer"

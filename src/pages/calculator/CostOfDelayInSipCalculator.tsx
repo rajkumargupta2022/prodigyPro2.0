@@ -50,10 +50,7 @@ const CostOfDelayInSipCalculator = () => {
       const P = startSipOf;
       const n = (investTillIAm - myCurrentAgeIs) * 12;
       const r = expectedRateOfReturn / 100 / 12;
-
-      // FV = P * ((1+r)^n - 1) / r * (1+r)
       const fv = P * ((Math.pow(1 + r, n) - 1) / r) * (1 + r);
-
       setRealProfit(fv);
       const ni = (investTillIAm - myCurrentAgeIs - ifIDelayStartingMySipBy) * 12;
 
@@ -156,7 +153,7 @@ const CostOfDelayInSipCalculator = () => {
                       <div className="border border-2 rounded-4 p-3 cost-investment-cards">
                        <span className="rounded-pill cacl-bg-green"> 👍 Start Age : {myCurrentAgeIs}</span>
                         <p>Final Value of Investment</p>
-                        <h3 className="cost-invet-green">₹{realProfit.toLocaleString("en-IN")}</h3>
+                        <h3 className="cost-invet-green">₹{realProfit.toLocaleString("en-IN",{maximumFractionDigits: 0})}</h3>
                         <p>Total Investment:₹ {realTotalInvestment.toLocaleString("en-IN")}</p>
                       </div>
                     </div>
@@ -164,28 +161,28 @@ const CostOfDelayInSipCalculator = () => {
                       <div className="border border-2 rounded-4 p-3 cost-investment-cards">
                        <span className="rounded-pill cacl-bg-red"> 👎 Start Age : {Number(ifIDelayStartingMySipBy)+Number(myCurrentAgeIs)}</span>
                         <p>Final Value of Investment</p>
-                        <h3 className="cost-invet-red">₹{fakeProfit.toLocaleString("en-IN")}</h3>
-                        <p>Total Investment:₹ {fakeTotalInvestment.toLocaleString("en-IN")}</p>
+                        <h3 className="cost-invet-red">₹{fakeProfit.toLocaleString("en-IN",{maximumFractionDigits: 0})}</h3>
+                        <p>Total Investment:₹ {fakeTotalInvestment.toLocaleString("en-IN",{maximumFractionDigits: 0})}</p>
                       </div>
                     </div>
                   </div>
                   <div className="pt-4">
                     <div className="text-center">
                       <span className="">Loss Due to Delay in Investment</span>
-                      <h2 className="cost-invet-red py-2">₹{difference.toLocaleString("en-IN")}</h2>
+                      <h2 className="cost-invet-red py-2">₹{difference.toLocaleString("en-IN",{maximumFractionDigits: 0})}</h2>
                     </div>
                     <p className="">
                       Starting a{" "}
                       <strong>
-                        ₹{startSipOf.toLocaleString("en-IN")}
+                        ₹{startSipOf.toLocaleString("en-IN",{maximumFractionDigits: 0})}
                       </strong>{" "}
                       monthly SIP at age {myCurrentAgeIs} grows to{" "}
-                      <strong >₹{realProfit.toLocaleString("en-IN")}</strong> by
+                      <strong >₹{realProfit.toLocaleString("en-IN",{maximumFractionDigits: 0})}</strong> by
                       age {investTillIAm}, while delaying it by {ifIDelayStartingMySipBy}{" "}
                       years reduces the corpus to{" "}
-                      <strong>₹{fakeProfit.toLocaleString("en-IN")} </strong>
+                      <strong>₹{fakeProfit.toLocaleString("en-IN",{maximumFractionDigits: 0})} </strong>
                       causing a loss of{" "}
-                      <strong>₹{difference.toLocaleString("en-IN")}</strong>
+                      <strong>₹{difference.toLocaleString("en-IN",{maximumFractionDigits: 0})}</strong>
                       {/* ; to bridge this gap, you would need to invest <strong></strong> per month instead of {monthlySIP} */}
                     </p>
                     </div>

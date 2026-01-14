@@ -223,7 +223,9 @@ const { invested: investedArr, gain: gainArr } = buildYearSeries(
                   </p>
                   <p className=" fs12px">
                     FUTURE  VALUE OF INVESTMENT <br />
-                    <h6 className="fw600 text-dark">₹{gains.toLocaleString("en-IN")}</h6>
+                    <h6 className="fw600 text-dark">₹{gains.toLocaleString("en-IN", {
+  maximumFractionDigits: 0
+})}</h6>
                   </p>
                   
                 </div>
