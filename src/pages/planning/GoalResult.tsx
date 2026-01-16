@@ -447,6 +447,7 @@ const GoalResult = () => {
   };
 
   const handleGoal = () => {
+   
     navigate("/recommended-scheme-goal", { state: location.state });
   };
 
@@ -467,11 +468,8 @@ const GoalResult = () => {
       <div className="container px-4 mt-3">
         <div className="row">
           <div className="col-12 align-items-start mb-3">
-            <h4>Retirement</h4>
-            <p className="fs14px">
-              Set your retirement goal and start investing today to ensure a
-              secure and stress-free future.
-            </p>
+                        <h4>{location?.state?.title}</h4>
+              <p className="small">{location?.state?.paragraph}</p>
           </div>
 
           <div className="row justify-content-md-center">

@@ -21,7 +21,7 @@ const AnnualSipCalculator = () => {
 
   const [investAmount, setInvestAmount] = useState<number>(50000);
   const [rateOfReturn, setRateOfReturn] = useState<number>(12);
-  const [resultInvestment, setResultInvestment] = useState<number>(500000);
+  const [resultInvestment, setResultInvestment] = useState<number>(600000);
   const [gains, setGains] = useState<number>(1351455.463);
   const [resultPeriod, setResultPeriod] = useState<number>(12);
   const [resultReturn, setResultReturn] = useState<number>(12);
@@ -147,7 +147,15 @@ const { invested: investedArr, gain: gainArr } = buildYearSeries(
     },
   };
 
-
+  const handleRecomendedScheme = () => {
+    navigate("/recommended-scheme-goal", {
+      state: {
+        title: "Recommended Funds",
+        paragraph: "Discover expertly curated fund baskets tailored to your financial goals. Simplify your investment journey with the right mix of funds for every need!",
+        investmentPeriod: investmentPeriod
+      }
+    })
+  }
   return (
     <>
       <NavBar />
@@ -244,7 +252,7 @@ const { invested: investedArr, gain: gainArr } = buildYearSeries(
                   </div>
                 </div>
               </div>
-              <button type="button" className="btn investBtn mt-2 shadow-lg" onClick={() => { navigate("/all-mutual-funds") }}>
+              <button type="button" className="btn investBtn mt-2 shadow-lg" onClick={handleRecomendedScheme}>
                 Start Investing
               </button>
             </div>

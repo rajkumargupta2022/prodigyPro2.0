@@ -9,6 +9,7 @@ import { postRequest } from "../../services/Api/HandleApi";
 import { sipWithAnnualIncreaseRes } from "../data-interfaces/calculators";
 import {  endPoints } from "../../services/utils/urls";
 import { getValueInSort } from "../../services/calculation/percentageCalculate";
+import { useNavigate } from "react-router-dom";
 interface ChartState {
   options: object;
   series: number[];
@@ -17,6 +18,7 @@ interface ChartState {
 }
 
 const SipWithAnnualIncrease = () => {
+  const navigate = useNavigate()
   const [investmentPeriod, setInvestmentPeriod] = useState<number>(115);
   const [monthlySip, setMonthlySip] = useState<number>(25000);
   const [expectedReturn, setExpectedReturn] = useState<number>(12.5);
@@ -241,6 +243,9 @@ const SipWithAnnualIncrease = () => {
                   </div>
                 </div>
               </div>
+                    <button type="button" className="btn investBtn mt-2 shadow-lg" onClick={() => { navigate("/recommended-funds") }}>
+                Start Investing
+              </button>
             </div>
           </div>
         </div>

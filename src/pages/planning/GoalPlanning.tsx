@@ -31,7 +31,7 @@ const GoalPlanning = () => {
             <button type="button" className="customButton align-items-end px-2 mb-3" >+ Add Custom Goal</button>
           </div> */}
         </div>
-        <div className="row">
+        <div className="row crPointer">
           <div className="col-6 col-md-4 col-lg-3 text-center rounded-2 alignCenter px-2 mb-3" onClick={() => handleGoal(goalContent.retirement)}>
             <div className="card border-0 shadow">
               <div className="card-header border-0 bg-transparent pb-0 pt-3">

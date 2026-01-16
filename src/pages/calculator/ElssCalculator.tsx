@@ -6,8 +6,10 @@ import {
   isNotEmpty,
   minAmount,
 } from "../../services/Validated-inputs/validations";
+import { useNavigate } from "react-router-dom";
 
 const ElssCalculator = () => {
+  const navigate = useNavigate()
   const [investmentAmount, setInvestmentAmount] = useState<number>(12500);
   const [taxSlab, setTaxSlab] = useState<number>(5);
   const [totalTaxSaved, setTotalTaxSaved] = useState<number>(650);
@@ -113,6 +115,9 @@ const ElssCalculator = () => {
 
                 </div>
               </div>
+                  <button type="button" className="btn investBtn mt-2 shadow-lg" onClick={() => { navigate("/tax-saving") }}>
+                Start Investing
+              </button>
             </div>
           </div>
         </div>

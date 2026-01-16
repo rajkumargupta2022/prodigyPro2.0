@@ -130,6 +130,15 @@ const RetirementCalculator = () => {
     setIsCalculate(true)
     }
   };
+  const handleRecomendedScheme = () => {
+      navigate("/recommended-scheme-goal", {
+        state: {
+          title: "Recommended Funds",
+          paragraph: "Discover expertly curated fund baskets tailored to your financial goals. Simplify your investment journey with the right mix of funds for every need!",
+          investmentPeriod: retirementAge - currentAge
+        }
+      })
+    }
 
   return (
     <>
@@ -335,7 +344,7 @@ const RetirementCalculator = () => {
                     <h6 className="mt-1">₹{extraSavingPM.toLocaleString("en-IN")}</h6>
                   </div>
                 </div>
-                <button type="button" className="btn investBtn mt-2 shadow-lg" onClick={()=>{navigate("/all-mutual-funds")}}>
+                <button type="button" className="btn investBtn mt-2 shadow-lg" onClick={handleRecomendedScheme}>
                   Invest
                 </button>
               </div>

@@ -11,6 +11,7 @@ import { goalContent, GoalContentInterface } from "../data/goal"
 const GoalPlanning = () => {
   const navigate = useNavigate()
   const handleGoal = (data: GoalContentInterface) => {
+
     navigate("/goal", { state: data });
   }
   return (

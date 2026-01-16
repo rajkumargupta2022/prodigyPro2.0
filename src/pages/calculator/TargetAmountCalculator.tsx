@@ -4,9 +4,11 @@ import RangeBar from "./RangeBar";
 import ValidatedInput from "../../services/Validated-inputs/inputs";
 import { isNotEmpty } from "../../services/Validated-inputs/validations";
 import { amountHandler, percentageHandler } from "../../services/utils/calculatorsFs";
+import { useNavigate } from "react-router-dom";
 
 
 const TargetAmountSIPCalculator = () => {
+  const navigate = useNavigate()
   const [investmentPeriod, setInvestmentPeriod] = useState<number>(10);
   const [targetAmount, setTargetAmount] = useState<number>(2500000);
   const [expectedRateOfReturn, setExpectedRateOfReturn] = useState<number>(12);
@@ -22,7 +24,7 @@ const TargetAmountSIPCalculator = () => {
     validate: (value: number) => boolean;
   }>(null);
 
- 
+
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -32,23 +34,31 @@ const TargetAmountSIPCalculator = () => {
     ].every((value) => value === true);
 
     if (isValidated) {
-       const monthlyRate = expectedRateOfReturn / 100 / 12;
-    const totalMonths = investmentPeriod * 12;
+      const monthlyRate = expectedRateOfReturn / 100 / 12;
+      const totalMonths = investmentPeriod * 12;
 
-    // Monthly SIP (PMT equivalent)
-    const monthlySipValue =
-      (targetAmount * monthlyRate) /
-      (Math.pow(1 + monthlyRate, totalMonths) - 1);
+      // Monthly SIP (PMT equivalent)
+      const monthlySipValue =
+        (targetAmount * monthlyRate) /
+        (Math.pow(1 + monthlyRate, totalMonths) - 1);
 
-    // One-time Lump Sum
-    const lumpSum =
-      targetAmount / Math.pow(1 + expectedRateOfReturn / 100, investmentPeriod);
+      // One-time Lump Sum
+      const lumpSum =
+        targetAmount / Math.pow(1 + expectedRateOfReturn / 100, investmentPeriod);
       setMonthySip(Math.round(monthlySipValue));
       setOneTimeInvestment(Math.round(lumpSum));
       setTotalTargetAmount(targetAmount);
     }
   };
-
+  const handleRecomendedScheme = () => {
+    navigate("/recommended-scheme-goal", {
+      state: {
+        title: "Recommended Funds",
+        paragraph: "Discover expertly curated fund baskets tailored to your financial goals. Simplify your investment journey with the right mix of funds for every need!",
+        investmentPeriod: investmentPeriod
+      }
+    })
+  }
   return (
     <>
       <NavBar />
@@ -76,7 +86,7 @@ const TargetAmountSIPCalculator = () => {
                         className="form-control"
                         id="exampleInputEmail1"
                         aria-describedby="emailHelp"
-                        placeholder="₹ 100,000"
+                        placeholder="₹100,000"
                         value={targetAmount}
                         onChange={(e) =>
                           amountHandler(e, 100000, setTargetAmount)
@@ -129,11 +139,14 @@ const TargetAmountSIPCalculator = () => {
                       <p className="fs12px mb-0 mt-3">ONE TIME INVESTMENT REQUIRED</p>
                       <h6 className="mt-1">₹{oneTimeInvestment.toLocaleString('en-IN')}</h6>
                     </div>
-                  
+
                   </div>
                 </div>
               </div>
-             
+              <button type="button" className="btn investBtn mt-2 shadow-lg" onClick={handleRecomendedScheme}>
+                Start Investing
+              </button>
+
             </div>
           </div>
         </div>

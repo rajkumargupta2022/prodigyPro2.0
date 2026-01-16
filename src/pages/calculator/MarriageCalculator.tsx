@@ -76,6 +76,15 @@ const MarriageCalculator = () => {
       setOneTimeInvestmentRequired(Math.trunc(lumpsumRequired));
     }
   };
+  const handleRecomendedScheme = () => {
+      navigate("/recommended-scheme-goal", {
+        state: {
+          title: "Recommended Funds",
+          paragraph: "Discover expertly curated fund baskets tailored to your financial goals. Simplify your investment journey with the right mix of funds for every need!",
+          investmentPeriod: marriedAge - childAge
+        }
+      })
+    }
 
   return (
     <>
@@ -215,7 +224,7 @@ const MarriageCalculator = () => {
                     <h6 className="mt-1">₹{monthlyInvestmentRequired.toLocaleString('en-IN')}</h6>
                   </div>
                 </div>
-                <button type="button" className="btn investBtn mt-2" onClick={()=>{navigate("/all-mutual-funds")}}>
+                <button type="button" className="btn investBtn mt-2" onClick={handleRecomendedScheme}>
                   Invest
                 </button>
               </div>

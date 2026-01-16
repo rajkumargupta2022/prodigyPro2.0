@@ -112,8 +112,8 @@ const CalculatorList = () => {
             <Link to="/target-amount-sip-calculator" className="card border-0 shadow rounded-3" >
               <div className="card-body border-0 card px-3">
                 <img src={targetAmount} className="" alt="..." height={44} width={44} />
-                <p className="fs18pxHeading mb-0 mt-2">Target Amount SIP</p>
-                <p className="fs14px mb-0">Find the monthly SIP needed to reach your financial goal.</p>
+                <p className="fs18pxHeading mb-0 mt-2">Target Amount Calculator</p>
+                <p className="fs14px mb-0">Reach pre-planned targets with precision.</p>
               </div>
             </Link>
           </div>
@@ -121,8 +121,8 @@ const CalculatorList = () => {
             <Link to="/sip-with-annual-increase-calculator" className="card border-0 shadow rounded-3" >
               <div className="card-body border-0 card px-3">
                 <img src={sipWithAnnual} className="" alt="..." height={44} width={44} />
-                <p className="fs18pxHeading mb-0 mt-2">SIP with Annual Increase</p>
-                <p className="fs14px mb-0">See how yearly SIP step-ups accelerate your wealth creation.</p>
+                <p className="fs18pxHeading mb-0 mt-2">Step-UP SIP Calculator</p>
+                <p className="fs14px mb-0">Calculate the value of SIPs with yearly increase.</p>
               </div>
             </Link>
           </div>
@@ -131,7 +131,7 @@ const CalculatorList = () => {
               <div className="card-body border-0 card px-3">
                 <img src={annualSip} className="" alt="..." height={44} width={44} />
                 <p className="fs18pxHeading mb-0 mt-2">Annual SIP Calculator</p>
-                <p className="fs14px mb-0">Calculate your investment growth with yearly SIP contributions.</p>
+                <p className="fs14px mb-0">Estimate annual SIP growth easily in a few clicks.</p>
               </div>
             </Link>
           </div>
@@ -139,8 +139,8 @@ const CalculatorList = () => {
             <Link to="/cost-of-delay-in-sip-calculator" className="card border-0 shadow rounded-3" >
               <div className="card-body border-0 card px-3">
                 <img src={delayInvestment} className="" alt="..." height={44} width={44} />
-                <p className="fs18pxHeading mb-0 mt-2">Cost of Investment Delay</p>
-                <p className="fs14px mb-0">Understand how postponing your investment affects your long-term wealth.</p>
+                <p className="fs18pxHeading mb-0 mt-2">Cost of Delay in SIP Calculator</p>
+                <p className="fs14px mb-0">Starting late costs more than you think– calculate now!</p>
               </div>
             </Link>
           </div>
