@@ -45,8 +45,8 @@ const ProfileModel: React.FC<ProfileModelProps> = ({ show, setShow }) => {
               <Link to="/my-profile" className='text-center logoBlueColor'>My Profile</Link>
               <hr />
 
-              {familyMemberList.length > 0 && familyMemberList.map((item) => {
-                return <> <div className="d-flex justify-content-around">
+              {familyMemberList.length > 0 && familyMemberList.map((item,i) => {
+                return <> <div className="d-flex justify-content-around" key={i}>
 
                   {adminUser?.profilePic ? <img src={adminUser?.profilePic} className='circleImg-2' alt="Image not found" /> : <div className="nameTitle">
                     <p className='mb-0 text-white'>{item?.name?.split(" ")?.slice(0, 2).map(word => word[0]).join("").toUpperCase()}</p>

@@ -66,7 +66,6 @@ interface bankMandate {
         to_date: res.mandates[0]?.to_date.replace("T", " ").replace("Z", "")
       }))
       
-      console.log("mandates", update);
       setUpdatedSchemeList(update);  // ✅ Store in local state
       setSchemeList([...update])
       
@@ -91,10 +90,7 @@ interface bankMandate {
   };
 
   const handleTransaction = () => {
-    console.log("schelist", updatedSchemeList);  // ✅ Use local state with fresh data
-    
     finalTransaction(updatedSchemeList, isSipTransaction ? keys.sip : keys.purchase, setSuccessData, additionalPurchase).then((res) => {
-      console.log(res);
       setOpenSuccess(true)
       setShow(false)
     })

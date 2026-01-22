@@ -52,7 +52,7 @@ const Account = ({ Component }: { Component: any }) => {
                 <ul className="nav flex-column">
                   {navBar.map((el, i) => {
                     return (
-                      <Link className="nav-link" to={el.url}>
+                      <Link className="nav-link" to={el.url} key={el.url}>
                         <li
                           className={`nav-item  d-flex justify-content-between align-items-center ${i !== 6 && "border-bottom"} ${pathname === el.url ? "active" : ""
                             }`}
@@ -73,7 +73,7 @@ const Account = ({ Component }: { Component: any }) => {
                 <ul className="nav flex-column">
                   {navBar2.map((el, i) => {
                     return (
-                      <Link className="nav-link" to={el.url}>
+                      <Link className="nav-link" to={el.url} key={el.url}>
                         <li
                           className={`nav-item  d-flex justify-content-between  align-items-center ${i !== 3 && "border-bottom"} ${pathname === el.url ? "active" : ""
                             }`}

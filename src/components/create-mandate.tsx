@@ -73,7 +73,7 @@ const CreateMandate: React.FC<investmetProps> = ({ show, setShow, accountNumber,
       if (res.success) {
         successToast("Mandate created successfully! You'll receive a confirmation link on your registered mail id.")
         setShow(false)
-        navigate("/bank-details-show")
+        navigate("/bank-and-mandate-list", { state: accountNumber } )
       }
     } catch (err) {
       errorToast(err)

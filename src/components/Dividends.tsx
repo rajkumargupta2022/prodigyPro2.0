@@ -18,7 +18,6 @@ function Dividends() {
   const [limit, setLimit] = useState<number>(20);
   const [page, setPage] = useState<number>(1);
   const yearHandler = (e: any) => {
-    console.log(e.target.value);
     setSelectedDate(e.target.value)
     fetchDividends(e.target.value)
 

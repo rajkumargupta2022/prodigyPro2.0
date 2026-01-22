@@ -102,8 +102,6 @@ const InvestmentChart: React.FC<schemeDataProps> = ({ schemeData }) => {
       },
        tooltip: {
         custom: function ({ series, dataPointIndex }) {
-          console.log("oooo", selectedInvestmentType);
-
           const invested = series[0][dataPointIndex];
           const maturity = series[1][dataPointIndex];
 

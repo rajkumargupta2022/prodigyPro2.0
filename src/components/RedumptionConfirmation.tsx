@@ -21,8 +21,6 @@ const RedumptionConfirmation: React.FC<investmetProps> = ({ show, setShow, redee
 
 
   useEffect(() => {
-    console.log("reddd",redeemList);
-    
     setSelectedList(JSON.parse(JSON.stringify(redeemList)))
   }, [show])
   const handleSwitch = () => {

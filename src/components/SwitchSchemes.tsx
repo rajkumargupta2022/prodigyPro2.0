@@ -294,7 +294,7 @@ const SwitchSchemes: React.FC<SchemesProps> = ({
         }
       }
       setLoading(true)
-      const res = await axios.get<searchRes>(baseUrl + endPoints.searchScheme + "?text=" + name, tokenBody)
+      const res = await axios.get<searchRes>(process.env.VITE_API_BASE_URL + endPoints.searchScheme + "?text=" + name, tokenBody)
       if (res.data.success) {
         const options: OptionType[] = res.data.data.map(item => ({
           value: item.accord_scheme_code, 

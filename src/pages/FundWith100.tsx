@@ -56,9 +56,9 @@ const fundDetails = (item: sifFundsKeys) => {
           </div>
 
         </div>
-      {sifSchemeList?.length > 0 ? sifSchemeList?.map((item) => {
+      {sifSchemeList?.length > 0 ? sifSchemeList?.map((item,i) => {
         return (
-          <div className="container py-2 crPointer"onClick={()=>fundDetails(item)} >
+          <div className="container py-2 crPointer"onClick={()=>fundDetails(item)} key={i}>
             <div className="personal_form_container">
               <div className="borderColor p-3 rounded-4 bg-white">
                 <div className="d-flex justify-content-between">

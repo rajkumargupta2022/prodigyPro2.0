@@ -220,8 +220,8 @@ const PortfolioReview = () => {
               <div className="col-12 bg-white rounded-2 p-2 px-2 mt-4">
                 <h5>Fund Performance Summary</h5>
 
-                {portfolioSummaryList?.length > 0 ? portfolioSummaryList?.map((item) => {
-                  return <div className="mb-3">
+                {portfolioSummaryList?.length > 0 ? portfolioSummaryList?.map((item,i) => {
+                  return <div className="mb-3" key={i}>
                     <div className="d-flex justify-content-between">
                       <span>{item.name} ({item.scheme_count})</span>
                       <span>₹{getValueInSort(item.currentValue)}</span>

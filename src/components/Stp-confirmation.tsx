@@ -236,7 +236,7 @@ const StpConfiramtion: React.FC<investmetProps> = ({ show, setShow, cartItem, se
                   <Form.Select value={frequency} onChange={(e) => setFrequency(e.target.value)}>
                   <option value={""}>Select Frequency</option>
                     {cartItem[0]?.stpFrequency?.map((item: any) => {
-                      return <option value={item}>{item}</option>
+                      return <option value={item} key={item}>{item}</option>
                     })}
 
 

@@ -39,9 +39,9 @@ function Profile() {
         </div>
 
         <div className="row">
-          {familyMemberList.length > 0 && familyMemberList.map((item) => {
+          {familyMemberList.length > 0 && familyMemberList.map((item,i) => {
             return <>
-              <div className="col-lg-4 col-md-6 col-sm-12 py-2">
+              <div className="col-lg-4 col-md-6 col-sm-12 py-2" key={i}>
                 <div
                   className="profileCard"
                 >

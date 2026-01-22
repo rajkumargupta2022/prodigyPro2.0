@@ -3,7 +3,7 @@ import NavBar from "../components/Navbar";
 import NextBar from "../components/Next-bar";
 import Breadcrumb from "react-bootstrap/Breadcrumb";
 
-const BankDetails = () => {
+const BankDetailForm = () => {
   const navigate = useNavigate()
   return (
     <>
@@ -88,4 +88,4 @@ const BankDetails = () => {
   );
 };
 
-export default BankDetails;
+export default BankDetailForm;

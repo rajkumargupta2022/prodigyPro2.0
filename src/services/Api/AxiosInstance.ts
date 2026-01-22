@@ -1,6 +1,6 @@
 import axios, { AxiosError } from "axios";
-import { baseUrl } from "../utils/urls";
 import { showLoader, hideLoader } from "../Loader/LoaderController";
+import { baseUrl } from "../utils/urls";
 
 let activeRequests = 0;
 

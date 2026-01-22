@@ -28,7 +28,6 @@ const SelectFolioPopup: React.FC<SchemeDetailsProps> = ({ show, setShow, schemeL
   useEffect(() => {
     if (!show) return;
     defaultSelectFolio()
-    console.log("from folio");
     
   }, [show])
   const defaultSelectFolio = () => {

@@ -40,7 +40,7 @@ function BankList() {
   }
 
   const detailPage = (account_number: string) => {
-    navigate("/bank-details-show", { state: account_number })
+    navigate("/bank-and-mandate-list", { state: account_number })
   }
   return (
     <>

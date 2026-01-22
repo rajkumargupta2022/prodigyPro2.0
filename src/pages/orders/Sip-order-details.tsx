@@ -142,9 +142,9 @@ function SIPOrderDetails() {
               <span className="value-font2">{dateInStringNumber(location?.state?.next_sip_date)}</span>
             </div>
           </div>
-          {(orderDetail?.installments?.length ?? 0) > 0 ? orderDetail?.installments.map((item) => {
+          {(orderDetail?.installments?.length ?? 0) > 0 ? orderDetail?.installments.map((item,i) => {
             return <div
-              className="p-4 shadow-sm bg-white border-0 rounded-4 mb-2 crPointer"
+              className="p-4 shadow-sm bg-white border-0 rounded-4 mb-2 crPointer" key={i}
               onClick={() => orderTimeLine(item.installment_id)}
             >
               <div className="d-flex justify-content-between align-items-center">

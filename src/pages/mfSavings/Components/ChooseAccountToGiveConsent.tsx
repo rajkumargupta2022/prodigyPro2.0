@@ -17,6 +17,7 @@ interface ChooseAccountToConsent {
 const ChooseAccountToConsent: React.FC<ChooseAccountToConsent> = ({ show, setShow }) => {
   const [bankList, setBankList] = useState<getAllBankAccKeys[]>([])
   const [selectedBank, setSelectedBank] = useState<getAllBankAccKeys>()
+  const [consentUrl, setConsentUrl] = useState<string>()
   useEffect(() => {
     fetchAccountList()
   }, [])
@@ -39,16 +40,19 @@ const ChooseAccountToConsent: React.FC<ChooseAccountToConsent> = ({ show, setSho
     setSelectedBank(data)
   }
   const handleConsentLink = async () => {
+    const adminUser = fetchAdminUser()
     const reqBody = {
       bank_name: selectedBank?.bank_name,
       account_number: selectedBank?.account_number,
+      ucc: adminUser.ucc
     }
     try {
       const res = await postRequest<getConsentLinkRes>(endPoints.getConsentLink,reqBody)
       if (res.success) {
-       window.open(res.data.consent_url??"","_blank")
+       setConsentUrl(res.data.consentUrl)
       }
     } catch (err) {
+      setConsentUrl("")
       console.log(err);
 
     }
@@ -65,6 +69,8 @@ const ChooseAccountToConsent: React.FC<ChooseAccountToConsent> = ({ show, setSho
         <Modal.Header closeButton className="modal-bg">
           <Modal.Title>Choose Account to Give Consent</Modal.Title>
         </Modal.Header>
+     
+
         <Modal.Body className="modal-bg">
           {bankList.length > 0 ? bankList?.map((item, index) => {
             return <div key={item.account_number} className="borderColor p-3 rounded bg-white m-2 crPointer" onClick={() => handleBankSelection(item)}>

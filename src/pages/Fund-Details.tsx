@@ -194,8 +194,7 @@ const FundDetails = () => {
       const monthForMap = [1, 3, 6, 12, 36, 60]
       let monthData: monthKeys[] = []
       const month = getMonthsSinceLaunch(res.data[0].launchDate)
-      console.log("111");
-      
+
       monthForMap.forEach((item) => {
         if (month >= item) {
           monthData.push({ value: item, label: (item >= 12 ? (item / 12) + "Y" : item + "M") })
@@ -385,8 +384,8 @@ const FundDetails = () => {
               </div>
 
               <div className="d-flex justify-content-between align-items-center mx-4 mt-0 crPointer" >
-                {monthList.map((item: monthKeys) => {
-                  return <p className={`${duration === item.value && "activeDuratin"}`} onClick={() => fetchNavHistory(item.value)}>{item.label}</p>
+                {monthList.map((item: monthKeys,i:number) => {
+                  return <p className={`${duration === item.value && "activeDuratin"}`} key={i} onClick={() => fetchNavHistory(item.value)}>{item.label}</p>
                 })}
               </div>
             </div>

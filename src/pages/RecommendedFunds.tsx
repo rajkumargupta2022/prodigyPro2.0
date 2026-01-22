@@ -70,8 +70,8 @@ const RecommendedFunds = () => {
             <div className=" col">
               <small className="fs14px lightBlack">Investment horizon</small>
               <div className="">
-                   {duration?.map((item)=>{
-               return <button type="button" className={`btn mx-1  ${item.durationValues === selectedYear ? "selectedBtn" : "riskProfileBtn"}`} onClick={() => handleYears(item.durationValues)}> {item.duration}</button>
+                   {duration?.map((item,i)=>{
+               return <button type="button" key={i} className={`btn mx-1  ${item.durationValues === selectedYear ? "selectedBtn" : "riskProfileBtn"}`} onClick={() => handleYears(item.durationValues)}> {item.duration}</button>
                 })}
              
               </div>

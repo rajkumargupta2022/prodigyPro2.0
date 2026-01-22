@@ -53,7 +53,7 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
      if (!show) return;
     fetchFolios()
     defaultTransactionType()
-    setMinimumDate(daysAdded(7, sipDateList))
+    setMinimumDate(daysAdded(30, sipDateList))
 
     const updated = schemeList.map(obj => ({
       ...obj,
@@ -62,7 +62,7 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
       from_date: "",
       amount: 0,
       totalAmount: 0,
-      start_date: daysAdded(7, sipDateList),
+      start_date: daysAdded(30, sipDateList),
     }));
     setSchemeList(updated)
   }, [show]);

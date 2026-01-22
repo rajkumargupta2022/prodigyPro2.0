@@ -10,14 +10,12 @@ import { dateInStringNumber } from "../services/dates/dateFormater";
 import { bankType } from "../services/utils/keys";
 import { maskString } from "../services/utils/services";
 
-function BankDetails() {
+function BankAndMandateList() {
   const location = useLocation()
   const navigate = useNavigate()
   const [openCreateMandate, setOpenCreateMandate] = useState(false);
   const [mandateList, setMandateList] = useState<userBankDetailKeys[]>([])
   useEffect(() => {
-    console.log("dfffffffg");
-
     fetchankDetail()
   }, [])
 
@@ -134,4 +132,4 @@ function BankDetails() {
   );
 }
 
-export default BankDetails;
+export default BankAndMandateList;

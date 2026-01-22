@@ -5,7 +5,7 @@ import {
   ChatDots,
   Star,
 } from "react-bootstrap-icons";
-import RateYourRM from "../components/Rate-Your-RM";
+import RateYourRM from "./Rate-Your-RM";
 import { useEffect, useState } from "react";
 import { helpAndSupportKey, helpAndSupportResponse } from "../pages/data-interfaces/accounts";
 import { postRequest } from "../services/Api/HandleApi";

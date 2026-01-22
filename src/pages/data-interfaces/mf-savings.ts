@@ -21,7 +21,7 @@ export interface getConsentLinkRes {
   data: getConsentLinkKeys;
 }
 export interface getConsentLinkKeys {
-  consent_url?: string;
+  consentUrl?: string;
 }
 
 export interface calculateManualInsightsKeys {

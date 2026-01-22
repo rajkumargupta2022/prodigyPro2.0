@@ -30,8 +30,6 @@ const SwitchConfirmation: React.FC<investmetProps> = ({ show, setShow, cartItem,
 
 
   useEffect(()=>{
-    console.log("cartItem",cartItem);
-    
        setFinalCartData(cartItem)
   },[show])
   const finalSwitch = async () => {

@@ -17,8 +17,6 @@ export const finalTransaction = async (
   datasetter: (vlaue: any) => void,
   additionalPurchase:boolean
 ) => {
-  console.log("schemelist",schemeList);
- 
   const adminUser = fetchAdminUser();
   if(!adminUser){
     errorToast("Something went wrong..")

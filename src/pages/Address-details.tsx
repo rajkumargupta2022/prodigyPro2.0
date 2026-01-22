@@ -85,7 +85,7 @@ const AddressDetails = () => {
           </form>
         </div>
       </div>
-      <NextBar onBack={() => { }} onSaveContinue={() => { navigate('/bank-details') }} />
+      <NextBar onBack={() => { }} onSaveContinue={() => { navigate('/bank-details-form') }} />
       <Footer />
     </>
   );

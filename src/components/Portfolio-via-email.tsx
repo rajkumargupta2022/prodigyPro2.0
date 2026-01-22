@@ -40,7 +40,6 @@ const PortfolioViaEmail = () => {
 
   const dateHandler = (e: any) => {
     setSelectedDate(e.target.value)
-console.log(e.target.value);
 
   }
 

@@ -102,8 +102,6 @@ const InvestMoreScheme: React.FC<InvestMoreScheme> = ({
       const filtered = transformed.filter((item: any) => {
         return !item.scheme.toLowerCase().includes('direct');
       });
-      console.log("filtered",filtered);
-      
       setSelectedSchemeList(filtered);
       handleSipIntersection(filtered);
     } catch (err) {

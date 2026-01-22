@@ -72,8 +72,8 @@ const PopularFunds = () => {
             </button>
 
           </div>
-          {filteredSchemes?.map((item) => {
-            return <div className="col-12 mt-2 crPointer">
+          {filteredSchemes?.map((item,i) => {
+            return <div className="col-12 mt-2 crPointer" key={i}>
               <div className="d-flex gap-3 border-bottom borderColor py-2" onClick={()=>fundDetails(item)}>
                 <div className="">
                   <img src={imageUrl + item?.accordAMCCode + ".png"} height={45} width={45} alt="" className='rounded' />

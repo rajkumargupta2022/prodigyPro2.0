@@ -121,8 +121,8 @@ function getRemainingDays(closeDate: Date | string): string {
 
         </div>
       </div>
-      {nfoSchemeList.length > 0 ? nfoSchemeList.map((item) => {
-        return <div className="container py-2">
+      {nfoSchemeList.length > 0 ? nfoSchemeList.map((item,i) => {
+        return <div className="container py-2" key={i}>
           <div className="personal_form_container">
             <div className="borderColor p-3 headerRadius bg-white">
               <div className="d-flex justify-content-between">

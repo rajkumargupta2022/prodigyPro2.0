@@ -59,8 +59,8 @@ function Filters({ handleFilter, isAvailable, riskValue, setRiskValue }: Filters
       >
         <h5 className="mt-3 font-size-16 mb-3">Risk</h5>
         <Form className="checkbox-grid-setprodgy">
-          {riskList?.length > 0 && riskList.map((item) => {
-            return <Form.Check type="checkbox" label={item.risk} id={`risk-${item.risk_code}`} value={item.risk_code} checked={riskValue === item.risk_code} name="risk" onChange={handleRiskValue} />
+          {riskList?.length > 0 && riskList.map((item,i) => {
+            return <Form.Check type="checkbox" key={i} label={item.risk} id={`risk-${item.risk_code}`} value={item.risk_code} checked={riskValue === item.risk_code} name="risk" onChange={handleRiskValue} />
           })}
 
         </Form>

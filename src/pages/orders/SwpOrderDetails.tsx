@@ -127,8 +127,9 @@ function SWPOrderDetails() {
        
        
       </div>
-      {(orderDetail?.installments?.length ?? 0) > 0 ? orderDetail?.installments.map((item) => {
+      {(orderDetail?.installments?.length ?? 0) > 0 ? orderDetail?.installments.map((item,i) => {
         return <div
+        key={i}
           className="p-4 shadow-sm bg-white border-0 rounded-4 mb-2 crPointer"
           onClick={() => orderTimeLine(item.installment_id)}
         >
