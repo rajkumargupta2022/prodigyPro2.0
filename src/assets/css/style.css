@@ -1978,4 +1978,9 @@ margin-bottom: 0px;
 .cost-invet-red{
     color: #CB414E !important;
 }
-          
+        
+.small-dander-msg{
+  font-size: 12px;
+  color: #CB414E;
+  margin-top: 0px;
+}

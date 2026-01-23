@@ -122,7 +122,7 @@ const SipWithAnnualIncrease = () => {
       <div className="container px-4 my-4">
         <div className="row">
           <div className="col-12 align-items-start mb-3">
-            <h4>SIP with Annual Increase</h4>
+            <h4>Step-up SIP Calculator</h4>
             <p className="fs14px">
               Project your wealth growth with yearly SIP step-ups for smarter long-term planning.
             </p>

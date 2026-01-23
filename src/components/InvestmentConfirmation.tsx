@@ -43,28 +43,17 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
   const [amount, setAmount] = useState<number>(0)
   const [amountErrorMsg, setAmountErrorMsg] = useState<string>("")
   const [dateErrorMsg, setDateErrorMsg] = useState<string>("")
-  const [minimumDate, setMinimumDate] = useState<Date>()
+  const [minimumDate, setMinimumDate] = useState<Date>(daysAdded(30, sipDateList))
   const [foliosFetched, setFoliosFetched] = useState(false);
+
 
   // ✅ Fixed shortcut button values (they won't follow `amount` changes)
   const [shortcutValues, setShortcutValues] = useState<number[]>([0, 0, 0]);
 
   useEffect(() => {
-     if (!show) return;
+    if (!show) return;
     fetchFolios()
-    defaultTransactionType()
-    setMinimumDate(daysAdded(30, sipDateList))
 
-    const updated = schemeList.map(obj => ({
-      ...obj,
-      firstSIPToday: true,
-      to_date: "",
-      from_date: "",
-      amount: 0,
-      totalAmount: 0,
-      start_date: daysAdded(30, sipDateList),
-    }));
-    setSchemeList(updated)
   }, [show]);
 
   const dateHandle = (e: Date | null) => {
@@ -87,7 +76,7 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
   };
 
   useEffect(() => {
-     if (!show) return;
+    if (!show) return;
     if (foliosFetched) {
       if (schemeList[0]?.totalAmount) {
         const total = Number(schemeList[0]?.totalAmount);
@@ -105,19 +94,7 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
     }
   }, [foliosFetched]);
 
-  const defaultTransactionType = () => {
-    if (isSipTransaction) {
-      let data = checkTransactionAllowed(schemeList, keys.sip) ? true : false
-      if (!data) {
-        setAmount(5000);
-        distributeAmount(5000);
-      } else {
-        setIsSipTransaction(data)
-        setAmount(1000);
-        distributeAmount(1000);
-      }
-    }
-  }
+
 
   const fetchFolios = async () => {
     const adminUser = fetchAdminUser();
@@ -160,6 +137,17 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
     })
 
   };
+  const filteredSchemeList = schemeList.filter((scheme) => {
+    if (isSipTransaction) {
+      return scheme.sipAllowed && scheme.minSIPAmt;
+    }
+
+    if (isLumpsumTransaction) {
+      return scheme.purchaseAllowed && scheme.minLumSumAmt;
+    }
+
+    return false;
+  });
 
   const handleFolioSelection = () => {
 
@@ -182,19 +170,27 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
       setAmountErrorMsg("Enter investment amount")
       return
     }
+    for (let i = 0; i < filteredSchemeList.length; i++) {
+      const scheme = filteredSchemeList[i];
 
-    for (let i = 0; i < schemeList.length; i++) {
-      const scheme = schemeList[i];
+      const minAmount = isSipTransaction
+        ? Number(scheme.minSIPAmt)
+        : Number(scheme.minLumSumAmt);
 
-      const minAmount = isSipTransaction ? Number(scheme.minSIPAmt) : Number(scheme.minLumSumAmt);
-      const enteredAmount = scheme.amount ?? 0;
+      const enteredAmount = Number(scheme.amount ?? 0);
+
+      // Skip if minAmount is invalid
+      if (!minAmount || isNaN(minAmount)) continue;
 
       if (enteredAmount < minAmount) {
-        setAmountErrorMsg(`Minimum amount required for ${scheme.scheme}`);
+        setAmountErrorMsg(
+          `Minimum amount required for ${scheme.scheme}`
+        );
         return;
       }
     }
 
+    setSchemeList(filteredSchemeList);
     if (minTotal > total) {
       setAmountErrorMsg("Minimum investment amount is ₹" + minTotal)
       return
@@ -227,11 +223,6 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
 
   const handleTransactionType = (type: boolean) => {
     setIsSipTransaction(type)
-    if (type) {
-      setAmount(1000)
-    } else {
-      setAmount(5000)
-    }
     handleMinAmount(type)
   }
 
@@ -242,12 +233,15 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
     const newAmount = Number(e.target.value.trim());
 
     const updatedList = schemeList.map((item, index) => {
-      if (index === indexToUpdate) {
-        return {
-          ...item,
-          amount: newAmount,
-        };
+      if ((item.sipAllowed && isSipTransaction) || (item.purchaseAllowed && isLumpsumTransaction)) {
+        if (index === indexToUpdate) {
+          return {
+            ...item,
+            amount: newAmount,
+          };
+        }
       }
+
       return item;
     });
 
@@ -384,6 +378,8 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
     window.open("/terms-and-conditions", "_blank");
   }
 
+
+
   return (
     <>
 
@@ -401,10 +397,10 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
             <div className="d-flex justify-content-between">
               <div className="d-flex">
                 <div className="prod_icon_img">
-                  <img src={(from === "portfolio"&& schemeList.length===1) ? imageUrl + schemeList[0]?.accordAMCCode + ".png" : money} height={35} width={35} alt="" className='rounded-2' />
+                  <img src={(from === "portfolio" && schemeList.length === 1) ? imageUrl + schemeList[0]?.accordAMCCode + ".png" : money} height={35} width={35} alt="" className='rounded-2' />
                 </div>
                 <div className="ms-2 prod_icon_heading">
-                  <h4>{(from === "portfolio"&& schemeList.length===1) ? schemeList[0]?.scheme : from.charAt(0).toUpperCase() + from?.slice(1) + " Funds"}</h4>
+                  <h4>{(from === "portfolio" && schemeList.length === 1) ? schemeList[0]?.scheme : from.charAt(0).toUpperCase() + from?.slice(1) + " Funds"}</h4>
                   <p>Selected fund {schemeList?.length}</p>
                 </div>
               </div>
@@ -494,36 +490,60 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
               </div>
             </div>
 
-          
-              <p className='sip_amount_breakup12 fs14px mb-0'>Sip amount breakup</p>
-              {schemeList?.map((item, index) => {
-                return (
-                  <div key={index} className="d-flex justify-content-between midpodgy_invest_conf py-1">
-                    <div>
-                      <span>{item?.scheme}</span>
-                    </div>
-                    <div>
-                      <input
-                        className=''
-                        type="text"
-                        placeholder='0'
-                        value={item?.amount}
-                        onChange={(e) => handleMultipleAmount(e, index)}
-                      /><br />
-                      <span className="errorColor">
-                        {isSipTransaction
-                          ? ((item?.amount ?? 0) < item.minSIPAmt
-                            ? "Min amount " + item.minSIPAmt
-                            : "")
-                          : ((item?.amount ?? 0) < item.minLumSumAmt
-                            ? "Min amount " + item.minLumSumAmt
-                            : "")
-                        }
+
+            <p className='sip_amount_breakup12 fs14px mb-0'>Sip amount breakup</p>
+            {schemeList?.map((item, index) => {
+              const isDisabled =
+                (isSipTransaction && !isLumpsumTransaction && !item.sipAllowed) ||
+                (isLumpsumTransaction && !isSipTransaction && !item.purchaseAllowed);
+
+              return (
+                <div key={index} className="d-flex justify-content-between midpodgy_invest_conf py-1">
+                  <div>
+                    <span className={isDisabled ? "text-muted opacity-50 d-block mb-1" : "d-block mb-1"}>
+                      {item?.scheme}
+                    </span>
+
+                    {(!item.sipAllowed && isSipTransaction && !isLumpsumTransaction) && (
+                      <span className="small-dander-msg d-block mb-1">
+                        Sip investment not allowed
                       </span>
-                    </div>
+                    )}
+
+                    {(!item.purchaseAllowed && isLumpsumTransaction && !isSipTransaction) && (
+                      <span className="small-dander-msg d-block mb-1">
+                        Lumpsum investment not allowed
+                      </span>
+                    )}
+
+
+
                   </div>
-                )
-              })}
+                  <div>
+                    <input
+                      className="form-control py-1"
+                      type="text"
+                      placeholder="0"
+                      value={item?.amount}
+                      disabled={isDisabled}
+                      onChange={(e) => handleMultipleAmount(e, index)}
+                    />
+
+
+                    <span className="errorColor">
+                      {isSipTransaction
+                        ? ((item?.amount ?? 0) < item.minSIPAmt
+                          ? "Min amount " + item.minSIPAmt
+                          : "")
+                        : ((item?.amount ?? 0) < item.minLumSumAmt
+                          ? "Min amount " + item.minLumSumAmt
+                          : "")
+                      }
+                    </span>
+                  </div>
+                </div>
+              )
+            })}
 
 
             {isSipTransaction &&

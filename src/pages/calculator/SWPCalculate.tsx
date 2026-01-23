@@ -187,7 +187,7 @@ const SWPCalculator = () => {
                     />
                     <div className="form-group">
                       <label htmlFor="exampleInputPassword1" className="fs12px">
-                        EXPECTED RETURN (%)
+                        EXPECTED RETURN (% P.A.)
                       </label>
                       <ValidatedInput
                         ref={expectedReturnRef}

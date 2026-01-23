@@ -27,7 +27,6 @@ const RecomendedSchemes: React.FC<pageProps> = ({ from, url = endPoints.goalPlan
 
   useEffect(() => {
     if (url === endPoints.getRecommendedSchemes) {
-
       fetchRecomendedSchemeList()
     } else if (url === endPoints.getEmergencyFunds) {
       fetchEmergencyScheme()
