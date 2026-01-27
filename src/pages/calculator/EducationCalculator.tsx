@@ -78,7 +78,8 @@ const EducationCalculator = () => {
         state: {
           title: "Recommended Funds",
           paragraph: "Discover expertly curated fund baskets tailored to your financial goals. Simplify your investment journey with the right mix of funds for every need!",
-          investmentPeriod: (Number(durationOfEducation)+Number(startCollegeAge)) - Number(childAge)
+          investmentPeriod: (Number(durationOfEducation)+Number(startCollegeAge)) - Number(childAge),
+          newsipamt: monthlyInvestmentRequired
         }
       })
     }

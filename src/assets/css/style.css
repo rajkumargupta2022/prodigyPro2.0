@@ -1786,6 +1786,26 @@ a{
   bottom: 20%; /* Move up by 30px from the bottom */
 }
 
+
+.carousel-indicators {
+    position: fixed !important;
+    right: 40rem;
+    bottom: -13px;
+    left: 0px;
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    padding: 0;
+    margin-right: 15%;
+    margin-bottom: 1rem;
+    margin-left: 15%;
+}
+.carousel-indicators [data-bs-target]{
+  height: 5px;
+}
+
+
+
 .focus_datepickers121:focus{
   outline: none;
   border: 0px;
@@ -1984,3 +2004,4 @@ margin-bottom: 0px;
   color: #CB414E;
   margin-top: 0px;
 }
+

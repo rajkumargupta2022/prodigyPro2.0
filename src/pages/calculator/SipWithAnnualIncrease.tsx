@@ -19,16 +19,16 @@ interface ChartState {
 
 const SipWithAnnualIncrease = () => {
   const navigate = useNavigate()
-  const [investmentPeriod, setInvestmentPeriod] = useState<number>(115);
+  const [investmentPeriod, setInvestmentPeriod] = useState<number>(10);
   const [monthlySip, setMonthlySip] = useState<number>(25000);
   const [expectedReturn, setExpectedReturn] = useState<number>(12.5);
   const [annualSipIncrease, setAnnualSipIncrease] = useState<number>(12);
-  const [totalSipInvestedWithOutAnnualIncrease, setTotalSipInvestedWithOutAnnualIncrease] = useState<number>(2875000);
-  const [totalGrowthWithOutAnnualIncrease, setTotalGrowthWithOutAnnualIncrease] = useState<number>(2479127);
-  const [totalFutureValueNoAnnualIncrease, setTotalFutureValueNoAnnualIncrease] = useState<number>(5354127);
-  const [totalSipAmountInvestedWithAnnualIncrease, setTotalSipAmountInvestedWithAnnualIncrease] = useState<number>(4432696);
-  const [totalGrowthWithAnnualIncrease, setTotalGrowthWithAnnualIncrease] = useState<number>(2825546);
-  const [totalFutureValueSipAndWithAnnualIncrease, setTotalFutureValueSipAndWithAnnualIncrease] = useState<number>(7258243);
+  const [totalSipInvestedWithOutAnnualIncrease, setTotalSipInvestedWithOutAnnualIncrease] = useState<number>(3000000);
+  const [totalGrowthWithOutAnnualIncrease, setTotalGrowthWithOutAnnualIncrease] = useState<number>(2752190);
+  const [totalFutureValueNoAnnualIncrease, setTotalFutureValueNoAnnualIncrease] = useState<number>(5752190);
+  const [totalSipAmountInvestedWithAnnualIncrease, setTotalSipAmountInvestedWithAnnualIncrease] = useState<number>(5264620);
+  const [totalGrowthWithAnnualIncrease, setTotalGrowthWithAnnualIncrease] = useState<number>(3788142);
+  const [totalFutureValueSipAndWithAnnualIncrease, setTotalFutureValueSipAndWithAnnualIncrease] = useState<number>(9052762);
 
   const monthlySipRef = useRef<{
     validate: (value: number) => boolean;
@@ -95,7 +95,7 @@ const SipWithAnnualIncrease = () => {
         try{
           const reqBody = {
             monthlySip,
-            totalMonth:investmentPeriod,  
+            totalMonth:investmentPeriod*12,  
             expectedReturn,
             annualSipIncrease
           }
@@ -115,7 +115,16 @@ const SipWithAnnualIncrease = () => {
         }
     }
   };
-
+ const handleRecomendedScheme = () => {
+      navigate("/recommended-scheme-goal", {
+        state: {
+          title: "Recommended",
+          paragraph: "Discover expertly curated fund baskets tailored to your financial goals. Simplify your investment journey with the right mix of funds for every need!",
+          investmentPeriod: investmentPeriod,
+          newsipamt: monthlySip,
+        }
+      })
+    }
   return (
     <>
       <NavBar />
@@ -152,8 +161,8 @@ const SipWithAnnualIncrease = () => {
                       />
                     </div>
                      <RangeBar
-                      label={"HOW MANY MONTHS WILL YOU CONTINUE THE SIP?"}
-                      maxLimit={240}
+                      label={"HOW MANY YEARS WILL YOU CONTINUE THE SIP?"}
+                      maxLimit={30}
                       value={investmentPeriod}
                       setValue={setInvestmentPeriod}
                     />
@@ -243,7 +252,7 @@ const SipWithAnnualIncrease = () => {
                   </div>
                 </div>
               </div>
-                    <button type="button" className="btn investBtn mt-2 shadow-lg" onClick={() => { navigate("/recommended-funds") }}>
+                    <button type="button" className="btn investBtn mt-2 shadow-lg" onClick={handleRecomendedScheme}>
                 Start Investing
               </button>
             </div>

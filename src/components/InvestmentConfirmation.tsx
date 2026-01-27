@@ -53,7 +53,7 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
   useEffect(() => {
     if (!show) return;
     fetchFolios()
-
+    
   }, [show]);
 
   const dateHandle = (e: Date | null) => {
@@ -491,7 +491,7 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
             </div>
 
 
-            <p className='sip_amount_breakup12 fs14px mb-0'>Sip amount breakup</p>
+            <p className='sip_amount_breakup12 fs14px mb-0'>Amount breakup</p>
             {schemeList?.map((item, index) => {
               const isDisabled =
                 (isSipTransaction && !isLumpsumTransaction && !item.sipAllowed) ||

@@ -18,8 +18,10 @@ const ChooseAccountToConsent: React.FC<ChooseAccountToConsent> = ({ show, setSho
   const [bankList, setBankList] = useState<getAllBankAccKeys[]>([])
   const [selectedBank, setSelectedBank] = useState<getAllBankAccKeys>()
   const [consentUrl, setConsentUrl] = useState<string>()
+  
   useEffect(() => {
     fetchAccountList()
+    console.log("consentUrl",consentUrl);
   }, [])
 
   const fetchAccountList = async () => {

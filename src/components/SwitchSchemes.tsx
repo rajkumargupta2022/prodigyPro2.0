@@ -1,6 +1,6 @@
 
 import { ChevronRight, ChevronLeft, ChevronDoubleLeft, ChevronDoubleRight, Search } from "react-bootstrap-icons";
-import { baseUrl, endPoints, imageUrl } from "../services/utils/urls";
+import {  endPoints, imageUrl } from "../services/utils/urls";
 import { Card, Col, Row, Dropdown, Form } from "react-bootstrap";
 import Returns from "../pages/explore/SortBy";
 import Category from "../pages/explore/Category";

@@ -106,7 +106,7 @@ const MarriageCalculator = () => {
                     <form onSubmit={submit}>
                       <RangeBar
                         label={"CHILD AGE TODAY (YEARS)"}
-                        maxLimit={30}
+                        maxLimit={40}
                         value={childAge}
                         setValue={setChildAge}
                       />

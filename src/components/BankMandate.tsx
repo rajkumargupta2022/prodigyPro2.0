@@ -93,6 +93,7 @@ interface bankMandate {
     finalTransaction(updatedSchemeList, isSipTransaction ? keys.sip : keys.purchase, setSuccessData, additionalPurchase).then((res) => {
       setOpenSuccess(true)
       setShow(false)
+      console.log(res)
     })
   }
   return (

@@ -64,7 +64,6 @@ import SIPOrderDetails from "./pages/orders/Sip-order-details";
 // import STPOrderDetails from "./pages/orders/Stp-order-details";
 import SWPOrderDetails from "./pages/orders/SwpOrderDetails";
 import LinkedBankAccount from "./components/Linked-BankAccount";
-import BankDetailsC from "./components/Bank-and-mandate-list";
 import AddBankAccount from "./components/Add-bank-account";
 import AddBankDetails from "./components/add-bank-details";
 import AddAccountVerification from "./components/bank-account-verification";

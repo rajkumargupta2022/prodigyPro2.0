@@ -151,12 +151,14 @@ const SipCalculator = () => {
    const handleRecomendedScheme = () => {
       navigate("/recommended-scheme-goal", {
         state: {
-          title: "Recommended Funds",
+          title: "Recommended",
           paragraph: "Discover expertly curated fund baskets tailored to your financial goals. Simplify your investment journey with the right mix of funds for every need!",
-          investmentPeriod: investmentPeriod
+          investmentPeriod: investmentPeriod,
+          newsipamt: monthlySaving,
         }
       })
     }
+
 
   return (
     <>

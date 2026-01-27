@@ -14,6 +14,7 @@ import InvetmentConfirmation from './InvestmentConfirmation';
 import PortfolioNotes from './PortfolioNotes';
 import DirectSchemeNote from './DirectSchemeNote';
 import {  filterDirectSchemeForInvest } from '../services/utils/services';
+import { errorToast } from '../services/utils/toast';
 
 interface InvestMoreScheme {
   show: boolean;
@@ -156,6 +157,10 @@ const InvestMoreScheme: React.FC<InvestMoreScheme> = ({
   };
 
   const handleInvestMore = () => {
+    if(selectedSchemeList.length<=0){
+      errorToast("Please select schemes to invest more.");
+      return;
+    }
     const hasDirect = schemeList.some((item) =>
       item?.scheme?.toLowerCase()?.includes('direct')
     );

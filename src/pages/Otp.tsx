@@ -22,7 +22,7 @@ const Otp = () => {
   const [counter, setCounter] = useState<number>(15);
 
   useEffect(() => {
-    let timer: number;
+    let timer: any;
     if (counter > 0) {
       timer = setTimeout(() => setCounter(prev => prev - 1), 1000);
     }

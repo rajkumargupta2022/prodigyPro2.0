@@ -24,7 +24,7 @@ const OtpField: React.FC<otpFieldProps> = ({ show, setShow, requestId, mobile })
 
   useEffect(() => {
     if (show) {
-      let timer: number;
+      let timer: any;
       if (counter > 0) {
         timer = setTimeout(() => setCounter(prev => prev - 1), 1000);
       }

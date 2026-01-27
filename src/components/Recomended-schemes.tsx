@@ -84,7 +84,7 @@ const RecomendedSchemes: React.FC<pageProps> = ({ from, url = endPoints.goalPlan
         prev.map((obj: any) => {
           return {
             ...obj,
-            totalAmount: location.state.newsipamt,
+            totalAmount: location.state?.newsipamt,
           };
         })
       );
