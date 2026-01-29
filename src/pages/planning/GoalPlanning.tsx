@@ -6,7 +6,7 @@ import car from "../../assets/img/icons/car 1.svg"
 import vacation from "../../assets/img/icons/vacation.svg"
 import wealth from "../../assets/img/icons/wealth creation.svg"
 import ring from "../../assets/img/icons/engagement-ring 1.svg"
-// import customGoal from "../../assets/img/icons/goal.svg"
+import customGoal from "../../assets/img/icons/goal.svg"
 // import { CurrencyRupee } from "react-bootstrap-icons";
 import { useNavigate } from "react-router-dom";
 import { goalContent, GoalContentInterface } from "../data/goal";
@@ -109,17 +109,17 @@ const GoalPlanning = () => {
               </div>
             </div>
           </div>
-          {/* <div className="col-6 col-md-4 col-lg-3 text-center rounded-2 alignCenter px-2 mb-3" onClick={() => { navigate("/custom-goal") }}>
+          <div className="col-6 col-md-4 col-lg-3 text-center rounded-2 alignCenter px-2 mb-3" onClick={() => handleGoal(goalContent.customizeGoal)}>
             <div className="card border-0 shadow">
               <div className="card-header border-0 bg-transparent pb-0 pt-3">
                 <img src={customGoal} className="card-img-top" alt="..." height={44} />
               </div>
               <div className="card-body">
-                <p className="fs14px mb-0 ">Custom Goal 1</p>
-                <small><CurrencyRupee className="mb-1" />2.25Cr</small>
+                <p className="fs14px mb-0 ">Add Customize Goal</p>
               </div>
             </div>
           </div>
+           {/*
           <div className="col-6 col-md-4 col-lg-3 text-center rounded-2 alignCenter px-2 mb-3" onClick={() => { navigate("/custom-goal") }}>
             <div className="card border-0 shadow">
               <div className="card-header border-0 bg-transparent pb-0 pt-3">

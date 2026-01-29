@@ -145,20 +145,17 @@ const GoalResult = () => {
   };
 
   const handleGoal = () => {
-   
-    navigate("/recommended-scheme-goal", { state: location.state });
+    navigate("/recommended-scheme-goal", { state: {
+        newsipamt:location.state?.newsipamt, investmentPeriod:location.state?.investmentPeriod,  title: "Recommended",
+        paragraph: location.state?.paragraph
+      }});
   };
 
   const recalculate = () => {
     navigate("/goal", { state: location.state });
   };
 
-  // Formatter for top values
-  // const formatTopValue = (v: number) => {
-  //   if (v >= 10000000) return `₹${(v / 10000000).toFixed(2)}Cr`;
-  //   if (v >= 100000) return `₹${(v / 100000).toFixed(2)}L`;
-  //   return `₹${v.toLocaleString()}`;
-  // };
+
 
   return (
     <>

@@ -2004,4 +2004,8 @@ margin-bottom: 0px;
   color: #CB414E;
   margin-top: 0px;
 }
+.disabled-click {
+  pointer-events: none;
+  cursor: not-allowed;
+}
 

@@ -39,4 +39,9 @@ export const goalContent: Record<string, GoalContentInterface> = {
     paragraph:
       "Set your wealth creation goal and start investing today to achieve financial freedom and long-term prosperity.",
   },
+    customizeGoal: {
+    title: "Customize Goal",
+    paragraph:
+      "Set a personalized goal and start investing your way to financial success.",
+  },
 };

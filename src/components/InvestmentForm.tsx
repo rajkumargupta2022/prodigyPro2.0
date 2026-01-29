@@ -276,11 +276,11 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
         <hr />
         <div className="row text-center mt-2 ">
           {(checkTransactionAllowed(schemeList, keys.sip))&&
-            <div className={`col-md-6 py-2 py-md-0`}>
+            <div className={`col py-2 py-md-0`}>
               <div className={`${isSipTransaction ? "text-white logobg_color" : "logoBlueColor"} w-100 border  text-center monthly_btn crPointer`} onClick={() => { handleTransactionType(true) }}> Monthly SIP</div>
             </div>}
           {checkTransactionAllowed(schemeList, keys.purchase) &&
-            <div className={`col-md-6 py-2 py-md-0`}>
+            <div className={`col py-2 py-md-0`}>
               <div className={`${!isSipTransaction ? "text-white logobg_color" : "logoBlueColor"} w-100 border  text-center monthly_btn crPointer`} onClick={() => { handleTransactionType(false) }}> One-Time </div>
             </div>}
         </div>
@@ -304,7 +304,7 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
                   minDate={minimumDate}
                   className="focus_datepickers121"
                 />
-                <div className="prod_view_fund align-self-center">
+                <div className="prod_view_fund align-self-center">  
                   <div className="crPointer dateIcon"><Calendar4 className='' /></div>
                 </div>
               </div>

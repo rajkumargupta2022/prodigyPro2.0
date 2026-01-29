@@ -3,9 +3,12 @@ import NavBar from "../../components/Navbar";
 import RangeBar from "../calculator/RangeBar";
 import { useState } from "react";
 import { FV, pmtvalue } from "../../services/utils/calculatorsFs";
+import { goalContent } from "../data/goal";
+import { errorToast } from "../../services/utils/toast";
 
 const Goal = () => {
   const [investmentPeriod, setInvestmentPeriod] = useState<Number>(10)
+  const [goalName, setGoalName] = useState<string>("")
   const navigate = useNavigate()
   const location = useLocation()
 
@@ -14,18 +17,21 @@ const Goal = () => {
   const [error, setError] = useState("")
 
   const calculateResult = async () => {
-
+if (goalContent.customizeGoal?.title===location.state?.title && goalName.trim() === "") {
+      errorToast("Plaese define goal..."); // 🔹 show error below input
+      return;
+    }
     if (amount.trim() === "") {
       setError("Plaese enter amount..."); // 🔹 show error below input
       return;
     }
-
+   let titleName = (goalContent.customizeGoal?.title===location.state?.title)? goalName  : location.state?.title;
 
     const { newsipamt, lumpsumRequired ,ir} = await goalCalculater(Number(amount), Number(investmentPeriod));
       
     navigate("/goal-result", {
       state: {
-        newsipamt, lumpsumRequired, investmentPeriod,amount, ir,  title: location.state?.title,
+        newsipamt, lumpsumRequired, investmentPeriod,amount, ir,  title: titleName,
         paragraph: location.state?.paragraph
       }
     });
@@ -90,6 +96,9 @@ const Goal = () => {
               <div className="card border-0 shadow p-4">
                 <div className="card-body">
                   <p className=" fs18px fw-normal">How much money will you need to achieve this goal?</p>
+                  {goalContent.customizeGoal?.title===location.state?.title &&<>
+                   <label htmlFor="exampleInputEmail1" className="form-label fs12px">Define Goal</label>
+                  <input type="text" className="form-control" placeholder="" value={goalName} onChange={(e)=>setGoalName(e.target.value)} aria-describedby="emailHelp" /></>}
                   <label htmlFor="exampleInputEmail1" className="form-label fs12px">Amount (In today’s term)</label>
                   <input type="text" className={`form-control ${error ? "is-invalid" : ""}`} placeholder="₹ 25,00,000" id="exampleInputEmail1" aria-describedby="emailHelp" value={amount} onChange={handleAmount} />
                   {error && <div className="invalid-feedback">{error}</div>}

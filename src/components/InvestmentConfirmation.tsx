@@ -13,7 +13,6 @@ import BankMandate from './BankMandate';
 
 import { daysAdded } from '../services/dates/dateFormater';
 import { keys } from '../services/utils/keys';
-import { checkTransactionAllowed } from '../services/utils/services';
 import { finalTransaction } from '../services/utils/transactionApi';
 import OrderPlaces from './order-places';
 import DatePicker from 'react-datepicker';
@@ -53,7 +52,7 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
   useEffect(() => {
     if (!show) return;
     fetchFolios()
-    
+    setIsSipTransaction(true)
   }, [show]);
 
   const dateHandle = (e: Date | null) => {
@@ -281,6 +280,7 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
   };
 
   const handleMinAmount = async (type: boolean = isSipTransaction) => {
+
     if (!schemeList || schemeList.length === 0) return;
 
     const regex = /\bSIF\b|\bQSIF\b|long[\s\-]*short/i;
@@ -377,6 +377,16 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
   const handleTerms = () => {
     window.open("/terms-and-conditions", "_blank");
   }
+  const checkAnyAllowed = (type: string) => {
+    if (type === keys.sip) {
+      let a = schemeList.some((scheme) => scheme.sipAllowed);
+      return a
+    } else if (type === keys.purchase) {
+      let a = schemeList.some((scheme) => scheme.purchaseAllowed);
+      return a
+    }
+    return false
+  }
 
 
 
@@ -407,15 +417,35 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
             </div>
             <hr />
             <div className="row text-center mt-2">
-              {checkTransactionAllowed(schemeList, keys.sip) &&
-                <div className="col py-2 py-md-0">
-                  <div className={`${isSipTransaction ? "text-white logobg_color" : "logoBlueColor"} w-100 border  text-center monthly_btn crPointer`} onClick={() => { handleTransactionType(true) }}> Monthly SIP</div>
-                </div>}
 
-              {(checkTransactionAllowed(schemeList, keys.purchase) && isLumpsumTransaction) &&
-                <div className="col py-2 py-md-0">
-                  <div className={`${!isSipTransaction ? "text-white logobg_color" : "logoBlueColor"} w-100 border  text-center monthly_btn crPointer`} onClick={() => { handleTransactionType(false) }}> One-Time </div>
-                </div>}
+              <div
+                className={`col py-2 py-md-0 
+    ${checkAnyAllowed(keys.sip) ? "" : "opacity-50 disabled-click"}`}
+              >
+                <div
+                  className={`${isSipTransaction ? "text-white logobg_color" : "logoBlueColor"} 
+      w-100 border text-center monthly_btn crPointer`}
+                  onClick={() => handleTransactionType(true)}
+                >
+                  Monthly SIP
+                </div>
+              </div>
+
+              {from !== "Recommended" && (
+                <div
+                  className={`col py-2 py-md-0 
+                 ${checkAnyAllowed(keys.purchase) ? "" : "opacity-50 disabled-click"}`}
+                >
+                  <div
+                    className={`${!isSipTransaction ? "text-white logobg_color" : "logoBlueColor"} 
+                     w-100 border text-center monthly_btn crPointer`}
+                    onClick={() => handleTransactionType(false)}
+                  >
+                    One-Time
+                  </div>
+                </div>
+              )}
+
             </div>
 
             {isSipTransaction && <>

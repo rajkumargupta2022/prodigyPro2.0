@@ -10,7 +10,6 @@ import { getPercentageValue, getValueInSort } from "../services/calculation/perc
 import InvestMoreScheme from "../components/Invest-more-scheme";
 import UnderWatchPerformance from "../components/Underwatch-performance";
 import RedemptionPerformance from "../components/Redemption-performance";
-import { analytics } from "../services/utils/eventsKeys";
 import PortfolioEmpty from "./PortfolioEmpty";
 import emptyImg from "../assets/img/empty-img.svg"
 
@@ -168,7 +167,6 @@ const PortfolioReview = () => {
       return item.accordSchemeCode
     })
     setProductCodes(products)
-    analytics.track("invest_more_btn")
     setOpenInvestMore(true)
     setSatisfactoryListProps(satisfactoryList)
 
@@ -184,14 +182,12 @@ const PortfolioReview = () => {
     const uniqueProducts = Array.from(products);
     setProductCodes(uniqueProducts)
     setOpenSwitchFund(true)
-    analytics.track("bulk_scheme_switch_btn")
   }
 
   const redemptionPerformance = () => {
     let products = redemptionList.map((item: any) => {
       return item.accordSchemeCode
     })
-    analytics.track("redeem_scheme_btn")
     setProductCodes(products)
     setOpenRedumptinPerformance(true)
     setRedemptionListProps(redemptionList)
