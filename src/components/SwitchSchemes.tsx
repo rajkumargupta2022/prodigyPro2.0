@@ -1,6 +1,6 @@
 
 import { ChevronRight, ChevronLeft, ChevronDoubleLeft, ChevronDoubleRight, Search } from "react-bootstrap-icons";
-import {  endPoints, imageUrl } from "../services/utils/urls";
+import {  baseUrl, endPoints, imageUrl } from "../services/utils/urls";
 import { Card, Col, Row, Dropdown, Form } from "react-bootstrap";
 import Returns from "../pages/explore/SortBy";
 import Category from "../pages/explore/Category";
@@ -294,7 +294,7 @@ const SwitchSchemes: React.FC<SchemesProps> = ({
         }
       }
       setLoading(true)
-      const res = await axios.get<searchRes>(process.env.VITE_API_BASE_URL + endPoints.searchScheme + "?text=" + name, tokenBody)
+      const res = await axios.get<searchRes>(baseUrl + endPoints.searchScheme + "?text=" + name, tokenBody)
       if (res.data.success) {
         const options: OptionType[] = res.data.data.map(item => ({
           value: item.accord_scheme_code, 
@@ -382,7 +382,7 @@ const SwitchSchemes: React.FC<SchemesProps> = ({
               <Search
                 className="mutual-funds-searchbuttonprodgy12 text-secondary "
                 size={18}
-
+                
               />
 
               <Select<OptionType>
