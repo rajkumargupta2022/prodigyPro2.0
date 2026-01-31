@@ -53,26 +53,24 @@ const OrderPlaces: React.FC<OrderPlaces> = ({ show, setShow, successData }) => {
 
                     <div className={`mx-md-5 m-2 ${item.reg_status ? "schemeDetailBox" : "schemeDetailBoxRed"} my-md-3 my-1`}>
                       {item?.reg_id && <div className="d-flex text-start fs12pxWhite">
-                        <p className="order-Placed-modal text-start">UNIQUE NUMBER:</p>
+                        <p className="order-Placed-modal text-start">TRXN NUMBER:</p>
                         <p className="fs16">{item.reg_id}</p>
                       </div>}
-                      {/* <div className="d-flex text-start fs12pxWhite">
-                        <p className="order-Placed-modal">TRXN NUMBER:</p>
-                        <p className="fs16">265498989</p>
-                      </div> */}
+                     
                       <div className="d-flex text-start fs12pxWhite">
                         <p className="order-Placed-modal">FUND:</p>
                         <p className="fs16">{item.schemeName}</p>
                       </div>
-                      {item?.folio_no !== " " &&
+
+                      
                         <div className="d-flex text-start fs12pxWhite">
                           <p className="order-Placed-modal">FOLIO NUMBER:</p>
-                          <p className="fs16">{item.folio_no}</p>
-                        </div>}
+                          <p className="fs16">{item.folio_no === " " ? "New Folio" : item.folio_no}</p>
+                        </div>
                       {item?.amount &&
                         <div className="d-flex text-start fs12pxWhite">
                           <p className="order-Placed-modal">AMOUNT:</p>
-                          <p className="fs16">{item.amount}</p>
+                          <p className="fs16">₹{item.amount}</p>
                         </div>}
                       {item?.unit &&
                         <div className="d-flex text-start fs12pxWhite">
@@ -81,7 +79,7 @@ const OrderPlaces: React.FC<OrderPlaces> = ({ show, setShow, successData }) => {
                         </div>}
                       <div className="d-flex text-start fs12pxWhite">
                         <p className="order-Placed-modal">STATUS:</p>
-                        <p className="fs16">{item.reg_status ? "Successful" : "Failed"}</p>
+                        <p className="fs16">{item.reg_status ? "Initiated" : "Failed"}</p>
                       </div>
                       {item?.reg_remark !== " " &&
                         <div className="d-flex text-start fs12pxWhite">
@@ -98,8 +96,7 @@ const OrderPlaces: React.FC<OrderPlaces> = ({ show, setShow, successData }) => {
                       <br />
                       <p className="text-white fs14px" style={{ textAlign: "start" }}>
                         Authorization link has been sent on your registered mail id
-                        and mobile number.The Link shall remain active for the next 48
-                        hours.Kindly authorize.
+                        and mobile number.The Link shall remain active for T+3 days.Kindly authorize.
                       </p>
                     </div>
 

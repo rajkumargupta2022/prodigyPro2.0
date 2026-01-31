@@ -60,8 +60,7 @@ const OtpField: React.FC<otpFieldProps> = ({ show, setShow, requestId, mobile })
     } catch (err) {
       errorToast(err)
     }
-    setShow(false)
-    // navigate("/portfolio-under-review")
+ 
   };
   const resendOtp = async () => {
     try {

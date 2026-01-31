@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import NavBar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 import PortfolioEmpty from "../PortfolioEmpty";
@@ -10,13 +10,46 @@ import ReactApexChart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
 
 import { currentDateInStringNumber } from "../../services/dates/dateFormater";
-import { imageUrl } from "../../services/utils/urls";
+import { endPoints, imageUrl } from "../../services/utils/urls";
+import { fetchAdminUser } from "../../services/user/adminUser";
+import { getRequest } from "../../services/Api/HandleApi";
+import { NewMfUserRes } from "../data-interfaces/mf-savings";
 
-const ManualSurplusResult = () => {
+const MfSavingDashboard = () => {
+  const navigate = useNavigate();
   const [isEmergencyFund, setIsEmergencyFund] = useState<boolean>(true);
   const [openManageAccounts, setOpenManageAccounts] = useState<boolean>(false);
 
-  /* ---------------- CHART DATA ---------------- */
+
+  useEffect(() => {
+    fetchIsNewUser()
+  }, [])
+
+  const fetchIsNewUser = async () => {
+    const adminUser = fetchAdminUser();
+    try {
+      const res = await getRequest<NewMfUserRes>(`${endPoints.checkNewUser}?ucc=${adminUser.ucc}`);
+        console.log(res.data)
+        if(res.data){
+          navigate("/what-is-mf-savings");
+        }else if(!res.data){
+          navigate("/mf-saving-dashboard");
+        }
+      
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const fetchAllInsights = async () => {
+    const adminUser = fetchAdminUser(); 
+    try {
+      const res = await getRequest<any>(`${endPoints.getAllInsights}?ucc=${adminUser.ucc}`);
+        console.log(res.data);
+    } catch (err) {
+      console.error(err);
+    }
+  }
 
   const series = [
     {
@@ -184,7 +217,7 @@ const ManualSurplusResult = () => {
           <div className="container py-2">
             <div className="row justify-content-between align-items-center mb-3">
               <div className="col-6 mb-2"><h5 className="mb-0">My Accounts</h5></div>
-              <div className="col-6 text-end mb-2" onClick={()=>setOpenManageAccounts(true)}><p className="mb-0 logoBlueColor crPointer">Manage</p></div>
+              <div className="col-6 text-end mb-2" onClick={() => setOpenManageAccounts(true)}><p className="mb-0 logoBlueColor crPointer">Manage</p></div>
             </div>
 
             {[400027, 400013].map((bankId, index) => (
@@ -263,4 +296,4 @@ const ManualSurplusResult = () => {
   );
 };
 
-export default ManualSurplusResult;
+export default MfSavingDashboard;

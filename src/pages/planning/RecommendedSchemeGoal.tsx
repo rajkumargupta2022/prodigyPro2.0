@@ -1,5 +1,5 @@
 import NavBar from "../../components/Navbar";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import RecomendedSchemes from "../../components/Recomended-schemes";
 
 const RecommendedSchemeGoal = () => {

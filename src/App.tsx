@@ -86,7 +86,7 @@ import SwpInstallmentDetails from "./pages/orders/SwpInstallmentDetails";
 import TransactionHistory from "./pages/orders/TransactionHistory";
 import WhatIsMfSavings from "./pages/mfSavings/What-is-mf-savings";
 import ManualSurplusCalculator from "./pages/mfSavings/ManualSurplusCalculator";
-import ManualSurplusResult from "./pages/mfSavings/ManualSurplusResult";
+import MfSavingDashboard from "./pages/mfSavings/MfSavingDashboard";
 import MfSavingAccount from "./pages/mfSavings/MfSavingAccount";
 import TargetAmountSIPCalculator from "./pages/calculator/TargetAmountCalculator";
 import SipWithAnnualIncrease from "./pages/calculator/SipWithAnnualIncrease";
@@ -275,8 +275,8 @@ function App() {
             element={<ManualSurplusCalculator />}
           />
           <Route
-            path="/manual-surplus-result"
-            element={<ManualSurplusResult />}
+            path="/mf-saving-dashboard"
+            element={<MfSavingDashboard />}
           />
           <Route
             path="/education-calculator"

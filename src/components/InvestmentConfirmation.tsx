@@ -420,11 +420,11 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
 
               <div
                 className={`col py-2 py-md-0 
-    ${checkAnyAllowed(keys.sip) ? "" : "opacity-50 disabled-click"}`}
+                ${checkAnyAllowed(keys.sip) ? "" : "opacity-50 disabled-click"}`}
               >
                 <div
                   className={`${isSipTransaction ? "text-white logobg_color" : "logoBlueColor"} 
-      w-100 border text-center monthly_btn crPointer`}
+                  w-100 border text-center monthly_btn crPointer`}
                   onClick={() => handleTransactionType(true)}
                 >
                   Monthly SIP

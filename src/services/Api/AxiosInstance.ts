@@ -5,7 +5,7 @@ import { baseUrl } from "../utils/urls";
 let activeRequests = 0;
 
 const AxiosInstance = axios.create({
-  baseURL: baseUrl,
+  baseURL: import.meta.env.VITE_API_BASE_URL || baseUrl ,
   timeout: 20000,
   headers: {
     Accept: "application/json",

@@ -119,40 +119,7 @@ const GoalPlanning = () => {
               </div>
             </div>
           </div>
-           {/*
-          <div className="col-6 col-md-4 col-lg-3 text-center rounded-2 alignCenter px-2 mb-3" onClick={() => { navigate("/custom-goal") }}>
-            <div className="card border-0 shadow">
-              <div className="card-header border-0 bg-transparent pb-0 pt-3">
-                <img src={customGoal} className="card-img-top" alt="..." height={44} />
-              </div>
-              <div className="card-body">
-                <p className="fs14px mb-0 ">Custom Goal 2</p>
-                <small><CurrencyRupee className="mb-1" />2.25Cr</small>
-              </div>
-            </div>
-          </div>
-          <div className="col-6 col-md-4 col-lg-3 text-center rounded-2 alignCenter px-2 mb-3" onClick={() => { navigate("/custom-goal") }}>
-            <div className="card border-0 shadow">
-              <div className="card-header border-0 bg-transparent pb-0 pt-3">
-                <img src={customGoal} className="card-img-top" alt="..." height={44} />
-              </div>
-              <div className="card-body">
-                <p className="fs14px mb-0 ">Custom Goal 3</p>
-                <small><CurrencyRupee className="mb-1" />2.25Cr</small>
-              </div>
-            </div>
-          </div>
-          <div className="col-6 col-md-4 col-lg-3 text-center rounded-2 alignCenter px-2 mb-3" onClick={() => { navigate("/custom-goal") }}>
-            <div className="card border-0 shadow">
-              <div className="card-header border-0 bg-transparent pb-0 pt-3">
-                <img src={customGoal} className="card-img-top" alt="..." height={44} />
-              </div>
-              <div className="card-body">
-                <p className="fs14px mb-0 ">Custom Goal 4</p>
-                <small><CurrencyRupee className="mb-1" />2.25Cr</small>
-              </div>
-            </div>
-          </div> */}
+          
 
         </div>
       </div>

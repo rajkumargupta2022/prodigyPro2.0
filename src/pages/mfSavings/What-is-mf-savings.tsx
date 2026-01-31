@@ -17,25 +17,8 @@ const WhatIsMfSavings = () => {
   const navigate = useNavigate();
   const [activeIndex, setActiveIndex] = useState<number>(0);
 
-  /* ---------------- CHECK NEW USER ---------------- */
-  useEffect(() => {
-    fetchIsNewUser();
-  }, []);
 
-  const fetchIsNewUser = async () => {
-    const adminUser = fetchAdminUser();
-    try {
-      const res = await getRequest<NewMfUserRes>(
-        `${endPoints.checkNewUser}?ucc=${adminUser.ucc}`
-      );
 
-      if (!res.data) {
-        // navigate("/mf-saving-account");
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  };
 
   /* ---------------- CAROUSEL SLIDE LISTENER ---------------- */
   useEffect(() => {

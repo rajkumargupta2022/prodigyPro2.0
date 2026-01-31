@@ -1,6 +1,6 @@
 import { ChevronRight } from "react-bootstrap-icons";
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import InvetmentConfirmation from "../components/InvestmentConfirmation";
 import { endPoints, imageUrl } from "../services/utils/urls";
 import { errorToast } from "../services/utils/toast";
@@ -169,7 +169,7 @@ const RecomendedSchemes: React.FC<pageProps> = ({ from, url = endPoints.goalPlan
 
 
 
-          {/* <Link to={"/all-mutual-funds"} className="logoBlueColor">+ Add New Fund</Link><br /> */}
+         {(url === endPoints.goalPlanningSchemes)&&<> <Link to={"/all-mutual-funds"} className="logoBlueColor"> Add Mutual Fund</Link><br /></>}
           <button type="button" className="customButton px-2 mt-3" onClick={handleInvestmentConfirmation}>Continue</button>
         </div>
       </div>

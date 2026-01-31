@@ -35,7 +35,6 @@ const saveRm =async ()=>{
   try{
     await postRequest<any>(endPoints.rateRm,reqBody)
     successToast({msg:"Thankyou. Your rating submit successfully."})
-    // setOpenSuccessModel(true)
     setShow(false)
   }catch(err){
     errorToast(err);

@@ -41,6 +41,7 @@ export enum endPoints {
   getAllBanksAcc = "mf-savings/get-all-banks-acc",
   getConsentLink = "mf-savings/get-consent-link",
   calculateManualInsights = "mf-savings/calculate-manual-insights",
+  getAllInsights = "mf-savings/get-all-insights",
 
   /* =========================
      BAJAJ INSTA REDEEM
