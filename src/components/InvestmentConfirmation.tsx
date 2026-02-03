@@ -264,20 +264,48 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
     }
   };
 
-  const distributeAmount = (total: number) => {
-    const count = schemeList?.length;
+ const distributeAmount = (total: number) => {
+  const eligibleIndexes = getEligibleIndexes();
+  const count = eligibleIndexes.length;
 
-    if (count === 0) return;
+  if (count === 0) return;
 
-    const perScheme = Math.floor(total / count);
-    const remainder = total % count;
+  const perScheme = Math.floor(total / count);
+  const remainder = total % count;
 
-    const updatedList = schemeList?.map((item, index) => ({
+  let remainderUsed = false;
+
+  const updatedList = schemeList.map((item, index) => {
+    if (!eligibleIndexes.includes(index)) {
+      return { ...item, amount: 0 }; // or keep previous amount
+    }
+
+    let amount = perScheme;
+
+    if (!remainderUsed) {
+      amount += remainder;
+      remainderUsed = true;
+    }
+
+    return {
       ...item,
-      amount: perScheme + (index === 0 ? remainder : 0)
-    }));
-    setSchemeList(updatedList);
-  };
+      amount,
+    };
+  });
+
+  setSchemeList(updatedList);
+};
+
+  const getEligibleIndexes = () => {
+  return schemeList
+    .map((item, index) => {
+      if (isSipTransaction && item.sipAllowed) return index;
+      if (isLumpsumTransaction && item.purchaseAllowed) return index;
+      return null;
+    })
+    .filter((index) => index !== null) as number[];
+};
+
 
   const handleMinAmount = async (type: boolean = isSipTransaction) => {
 
@@ -396,7 +424,7 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
       <Modal
         show={show}
         onHide={() => setShow(false)}
-        backdrop={true}
+        backdrop={"static"}
         keyboard={false}
       >
         <Modal.Header closeButton className='modal-bg'>

@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { getAllBankAccKeys, getAllBankAccRes, getConsentLinkRes } from "../../data-interfaces/mf-savings";
 import { fetchAdminUser } from "../../../services/user/adminUser";
 import { getRequest, postRequest } from "../../../services/Api/HandleApi";
+import { errorToast } from "../../../services/utils/toast";
 interface ChooseAccountToConsent {
   show: boolean;
   setShow: (show: boolean) => void;
@@ -17,11 +18,9 @@ interface ChooseAccountToConsent {
 const ChooseAccountToConsent: React.FC<ChooseAccountToConsent> = ({ show, setShow }) => {
   const [bankList, setBankList] = useState<getAllBankAccKeys[]>([])
   const [selectedBank, setSelectedBank] = useState<getAllBankAccKeys>()
-  const [consentUrl, setConsentUrl] = useState<string>()
   
   useEffect(() => {
     fetchAccountList()
-    console.log("consentUrl",consentUrl);
   }, [])
 
   const fetchAccountList = async () => {
@@ -51,11 +50,10 @@ const ChooseAccountToConsent: React.FC<ChooseAccountToConsent> = ({ show, setSho
     try {
       const res = await postRequest<getConsentLinkRes>(endPoints.getConsentLink,reqBody)
       if (res.success) {
-       setConsentUrl(res.data.consentUrl)
+       window.open(res.data.consentUrl, "_blank")
       }
     } catch (err) {
-      setConsentUrl("")
-      console.log(err);
+      errorToast(err)
 
     }
   }

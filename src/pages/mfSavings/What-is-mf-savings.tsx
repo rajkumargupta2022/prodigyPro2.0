@@ -8,11 +8,6 @@ import mfMoney from "../../assets/img/mf_savings/mfMoney.svg";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { getRequest } from "../../services/Api/HandleApi";
-import { endPoints } from "../../services/utils/urls";
-import { fetchAdminUser } from "../../services/user/adminUser";
-import { NewMfUserRes } from "../data-interfaces/mf-savings";
-
 const WhatIsMfSavings = () => {
   const navigate = useNavigate();
   const [activeIndex, setActiveIndex] = useState<number>(0);

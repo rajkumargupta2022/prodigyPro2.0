@@ -5,7 +5,7 @@ import { amountHandler } from "../../services/utils/calculatorsFs";
 import { errorToast } from "../../services/utils/toast";
 import { fetchAdminUser } from "../../services/user/adminUser";
 import { endPoints } from "../../services/utils/urls";
-import { calculateManualInsightsKeys, calculateManualInsightsRes } from "../data-interfaces/mf-savings";
+import {  calculateManualInsightsRes } from "../data-interfaces/mf-savings";
 import { postRequest } from "../../services/Api/HandleApi";
 
 const ManualSurplusCalculator = () => {
@@ -14,7 +14,6 @@ const ManualSurplusCalculator = () => {
   const [currentBalance, setCurrentBalance]  = useState<number>(100000)
   const [monthlyInflows, setMonthlyInflows]  = useState<number>(120000)
   const [monthlyOutFlows, setMonthlyOutFlows]  = useState<number>(50000)
-  const [result,setResult] = useState<calculateManualInsightsKeys>()
   const error= ""
 
   const calculateResult = async () => {
@@ -40,12 +39,10 @@ const ManualSurplusCalculator = () => {
     try {
       const res = await postRequest<calculateManualInsightsRes>(endPoints.calculateManualInsights,reqBody)
       if (res.success) {
-        setResult(res.data)
-        navigate("/manual-surplus-result",{state:result})
+        navigate("/mf-saving-dashboard")
       }
     } catch (err) {
-      console.log(err);
-
+      errorToast(err);
     }
 
 

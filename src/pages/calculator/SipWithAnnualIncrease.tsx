@@ -1,5 +1,4 @@
 import NavBar from "../../components/Navbar";
-import Chart from "react-apexcharts";
 import { useRef, useState } from "react";
 import RangeBar from "./RangeBar";
 import ValidatedInput from "../../services/Validated-inputs/inputs";
@@ -8,14 +7,8 @@ import { amountHandler, percentageHandler } from "../../services/utils/calculato
 import { postRequest } from "../../services/Api/HandleApi";
 import { sipWithAnnualIncreaseRes } from "../data-interfaces/calculators";
 import {  endPoints } from "../../services/utils/urls";
-import { getValueInSort } from "../../services/calculation/percentageCalculate";
 import { useNavigate } from "react-router-dom";
-interface ChartState {
-  options: object;
-  series: number[];
-  // labels: string[];
-  colors: string[];
-}
+
 
 const SipWithAnnualIncrease = () => {
   const navigate = useNavigate()
@@ -41,46 +34,7 @@ const SipWithAnnualIncrease = () => {
     validate: (value: number) => boolean;
   }>(null);
 
-  const state: ChartState = {
-    options: {
-      dataLabels: {
-        enabled: false, // Disable percentage or value labels
-      },
-      colors: ["#1A35FE","#CCD2FF" ],
-      tooltip: {
-        enabled: false, // Disable hover tooltip
-      },
-      labels: [`Total SIP Amount Invested (${getValueInSort(totalSipInvestedWithOutAnnualIncrease )})`, `Total Growth (${getValueInSort(totalFutureValueSipAndWithAnnualIncrease)})`,],
-      legend: {
-        show: true,
-        position: 'bottom', // ✅ Legend at bottom
-        horizontalAlign: 'center',
-        fontSize: '14px',
-        markers: {
-          width: 12,
-          height: 12,
-        },
-        onItemHover: {
-          highlightDataSeries: false, // ❌ disables slice highlight on legend hover
-        },
-      },
-      states: {
-        hover: {
-          filter: {
-            type: 'none', // Disable hover visual effect
-          },
-        },
-        active: {
-          filter: {
-            type: 'none', // Disable active (on-click) effect
-          },
-        },
-      },
-
-    },
-    series: [totalSipInvestedWithOutAnnualIncrease,totalFutureValueSipAndWithAnnualIncrease],
-    colors: ["#1A35FE","#CCD2FF" ],
-  };
+  
 
   const submit =async (e: React.FormEvent) => {
     e.preventDefault();
@@ -168,7 +122,7 @@ const SipWithAnnualIncrease = () => {
                     />
                     <div className="form-group">
                       <label htmlFor="exampleInputPassword1" className="fs12px">
-                       EXPECTED SIP RETURN RATE (%P.A)
+                       EXPECTED RETURN (%P.A)
                       </label>
                       <ValidatedInput
                         ref={expectedReturnRef}
@@ -183,16 +137,16 @@ const SipWithAnnualIncrease = () => {
                     </div>
                     <div className="form-group">
                       <label htmlFor="exampleInputPassword1" className="fs12px">
-                       HOW MUCH ANNUALLY INCREASE MONTHLY SIP? (%P.A)
+                       ANNUAL STEP UP PERCENTAGE (% P.A)
                       </label>
                       <ValidatedInput
                         ref={annualSipIncreaseRef}
-                        type="number"
+                        type="text"
                         className="form-control"
                         id="exampleInputPassword1"
                         placeholder="12"
                         value={annualSipIncrease}
-                        onChange={(e) => percentageHandler(e, 100, setAnnualSipIncrease)}
+                        onChange={(e) => amountHandler(e, 100, setAnnualSipIncrease)}
                         validate={isNotEmpty}
                       />
                     </div>
@@ -210,19 +164,19 @@ const SipWithAnnualIncrease = () => {
                   <h5 className=" fw-normal mb-1">Result</h5>
                   <div className="row">
                     <div className="col-6">
-                      <p className="fs12px mb-0 mt-3">TOTAL  SIP AMOUNT INVESTED WITHOUT ANNUAL INCREASE</p>
+                      <p className="fs12px mb-0 mt-3">TOTAL SIP AMOUNT INVESTED WITHOUT ANNUAL INCREASE</p>
                       <h6 className="mt-1">₹{totalSipInvestedWithOutAnnualIncrease.toLocaleString('en-IN')}</h6>
                     </div>
                     <div className="col-6">
-                      <p className="fs12px mb-0 mt-3">TOTAL GROWTH WITH OUT ANNUAL INCREASE</p>
+                      <p className="fs12px mb-0 mt-3">TOTAL GROWTH WITHOUT ANNUAL INCREASE</p>
                       <h6 className="mt-1">₹{totalGrowthWithOutAnnualIncrease.toLocaleString('en-IN')}</h6>
                     </div>
                     <div className="col-6">
-                      <p className="fs12px mb-0 mt-3">TOTAL FUTURE VALUE (SIP INVESTMENT + RETIRNS, NO ANNUAL INCREASE)</p>
+                      <p className="fs12px mb-0 mt-3">TOTAL FUTURE VALUE (SIP INVESTMENT + RETURNS, NO ANNUAL INCREASE)</p>
                       <h6 className="mt-1">₹{totalFutureValueNoAnnualIncrease.toLocaleString('en-IN')}</h6>
                     </div>
                     <div className="col-6">
-                      <p className="fs12px mb-0 mt-3">TOTAL  SIP AMOUNT INVESTED WITH ANNUAL INCREASE</p>
+                      <p className="fs12px mb-0 mt-3">TOTAL SIP AMOUNT INVESTED WITH ANNUAL INCREASE</p>
                       <h6 className="mt-1">₹{totalSipAmountInvestedWithAnnualIncrease.toLocaleString('en-IN')}</h6>
                     </div>
                      <div className="col-6">
@@ -236,22 +190,7 @@ const SipWithAnnualIncrease = () => {
                   </div>
                 </div>
               </div>
-              <div className="row mt-2">
-                <div className="col-lg-12 co-sm-12 col-md-12 ">
-                  <div className="card border-0 shadow p-0 d-flex justify-content-center align-items-center">
-                    <div className="card-body">
-                      <div className="donut">
-                        <Chart
-                          options={state.options}
-                          series={state.series}
-                          type="donut"
-                          width="280"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              
                     <button type="button" className="btn investBtn mt-2 shadow-lg" onClick={handleRecomendedScheme}>
                 Start Investing
               </button>

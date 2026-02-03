@@ -64,7 +64,7 @@ const LoginLeftImage = ({ LeftImage = journeyImage }) => {
     </div>
 
     {/* Indicators */}
-    <div className="carousel-indicators ">
+    <div className="carousel-indicators indicator-login">
       <button
         type="button"
         data-bs-target="#loginSlider"

@@ -17,14 +17,12 @@ import { keys } from "../../services/utils/keys";
 
 const EmergencyInvestments = () => {
   const navigate = useNavigate()
-  const { familyPortfolio,  portfolioDetailData, fetchDetailedPortfolio } = useAdminUser()
+  const {   portfolioDetailData } = useAdminUser()
   const { emergencyPortfolioSnapshot,fetchPortfolio,fetchPortfolioList,emergencyPortfolioList } = useEmergencyPortfolio()
   const title: string = "You Have No Investments Yet";
   const body: string = "Start investing today to build your portfolio and achieve your financial goals.";
   const btnName = "Explore Funds";
   const btnUrl = "/all-mutual-funds"
-  const adminUser = fetchAdminUser()
-  // const [isEmergencyPortfolio, setIsEmergencyPortfolio] = useState<boolean>(false)
 
 
 
@@ -32,8 +30,6 @@ const EmergencyInvestments = () => {
     const pan = localStorage.getItem("pan")
     if (pan) {
       isPortfolioAvailble()
-      familyPortfolio(adminUser, true)
-      fetchDetailedPortfolio(adminUser?.ucc)
     }
   }, [])
 
@@ -46,13 +42,10 @@ const EmergencyInvestments = () => {
         // setIsEmergencyPortfolio(res.data)
         fetchPortfolio()
         fetchPortfolioList()
-      } else {
-        // setIsEmergencyPortfolio(false)
-      }
+      } 
 
     } catch (err) {
       console.log(err);
-      // setIsEmergencyPortfolio(false)
     }
   }
 
