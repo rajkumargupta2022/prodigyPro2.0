@@ -104,7 +104,7 @@ const CostOfDelayInSipCalculator = () => {
           <div className="col-12 align-items-start mb-3">
             <h4>Cost of Delay in SIP Calculator</h4>
             <p className="fs14px">
-              Calculate the difference in portfolio value over time between starting an SIP immediately and at a later date. Understand the consequences of delaying your SIP.
+              Calculate how delaying your SIP impacts your portfolio value over time.
             </p>
           </div>
 
@@ -161,7 +161,7 @@ const CostOfDelayInSipCalculator = () => {
                         />
                       </div>
                       <RangeBar
-                        label={"YOU DELAY STARTING MY SIP BY"}
+                        label={"YOU DELAY STARTING YOUR SIP BY"}
                         maxLimit={40}
                         value={ifIDelayStartingMySipBy}
                         setValue={setIfIDelayStartingMySipBy}

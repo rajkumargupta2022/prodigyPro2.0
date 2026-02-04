@@ -24,7 +24,9 @@ const OrderPlaces: React.FC<OrderPlaces> = ({ show, setShow, successData }) => {
         keyboard={false}
       >
         <Modal.Body style={{ padding: 0 }}>
-          <Carousel className="custom-carousel" controls={false}>
+         <Carousel   className="custom-carousel"
+  controls={false}
+  indicators={true}>
             {successData?.map((item: any, index: number) => (
               <Carousel.Item key={index}>
                 <div className="d-flex justify-content-center align-items-center ">

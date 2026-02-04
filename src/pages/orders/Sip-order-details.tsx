@@ -123,7 +123,7 @@ function SIPOrderDetails() {
             </div>
             <div className="d-flex justify-content-between mb-2">
               <span className="text-secondary">SIP REGISTERED ON</span>
-              <span className="value-font2">{location.state?.sip_registration_no}</span>
+              <span className="value-font2">{dateInStringNumber(location.state?.sip_start_date)}</span>
             </div>
             <div className="d-flex justify-content-between mb-2">
               <span className="text-secondary">SIP INVESTED</span>

@@ -55,7 +55,7 @@ import { ToastContainer } from "react-toastify";
 import RiskResult from "./components/Risk-result";
 import Profile from "./components/Profile";
 import LocateUs from "./components/Locate-us";
-import AboutUs from "./components/About-us";
+import AboutUs from "./components/About-Us";
 import PrivacyPolicyComponent from "./components/privacyPolicy";
 import AddFamilyMemberC from "./components/Add-family-member";
 import AllOrders from "./components/All-orders";
