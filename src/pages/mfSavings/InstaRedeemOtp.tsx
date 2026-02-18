@@ -6,7 +6,7 @@ import { postRequest } from '../../services/Api/HandleApi';
 import { endPoints } from '../../services/utils/urls';
 import { errorToast, successToast } from '../../services/utils/toast';
 import { fetchAdminUser } from '../../services/user/adminUser';
-import OrderPlaces from '../../components/order-places';
+import RedeemSuccessModel from '../../components/Redeem-success-model';
 
 interface InstaRedeemOtpProps {
   show: boolean;
@@ -39,6 +39,8 @@ const InstaRedeemOtp: React.FC<InstaRedeemOtpProps> = ({ show, setShow, requestI
       if (res.success) {
           setSuccessData(res.data)
           setOpenSuccess(true)
+          setShow(false)
+          setOtp("")
         successToast(res.msg)
       } else {
         errorToast(res.msg)
@@ -46,8 +48,7 @@ const InstaRedeemOtp: React.FC<InstaRedeemOtpProps> = ({ show, setShow, requestI
     } catch (err) {
       errorToast(err)
     }
-    setShow(false)
-    // navigate("/portfolio-under-review")
+
   };
  
 
@@ -78,10 +79,10 @@ const InstaRedeemOtp: React.FC<InstaRedeemOtpProps> = ({ show, setShow, requestI
           </div>
         </Modal.Body>
         <Modal.Footer className='modal-bg justify-content-center'>
-          <Button className='customButton' onClick={handleVarifyOtp}>Varify OTP</Button>
+          <Button className='customButton' onClick={handleVarifyOtp}>Verify OTP</Button>
         </Modal.Footer>
       </Modal>
-          <OrderPlaces show={openSuccess} setShow={setOpenSuccess} successData={successData} />
+          <RedeemSuccessModel show={openSuccess} setShow={setOpenSuccess} successData={successData} />
     </>
   );
 }

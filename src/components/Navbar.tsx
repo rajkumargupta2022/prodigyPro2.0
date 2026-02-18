@@ -83,7 +83,7 @@ const MyNavbar = () => {
             </Link>
           </Nav>
           <div className="user_profile_icon prodgy_menu m-2">
-            <Link to="/help&support" className="prodgy_menu">
+            <Link to="/help-and-support" className="prodgy_menu">
               <QuestionCircle size={24} />
             </Link>
             {/* <Link to="#" className="prodgy_menu">

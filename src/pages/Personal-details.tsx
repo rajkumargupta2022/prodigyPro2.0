@@ -1,6 +1,8 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import NavBar from "../components/Navbar";
 import NextBar from "../components/Next-bar";
+import { Breadcrumb } from "react-bootstrap";
+import { ChevronRight } from "react-bootstrap-icons";
 
 
 const PersonalDetails = () => {
@@ -9,17 +11,13 @@ const PersonalDetails = () => {
     <>
       <NavBar />
 
-      {/* <div className="breadcum_area" style={{ backgroundColor: "#F2F4FB" }}>
-        <div className="personal_form_container p-3">
-          <Breadcrumb>
-            <Breadcrumb.Item href="#">Home</Breadcrumb.Item>
-            <Breadcrumb.Item href="https://getbootstrap.com/docs/4.0/components/breadcrumb/">
-              Library
-            </Breadcrumb.Item>
-            <Breadcrumb.Item active>Data</Breadcrumb.Item>
-          </Breadcrumb>
+      <div className="breadcum_area" style={{ backgroundColor: "#E6E8FF" }}>
+        <div className="personal_form_container p-2">
+               <div className="d-flex my-2">
+            <h6 className="logoBlueColor crPointer" ><Link to={"/dashboard"}>Home</Link> <small className="greyColor"> <ChevronRight className="fs14px" /> Declarations </small> </h6>
+          </div>
         </div>
-      </div> */}
+      </div>
       <div className="container  mt-2">
         <div className="personal_form_container">
           <h5 className="mb-4  ">Personal Details</h5>

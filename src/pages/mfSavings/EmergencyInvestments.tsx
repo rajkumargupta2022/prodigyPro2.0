@@ -4,7 +4,6 @@ import { endPoints, imageUrl } from "../../services/utils/urls";
 import { currentDateInStringNumber } from "../../services/dates/dateFormater";
 import { getPercentageValue, getValueInSort } from "../../services/calculation/percentageCalculate";
 import { useNavigate } from "react-router-dom";
-import { useAdminUser } from "../../context/AdminContext";
 import { fetchAdminUser } from "../../services/user/adminUser";
 import PortfolioEmpty from "../PortfolioEmpty";
 import emptyImg from "../../assets/img/empty-img.svg"
@@ -17,7 +16,6 @@ import { keys } from "../../services/utils/keys";
 
 const EmergencyInvestments = () => {
   const navigate = useNavigate()
-  const {   portfolioDetailData } = useAdminUser()
   const { emergencyPortfolioSnapshot,fetchPortfolio,fetchPortfolioList,emergencyPortfolioList } = useEmergencyPortfolio()
   const title: string = "You Have No Investments Yet";
   const body: string = "Start investing today to build your portfolio and achieve your financial goals.";
@@ -64,7 +62,7 @@ const EmergencyInvestments = () => {
 
       <div className="container py-2  portfolio_sticky_2025">
         <div className="personal_form_container">
-          {portfolioDetailData?.length > 0 ? <>
+          {emergencyPortfolioSnapshot?.length > 0 ? <>
             <div className="borderColor p-3 rounded-4 bg-white">
               <div className="row text-center">
                 <div className="col">

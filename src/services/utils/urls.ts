@@ -151,4 +151,10 @@ export enum endPoints {
      NFO
   ========================== */
   liveNfo = "nfo/live-nfo",
+
+    /* =========================
+     KYC
+  ========================== */
+  checkKycStatus = "kyc/status",
+  initiateKyc = "kyc/initiate",
 }

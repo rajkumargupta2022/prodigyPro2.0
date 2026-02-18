@@ -38,21 +38,7 @@ const Dashboard = () => {
   };
   useEffect(() => {
     familyPortfolio(adminUser)
-    // fetchRiskProfile()
   }, [])
-
-  // const fetchRiskProfile = async () => {
-  //   try {
-  //     await postRequest<any>(endPoints.getRiskProfile, { ucc: adminUser?.ucc ?? "" })
-  //   } catch (err: any) {
-  //     console.log(err.response.data.data.risk);
-  //     if (err.response.data.data.risk === -1) {
-  //       navigate("/risk-profile")
-  //     }
-  //   }
-  // }
-
-
 
   return (
     <>

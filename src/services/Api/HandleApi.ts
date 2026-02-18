@@ -1,4 +1,4 @@
-import { AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
+import axios, { AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
 import AxiosInstance from './AxiosInstance';
 
 type RequestOptions = AxiosRequestConfig & {
@@ -12,6 +12,11 @@ const shouldRetry = (error: AxiosError) => {
   if (!status) return true; // network/timeout
   return status >= 500 && status < 600;
 };
+
+const getToken = (): string | null => {
+  return localStorage.getItem('token'); // or sessionStorage
+};
+
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -46,5 +51,41 @@ export const putRequest = async <T>(endPoint: string, body: any, options: Reques
 
 export const deleteRequest = async <T>(endPoint: string, options: RequestOptions = {}): Promise<T> => {
   const response: AxiosResponse<T> = await AxiosInstance.delete(endPoint, options);
+  return response.data;
+};
+
+
+
+
+export const getRequestSimple = async <T>(
+  url: string,
+  options: AxiosRequestConfig = {}
+): Promise<T> => {
+  const token = getToken();
+  const response: AxiosResponse<T> = await axios.get(import.meta.env.VITE_API_BASE_URL + url, {
+    ...options,
+    headers: {
+      ...(options.headers || {}),
+      ...(token && { Authorization: `Bearer ${token}` }),
+    },
+  });
+
+  return response.data;
+};
+export const postRequestSimple = async <T>(
+  url: string,
+  body: any,
+  options: AxiosRequestConfig = {}
+): Promise<T> => {
+  const token = getToken();
+
+  const response: AxiosResponse<T> = await axios.post(url, body, {
+    ...options,
+    headers: {
+      ...(options.headers || {}),
+      ...(token && { Authorization: `Bearer ${token}` }),
+    },
+  });
+
   return response.data;
 };

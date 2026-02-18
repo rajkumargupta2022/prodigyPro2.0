@@ -116,19 +116,23 @@ const TransactionHistory = () => {
                   <span className="fw-semibold">{dateInStringNumber(item.order_date)}</span>
                 </div>
                 <div>
-                  <span className="text-secondary small">Next SIP </span>
-                  <br />
-                  <span className="fw-semibold">{dateInStringNumber(item.next_sip_date)}</span>
+                  {item?.next_sip_date ? (
+                    <>
+                      <span className="text-secondary small">Next SIP </span>
+                      <br />
+                      <span className="fw-semibold">{dateInStringNumber(item.next_sip_date)}</span>
+                    </>
+                  ) : ""}
                 </div>
                 <div>
                   <span className="text-secondary small">Amount</span>
                   <br />
-                  <span className="fw-semibold">₹{item.installment_amount}</span>
+                  <span className="fw-semibold">₹{item.installment_amount|| item.redemption_amount||item.order_amount}</span>
                 </div>
               </div>
             </div>
           )
-        }) : "No data availble"}
+        }) : "No data available"}
         {transactionHistoryList.length > 9 ?
           <Paginations totalRecords={transactionHistoryList.length} page={page} setPage={setPage} limit={limit} setLimit={setLimit} /> : ""}
       </div>

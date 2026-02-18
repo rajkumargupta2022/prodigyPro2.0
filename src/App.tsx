@@ -244,7 +244,7 @@ function App() {
           />
 
           <Route
-            path="/help&support"
+            path="/help-and-support"
             element={<Account Component={HelpSupport} />}
           />
 

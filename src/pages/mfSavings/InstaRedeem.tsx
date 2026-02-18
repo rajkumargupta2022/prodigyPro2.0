@@ -93,7 +93,7 @@ function getMaxRedeemableAmount(currentValue:number, maxRedeemableAmount:number)
     const adminUser = fetchAdminUser()
     const reqBody = {
       ucc: adminUser?.ucc,
-      folio_number: "71010671504",
+      folio_number: redemptionDetail[0]?.folio??"",
       accord_product_code: redemptionDetail[0].accordSchemeCode,
       scheme_name: redemptionDetail[0]?.scheme,
       amount: redemptionDetail[0]?.amount,
@@ -157,7 +157,7 @@ function getMaxRedeemableAmount(currentValue:number, maxRedeemableAmount:number)
               </div>
             </div>
             <div className="form-group">
-              <label htmlFor="amountFor" className='fs12px'>REDUMPTION AMOUNT</label>
+              <label htmlFor="amountFor" className='fs12px'>REDEMPTION AMOUNT</label>
               <input type="text" className="form-control" value={redemptionDetail[0].amount ?? 0} id="amountFor" onChange={amountHandle} aria-describedby="emailHelp" placeholder={`${"Enter Amount"}`} />
               {amountMsg && <small className='text-danger'>{amountMsg}</small>}
             </div>

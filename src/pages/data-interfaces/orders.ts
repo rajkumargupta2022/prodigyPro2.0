@@ -203,10 +203,12 @@ export interface transactionHistoryKeys {
   accord_product_code: number;
   accord_amc_code: number;
   folio_number: string;
-  sip_start_date: string;
-  next_sip_date: string;
-  installment_amount: number;
+  sip_start_date?: string;
+  next_sip_date?: string;
+  installment_amount?: number;
   transaction_id: string;
-  sip_registration_no: string;
+  sip_registration_no?: string;
   order_date: string;
+  redemption_amount?: number
+  order_amount?: number;
 }

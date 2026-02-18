@@ -23,7 +23,7 @@ const Account = ({ Component }: { Component: any }) => {
 
   const navBar2 = [
     // { name: "Change Password", url: "/change-password" },
-    { name: "Help & Support", url: "/help&support" },
+    { name: "Help & Support", url: "/help-and-support" },
     { name: "About Us", url: "/about-us" },
     { name: "Locate Us", url: "/locate-us" },
     { name: "Privacy Policy", url: "/privacyPolicy " },

@@ -7,13 +7,13 @@ import errorImg from "../assets/img/bg-image/errorBg.png"
 import { Link } from "react-router-dom";
 import Carousel from 'react-bootstrap/Carousel';
 
-interface OrderPlaces {
+interface RedeemSuccessModel {
   show: boolean;
   setShow: (show: boolean) => void;
   successData: any[]
 }
 
-const OrderPlaces: React.FC<OrderPlaces> = ({ show, setShow, successData }) => {
+const RedeemSuccessModel: React.FC<RedeemSuccessModel> = ({ show, setShow, successData }) => {
 
   return (
     <>
@@ -47,8 +47,7 @@ const OrderPlaces: React.FC<OrderPlaces> = ({ show, setShow, successData }) => {
 
                     <h3 className="mb-3">Order {item.reg_status ? "Placed" : "Failed"}</h3>
                     {item.reg_status && <p className="text-white fs18px mb-0">
-                      Units will be alloted subject to realization of funds in AMC’s
-                      account
+                      Your redemption request has been submitted successfully. Proceeds will be credited to your registered bank account as per AMC processing timelines.
                     </p>}
 
 
@@ -81,7 +80,7 @@ const OrderPlaces: React.FC<OrderPlaces> = ({ show, setShow, successData }) => {
                         </div>}
                       <div className="d-flex text-start fs12pxWhite">
                         <p className="order-Placed-modal">STATUS:</p>
-                        <p className="fs16">{item.reg_status ? "Initiated" : "Failed"}</p>
+                        <p className="fs16">{item.reg_status ? "Success" : "Failed"}</p>
                       </div>
                       {item?.reg_remark !== " " &&
                         <div className="d-flex text-start fs12pxWhite">
@@ -97,8 +96,7 @@ const OrderPlaces: React.FC<OrderPlaces> = ({ show, setShow, successData }) => {
                       <span className="text-white">Note:</span>
                       <br />
                       <p className="text-white fs14px" style={{ textAlign: "start" }}>
-                        Authorization link has been sent on your registered mail id
-                        and mobile number.The Link shall remain active for T+3 days.Kindly authorize.
+                        Updated portfolio will reflect on next working day.
                       </p>
                     </div>
 
@@ -119,4 +117,4 @@ const OrderPlaces: React.FC<OrderPlaces> = ({ show, setShow, successData }) => {
   );
 };
 
-export default OrderPlaces;
+export default RedeemSuccessModel;

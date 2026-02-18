@@ -73,7 +73,7 @@ function MyProfile() {
       <p className="text-center mt-2 fs14px">
         Your profile is verified and these details are non-editable, in case any
         questions please contact{" "}
-        <span className="logoBlueColor">support team.</span>
+        <Link to="/help-and-support" className="logoBlueColor">support team.</Link>
       </p>
     </main>
   );
