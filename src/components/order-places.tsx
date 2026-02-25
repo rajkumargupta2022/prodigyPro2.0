@@ -11,9 +11,10 @@ interface OrderPlaces {
   show: boolean;
   setShow: (show: boolean) => void;
   successData: any[]
+  isRedeem?: boolean
 }
 
-const OrderPlaces: React.FC<OrderPlaces> = ({ show, setShow, successData }) => {
+const OrderPlaces: React.FC<OrderPlaces> = ({ show, setShow, successData,isRedeem=false }) => {
 
   return (
     <>
@@ -47,8 +48,9 @@ const OrderPlaces: React.FC<OrderPlaces> = ({ show, setShow, successData }) => {
 
                     <h3 className="mb-3">Order {item.reg_status ? "Placed" : "Failed"}</h3>
                     {item.reg_status && <p className="text-white fs18px mb-0">
-                      Units will be alloted subject to realization of funds in AMC’s
-                      account
+                      {isRedeem ? "Your redemption request has been submitted successfully. Proceeds will be credited to your registered bank account as per AMC processing timelines." : " Units will be alloted subject to realization of funds in AMC’s account."}
+                      
+                     
                     </p>}
 
 

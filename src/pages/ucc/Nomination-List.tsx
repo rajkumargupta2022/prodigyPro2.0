@@ -1,9 +1,9 @@
-import NavBar from "../components/Navbar";
-import NextBar from "../components/Next-bar";
+import NavBar from "../../components/Navbar";
+import NextBar from "../../components/Next-bar";
 import Breadcrumb from "react-bootstrap/Breadcrumb";
 import { Card } from "react-bootstrap";
 import { ThreeDotsVertical } from "react-bootstrap-icons";
-import NomineeModal from "../components/Nominee-Modal";
+import NomineeModal from "../../components/Nominee-Modal";
 
 const NominationList = () => {
   // const [openNomination,setOpenNomination] = useState(false)
@@ -150,7 +150,7 @@ const NominationList = () => {
           </form>
         </div>
       </div>
-      <NextBar onBack={() => {}} onSaveContinue={() => {}} />
+      <NextBar  onSaveContinue={() => {}} />
     </>
   );
 };

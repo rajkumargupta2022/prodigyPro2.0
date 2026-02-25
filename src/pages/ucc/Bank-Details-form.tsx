@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
-import NavBar from "../components/Navbar";
-import NextBar from "../components/Next-bar";
-import Breadcrumb from "react-bootstrap/Breadcrumb";
+import NavBar from "../../components/Navbar";
+import NextBar from "../../components/Next-bar";
+import TrackBar from "./Track-bar";
 
 const BankDetailForm = () => {
   const navigate = useNavigate()
@@ -9,17 +9,7 @@ const BankDetailForm = () => {
     <>
       <NavBar />
 
-      <div className="breadcum_area" style={{ backgroundColor: "#F2F4FB" }}>
-        <div className="personal_form_container p-3">
-          <Breadcrumb>
-            <Breadcrumb.Item href="#">Home</Breadcrumb.Item>
-            <Breadcrumb.Item href="https://getbootstrap.com/docs/4.0/components/breadcrumb/">
-              Library
-            </Breadcrumb.Item>
-            <Breadcrumb.Item active>Data</Breadcrumb.Item>
-          </Breadcrumb>
-        </div>
-      </div>
+    <TrackBar/>
       <div className="container">
         <div className="personal_form_container">
           <h5 className="mb-3 mt-1">Bank Details</h5>
@@ -83,7 +73,7 @@ const BankDetailForm = () => {
           </form>
         </div>
       </div>
-      <NextBar onBack={() => {}} onSaveContinue={() => {navigate('/bank-details-varification')}} />
+      <NextBar  onSaveContinue={() => {navigate('/bank-details-varification')}} />
     </>
   );
 };

@@ -1,23 +1,23 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
 import TermsAndConditions from "./components/TermsAndConditions";
-import PersonalDetails from "./pages/Personal-details";
-import Declaration from "./pages/Declaration";
-import AddressDetails from "./pages/Address-details";
-import NominationDetails from "./pages/Nomination-details";
-import ProofIdentity from "./pages/proof-identity";
-import ProofIdentity2 from "./pages/proof-identity2";
-import DigitalSignature from "./pages/digital-signature";
-import E_Sign from "./pages/e-sign";
+import PersonalDetails from "./pages/ucc/Personal-details";
+import Declaration from "./pages/ucc/Declaration";
+import AddressDetails from "./pages/ucc/Address-details";
+import NominationDetails from "./pages/ucc/Nomination-details";
+import ProofIdentity from "./pages/ucc/proof-identity";
+import ProofIdentity2 from "./pages/ucc/proof-identity2";
+import DigitalSignature from "./pages/ucc/digital-signature";
+import E_Sign from "./pages/ucc/e-sign";
 import SuccessPage from "./pages/congratulation";
-import KycStatusCheck from "./pages/kyc-status-check";
+import KycStatusCheck from "./pages/ucc/kyc-status-check";
 import "./assets/css/style.css";
 import "./assets/css/media.css";
 import Otp from "./pages/Otp";
-import PanVarification from "./pages/PanVarification";
+import PanVarification from "./pages/ucc/PanVarification";
 import Dashboard from "./pages/Dashboard";
 import EmergencyFunds from "./pages/EmergencyFund";
 import RecommendedFunds from "./pages/RecommendedFunds";
@@ -25,8 +25,8 @@ import TaxSaving from "./pages/TaxSaving";
 import NFOLive from "./pages/NFOLive";
 import NFOApply from "./pages/NFOApply";
 import PortfolioReview from "./pages/PortfolioReview";
-import BankDetailsVarification from "./pages/bank-details-varification";
-import NominationList from "./pages/Nomination-List";
+import BankDetailsVarification from "./pages/ucc/bank-details-varification";
+import NominationList from "./pages/ucc/Nomination-List";
 import PortfolioImport from "./pages/PortfolioImport";
 import PortfolioUnderReview from "./pages/PortfolioUnderReview";
 import Portfolio from "./pages/Portfolio";
@@ -92,8 +92,9 @@ import TargetAmountSIPCalculator from "./pages/calculator/TargetAmountCalculator
 import SipWithAnnualIncrease from "./pages/calculator/SipWithAnnualIncrease";
 import AnnualSipCalculator from "./pages/calculator/AnnualSipCalculator";
 import CostOfDelayInSipCalculator from "./pages/calculator/CostOfDelayInSipCalculator";
-import BankDetailsForm from "./pages/Bank-Details-form";
+import BankDetailsForm from "./pages/ucc/Bank-Details-form";
 import BankAndMandateList from "./components/Bank-and-mandate-list";
+import MinorKycCheck from "./pages/ucc/Minor-kyc-check";
 
 const LoaderHandler = () => {
   const { showLoader, hideLoader } = useLoader();
@@ -270,6 +271,7 @@ function App() {
           <Route path="/sip-calculator" element={<SipCalculator />} />
           <Route path="/marriage-calculator" element={<MarriageCalculator />} />
           <Route path="/sif-funds" element={<SifFunds />} />
+          <Route path="/minor-kyc-check" element={<MinorKycCheck />} />
           <Route
             path="/manual-surplus-calculator"
             element={<ManualSurplusCalculator />}
@@ -309,7 +311,7 @@ function App() {
           <Route path="/sign-up" element={<SighnUp />} />
 
           <Route path="/custom-goal" element={<CustomGoal />} />
-          {/* <Route path="*" element={<Navigate to="/" replace />} /> */}
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </LoaderProvider>
     </>

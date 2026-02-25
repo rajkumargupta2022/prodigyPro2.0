@@ -1,5 +1,5 @@
-import NavBar from "../components/Navbar";
-import NextBar from "../components/Next-bar";
+import NavBar from "../../components/Navbar";
+import NextBar from "../../components/Next-bar";
 import Breadcrumb from "react-bootstrap/Breadcrumb";
 import { Button } from "react-bootstrap";
 import { Upload } from "react-bootstrap-icons";
@@ -124,7 +124,7 @@ const BankDetailsVarification = () => {
           </form>
         </div>
       </div>
-      <NextBar onBack={() => {}} onSaveContinue={() => {navigate("/nomination-details")}} />
+      <NextBar  onSaveContinue={() => {navigate("/nomination-details")}} />
     </>
   );
 };

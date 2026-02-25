@@ -57,7 +57,7 @@ const CalculatorList = () => {
             <Link to="/future-value-calculator" className="card border-0 shadow rounded-3" >
               <div className="card-body border-0 card px-3">
                 <img src={wealth} className="" alt="..." height={44} width={44} />
-                <p className="fs18pxHeading mb-0 mt-2">Future Value Calculator</p>
+                <p className="fs18pxHeading mb-0 mt-2">Lump Sum Calculator</p>
                 <p className="fs14px mb-0">See how your investments can grow over time</p>
               </div>
             </Link>

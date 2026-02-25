@@ -6,6 +6,8 @@ import { getRequest, postRequest } from "../services/Api/HandleApi";
 import { endPoints } from "../services/utils/urls";
 import { addFamilyRes, familyRelationKeys, familyRelationRes } from "../pages/data-interfaces/users";
 import { errorToast } from "../services/utils/toast";
+import { generateOptions } from "../pages/re-used-html/select-box";
+import { HoldingNatureEnum, TaxStatusEnum } from "../pages/data/ucc-data";
 
 function AddFamilyMember() {
   const navigate = useNavigate()
@@ -15,7 +17,8 @@ function AddFamilyMember() {
   const [memberPan, setMemberPan] = useState<string>("")
   const [familyRelationList, setFamilyRelationList] = useState<familyRelationKeys[]>([])
   const [mobile,setMobile] = useState<string>("")
-  const accountState = "link";
+  // const accountState = "link";
+  const [accountState, setAccountState] = useState<string>("link")
 
   useEffect(() => {
     fetchRelation()
@@ -83,12 +86,12 @@ function AddFamilyMember() {
         </h4>
         <hr className="fw-light text-secondary" />
         <div className="p-4 shadow-sm bg-white border-0 rounded-4">
-          {/* <div className="d-flex">
+          <div className="d-flex">
             <button type="button" className={`btn statementBtn ${accountState=="link"&&"statementBtnActive"} mx-1`} onClick={() => setAccountState("link")}>Link Account</button>
            
 
              <button type="button" className={`btn statementBtn ${accountState==""&&"statementBtnActive"} mx-1`} onClick={() => setAccountState("")}>Create Account</button>
-          </div> */}
+          </div>
 
           {accountState == "link" ? (
             <div className="mt-2">
@@ -130,27 +133,27 @@ function AddFamilyMember() {
             <div className="mt-4">
               <div className="form-group">
                 <label
-                  className="text-secondary"
+                  className="fs12px"
                   htmlFor="exampleFormControlSelect1"
                 >
                   TAX STATUS
                 </label>
                 <select className="form-control" id="exampleFormControlSelect1">
                   <option>Select...</option>
-                  <option>On Behalf of Minor</option>
+                   {generateOptions(TaxStatusEnum,"value","label")}
                 </select>
               </div>
 
               <div className="form-group mt-2">
                 <label
-                  className="text-secondary"
+                  className="fs12px"
                   htmlFor="exampleFormControlSelect1"
                 >
                   HOLDING NATURE
                 </label>
                 <select className="form-control" id="exampleFormControlSelect1">
                   <option>Select...</option>
-                  <option>On Behalf of Minor</option>
+                  {generateOptions(HoldingNatureEnum,"value","label")}
                 </select>
               </div>
 

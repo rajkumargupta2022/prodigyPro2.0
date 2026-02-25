@@ -157,4 +157,12 @@ export enum endPoints {
   ========================== */
   checkKycStatus = "kyc/status",
   initiateKyc = "kyc/initiate",
+
+
+   /* =========================
+     UCC
+   ========================== */
+   initiateUcc = "ucc/initiate",
+   tempSaveUcc = "ucc/temp-save"
+
 }

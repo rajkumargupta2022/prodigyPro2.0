@@ -1,19 +1,19 @@
 import { MouseEventHandler } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
+import { useNavigate } from "react-router";
 
 const Footer = ({
-  onBack,
   onSaveContinue,
 }: {
-  onBack: MouseEventHandler;
   onSaveContinue: MouseEventHandler;
 }) => {
+  const navigate = useNavigate();
   return (
     <footer className="fixed-bottom bg-white border-top py-3">
       <Container>
         <Row>
           <Col className="text-start">
-            <Button  className="customCancelButton px-3" onClick={onBack}>
+            <Button  className="customCancelButton px-3" onClick={()=>navigate(-1)}>
               Back
             </Button>
           </Col>

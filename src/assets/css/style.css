@@ -2037,3 +2037,109 @@ margin-bottom: 0px;
   margin-bottom: 2.5rem;
   margin-left: 15%;
 }
+
+/* =============================================
+   Minor KYC Check Page Styles
+   ============================================= */
+
+.minorKyc__back {
+  color: #1a34fe;
+  font-weight: 500;
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+}
+
+.minorKyc__back:hover {
+  color: #1a34fe;
+}
+
+.minorKyc__heading {
+  font-weight: 800;
+  font-size: 22px;
+  color: #111827;
+  margin-top: 32px;
+  margin-bottom: 4px;
+}
+
+.minorKyc__subtitle {
+  color: #6b7280;
+  font-size: 13px;
+  margin-bottom: 28px;
+}
+
+.minorKyc__fieldGroup {
+  margin-bottom: 20px;
+}
+
+.minorKyc__label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #9ca3af;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.minorKyc__input {
+  width: 100%;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  outline: none;
+  font-size: 15px;
+  padding: 12px 14px;
+  background: #fff;
+  color: #111827;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+
+.minorKyc__input:focus {
+  border-color: #1a34fe;
+  box-shadow: 0 0 0 3px rgba(26, 52, 254, 0.08);
+}
+
+.minorKyc__input::placeholder {
+  color: #9ca3af;
+}
+
+.minorKyc__successMsg {
+  color: #16a34a;
+  font-weight: 600;
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+
+.minorKyc__errorMsg {
+  color: #dc2626;
+  font-weight: 600;
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+
+.minorKyc__proceedBtn {
+  width: 100%;
+  background-color: #1a34fe;
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  padding: 14px;
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: opacity 0.2s;
+}
+
+.minorKyc__proceedBtn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.minorKyc__proceedBtn:hover:not(:disabled) {
+  opacity: 0.9;
+}

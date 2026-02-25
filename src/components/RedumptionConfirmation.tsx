@@ -89,7 +89,7 @@ const RedumptionConfirmation: React.FC<investmetProps> = ({ show, setShow, redee
           <Button className='customButton buttunCenter' onClick={handleSwitch}>Redeem</Button>
         </Modal.Footer>
       </Modal>
-      <OrderPlaces show={openSuccess} setShow={setOpenSuccess} successData={successData} />
+      <OrderPlaces show={openSuccess} setShow={setOpenSuccess} successData={successData} isRedeem={true} />
 
     </>
   );

@@ -142,7 +142,7 @@ const handleRecomendedScheme = () => {
       <div className="container px-4 my-4">
         <div className="row">
           <div className="col-12 align-items-start mb-3">
-            <h4>Future Value Calculator</h4>
+            <h4>Lump Sum Calculator</h4>
             <p className="fs14px">
               This calculator will help you to calculate the return value of
               your one time investment after your decided period.

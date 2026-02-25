@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
-import NavBar from "../components/Navbar";
-import NextBar from "../components/Next-bar";
+import NavBar from "../../components/Navbar";
+import NextBar from "../../components/Next-bar";
 import Breadcrumb from "react-bootstrap/Breadcrumb";
 
 const E_Sign = () => {
@@ -37,7 +37,7 @@ const E_Sign = () => {
           </form>
         </div>
       </div>
-      <NextBar onBack={() => {}} onSaveContinue={() => {navigate("/congratulation")}} />
+      <NextBar  onSaveContinue={() => {navigate("/congratulation")}} />
     </>
   );
 };

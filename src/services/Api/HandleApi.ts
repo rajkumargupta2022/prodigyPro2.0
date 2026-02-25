@@ -79,13 +79,17 @@ export const postRequestSimple = async <T>(
 ): Promise<T> => {
   const token = getToken();
 
-  const response: AxiosResponse<T> = await axios.post(url, body, {
-    ...options,
-    headers: {
-      ...(options.headers || {}),
-      ...(token && { Authorization: `Bearer ${token}` }),
-    },
-  });
+  const response: AxiosResponse<T> = await axios.post(
+    import.meta.env.VITE_API_BASE_URL + url,
+    body,
+    {
+      ...options,
+      headers: {
+        ...(options.headers || {}),
+        ...(token && { Authorization: `Bearer ${token}` }),
+      },
+    }
+  );
 
   return response.data;
 };

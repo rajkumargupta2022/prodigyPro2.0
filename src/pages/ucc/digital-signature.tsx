@@ -1,6 +1,6 @@
 import SignatureCanvas from "react-signature-canvas";
-import NavBar from "../components/Navbar";
-import NextBar from "../components/Next-bar";
+import NavBar from "../../components/Navbar";
+import NextBar from "../../components/Next-bar";
 import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -85,7 +85,7 @@ const DigitalSignature = () => {
           </div>
         </div>
       </div>
-      <NextBar onBack={() => {}} onSaveContinue={()=>{navigate("/e-sign")}} />
+      <NextBar onSaveContinue={()=>{navigate("/e-sign")}} />
     </>
   );
 };

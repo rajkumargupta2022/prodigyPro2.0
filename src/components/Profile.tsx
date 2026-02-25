@@ -35,7 +35,7 @@ function Profile() {
 
         <div className="d-flex">
           <h5 style={{ flex: 1 }}>Family Members</h5>
-          {/* <Link className="logoBlueColor" to={"/add-family-member"}>+ Add New</Link> */}
+          <Link className="logoBlueColor" to={"/add-family-member"}>+ Add New</Link>
         </div>
 
         <div className="row">

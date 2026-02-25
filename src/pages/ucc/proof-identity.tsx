@@ -1,7 +1,7 @@
 import { useDropzone } from "react-dropzone";
-import NavBar from "../components/Navbar";
+import NavBar from "../../components/Navbar";
 import Breadcrumb from "react-bootstrap/Breadcrumb";
-import NextBar from "../components/Next-bar";
+import NextBar from "../../components/Next-bar";
 import { CloudUploadFill } from "react-bootstrap-icons";
 import { useNavigate } from "react-router-dom";
 
@@ -67,7 +67,7 @@ const ProofIdentity = () => {
           </form>
         </div>
       </div>
-      <NextBar onBack={() => {}} onSaveContinue={() => {navigate("/proof-identity2")}} />
+      <NextBar  onSaveContinue={() => {navigate("/proof-identity2")}} />
     </>
   );
 };
