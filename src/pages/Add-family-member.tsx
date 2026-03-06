@@ -88,7 +88,7 @@ const AddFamilyMember = () => {
           {/* Form Section */}
           <main className="col-md-9 ms-sm-auto col-lg-9 px-md-4 py-4">
             <p>
-              <ArrowLeft size={25} /> Add Family Memberdsd
+              <ArrowLeft size={25} /> Add Family Member
             </p>
             <hr className="fw-light text-secondary" />
             <form className="card p-4 shadow-sm bg-white border-0 rounded-4">

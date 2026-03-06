@@ -169,3 +169,44 @@ const year = dateObj.getFullYear();
 
 return`${day}-${month}-${year}`;
 }
+
+export const formatDateToUTCString = (dateInput: string): string => {
+  if (!dateInput) {
+    throw new Error("dateInput is required");
+  }
+
+  // If already in correct UTC format, return as-is
+  const utcRegex = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3}Z$/;
+  if (utcRegex.test(dateInput)) {
+    return dateInput;
+  }
+
+  // If in YYYY-MM-DD format
+  const dateOnlyRegex = /^\d{4}-\d{2}-\d{2}$/;
+  if (dateOnlyRegex.test(dateInput)) {
+    const date = new Date(`${dateInput}T00:00:00.000Z`);
+
+    if (isNaN(date.getTime())) {
+      throw new Error("Invalid date value");
+    }
+
+    return date.toISOString().replace("T", " ");
+  }
+
+  throw new Error(
+    "Invalid format. Expected 'YYYY-MM-DD' or 'YYYY-MM-DD HH:mm:ss.sssZ'"
+  );
+};
+
+export const formatUTCToDateOnly = (utcDate: string): string => {
+  if (!utcDate) return "";
+
+  // Convert "YYYY-MM-DD HH:mm:ss.sssZ" → ISO format
+  const isoDate = utcDate.replace(" ", "T");
+
+  const date = new Date(isoDate);
+
+  if (isNaN(date.getTime())) return "";
+
+  return date.toISOString().split("T")[0]; // YYYY-MM-DD
+};

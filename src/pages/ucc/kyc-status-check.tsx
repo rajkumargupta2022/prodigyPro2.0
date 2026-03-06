@@ -2,6 +2,12 @@ import LoginLeftImage from "../../components/LoginLeftImage";
 import { ArrowLeft } from "react-bootstrap-icons";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { errorToast } from "../../services/utils/toast";
+import { getRequest, postRequestSimple } from "../../services/Api/HandleApi";
+import { endPoints } from "../../services/utils/urls";
+import { initiateKycResponse, kycStatusResponse } from "../data-interfaces/kyc";
+import { fetchAdminUser } from "../../services/user/adminUser";
+import { uccDataRes } from "../data-interfaces/ucc";
 
 type HolderStatus = "pending" | "active" | "completed";
 
@@ -9,36 +15,139 @@ interface Holder {
   label: string;
   status: HolderStatus;
   pan: string;
+  isKycCompliant: boolean | null; // null = not checked yet
+  kycMsg: string;
+  kycSuccess: boolean;
+  isLoader: boolean;
 }
 
 const KycStatusCheck = () => {
   const navigate = useNavigate();
 
   const [holders, setHolders] = useState<Holder[]>([
-    { label: "Primary Holder", status: "active", pan: "" },
-    { label: "Second Holder", status: "pending", pan: "" },
-    { label: "Third Holder", status: "pending", pan: "" },
+    { label: "Primary Holder", status: "active", pan: "", isKycCompliant: null, kycMsg: "", kycSuccess: false, isLoader: false },
+    { label: "Second Holder", status: "pending", pan: "", isKycCompliant: null, kycMsg: "", kycSuccess: false, isLoader: false },
+    { label: "Third Holder", status: "pending", pan: "", isKycCompliant: null, kycMsg: "", kycSuccess: false, isLoader: false },
   ]);
 
-  const handleProceed = (index: number) => {
-    const updated = holders.map((h) => ({ ...h }));
-    updated[index].status = "completed";
-    if (index + 1 < updated.length) {
-      updated[index + 1].status = "active";
-      setHolders(updated);
-    } else {
-      setHolders(updated);
-      navigate("/personal-details");
+  const updateHolder = (index: number, partial: Partial<Holder>) => {
+    setHolders((prev) => prev.map((h, i) => (i === index ? { ...h, ...partial } : h)));
+  };
+
+  const checkKycStatus = async (index: number, pan: string) => {
+    if (!pan) {
+      updateHolder(index, { kycMsg: "Please enter your PAN number to proceed.", kycSuccess: false, isKycCompliant: null });
+      return;
+    }
+    const panRegex = /^[A-Z]{5}[0-9]{4}[A-Z]$/;
+    if (!panRegex.test(pan)) {
+      updateHolder(index, { kycMsg: "", kycSuccess: false, isKycCompliant: null });
+      errorToast("Invalid PAN format. Please enter a valid PAN number.");
+      return;
+    }
+
+    updateHolder(index, { isLoader: true, kycMsg: "", kycSuccess: false });
+    try {
+      const response = await getRequest<kycStatusResponse>(
+        `${endPoints.checkKycStatus}?pan_number=${pan}`
+      );
+      if (response.data.kyc_status) {
+        updateHolder(index, {
+          isKycCompliant: true,
+          kycMsg: "Congratulations! 🎉 You are KYC Compliant",
+          kycSuccess: true,
+          isLoader: false,
+        });
+      } else {
+        updateHolder(index, {
+          isKycCompliant: false,
+          kycMsg: "Sorry! 😔 You are not KYC Compliant",
+          kycSuccess: false,
+          isLoader: false,
+        });
+      }
+    } catch (err) {
+      updateHolder(index, { isLoader: false, kycMsg: "", kycSuccess: false, isKycCompliant: null });
+      errorToast(err);
     }
   };
 
   const handlePanChange = (index: number, value: string) => {
-    const updated = holders.map((h) => ({ ...h }));
-    updated[index].pan = value;
-    setHolders(updated);
+    const pan = value.toUpperCase().trim();
+    if (pan.length > 10) return;
+    updateHolder(index, { pan, kycMsg: "", kycSuccess: false, isKycCompliant: null });
+    if (pan.length === 10) {
+      checkKycStatus(index, pan);
+    }
   };
 
-  // Green filled circle with white tick — matches screenshot exactly
+  const handleProceed = async (index: number) => {
+    const holder = holders[index];
+    const { pan, isKycCompliant } = holder;
+
+    if (!pan) {
+      updateHolder(index, { kycMsg: "Please enter your PAN number to proceed.", kycSuccess: false });
+      return;
+    }
+    if (isKycCompliant === null) {
+      updateHolder(index, { kycMsg: "Please wait while we verify your PAN.", kycSuccess: false });
+      return;
+    }
+
+    const tax_status = 1;
+    const holding_nature = "SI";
+    const adminUser = fetchAdminUser();
+
+    if (isKycCompliant) {
+      try {
+        const reqBody = {
+          tax_status: 1,
+          holding_nature: "SI",
+          primary_pan: pan,
+          mobile_number: adminUser?.mobile,
+        };
+        const res = await postRequestSimple<uccDataRes>(endPoints.initiateUcc, reqBody);
+        if (res.success && res.data?.reference_id) {
+          navigate(
+            `/personal-details?reference_id=${res.data.reference_id}&tax_status=${tax_status}&holding_nature=${holding_nature}&pan=${pan}`
+          );
+        }
+      } catch (err) {
+        errorToast(err);
+      }
+    } else {
+      try {
+        if (!adminUser) return;
+        const response = await getRequest<initiateKycResponse>(
+          `${endPoints.initiateKyc}?pan_number=${pan}`
+        );
+        if (response.data.success) {
+          const hyperKycConfig = new window.HyperKycConfig(
+            response.data.access_token,
+            response.data.workflow_id,
+            response.data.transactionId,
+            true
+          );
+          hyperKycConfig.setInputs({
+            panNumber: pan,
+            mobileNumber: adminUser?.mobile || "",
+            kraStatus: "new",
+          });
+          hyperKycConfig.setUniqueId(response.data.unique_id);
+          hyperKycConfig.setUseLocation(false);
+          hyperKycConfig.setDefaultLangCode("en");
+          await window.HyperKYCModule.launch(hyperKycConfig, (event: any) => {
+            console.log("HyperKYC Event:", event);
+          });
+        }
+      } catch (err) {
+        console.log("Error initiating KYC:", err);
+        errorToast(err);
+      }
+    }
+  };
+
+  // Green filled circle with white tick
   const CompletedIcon = () => (
     <span
       style={{
@@ -52,26 +161,13 @@ const KycStatusCheck = () => {
         flexShrink: 0,
       }}
     >
-      {/* White checkmark SVG */}
-      <svg
-        width="14"
-        height="14"
-        viewBox="0 0 14 14"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M2 7L5.5 10.5L12 3.5"
-          stroke="white"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M2 7L5.5 10.5L12 3.5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     </span>
   );
 
-  // Orange clock icon — matches screenshot for active/pending
+  // Orange clock icon
   const ClockIcon = () => (
     <span
       style={{
@@ -85,22 +181,9 @@ const KycStatusCheck = () => {
         flexShrink: 0,
       }}
     >
-      {/* Clock SVG */}
-      <svg
-        width="14"
-        height="14"
-        viewBox="0 0 24 24"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <circle cx="12" cy="12" r="9" stroke="white" strokeWidth="2" />
-        <polyline
-          points="12 7 12 12 15 15"
-          stroke="white"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
+        <polyline points="12 7 12 12 15 15" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     </span>
   );
@@ -160,7 +243,6 @@ const KycStatusCheck = () => {
                       }}
                     >
                       {getIcon(holder.status)}
-                      {/* Vertical connector line between steps */}
                       {!isLast && (
                         <div
                           style={{
@@ -178,14 +260,13 @@ const KycStatusCheck = () => {
 
                     {/* Right Content Column */}
                     <div style={{ flex: 1, paddingBottom: isLast ? "0" : "16px" }}>
-                      {/* Holder Label */}
                       <div style={{ display: "flex", flexDirection: "column" }}>
                         <span
                           style={{
                             fontWeight: "700",
                             fontSize: "15px",
                             color: "#111827",
-                            lineHeight: "28px", // align with icon height
+                            lineHeight: "28px",
                           }}
                         >
                           {holder.label}
@@ -222,7 +303,7 @@ const KycStatusCheck = () => {
                             PAN NUMBER
                           </label>
 
-                          {/* PAN Input — boxed style matching screenshot */}
+                          {/* PAN Input */}
                           <input
                             type="text"
                             value={holder.pan}
@@ -234,31 +315,56 @@ const KycStatusCheck = () => {
                               outline: "none",
                               fontSize: "15px",
                               padding: "10px 12px",
-                              marginBottom: "14px",
+                              marginBottom: "6px",
                               background: "#fff",
                               color: "#111827",
                               boxSizing: "border-box",
                             }}
                             placeholder="DFPOL7895W"
+                            maxLength={10}
                           />
 
-                          {/* Proceed Button — pill shape matching screenshot */}
+                          {/* KYC Status Messages */}
+                          {holder.isLoader && (
+                            <p style={{ fontSize: "12px", color: "#6b7280", marginBottom: "8px" }}>
+                              Checking KYC status...
+                            </p>
+                          )}
+                          {!holder.isLoader && holder.kycSuccess && (
+                            <p style={{ fontSize: "13px", color: "#16a34a", fontWeight: "600", marginBottom: "8px" }}>
+                              {holder.kycMsg}
+                            </p>
+                          )}
+                          {!holder.isLoader && !holder.kycSuccess && holder.kycMsg && (
+                            <p style={{ fontSize: "13px", color: "#dc2626", fontWeight: "600", marginBottom: "8px" }}>
+                              {holder.kycMsg}
+                            </p>
+                          )}
+
+                          {/* Proceed Button */}
                           <button
                             type="button"
                             onClick={() => handleProceed(index)}
+                            disabled={holder.isLoader || holder.isKycCompliant === null}
                             style={{
-                              backgroundColor: "#1a34fe",
+                              backgroundColor:
+                                holder.isLoader || holder.isKycCompliant === null
+                                  ? "#9ca3af"
+                                  : "#1a34fe",
                               color: "#fff",
                               border: "none",
                               borderRadius: "50px",
-                              padding: "11px 36px",
-                              fontWeight: "600",
+                              padding: "9px 30px",
+                              fontWeight: "500",
                               fontSize: "14px",
-                              cursor: "pointer",
+                              cursor:
+                                holder.isLoader || holder.isKycCompliant === null
+                                  ? "not-allowed"
+                                  : "pointer",
                               letterSpacing: "0.01em",
                             }}
                           >
-                            Proceed
+                            {holder.isLoader ? "Checking..." : "Proceed"}
                           </button>
                         </div>
                       )}

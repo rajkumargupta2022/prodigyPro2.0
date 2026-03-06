@@ -15,6 +15,7 @@ export const HoldingNatureEnum = [
   { value: "AS", label: "Anyone / Survivor" },
 ];
 
+
 export const IncomeRangeEnum = [
   { value: 31, label: "Below 1 Lakh" },
   { value: 32, label: "1-5 Lakh" },

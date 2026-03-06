@@ -163,6 +163,7 @@ export enum endPoints {
      UCC
    ========================== */
    initiateUcc = "ucc/initiate",
-   tempSaveUcc = "ucc/temp-save"
+   tempSaveUcc = "ucc/temp-save",
+   getPincodeDetails = "ucc/get-pincode-details"
 
 }

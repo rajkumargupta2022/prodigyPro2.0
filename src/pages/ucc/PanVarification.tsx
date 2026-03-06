@@ -3,7 +3,7 @@ import { ArrowLeft } from "react-bootstrap-icons";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { errorToast } from "../../services/utils/toast";
-import { getRequest, postRequest, postRequestSimple } from "../../services/Api/HandleApi";
+import { getRequest, postRequestSimple } from "../../services/Api/HandleApi";
 import { endPoints } from "../../services/utils/urls";
 import { initiateKycResponse, kycStatusResponse } from "../data-interfaces/kyc";
 import { fetchAdminUser } from "../../services/user/adminUser";

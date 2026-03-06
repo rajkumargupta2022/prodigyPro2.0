@@ -1,13 +1,13 @@
 import { ArrowLeft } from "react-bootstrap-icons";
-import OTPField from "../components/OtpField";
+import OTPField from "../../components/OtpField";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getRequest, postRequest } from "../services/Api/HandleApi";
-import { endPoints } from "../services/utils/urls";
-import { addFamilyRes, familyRelationKeys, familyRelationRes } from "../pages/data-interfaces/users";
-import { errorToast } from "../services/utils/toast";
-import { generateOptions } from "../pages/re-used-html/select-box";
-import { HoldingNatureEnum, TaxStatusEnum } from "../pages/data/ucc-data";
+import { getRequest, postRequest } from "../../services/Api/HandleApi";
+import { endPoints } from "../../services/utils/urls";
+import { addFamilyRes, familyRelationKeys, familyRelationRes } from "../data-interfaces/users";
+import { errorToast } from "../../services/utils/toast";
+import { generateOptions } from "../re-used-html/select-box";
+import { HoldingNatureEnum, TaxStatusEnum } from "../data/ucc-data";
 
 function AddFamilyMember() {
   const navigate = useNavigate()
@@ -16,7 +16,9 @@ function AddFamilyMember() {
   const [requestId, setRequestId] = useState<string>("")
   const [memberPan, setMemberPan] = useState<string>("")
   const [familyRelationList, setFamilyRelationList] = useState<familyRelationKeys[]>([])
-  const [mobile,setMobile] = useState<string>("")
+  const [mobile, setMobile] = useState<string>("")
+  const [holdingNature, setHoldingNature] = useState<string>("")
+  const [taxStatus, setTaxStatus] = useState<string>("")
   // const accountState = "link";
   const [accountState, setAccountState] = useState<string>("link")
 
@@ -76,9 +78,34 @@ function AddFamilyMember() {
     }
   }
 
+  const handleHolding = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value
+    setHoldingNature(value)
+  }
+
+  const handleTaxStatus = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value
+    setTaxStatus(value)
+  }
+  const proceddForKyc = async () => {
+    if (!holdingNature) {
+      errorToast("Plaese select holding nature")
+      return
+    }
+    if (!taxStatus) {
+      errorToast("Plaese select tax status")
+      return
+    }
+
+    if (holdingNature === "SI") {
+      navigate(`/pan-verification?tax_status=${taxStatus}&holding_nature=${holdingNature}`)
+    } else {
+      navigate(`/kyc-status-check?tax_status=${taxStatus}&holding_nature=${holdingNature}`)
+    }
+  }
   return (
     <>
-      <OTPField show={show} setShow={setShow} requestId={requestId} mobile={mobile}/>
+      <OTPField show={show} setShow={setShow} requestId={requestId} mobile={mobile} />
       <main className="col-md-9 ms-sm-auto col-lg-9 px-md-4 py-4">
         <h4 onClick={() => navigate(-1)}>
           <ArrowLeft className="crPointer" /> Add
@@ -87,10 +114,10 @@ function AddFamilyMember() {
         <hr className="fw-light text-secondary" />
         <div className="p-4 shadow-sm bg-white border-0 rounded-4">
           <div className="d-flex">
-            <button type="button" className={`btn statementBtn ${accountState=="link"&&"statementBtnActive"} mx-1`} onClick={() => setAccountState("link")}>Link Account</button>
-           
+            <button type="button" className={`btn statementBtn ${accountState == "link" && "statementBtnActive"} mx-1`} onClick={() => setAccountState("link")}>Link Account</button>
 
-             <button type="button" className={`btn statementBtn ${accountState==""&&"statementBtnActive"} mx-1`} onClick={() => setAccountState("")}>Create Account</button>
+
+            <button type="button" className={`btn statementBtn ${accountState == "" && "statementBtnActive"} mx-1`} onClick={() => setAccountState("")}>Create Account</button>
           </div>
 
           {accountState == "link" ? (
@@ -138,9 +165,9 @@ function AddFamilyMember() {
                 >
                   TAX STATUS
                 </label>
-                <select className="form-control" id="exampleFormControlSelect1">
+                <select className="form-control" id="exampleFormControlSelect1" onChange={handleTaxStatus}>
                   <option>Select...</option>
-                   {generateOptions(TaxStatusEnum,"value","label")}
+                  {generateOptions(TaxStatusEnum, "value", "label")}
                 </select>
               </div>
 
@@ -151,16 +178,16 @@ function AddFamilyMember() {
                 >
                   HOLDING NATURE
                 </label>
-                <select className="form-control" id="exampleFormControlSelect1">
+                <select className="form-control" id="exampleFormControlSelect1" onChange={handleHolding}>
                   <option>Select...</option>
-                  {generateOptions(HoldingNatureEnum,"value","label")}
+                  {generateOptions(HoldingNatureEnum, "value", "label")}
                 </select>
               </div>
 
               <button
                 type="button"
                 className="customButton align-items-end px-2 mb-3 mt-3"
-                onClick={() => setShow(true)}
+                onClick={proceddForKyc}
               >
                 Proceed
               </button>

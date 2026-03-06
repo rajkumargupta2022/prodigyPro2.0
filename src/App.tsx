@@ -57,7 +57,6 @@ import Profile from "./components/Profile";
 import LocateUs from "./components/Locate-us";
 import AboutUs from "./components/About-Us";
 import PrivacyPolicyComponent from "./components/privacyPolicy";
-import AddFamilyMemberC from "./components/Add-family-member";
 import AllOrders from "./components/All-orders";
 import OrderDetails from "./pages/orders/SipInstallmentDetails";
 import SIPOrderDetails from "./pages/orders/Sip-order-details";
@@ -95,6 +94,7 @@ import CostOfDelayInSipCalculator from "./pages/calculator/CostOfDelayInSipCalcu
 import BankDetailsForm from "./pages/ucc/Bank-Details-form";
 import BankAndMandateList from "./components/Bank-and-mandate-list";
 import MinorKycCheck from "./pages/ucc/Minor-kyc-check";
+import AddFamilyMember from "./pages/ucc/Add-family-member";
 
 const LoaderHandler = () => {
   const { showLoader, hideLoader } = useLoader();
@@ -121,7 +121,7 @@ function App() {
           <Route path="/" element={<Login />} />
           <Route path="/folio-details" element={<Account Component={StateFolioDetails} />} />
           <Route path="/personal-details" element={<PersonalDetails />} />
-          <Route path="/pan-varification" element={<PanVarification />} />
+          <Route path="/pan-verification" element={<PanVarification />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/declaration" element={<Declaration />} />
           <Route path="/address-details" element={<AddressDetails />} />
@@ -143,7 +143,7 @@ function App() {
           <Route path="/portfolio-review" element={<PortfolioReview />} />
           <Route path="/kyc-status-check" element={<KycStatusCheck />} />
           <Route
-            path="/bank-details-varification"
+            path="/bank-details-verification"
             element={<BankDetailsVarification />}
           />
           <Route path="/nomination-list" element={<NominationList />} />
@@ -174,7 +174,7 @@ function App() {
           <Route path="/about-us" element={<Account Component={AboutUs} />} />
           <Route
             path="/add-family-member"
-            element={<Account Component={AddFamilyMemberC} />}
+            element={<Account Component={AddFamilyMember} />}
           />
 
           <Route

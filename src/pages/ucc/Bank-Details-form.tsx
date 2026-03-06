@@ -73,7 +73,7 @@ const BankDetailForm = () => {
           </form>
         </div>
       </div>
-      <NextBar  onSaveContinue={() => {navigate('/bank-details-varification')}} />
+      <NextBar  onSaveContinue={() => {navigate('/bank-details-verification')}} />
     </>
   );
 };

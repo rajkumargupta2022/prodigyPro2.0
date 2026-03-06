@@ -30,7 +30,7 @@ const BankDetailsVarification = () => {
 
             <div className="row mb-3">
               <div className="col-md-8">
-                <h4 className="font-weight-bold">Varification Incomplete</h4>
+                <h4 className="font-weight-bold">Verification Incomplete</h4>
                 <p className="py-2">
                   We need additional information to confirm that this bank
                   account belongs to you.

@@ -3,12 +3,13 @@ import Footer from "../../components/Next-bar";
 import TrackBar from "./Track-bar";
 import Navbar from "../../components/Navbar";
 import { generateOptions } from "../re-used-html/select-box";
-import { ContactRelationsEnum, OccupationEnum, UserGenderEnum } from "../data/ucc-data";
+import { ContactRelationsEnum, UserGenderEnum } from "../data/ucc-data";
 import { useEffect, useState } from "react";
 import { personalDetailForm, uccDataRes } from "../data-interfaces/ucc";
 import { postRequest } from "../../services/Api/HandleApi";
 import { endPoints } from "../../services/utils/urls";
 import { errorToast, successToast } from "../../services/utils/toast";
+import { formatDateToUTCString, formatUTCToDateOnly } from "../../services/dates/dateFormater";
 
 interface FormErrors {
   full_name?: string;
@@ -45,13 +46,21 @@ const PersonalDetails = () => {
   useEffect(() => {
     if (reference_id) {
       fetchUccData()
+      console.log(isSubmitting)
     }
   }, [])
 
   const fetchUccData = async () => {
     try {
       const response = await postRequest<uccDataRes>(endPoints.initiateUcc, { reference_id });
-      console.log(response);
+      if (response.success && response.data?.primary_user?.personal_details) {
+        const personalDetails = response.data.primary_user.personal_details;
+        setForm({
+          ...personalDetails,
+          dob: formatUTCToDateOnly(personalDetails.dob || ""),
+        });
+      }
+      console.log(response.data?.primary_user?.personal_details);
     } catch (err) {
       errorToast(err);
     }
@@ -123,18 +132,21 @@ const PersonalDetails = () => {
         reference_id,
         tax_status,
         holding_nature,
-        personal_details: {
-          pan: pan,
-          mobile_verified: true,
-          email_verified: true,
-          full_name: form.full_name,
-          email: form.email,
-          email_relation: form.email_relation,
-          mobile: form.mobile,
-          mobile_relation: form.mobile_relation,
-          dob: form.dob,
-          gender: form.gender,
-        },
+        primary_user: {
+          personal_details: {
+            pan: pan,
+            mobile_verified: true,
+            email_verified: true,
+            full_name: form.full_name,
+            email: form.email,
+            email_relation: form.email_relation,
+            mobile: form.mobile,
+            mobile_relation: form.mobile_relation,
+            dob: formatDateToUTCString(form.dob || ""),
+            gender: form.gender,
+          }
+        }
+        ,
       };
       await postRequest(endPoints.tempSaveUcc, { data: payload });
       successToast("Personal details saved!");
@@ -177,7 +189,7 @@ const PersonalDetails = () => {
                   value={form.full_name}
                   onChange={handleChange}
                   className={inputClass("full_name")}
-                  placeholder="e.g. Ravi Krishna"
+                  placeholder=""
                 />
                 {errors.full_name && (
                   <div className="invalid-feedback">{errors.full_name}</div>
@@ -191,7 +203,7 @@ const PersonalDetails = () => {
                   value={form.email}
                   onChange={handleChange}
                   className={inputClass("email")}
-                  placeholder="e.g. ravi@example.com"
+                  placeholder=""
                 />
                 {errors.email && (
                   <div className="invalid-feedback">{errors.email}</div>
@@ -225,7 +237,7 @@ const PersonalDetails = () => {
                   onChange={handleChange}
                   maxLength={10}
                   className={inputClass("mobile")}
-                  placeholder="e.g. 9876543210"
+                  placeholder=""
                 />
                 {errors.mobile && (
                   <div className="invalid-feedback">{errors.mobile}</div>
