@@ -1,85 +1,223 @@
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import NavBar from "../../components/Navbar";
 import NextBar from "../../components/Next-bar";
 import TrackBar from "./Track-bar";
-
+import { generateOptions } from "../re-used-html/select-box";
+import { IncomeRangeEnum, OccupationEnum, WealthSourceEnum } from "../data/ucc-data";
+import { fatchDeclarationsForm } from "../data-interfaces/ucc";
+import { postRequestSimple } from "../../services/Api/HandleApi";
+import { endPoints } from "../../services/utils/urls";
+import { errorToast, successToast } from "../../services/utils/toast";
 
 const Declaration = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const reference_id = searchParams.get("reference_id") ?? "";
+  const tax_status = searchParams.get("tax_status") ?? "";
+  const holding_nature = searchParams.get("holding_nature") ?? "";
+  const pan = searchParams.get("pan") ?? "";
+  const holder = searchParams.get("holder") ?? "";
+
+  const [form, setForm] = useState<fatchDeclarationsForm>({
+    occupation: undefined,
+    wealth_source: undefined,
+    income_range: undefined,
+    resident_status: 1, // default Indian
+    no_politically_exposed: false,
+    confirm_resident_indian: false,
+  });
+
+  const [errors, setErrors] = useState<Partial<Record<keyof fatchDeclarationsForm, string>>>({});
+
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
+    const { name, value, type } = e.target;
+    if (type === "checkbox") {
+      const checked = (e.target as HTMLInputElement).checked;
+      setForm((prev) => ({ ...prev, [name]: checked }));
+    } else {
+      setForm((prev) => ({ ...prev, [name]: value !== "" ? Number(value) : undefined }));
+    }
+    setErrors((prev) => ({ ...prev, [name]: "" }));
+  };
+
+  const handleIncomeRange = (value: number) => {
+    setForm((prev) => ({ ...prev, income_range: value }));
+    setErrors((prev) => ({ ...prev, income_range: "" }));
+  };
+
+  const validate = (): boolean => {
+    const newErrors: Partial<Record<keyof fatchDeclarationsForm, string>> = {};
+    if (!form.occupation) newErrors.occupation = "Occupation is required.";
+    if (!form.wealth_source) newErrors.wealth_source = "Source of income is required.";
+    if (!form.income_range) newErrors.income_range = "Please select an income range.";
+    if (!form.no_politically_exposed)
+      newErrors.no_politically_exposed = "You must confirm you are not a politically exposed person.";
+    if (!form.confirm_resident_indian)
+      newErrors.confirm_resident_indian = "You must confirm you are a resident Indian taxpayer.";
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async () => {
+    if (!validate()) return;
+
+    try {
+      const payload = {
+        reference_id,
+        tax_status,
+        holding_nature,
+        [holder]: {
+          fatca_declarations: {
+            occupation: form.occupation,
+            wealth_source: form.wealth_source,
+            income_range: form.income_range,
+            resident_status: form.resident_status,
+            no_politically_exposed: form.no_politically_exposed,
+            confirm_resident_indian: form.confirm_resident_indian,
+          },
+        },
+      };
+      await postRequestSimple(endPoints.tempSaveUcc, { data: payload });
+      successToast("Declaration details saved!");
+      navigate(
+        `/address-details?reference_id=${reference_id}&tax_status=${tax_status}&holding_nature=${holding_nature}&pan=${pan}&holder=${holder}`
+      );
+    } catch (err) {
+      errorToast(err);
+    } finally {
+    }
+  };
+
   return (
     <>
       <NavBar />
-
-     <TrackBar/>
-      <div className="container ">
-        <div className="personal_form_container ">
+      <TrackBar />
+      <div className="container">
+        <div className="personal_form_container">
           <h5 className="mb-4">Declarations</h5>
           <form className="bg-white px-5 py-4 rounded-4 form_shadow">
-            {/* First Name & Last Name */}
-            <div className="row">
-            <div className=" col">
-              <small className="fs14px lightBlack">INCOME RANGE</small><br/>
-                <button type="button" className="btn riskProfileBtn">Below 1 Lakh</button>
-                <button type="button" className="btn riskProfileBtn mx-1">1-5 Lakh</button>
-                <button type="button" className="btn riskProfileBtn mx-1">5-10 Lakh</button>
-                <button type="button" className="btn riskProfileBtn mx-1">10-25 Lakh</button>
-                <button type="button" className="btn riskProfileBtn mx-1">25 Lakh  - 1 Crore</button>
-                <button type="button" className="btn riskProfileBtn mx-1">Above 1 Crore</button>
-              </div>
-          </div>
 
+            {/* Occupation & Source of Income */}
+            <div className="row mb-3">
+              <div className="col-md-6">
+                <label className="form-label fs12px">OCCUPATION</label>
+                <select
+                  name="occupation"
+                  value={form.occupation ?? ""}
+                  onChange={handleChange}
+                  className={`form-select${errors.occupation ? " is-invalid" : ""}`}
+                >
+                  <option value="">Choose...</option>
+                  {generateOptions(OccupationEnum, "value", "label")}
+                </select>
+                {errors.occupation && <div className="invalid-feedback">{errors.occupation}</div>}
+              </div>
+
+              <div className="col-md-6">
+                <label className="form-label fs12px">SOURCE OF INCOME</label>
+                <select
+                  name="wealth_source"
+                  value={form.wealth_source ?? ""}
+                  onChange={handleChange}
+                  className={`form-select${errors.wealth_source ? " is-invalid" : ""}`}
+                >
+                  <option value="">Choose...</option>
+                  {generateOptions(WealthSourceEnum, "value", "label")}
+                </select>
+                {errors.wealth_source && <div className="invalid-feedback">{errors.wealth_source}</div>}
+              </div>
+            </div>
+
+            {/* Income Range */}
+            <div className="row mb-3">
+              <div className="col-12">
+                <small className="fs14px lightBlack">INCOME RANGE</small>
+                <br />
+                <div className="mt-1 d-flex flex-wrap gap-1">
+                  {IncomeRangeEnum.map((item) => (
+                    <button
+                      key={item.value}
+                      type="button"
+                      className={`btn riskProfileBtn${form.income_range === item.value ? " activeBtnIncome" : ""}`}
+                      onClick={() => handleIncomeRange(item.value)}
+                    >
+                      {item.label}
+                    </button>
+                  ))}
+                </div>
+                {errors.income_range && (
+                  <div className="text-danger mt-1" style={{ fontSize: "12px" }}>
+                    {errors.income_range}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Resident Status */}
             <div className="row mb-3">
               <div className="col-md-6 mt-2">
-                <span className="mt-2 fs14px">
-                  RESIDENT STATUS
-                </span>
+                <span className="mt-2 fs14px">RESIDENT STATUS</span>
                 <br />
-                <input
-                  type="radio"
-                  className="btn-check"
-                  name="a2"
-                  id="option11"
-                  autoComplete="off"
-                />
-              <div className=" col">
-                <button type="button" className="btn riskProfileBtn">Indian</button>
-             
-            </div>
+                <div className="mt-1">
+                  {/* Fixed as Indian (resident_status: 1) */}
+                  <button
+                    type="button"
+                    className="btn activeBtnIncome"
+                  >
+                    Indian
+                  </button>
+                </div>
               </div>
             </div>
 
+            {/* Declarations / Checkboxes */}
             <div className="row mb-3">
               <div className="form-check mb-2">
                 <input
                   type="checkbox"
-                  className="form-check-input custom-checkbox"
-                  id="option1"
-                  name="option6"
+                  className={`form-check-input custom-checkbox${errors.no_politically_exposed ? " is-invalid" : ""}`}
+                  id="no_politically_exposed"
+                  name="no_politically_exposed"
+                  checked={form.no_politically_exposed ?? false}
+                  onChange={handleChange}
                   style={{ borderRadius: "2.25em" }}
                 />
-                <label className="form-check-label mx-1" htmlFor="option1">
-                  I hereby declare that i'm not a politically person.
+                <label className="form-check-label mx-1" htmlFor="no_politically_exposed">
+                  I hereby declare that I'm not a politically exposed person.
                 </label>
+                {errors.no_politically_exposed && (
+                  <div className="text-danger" style={{ fontSize: "12px" }}>
+                    {errors.no_politically_exposed}
+                  </div>
+                )}
               </div>
 
-              {/* Checkbox 2 */}
               <div className="form-check">
                 <input
                   type="checkbox"
-                  className="form-check-input custom-checkbox"
-                  id="option2"
-                  name="option5"
+                  className={`form-check-input custom-checkbox${errors.confirm_resident_indian ? " is-invalid" : ""}`}
+                  id="confirm_resident_indian"
+                  name="confirm_resident_indian"
+                  checked={form.confirm_resident_indian ?? false}
+                  onChange={handleChange}
                   style={{ borderRadius: "2.25em" }}
                 />
-                <label className="form-check-label mx-1" htmlFor="option2">
-                  I'm not the Tax Payer of any other country other than india.
+                <label className="form-check-label mx-1" htmlFor="confirm_resident_indian">
+                  I'm not the Tax Payer of any other country other than India.
                 </label>
+                {errors.confirm_resident_indian && (
+                  <div className="text-danger" style={{ fontSize: "12px" }}>
+                    {errors.confirm_resident_indian}
+                  </div>
+                )}
               </div>
             </div>
+
           </form>
         </div>
       </div>
-      <NextBar  onSaveContinue={() => {navigate('/address-details')}} />
+      <NextBar onSaveContinue={handleSubmit} />
     </>
   );
 };

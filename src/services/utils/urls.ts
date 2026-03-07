@@ -97,6 +97,7 @@ export enum endPoints {
   verifyBank = "banks/verify-bank",
   uploadProof = "banks/upload-proof",
   createMandate = "mandates/create-mandate",
+  fetchBankViaIfsc = "banks/fetch-bank-via-ifsc",
 
   /* =========================
      ORDERS

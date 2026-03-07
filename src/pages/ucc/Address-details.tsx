@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import NavBar from "../../components/Navbar";
 import NextBar from "../../components/Next-bar";
 import Footer from "../../components/Footer";
@@ -9,10 +9,17 @@ import { StatevaluesEnum } from "../data/ucc-data";
 import { addressDetailForm, pincodeDetailsRes } from "../data-interfaces/ucc";
 import { endPoints } from "../../services/utils/urls";
 import { postRequest } from "../../services/Api/HandleApi";
+import { errorToast, successToast } from "../../services/utils/toast";
 
 
 const AddressDetails = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const reference_id = searchParams.get("reference_id") ?? "";
+  const tax_status = searchParams.get("tax_status") ?? "";
+  const holding_nature = searchParams.get("holding_nature") ?? "";
+  const pan = searchParams.get("pan") ?? "";
+  const holder = searchParams.get("holder") ?? "";
 
   const [form, setForm] = useState<addressDetailForm>({});
   const [errors, setErrors] = useState<Partial<addressDetailForm>>({});
@@ -42,7 +49,7 @@ const AddressDetails = () => {
       try {
         const res = await postRequest<pincodeDetailsRes>(endPoints.getPincodeDetails, { pincode });
         if (res.data) {
-          setForm({ ...form, state: res.data.state, country: res.data.country,pincode:res.data.pincode ,city:res.data.district});
+          setForm({ ...form, state: res.data.state, country: res.data.country, pincode: res.data.pincode, city: res.data.district });
         }
       } catch (err) {
 
@@ -77,12 +84,33 @@ const AddressDetails = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!validate()) return;
-
-    navigate("/bank-details-form");
+    try {
+      const payload = {
+        reference_id,
+        tax_status,
+        holding_nature,
+        [holder]: {
+          address_details: {
+            address_1: form.address_1,
+            address_2: form.address_2,
+            city: form.city,
+            state: form.state,
+            pincode: form.pincode,
+            country: form.country,
+          }
+        }
+        ,
+      };
+      await postRequest(endPoints.tempSaveUcc, { data: payload });
+      successToast("Personal details saved!");
+      navigate(`/bank-details-form?reference_id=${reference_id}&tax_status=${tax_status}&holding_nature=${holding_nature}&pan=${pan}&holder=${holder}`);
+    } catch (err) {
+      errorToast(err);
+    }
   };
- 
+
 
   return (
     <>
@@ -126,7 +154,7 @@ const AddressDetails = () => {
 
             <div className="row mb-3">
               <div className="col-md-6">
-                <label className="form-label fs12px">LANDMARK</label>
+                <label className="form-label fs12px">LANDMARK(Optional)</label>
                 <input
                   type="text"
                   name="address_2"

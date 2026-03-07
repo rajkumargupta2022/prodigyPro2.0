@@ -29,6 +29,7 @@ const PersonalDetails = () => {
   const tax_status = searchParams.get("tax_status") ?? "";
   const holding_nature = searchParams.get("holding_nature") ?? "";
   const pan = searchParams.get("pan") ?? "";
+  const holder = searchParams.get("holder") ?? "";
 
   const [form, setForm] = useState<personalDetailForm>({
     full_name: "",
@@ -45,6 +46,7 @@ const PersonalDetails = () => {
 
   useEffect(() => {
     if (reference_id) {
+
       fetchUccData()
       console.log(isSubmitting)
     }
@@ -132,7 +134,7 @@ const PersonalDetails = () => {
         reference_id,
         tax_status,
         holding_nature,
-        primary_user: {
+        [holder]: {
           personal_details: {
             pan: pan,
             mobile_verified: true,
@@ -150,7 +152,9 @@ const PersonalDetails = () => {
       };
       await postRequest(endPoints.tempSaveUcc, { data: payload });
       successToast("Personal details saved!");
-      navigate(`/address-details?reference_id=${reference_id}`);
+      navigate(
+        `/declaration?reference_id=${reference_id}&tax_status=${tax_status}&holding_nature=${holding_nature}&pan=${pan}&holder=${holder}`
+      );
     } catch (err) {
       errorToast(err);
     } finally {

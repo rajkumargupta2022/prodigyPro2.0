@@ -12,6 +12,7 @@ import { uccDataRes } from "../data-interfaces/ucc";
 type HolderStatus = "pending" | "active" | "completed";
 
 interface Holder {
+  holder: string;
   label: string;
   status: HolderStatus;
   pan: string;
@@ -25,9 +26,9 @@ const KycStatusCheck = () => {
   const navigate = useNavigate();
 
   const [holders, setHolders] = useState<Holder[]>([
-    { label: "Primary Holder", status: "active", pan: "", isKycCompliant: null, kycMsg: "", kycSuccess: false, isLoader: false },
-    { label: "Second Holder", status: "pending", pan: "", isKycCompliant: null, kycMsg: "", kycSuccess: false, isLoader: false },
-    { label: "Third Holder", status: "pending", pan: "", isKycCompliant: null, kycMsg: "", kycSuccess: false, isLoader: false },
+    { holder: "primary_user", label: "Primary Holder", status: "active", pan: "", isKycCompliant: null, kycMsg: "", kycSuccess: false, isLoader: false },
+    { holder: "secondary_user", label: "Second Holder", status: "pending", pan: "", isKycCompliant: null, kycMsg: "", kycSuccess: false, isLoader: false },
+    { holder: "third_user", label: "Third Holder", status: "pending", pan: "", isKycCompliant: null, kycMsg: "", kycSuccess: false, isLoader: false },
   ]);
 
   const updateHolder = (index: number, partial: Partial<Holder>) => {
@@ -109,7 +110,7 @@ const KycStatusCheck = () => {
         const res = await postRequestSimple<uccDataRes>(endPoints.initiateUcc, reqBody);
         if (res.success && res.data?.reference_id) {
           navigate(
-            `/personal-details?reference_id=${res.data.reference_id}&tax_status=${tax_status}&holding_nature=${holding_nature}&pan=${pan}`
+            `/personal-details?reference_id=${res.data.reference_id}&tax_status=${tax_status}&holding_nature=${holding_nature}&pan=${pan}&holder=${holder.holder}`
           );
         }
       } catch (err) {
@@ -146,6 +147,7 @@ const KycStatusCheck = () => {
       }
     }
   };
+
 
   // Green filled circle with white tick
   const CompletedIcon = () => (

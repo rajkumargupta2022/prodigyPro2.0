@@ -8,7 +8,6 @@ export interface personalDetailForm {
   mobile_relation?: string;
   dob?: string;
   gender?: string;
-  occupation?: string;
   pan?: string;
   guardian_name?: string;
   guardian_relation?: string;
@@ -73,27 +72,24 @@ export interface uccDataResKeys {
   nominees?: nomineeDetailForm[];
 }
 export interface userDataObj {
-  personal_details?: personalDetailForm;
-  address_details?: addressDetailForm;
-  fatca_declarations?: fatchDeclarationsForm;
+ personal_details?: personalDetailForm;
+ address_details?: addressDetailForm;
+ fatca_declarations?: fatchDeclarationsForm;
 }
 
 export interface pincodeDetailsRes {
   success: boolean;
-  msg: string;
-  data: pincodeDetailsKeys;
+  msg: string
+  data: pincodeDetailsKeys
 }
-export interface pincodeDetailsKeys {
-  name: string;
-  description?: string;
-  branchtype: string;
-  deliverystatus: string;
-  circle: string;
+export interface pincodeDetailsKeys{
+  pincode: string;
   district: string;
-  division: string;
-  region: string;
-  block: string;
   state: string;
   country: string;
-  pincode: string;
+}
+export interface bankNameRes{
+    success: boolean,
+  bank_name: string,
+  branch_name: string
 }

@@ -439,6 +439,15 @@ span{
   font-size: 12px;
   border: 1px solid #D0DBEA;
 }
+.activeBtnIncome{
+    background-color: #011EFE !important;
+  color: #fff !important;
+  height: 28px;
+  padding: 0 8px;
+  border-radius: 10px;
+  font-size: 12px;
+  border: 1px solid #D0DBEA;
+}
 .selectedBtn {
   background-color: #011EFE !important;
   color: #fff !important;
