@@ -6,6 +6,7 @@ const steps = [
   { name: "Declarations", path: "/declaration" },
   { name: "Address", path: "/address-details" },
   { name: "Bank Details", path: "/bank-details-form" },
+  { name: "Bank Mandate", path: "/mandate-amount" },
   { name: "Nominations", path: "/nomination-details" },
 ];
 
@@ -32,11 +33,10 @@ const TrackBar = () => {
                 <div key={index} className="d-flex align-items-center">
                   <Link
                     to={step.path}
-                    className={`text-decoration-none fw-500 ${
-                      isCompletedOrActive
-                        ? "logoBlueColor"
-                        : "text-dark"
-                    }`}
+                    className={`text-decoration-none fw-500 ${isCompletedOrActive
+                      ? "logoBlueColor"
+                      : "text-dark"
+                      }`}
                   >
                     {step.name}
                   </Link>
@@ -46,7 +46,7 @@ const TrackBar = () => {
                       className="mx-2"
                       size={14}
                       color={
-                         "#6c757d"
+                        "#6c757d"
                       }
                     />
                   )}

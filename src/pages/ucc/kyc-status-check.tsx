@@ -1,13 +1,13 @@
 import LoginLeftImage from "../../components/LoginLeftImage";
 import { ArrowLeft } from "react-bootstrap-icons";
-import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { errorToast } from "../../services/utils/toast";
-import { getRequest, postRequestSimple } from "../../services/Api/HandleApi";
+import { getRequest, postRequest, postRequestSimple } from "../../services/Api/HandleApi";
 import { endPoints } from "../../services/utils/urls";
 import { initiateKycResponse, kycStatusResponse } from "../data-interfaces/kyc";
 import { fetchAdminUser } from "../../services/user/adminUser";
-import { uccDataRes } from "../data-interfaces/ucc";
+import { uccDataRes, uccDataResKeys } from "../data-interfaces/ucc";
 
 type HolderStatus = "pending" | "active" | "completed";
 
@@ -25,11 +25,73 @@ interface Holder {
 const KycStatusCheck = () => {
   const navigate = useNavigate();
 
+  const [searchParams] = useSearchParams();
+  const reference_id = searchParams.get("reference_id") ?? "";
+  const tax_status = searchParams.get("tax_status") ?? "";
+  const holding_nature = searchParams.get("holding_nature") ?? "";
+  const pan = searchParams.get("pan") ?? "";
+  const holder = searchParams.get("holder") as keyof uccDataResKeys;
+
+  const active = "active";
+  const pending = "pending";
+  const completed = "completed";
   const [holders, setHolders] = useState<Holder[]>([
-    { holder: "primary_user", label: "Primary Holder", status: "active", pan: "", isKycCompliant: null, kycMsg: "", kycSuccess: false, isLoader: false },
-    { holder: "secondary_user", label: "Second Holder", status: "pending", pan: "", isKycCompliant: null, kycMsg: "", kycSuccess: false, isLoader: false },
-    { holder: "third_user", label: "Third Holder", status: "pending", pan: "", isKycCompliant: null, kycMsg: "", kycSuccess: false, isLoader: false },
+    { holder: "primary_user", label: "Primary Holder", status: active, pan: "", isKycCompliant: null, kycMsg: "", kycSuccess: false, isLoader: false },
+    { holder: "secondary_user", label: "Second Holder", status: pending, pan: "", isKycCompliant: null, kycMsg: "", kycSuccess: false, isLoader: false },
+    { holder: "third_user", label: "Third Holder", status: pending, pan: "", isKycCompliant: null, kycMsg: "", kycSuccess: false, isLoader: false },
   ]);
+
+
+  useEffect(() => {
+    if (reference_id) {
+      fetchUccData()
+    }
+  }, [])
+
+  const fetchUccData = async () => {
+    try {
+      const response = await postRequest<uccDataRes>(endPoints.initiateUcc, { reference_id });
+      const data = response.data;
+      if (response.success && data) {
+        setHolders((prev) => {
+          const updated = [...prev];
+
+          // Function to set a holder's status and data
+          const setHolderCompleted = (index: number, userData: any) => {
+            updated[index] = {
+              ...updated[index],
+              status: completed,
+              pan: userData?.personal_details?.pan || updated[index].pan,
+              isKycCompliant: true,
+              kycSuccess: true
+            };
+          };
+
+          if (holder === "primary_user") {
+            setHolderCompleted(0, data.primary_user);
+            updated[1] = { ...updated[1], status: active };
+          } else if (holder === "secondary_user") {
+            setHolderCompleted(0, data.primary_user);
+            setHolderCompleted(1, data.secondary_user);
+            updated[2] = { ...updated[2], status: active };
+          } else if (holder === "third_user") {
+            setHolderCompleted(0, data.primary_user);
+            setHolderCompleted(1, data.secondary_user);
+            setHolderCompleted(2, data.third_user);
+          } else {
+            // Default Case: No holder or initial entry
+            updated[0] = { ...updated[0], status: active };
+            updated[1] = { ...updated[1], status: pending };
+            updated[2] = { ...updated[2], status: pending };
+          }
+
+          return updated;
+        });
+      }
+    } catch (err) {
+      errorToast(err);
+    }
+  }
 
   const updateHolder = (index: number, partial: Partial<Holder>) => {
     setHolders((prev) => prev.map((h, i) => (i === index ? { ...h, ...partial } : h)));
@@ -95,16 +157,16 @@ const KycStatusCheck = () => {
       return;
     }
 
-    const tax_status = 1;
-    const holding_nature = "SI";
+
     const adminUser = fetchAdminUser();
 
     if (isKycCompliant) {
+      const adminUser = fetchAdminUser()
       try {
         const reqBody = {
-          tax_status: 1,
-          holding_nature: "SI",
-          primary_pan: pan,
+          tax_status: tax_status,
+          holding_nature: holding_nature,
+          primary_pan: adminUser?.pan,
           mobile_number: adminUser?.mobile,
         };
         const res = await postRequestSimple<uccDataRes>(endPoints.initiateUcc, reqBody);
@@ -191,7 +253,7 @@ const KycStatusCheck = () => {
   );
 
   const getIcon = (status: HolderStatus) => {
-    if (status === "completed") return <CompletedIcon />;
+    if (status === completed) return <CompletedIcon />;
     return <ClockIcon />;
   };
 
@@ -252,7 +314,7 @@ const KycStatusCheck = () => {
                             flex: 1,
                             minHeight: "20px",
                             backgroundColor:
-                              holder.status === "completed" ? "#16a34a" : "#e5e7eb",
+                              holder.status === completed ? "#16a34a" : "#e5e7eb",
                             marginTop: "4px",
                             marginBottom: "4px",
                           }}
@@ -273,7 +335,7 @@ const KycStatusCheck = () => {
                         >
                           {holder.label}
                         </span>
-                        {holder.status === "completed" && (
+                        {holder.status === completed && (
                           <span
                             style={{
                               fontSize: "12px",
@@ -288,7 +350,7 @@ const KycStatusCheck = () => {
                       </div>
 
                       {/* Active Form */}
-                      {holder.status === "active" && (
+                      {holder.status === active && (
                         <div style={{ marginTop: "10px" }}>
                           {/* PAN Label */}
                           <label

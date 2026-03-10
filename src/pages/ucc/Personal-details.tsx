@@ -5,7 +5,7 @@ import Navbar from "../../components/Navbar";
 import { generateOptions } from "../re-used-html/select-box";
 import { ContactRelationsEnum, UserGenderEnum } from "../data/ucc-data";
 import { useEffect, useState } from "react";
-import { personalDetailForm, uccDataRes } from "../data-interfaces/ucc";
+import { personalDetailForm, uccDataRes, uccDataResKeys, userDataObj } from "../data-interfaces/ucc";
 import { postRequest } from "../../services/Api/HandleApi";
 import { endPoints } from "../../services/utils/urls";
 import { errorToast, successToast } from "../../services/utils/toast";
@@ -29,7 +29,8 @@ const PersonalDetails = () => {
   const tax_status = searchParams.get("tax_status") ?? "";
   const holding_nature = searchParams.get("holding_nature") ?? "";
   const pan = searchParams.get("pan") ?? "";
-  const holder = searchParams.get("holder") ?? "";
+   const holder = searchParams.get("holder") as keyof uccDataResKeys;
+  
 
   const [form, setForm] = useState<personalDetailForm>({
     full_name: "",
@@ -55,14 +56,14 @@ const PersonalDetails = () => {
   const fetchUccData = async () => {
     try {
       const response = await postRequest<uccDataRes>(endPoints.initiateUcc, { reference_id });
-      if (response.success && response.data?.primary_user?.personal_details) {
-        const personalDetails = response.data.primary_user.personal_details;
+      const profile = response.data[holder] as userDataObj;
+      if (response.success && profile?.personal_details) {
+        const personalDetails = profile.personal_details;
         setForm({
           ...personalDetails,
           dob: formatUTCToDateOnly(personalDetails.dob || ""),
         });
       }
-      console.log(response.data?.primary_user?.personal_details);
     } catch (err) {
       errorToast(err);
     }

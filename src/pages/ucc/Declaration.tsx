@@ -1,12 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import NavBar from "../../components/Navbar";
 import NextBar from "../../components/Next-bar";
 import TrackBar from "./Track-bar";
 import { generateOptions } from "../re-used-html/select-box";
 import { IncomeRangeEnum, OccupationEnum, WealthSourceEnum } from "../data/ucc-data";
-import { fatchDeclarationsForm } from "../data-interfaces/ucc";
-import { postRequestSimple } from "../../services/Api/HandleApi";
+import { fatchDeclarationsForm, uccDataRes, uccDataResKeys, userDataObj } from "../data-interfaces/ucc";
+import { postRequest, postRequestSimple } from "../../services/Api/HandleApi";
 import { endPoints } from "../../services/utils/urls";
 import { errorToast, successToast } from "../../services/utils/toast";
 
@@ -17,7 +17,7 @@ const Declaration = () => {
   const tax_status = searchParams.get("tax_status") ?? "";
   const holding_nature = searchParams.get("holding_nature") ?? "";
   const pan = searchParams.get("pan") ?? "";
-  const holder = searchParams.get("holder") ?? "";
+  const holder = searchParams.get("holder") as keyof uccDataResKeys;
 
   const [form, setForm] = useState<fatchDeclarationsForm>({
     occupation: undefined,
@@ -58,6 +58,28 @@ const Declaration = () => {
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
+
+  useEffect(() => {
+    if (reference_id) {
+      fetchUccData()
+    }
+  }, [])
+
+  const fetchUccData = async () => {
+    try {
+      const response = await postRequest<uccDataRes>(endPoints.initiateUcc, { reference_id });
+      const profile = response.data[holder] as userDataObj;
+      const fatca_declarations = profile.fatca_declarations;
+
+      if (response.success && fatca_declarations) {
+        setForm({
+          ...fatca_declarations
+        });
+      }
+    } catch (err) {
+      errorToast(err);
+    }
+  }
 
   const handleSubmit = async () => {
     if (!validate()) return;

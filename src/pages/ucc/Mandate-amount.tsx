@@ -1,0 +1,167 @@
+import { useNavigate, useSearchParams } from "react-router-dom";
+import NavBar from "../../components/Navbar";
+import NextBar from "../../components/Next-bar";
+import TrackBar from "./Track-bar";
+import { useEffect, useState } from "react";
+import { bankDetailForm, uccDataRes, uccDataResKeys } from "../data-interfaces/ucc";
+import { postRequest, postRequestSimple } from "../../services/Api/HandleApi";
+import { endPoints, imageUrl } from "../../services/utils/urls";
+import { errorToast, successToast } from "../../services/utils/toast";
+import { CurrencyRupee } from "react-bootstrap-icons";
+
+const MandateAmount = () => {
+  const shortAmount = {
+    minValue: 10000,
+    twoKValue: 20000,
+    threeKValue: 50000,
+    fiveKValue: 100000
+
+  }
+  const navigate = useNavigate()
+  const [searchParams] = useSearchParams();
+  const reference_id = searchParams.get("reference_id") ?? "";
+  const tax_status = searchParams.get("tax_status") ?? "";
+  const holding_nature = searchParams.get("holding_nature") ?? "";
+  const pan = searchParams.get("pan") ?? "";
+  const holder = searchParams.get("holder") as keyof uccDataResKeys;
+
+  const [mandateAmount, setMandateAmount] = useState<number | undefined>(undefined)
+  const [mandateAmountError, setMandateAmountError] = useState<string>("")
+  const [bankDetails, setBankDetails] = useState<bankDetailForm>({
+    bank_name: "",
+    bank_ifsc: "",
+    bank_branch: "",
+    bank_account_type: "",
+    bank_account_number: "",
+    is_bank_verified: false,
+  })
+  useEffect(() => {
+    if (reference_id) {
+      fetchUccData()
+    }
+  }, [])
+
+  const fetchUccData = async () => {
+    try {
+      const response = await postRequest<uccDataRes>(endPoints.initiateUcc, { reference_id });
+      const data = response.data?.bank_details;
+      if (response.success && data) {
+        setMandateAmount(response?.data?.mandate_amount ?? undefined)
+        setBankDetails({ ...data })
+      }
+    } catch (err) {
+      errorToast(err);
+    }
+  }
+  const amountHandler = (e: React.ChangeEvent<HTMLInputElement>, maxAmount: number,): void => {
+    let value = Number(e.target.value.trim());
+    if (value <= 1000000000) {
+      setMandateAmount(value);
+      setMandateAmountError("")
+
+    }
+    else if (value >= maxAmount) {
+      setMandateAmount(maxAmount);
+    }
+
+  };
+  const updateAmount = (value: number) => {
+    setMandateAmount(value)
+  }
+
+  const handleSubmit = async () => {
+
+    if (!mandateAmount) {
+      setMandateAmountError("Please enter mandate amount")
+      return
+    }
+
+    try {
+      const payload = {
+        reference_id,
+        tax_status,
+        holding_nature,
+        mandate_amount: Number(mandateAmount)
+      };
+
+      await postRequestSimple(endPoints.tempSaveUcc, { data: payload });
+      successToast("Data updated!");
+
+      if (holding_nature == "AS" && holder === "third_user") {
+        navigate(
+          `/nomination-details?reference_id=${reference_id}&tax_status=${tax_status}&holding_nature=${holding_nature}&pan=${pan}&holder=${holder}`
+        );
+      } else {
+        navigate(
+          `/kyc-status-check?reference_id=${reference_id}&tax_status=${tax_status}&holding_nature=${holding_nature}&pan=${pan}&holder=${holder}`
+        );
+      }
+    } catch (err) {
+      errorToast(err);
+    }
+  };
+  return (
+    <>
+      <NavBar />
+      <TrackBar />
+      <div className="container pt-3">
+        <div className="personal_form_container ">
+          <h3 className="mb-4 text-dark fw-bolder">Bank Mandate</h3>
+          <div className="borderColor row p-3 rounded-4 bg-white">
+            <div className="d-flex justify-content-between col-md-12 col-sm-12">
+              <div className="d-flex">
+                <div className="prod_icon_img">
+                  <img src={imageUrl + bankDetails?.bank_name?.trim()
+                    .toLowerCase()
+                    .replace(/\s+/g, '_') + ".png"} height={35} width={35} className="rounded-2" alt="bank-logo" />
+                </div>
+                <div className="ms-2 prod_icon_heading">
+                  <h4>{bankDetails?.bank_name}</h4>
+                  <p>A/c No: {bankDetails?.bank_account_number ?? ""}</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="form-group mt-3 col-md-6 col-sm-12">
+              <label htmlFor="amountFor" className="fs12px">
+                MANDATE AMOUNT
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                id="amountFor"
+                aria-describedby="emailHelp"
+                value={mandateAmount}
+
+                onChange={(e) => amountHandler(e, 1000000)}
+              />
+              <small className="errorColor">{mandateAmountError}</small>
+              <div className=" mt-2">
+                <button type="button" className="btn shortcutValue" onClick={() => updateAmount(shortAmount.minValue)} >
+                  Min.
+                </button>
+                <button type="button" className="btn shortcutValue mx-1" onClick={() => updateAmount(shortAmount.twoKValue)}>
+                  <CurrencyRupee className="mb-1" />
+                  {shortAmount.twoKValue}
+                </button>
+                <button type="button" className="btn shortcutValue mx-1" onClick={() => updateAmount(shortAmount.threeKValue)}>
+                  <CurrencyRupee className="mb-1" />
+                  {shortAmount.threeKValue}
+                </button>
+                <button type="button" className="btn shortcutValue mx-1" onClick={() => updateAmount(shortAmount.fiveKValue)}>
+                  <CurrencyRupee className="mb-1" />
+                  {shortAmount.fiveKValue}
+                </button>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+      <NextBar onSaveContinue={handleSubmit} />
+    </>
+  );
+};
+
+export default MandateAmount;

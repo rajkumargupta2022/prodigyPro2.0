@@ -58,7 +58,7 @@ export interface nomineeDetailForm {
 
 export interface uccDataRes {
   success?: boolean;
-  data?: uccDataResKeys;
+  data: uccDataResKeys;
 }
 export interface uccDataResKeys {
   reference_id?: string;

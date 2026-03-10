@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import NavBar from "../../components/Navbar";
 import NextBar from "../../components/Next-bar";
@@ -6,7 +6,7 @@ import Footer from "../../components/Footer";
 import TrackBar from "./Track-bar";
 import { generateOptions } from "../re-used-html/select-box";
 import { StatevaluesEnum } from "../data/ucc-data";
-import { addressDetailForm, pincodeDetailsRes } from "../data-interfaces/ucc";
+import { addressDetailForm, pincodeDetailsRes, uccDataRes, uccDataResKeys, userDataObj } from "../data-interfaces/ucc";
 import { endPoints } from "../../services/utils/urls";
 import { postRequest } from "../../services/Api/HandleApi";
 import { errorToast, successToast } from "../../services/utils/toast";
@@ -19,10 +19,32 @@ const AddressDetails = () => {
   const tax_status = searchParams.get("tax_status") ?? "";
   const holding_nature = searchParams.get("holding_nature") ?? "";
   const pan = searchParams.get("pan") ?? "";
-  const holder = searchParams.get("holder") ?? "";
+  const holder = searchParams.get("holder") as keyof uccDataResKeys;
 
   const [form, setForm] = useState<addressDetailForm>({});
   const [errors, setErrors] = useState<Partial<addressDetailForm>>({});
+
+  useEffect(() => {
+    if (reference_id) {
+      fetchUccData()
+    }
+  }, [])
+
+  const fetchUccData = async () => {
+    try {
+      const response = await postRequest<uccDataRes>(endPoints.initiateUcc, { reference_id });
+      const profile = response.data[holder] as userDataObj;
+      const address_details = profile.address_details;
+
+      if (response.success && address_details) {
+        setForm({
+          ...address_details
+        });
+      }
+    } catch (err) {
+      errorToast(err);
+    }
+  }
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -105,7 +127,17 @@ const AddressDetails = () => {
       };
       await postRequest(endPoints.tempSaveUcc, { data: payload });
       successToast("Personal details saved!");
-      navigate(`/bank-details-form?reference_id=${reference_id}&tax_status=${tax_status}&holding_nature=${holding_nature}&pan=${pan}&holder=${holder}`);
+      if (holding_nature == "AS" && holder === "third_user") {
+        navigate(
+          `/nomination-details?reference_id=${reference_id}&tax_status=${tax_status}&holding_nature=${holding_nature}&pan=${pan}&holder=${holder}`
+        );
+      } else if (holding_nature == "AS" && holder === "secondary_user") {
+        navigate(
+          `/kyc-status-check?reference_id=${reference_id}&tax_status=${tax_status}&holding_nature=${holding_nature}&pan=${pan}&holder=${holder}`
+        );
+      } else {
+        navigate(`/bank-details-form?reference_id=${reference_id}&tax_status=${tax_status}&holding_nature=${holding_nature}&pan=${pan}&holder=${holder}`);
+      }
     } catch (err) {
       errorToast(err);
     }

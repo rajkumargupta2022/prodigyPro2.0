@@ -95,6 +95,7 @@ import BankDetailsForm from "./pages/ucc/Bank-Details-form";
 import BankAndMandateList from "./components/Bank-and-mandate-list";
 import MinorKycCheck from "./pages/ucc/Minor-kyc-check";
 import AddFamilyMember from "./pages/ucc/Add-family-member";
+import MandateAmount from "./pages/ucc/Mandate-amount";
 
 const LoaderHandler = () => {
   const { showLoader, hideLoader } = useLoader();
@@ -126,6 +127,7 @@ function App() {
           <Route path="/declaration" element={<Declaration />} />
           <Route path="/address-details" element={<AddressDetails />} />
           <Route path="/bank-details-form" element={<BankDetailsForm />} />
+          <Route path="/mandate-amount" element={<MandateAmount />} />
           <Route path="/nomination-details" element={<NominationDetails />} />
           <Route path="/otp" element={<Otp />} />
           <Route path="/proof-identity" element={<ProofIdentity />} />

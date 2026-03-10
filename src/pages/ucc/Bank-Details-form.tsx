@@ -1,24 +1,24 @@
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import NavBar from "../../components/Navbar";
 import NextBar from "../../components/Next-bar";
 import TrackBar from "./Track-bar";
-import { bankDetailForm, bankNameRes } from "../data-interfaces/ucc";
-import { useState } from "react";
-import { getRequestSimple, postRequestSimple } from "../../services/Api/HandleApi";
+import { bankDetailForm, bankNameRes, uccDataRes, uccDataResKeys } from "../data-interfaces/ucc";
+import { useEffect, useState } from "react";
+import { getRequestSimple, postRequest, postRequestSimple } from "../../services/Api/HandleApi";
 import { endPoints } from "../../services/utils/urls";
 import { errorToast, successToast } from "../../services/utils/toast";
+// import { varifyBankRes } from "../data-interfaces/bank-and-mandate";
 
 const BankDetailForm = () => {
   const navigate = useNavigate();
-  const location = useLocation();
+  // const location = useLocation();
 
-  const queryParams = new URLSearchParams(location.search);
-
-  const reference_id = queryParams.get("reference_id");
-  const tax_status = queryParams.get("tax_status");
-  const holding_nature = queryParams.get("holding_nature");
-  const pan = queryParams.get("pan");
-  const holder = queryParams.get("holder");
+  const [searchParams] = useSearchParams();
+  const reference_id = searchParams.get("reference_id") ?? "";
+  const tax_status = searchParams.get("tax_status") ?? "";
+  const holding_nature = searchParams.get("holding_nature") ?? "";
+  const pan = searchParams.get("pan") ?? "";
+  const holder = searchParams.get("holder") as keyof uccDataResKeys;
 
   const [errors, setErrors] = useState<any>({});
 
@@ -33,6 +33,31 @@ const BankDetailForm = () => {
 
   const [confirmAccountNumber, setConfirmAccountNumber] = useState("");
   const [accountHidden, setAccountHidden] = useState(false);
+  const [holderName, setHolderName] = useState<string>("")
+
+  useEffect(() => {
+    if (reference_id) {
+      fetchUccData()
+      console.log(holderName)
+    }
+  }, [])
+
+  const fetchUccData = async () => {
+    try {
+      const response = await postRequest<uccDataRes>(endPoints.initiateUcc, { reference_id });
+      const data = response.data?.bank_details;
+      if (response.success && data) {
+        const holderData = response.data?.primary_user?.personal_details
+        setHolderName(response.data?.tax_status === 2 ? holderData?.guardian_name ?? "" : holderData?.full_name ?? "")
+        setBankDetailForm({
+          ...data
+        });
+        setConfirmAccountNumber(data.bank_account_number ?? "");
+      }
+    } catch (err) {
+      errorToast(err);
+    }
+  }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -136,6 +161,33 @@ const BankDetailForm = () => {
     }
   };
 
+  // const varifyBank = async () => {
+  // try {
+
+  // const reqBody = {
+  //   beneficiaryAccount: bankDetailForm?.bank_account_number ?? "",
+  //   beneficiaryIFSC: bankDetailForm?.bank_ifsc ?? "",
+  //   beneficiaryName: holderName
+  // }
+  // const res = await postRequest<varifyBankRes>(endPoints.verifyBank, reqBody)
+  // console.log("verify bank", res)
+  // if (res.data.nameMatch.toLocaleLowerCase() === "yes" && Number(res.data.nameMatchScore) === 1) {
+  //   setScore(Number(res.data.nameMatchScore))
+
+  // } else if (res.data.nameMatch.toLocaleLowerCase() === "no" && Number(res.data.nameMatchScore) >= 0.8) {
+  //   navigate("/add-verification-details", { state: { accountNumber, ifscCode, accountType } })
+
+  // } else {
+  //   errorToast(res.data.reason)
+  // }
+  // } catch (err) {
+  //   errorToast("Something went wrong")
+
+  // }
+
+
+  // }
+
   const handleSubmit = async () => {
     if (!validateForm()) return;
 
@@ -155,11 +207,9 @@ const BankDetailForm = () => {
       };
 
       await postRequestSimple(endPoints.tempSaveUcc, { data: payload });
-
       successToast("Bank details saved!");
-
       navigate(
-        `/nomination-details?reference_id=${reference_id}&tax_status=${tax_status}&holding_nature=${holding_nature}&pan=${pan}&holder=${holder}`
+        `/mandate-amount?reference_id=${reference_id}&tax_status=${tax_status}&holding_nature=${holding_nature}&pan=${pan}&holder=${holder}`
       );
     } catch (err) {
       errorToast(err);

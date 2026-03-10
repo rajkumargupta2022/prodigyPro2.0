@@ -24,7 +24,7 @@ const shortAmount = {
 }
 
 const CreateMandate: React.FC<investmetProps> = ({ show, setShow, accountNumber, ifscCode, accountType }) => {
-   const navigate = useNavigate()
+  const navigate = useNavigate()
   const [amount, setAmount] = useState<number>(shortAmount.minValue)
   const [amountError, setAmountError] = useState<string>("")
 
@@ -73,7 +73,7 @@ const CreateMandate: React.FC<investmetProps> = ({ show, setShow, accountNumber,
       if (res.success) {
         successToast("Mandate created successfully! You'll receive a confirmation link on your registered mail id.")
         setShow(false)
-        navigate("/bank-and-mandate-list", { state: accountNumber } )
+        navigate("/bank-and-mandate-list", { state: accountNumber })
       }
     } catch (err) {
       errorToast(err)
@@ -93,18 +93,7 @@ const CreateMandate: React.FC<investmetProps> = ({ show, setShow, accountNumber,
         <Modal.Body className="modal-bg">
           <div className="borderColor p-3 rounded-4 bg-white">
             <span className="sub-heading modal-heading">Mandate Details</span>
-            {/*  <p className="form-label mt-2">MODE</p>
-          <div className="row">
-              <div>
-                <button type="button" className="btn shortcutValue">
-                  Debit Card
-                </button>
 
-                <button type="button" className="btn shortcutValue mx-1">
-                  Net Banking
-                </button>
-              </div>
-            </div> */}
             <form>
               <div className="form-group mt-3">
                 <label htmlFor="amountFor" className="fs12px">
