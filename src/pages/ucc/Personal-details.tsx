@@ -152,7 +152,6 @@ const PersonalDetails = () => {
         ,
       };
       await postRequest(endPoints.tempSaveUcc, { data: payload });
-      successToast("Personal details saved!");
       navigate(
         `/declaration?reference_id=${reference_id}&tax_status=${tax_status}&holding_nature=${holding_nature}&pan=${pan}&holder=${holder}`
       );

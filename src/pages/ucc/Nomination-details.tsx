@@ -8,7 +8,8 @@ import { useEffect, useState } from "react";
 import { endPoints } from "../../services/utils/urls";
 import { postRequest } from "../../services/Api/HandleApi";
 import { errorToast } from "../../services/utils/toast";
-import {  nomineeDetailForm, pincodeDetailsRes } from "../data-interfaces/ucc";
+import { nomineeDetailForm, pincodeDetailsRes, uccDataRes, uccDataResKeys } from "../data-interfaces/ucc";
+import { formatDateToUTCString } from "../../services/dates/dateFormater";
 
 const NominationDetails = () => {
   const navigate = useNavigate();
@@ -16,8 +17,10 @@ const NominationDetails = () => {
   const reference_id = searchParams.get("reference_id") ?? "";
   const tax_status = searchParams.get("tax_status") ?? "";
   const holding_nature = searchParams.get("holding_nature") ?? "";
-
-  const [form, setForm] = useState<nomineeDetailForm>({
+  const pan = searchParams.get("pan") ?? "";
+  const holder = searchParams.get("holder") as keyof uccDataResKeys;
+  const [nomineeList, setNomineeList] = useState<nomineeDetailForm[]>([]);
+  const formKeys = {
     nominee_name: "",
     nominee_email: "",
     nominee_mobile: "",
@@ -35,26 +38,27 @@ const NominationDetails = () => {
       state: "",
       country: "",
     }
-  });
+  } as nomineeDetailForm;
+  const [form, setForm] = useState<nomineeDetailForm>(formKeys);
 
   const [errors, setErrors] = useState<any>({});
 
   useEffect(() => {
     if (reference_id) {
-      // fetchUccData()
+      fetchUccData()
     }
   }, [])
 
-  // const fetchUccData = async () => {
-  //   try {
-  //     const response = await postRequest<uccDataRes>(endPoints.initiateUcc, { reference_id });
-  //     if (response.success && response.data?.primary_user?.personal_details) {
-
-  //     }
-  //   } catch (err) {
-  //     errorToast(err);
-  //   }
-  // }
+  const fetchUccData = async () => {
+    try {
+      const response = await postRequest<uccDataRes>(endPoints.initiateUcc, { reference_id });
+      if (response.success && (response.data?.nominees?.length ?? 0 > 0)) {
+        setNomineeList(response.data?.nominees ?? []);
+      }
+    } catch (err) {
+      errorToast(err);
+    }
+  }
 
   const pinCodeDetails = async (pincode: string) => {
     if (pincode.length === 6) {
@@ -161,25 +165,42 @@ const NominationDetails = () => {
       setErrors(newErrors);
       return;
     }
+    const totalAllocation = getTotalAllocation();
+    if (totalAllocation > 100) {
+      errorToast("Total allocation percentage cannot exceed 100%");
+      return;
+    }
+    const addedNominee = nomineeList.length > 0 ? [...nomineeList] : [];
     const payloadNominee = {
       ...form,
       nominee_guardian_name: form.is_nominee_minor ? form.nominee_guardian_name : null,
       nominee_guardian_pan: form.is_nominee_minor ? form.nominee_guardian_pan : null,
       nominee_pan: !form.is_nominee_minor ? form.nominee_pan : null,
+      nominee_dob:formatDateToUTCString(form.nominee_dob??"") 
     };
 
     const payload = {
       reference_id,
       tax_status,
       holding_nature,
-      nominees: [payloadNominee]
+      nominees: [...addedNominee, payloadNominee]
     };
     await postRequest(endPoints.tempSaveUcc, { data: payload });
-
-    //  navigate(
-    //    `/declaration?reference_id=${reference_id}&tax_status=${tax_status}&holding_nature=${holding_nature}&pan=${pan}&holder=${holder}`
-    //  );
+    setForm(formKeys);
+    fetchUccData()
   };
+  const getTotalAllocation = (): number => {
+    const total = nomineeList.reduce((sum, nominee) => sum + (nominee.nominee_allocation ?? 0), 0);
+    return total + (form.nominee_allocation ?? 0);
+  }
+  const goOnNomineeList = () => {
+    const totalAllocation = getTotalAllocation();
+    if (totalAllocation >= 100) {
+      navigate(
+        `/nomination-list?reference_id=${reference_id}&tax_status=${tax_status}&holding_nature=${holding_nature}&pan=${pan}&holder=${holder}`
+      );
+    }
+  }
 
 
   return (
@@ -315,13 +336,14 @@ const NominationDetails = () => {
 
             <div className="row  mb-3">
               <div className="col-md-6">
-                <button type="button" className="btn btn-primary" onClick={handleAddNominee}> Add Nominee</button>
+                <button type="button" className="customButton px-2" onClick={handleAddNominee}>+ Add Nominee</button>
+                      
               </div>
             </div>
           </form>
         </div>
       </div>
-      <NextBar onSaveContinue={() => { navigate('/proof-identity') }} />
+      <NextBar onSaveContinue={goOnNomineeList} />
     </>
   );
 };

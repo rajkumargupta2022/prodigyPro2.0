@@ -207,7 +207,6 @@ const BankDetailForm = () => {
       };
 
       await postRequestSimple(endPoints.tempSaveUcc, { data: payload });
-      successToast("Bank details saved!");
       navigate(
         `/mandate-amount?reference_id=${reference_id}&tax_status=${tax_status}&holding_nature=${holding_nature}&pan=${pan}&holder=${holder}`
       );

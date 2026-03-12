@@ -8,7 +8,7 @@ import { IncomeRangeEnum, OccupationEnum, WealthSourceEnum } from "../data/ucc-d
 import { fatchDeclarationsForm, uccDataRes, uccDataResKeys, userDataObj } from "../data-interfaces/ucc";
 import { postRequest, postRequestSimple } from "../../services/Api/HandleApi";
 import { endPoints } from "../../services/utils/urls";
-import { errorToast, successToast } from "../../services/utils/toast";
+import { errorToast } from "../../services/utils/toast";
 
 const Declaration = () => {
   const navigate = useNavigate();
@@ -24,8 +24,9 @@ const Declaration = () => {
     wealth_source: undefined,
     income_range: undefined,
     resident_status: 1, // default Indian
-    no_politically_exposed: false,
-    confirm_resident_indian: false,
+    no_politically_exposed: true,
+    confirm_resident_indian: true,
+    place_of_birth: "",
   });
 
   const [errors, setErrors] = useState<Partial<Record<keyof fatchDeclarationsForm, string>>>({});
@@ -35,7 +36,10 @@ const Declaration = () => {
     if (type === "checkbox") {
       const checked = (e.target as HTMLInputElement).checked;
       setForm((prev) => ({ ...prev, [name]: checked }));
-    } else {
+    } else if(name === "place_of_birth") {
+      setForm((prev) => ({ ...prev, [name]: value !== "" ? value : "" }));
+    }
+    else {
       setForm((prev) => ({ ...prev, [name]: value !== "" ? Number(value) : undefined }));
     }
     setErrors((prev) => ({ ...prev, [name]: "" }));
@@ -49,6 +53,7 @@ const Declaration = () => {
   const validate = (): boolean => {
     const newErrors: Partial<Record<keyof fatchDeclarationsForm, string>> = {};
     if (!form.occupation) newErrors.occupation = "Occupation is required.";
+    if (!form.place_of_birth) newErrors.place_of_birth = "Place of birth is required.";
     if (!form.wealth_source) newErrors.wealth_source = "Source of income is required.";
     if (!form.income_range) newErrors.income_range = "Please select an income range.";
     if (!form.no_politically_exposed)
@@ -97,11 +102,11 @@ const Declaration = () => {
             resident_status: form.resident_status,
             no_politically_exposed: form.no_politically_exposed,
             confirm_resident_indian: form.confirm_resident_indian,
+            place_of_birth: form.place_of_birth,
           },
         },
       };
       await postRequestSimple(endPoints.tempSaveUcc, { data: payload });
-      successToast("Declaration details saved!");
       navigate(
         `/address-details?reference_id=${reference_id}&tax_status=${tax_status}&holding_nature=${holding_nature}&pan=${pan}&holder=${holder}`
       );
@@ -122,6 +127,13 @@ const Declaration = () => {
 
             {/* Occupation & Source of Income */}
             <div className="row mb-3">
+                 <div className="col-md-6">
+                <label className="form-label fw-light text-secondary">
+                  PLACE OF BIRTH
+                </label>
+                <input type="text" name="place_of_birth" value={form.place_of_birth} onChange={handleChange} className={`form-control ${errors.place_of_birth ? 'is-invalid' : ''}`} />
+                {errors.place_of_birth && <div className="invalid-feedback">{errors.place_of_birth}</div>}
+              </div>
               <div className="col-md-6">
                 <label className="form-label fs12px">OCCUPATION</label>
                 <select

@@ -126,7 +126,6 @@ const AddressDetails = () => {
         ,
       };
       await postRequest(endPoints.tempSaveUcc, { data: payload });
-      successToast("Personal details saved!");
       if (holding_nature == "AS" && holder === "third_user") {
         navigate(
           `/nomination-details?reference_id=${reference_id}&tax_status=${tax_status}&holding_nature=${holding_nature}&pan=${pan}&holder=${holder}`

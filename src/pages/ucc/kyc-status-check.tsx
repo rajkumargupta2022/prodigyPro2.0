@@ -8,6 +8,12 @@ import { endPoints } from "../../services/utils/urls";
 import { initiateKycResponse, kycStatusResponse } from "../data-interfaces/kyc";
 import { fetchAdminUser } from "../../services/user/adminUser";
 import { uccDataRes, uccDataResKeys } from "../data-interfaces/ucc";
+// import KycStatusMsg from "./Kyc-status-msg";
+// import correct from "../../assets/img/correct.png";
+// import underReview from "../../assets/img/icons/under-review.svg";
+// import submit from "../../assets/img/icons/submit.svg";
+// import errorImg from "../../assets/img/icons/failed-icon.png";
+
 
 type HolderStatus = "pending" | "active" | "completed";
 
@@ -21,9 +27,33 @@ interface Holder {
   kycSuccess: boolean;
   isLoader: boolean;
 }
-
+// interface kycMsgObj {
+//   firstColor: string;
+//   secondColor: string;
+//   heading: string;
+//   description_1?: string;
+//   description_2?: string;
+//   name?: string;
+//   pan?: string;
+//   taxStatus?: string;
+//   image: string;
+//   url?: string;
+//   footerMsg?: string
+//   btnName?: string
+// }
 const KycStatusCheck = () => {
   const navigate = useNavigate();
+
+  // const msgObj ={
+  //     firstColor: string;
+  // secondColor: string;
+  // heading:string;
+  // description_1?:string;
+  // description_2?:string;
+  // name?:string;
+  // pan?:string;
+  // taxStatus?:string;
+  // }
 
   const [searchParams] = useSearchParams();
   const reference_id = searchParams.get("reference_id") ?? "";
@@ -31,6 +61,7 @@ const KycStatusCheck = () => {
   const holding_nature = searchParams.get("holding_nature") ?? "";
   const pan = searchParams.get("pan") ?? "";
   const holder = searchParams.get("holder") as keyof uccDataResKeys;
+  const [kycTransactionId, setKycTransactionId] = useState<string>("")
 
   const active = "active";
   const pending = "pending";
@@ -111,6 +142,13 @@ const KycStatusCheck = () => {
 
     updateHolder(index, { isLoader: true, kycMsg: "", kycSuccess: false });
     try {
+      updateHolder(index, {
+        isKycCompliant: false,
+        kycMsg: "Sorry! 😔 You are not KYC Compliant",
+        kycSuccess: false,
+        isLoader: false,
+      });
+      return
       const response = await getRequest<kycStatusResponse>(
         `${endPoints.checkKycStatus}?pan_number=${pan}`
       );
@@ -172,7 +210,7 @@ const KycStatusCheck = () => {
         const res = await postRequestSimple<uccDataRes>(endPoints.initiateUcc, reqBody);
         if (res.success && res.data?.reference_id) {
           navigate(
-            `/personal-details?reference_id=${res.data.reference_id}&tax_status=${tax_status}&holding_nature=${holding_nature}&pan=${pan}&holder=${holder.holder}`
+            `/personal-details?reference_id=${res.data.reference_id}&tax_status=${tax_status}&holding_nature=${holding_nature}&pan=${pan}&holder=${holder.holder}&transactionId=${kycTransactionId}`
           );
         }
       } catch (err) {
@@ -185,6 +223,7 @@ const KycStatusCheck = () => {
           `${endPoints.initiateKyc}?pan_number=${pan}`
         );
         if (response.data.success) {
+          setKycTransactionId(response.data.transactionId)
           const hyperKycConfig = new window.HyperKycConfig(
             response.data.access_token,
             response.data.workflow_id,
@@ -201,6 +240,119 @@ const KycStatusCheck = () => {
           hyperKycConfig.setDefaultLangCode("en");
           await window.HyperKYCModule.launch(hyperKycConfig, (event: any) => {
             console.log("HyperKYC Event:", event);
+            switch (event.status) {
+              case "user_cancelled":
+                console.log("User cancelled the workflow");
+
+                // setShow(!show)
+                // setKycMsg({
+
+                //   firstColor: "#bc415f",
+                //   secondColor: "#a2547d",
+                //   heading: "You are not KYC compliant",
+                //   description_1: "You have cancelled the KYC process.",
+                //   description_2: "Please complete the KYC process to proceed.",
+                //   name: "",
+                //   pan: "",
+                //   taxStatus: "",
+                //   image: errorImg,
+                //   url: "",
+                //   footerMsg: "",
+                //   btnName: "Start KYC Verification"
+
+                // })
+                break;
+              case "error":
+                // setShow(!show)
+                // setKycMsg({
+
+                //   firstColor: "#bc415f",
+                //   secondColor: "#a2547d",
+                //   heading: "Something went wrong!",
+                //   description_1: "There appears to be a temporary technical problem.",
+                //   description_2: "Please re-submit your KYC. If the issue continues, you may contact our customer support team for assistance.",
+                //   name: "",
+                //   pan: "",
+                //   taxStatus: "",
+                //   image: errorImg,
+                //   url: "",
+                //   footerMsg: "Please ensure the details entered match your official documents.",
+                //   btnName: "Start KYC Verification"
+                // })
+                break;
+              case "auto_approved":
+                // setShow(!show)
+                // setKycMsg({
+
+                //   firstColor: "#118e72",
+                //   secondColor: "#10844e",
+                //   heading: "Something went wrong!",
+                //   description_1: "There appears to be a temporary technical problem.",
+                //   description_2: "Please re-submit your KYC. If the issue continues, you may contact our customer support team for assistance.",
+                //   name: "",
+                //   pan: "",
+                //   taxStatus: "",
+                //   image: correct,
+                //   url: `/personal-details?reference_id=${res.data.reference_id}&tax_status=${tax_status}&holding_nature=${holding_nature}&pan=${pan}&holder=${holder.holder}`,
+                //   footerMsg: "Please ensure the details entered match your official documents.",
+                //   btnName: "Start Your Investment Journey!"
+                // })
+                break;
+              case "auto_declined":
+                // setShow(!show)
+                // setKycMsg({
+
+                //   firstColor: "#bc415f",
+                //   secondColor: "#a2547d",
+                //   heading: "KYC Application Rejected",
+                //   description_1: "There appears to be an issue with the information you submitted.",
+                //   description_2: "Please re-submit your KYC. If the issue continues, you may contact our customer support team for assistance.",
+                //   name: "",
+                //   pan: "",
+                //   taxStatus: "",
+                //   image: errorImg,
+                //   url: "",
+                //   footerMsg: "Please ensure the details entered match your official documents.",
+                //   btnName: "Retry Verification"
+                // })
+                break;
+              case "needs_review":
+                // setShow(!show)
+                // setKycMsg({
+
+                //   firstColor: "#b78b0f",
+                //   secondColor: "#d3a01c",
+                //   heading: "Your KYC is Under Review",
+                //   description_1: "Your KYC details have been received and are currently being reviewed by our internal team",
+                //   description_2: "Meanwhile, you can continue with the Investor account opening process.",
+                //   name: "",
+                //   pan: "",
+                //   taxStatus: "",
+                //   image: underReview,
+                //   url: "",
+                //   footerMsg: "Our team will notify you if any additional information is required.",
+                //   btnName: "Start Your Investment Journey!"
+                // })
+                break;
+              default:
+                // setShow(!show)
+                // setKycMsg({
+
+                //   firstColor: "#bc415f",
+                //   secondColor: "#a2547d",
+                //   heading: "Something went wrong!",
+                //   description_1: "There appears to be a temporary technical problem.",
+                //   description_2: "Please re-submit your KYC. If the issue continues, you may contact our customer support team for assistance.",
+                //   name: "",
+                //   pan: "",
+                //   taxStatus: "",
+                //   image: correct,
+                //   url: "",
+                //   footerMsg: "Please ensure the details entered match your official documents."
+                // })
+                break;
+            }
+
           });
         }
       } catch (err) {
@@ -210,6 +362,11 @@ const KycStatusCheck = () => {
     }
   };
 
+  const skipHolder = () => {
+    navigate(
+      `/nomination-details?reference_id=${reference_id}&tax_status=${tax_status}&holding_nature=${holding_nature}&pan=${pan}&holder=${holder}`
+    );
+  }
 
   // Green filled circle with white tick
   const CompletedIcon = () => (
@@ -259,6 +416,7 @@ const KycStatusCheck = () => {
 
   return (
     <div className="container-fluid">
+      {/* <KycStatusMsg show={show} setShow={setShow} kycMsg={kycMsg} /> */}
       <div className="row login_hight_fixed">
         <LoginLeftImage />
         <div className="col-12 col-md-6 align-self-center">
@@ -354,15 +512,7 @@ const KycStatusCheck = () => {
                         <div style={{ marginTop: "10px" }}>
                           {/* PAN Label */}
                           <label
-                            style={{
-                              fontSize: "10px",
-                              fontWeight: "700",
-                              letterSpacing: "0.08em",
-                              color: "#9ca3af",
-                              textTransform: "uppercase",
-                              display: "block",
-                              marginBottom: "6px",
-                            }}
+                            className="panLabel"
                           >
                             PAN NUMBER
                           </label>
@@ -372,19 +522,8 @@ const KycStatusCheck = () => {
                             type="text"
                             value={holder.pan}
                             onChange={(e) => handlePanChange(index, e.target.value)}
-                            style={{
-                              width: "100%",
-                              border: "1px solid #d1d5db",
-                              borderRadius: "6px",
-                              outline: "none",
-                              fontSize: "15px",
-                              padding: "10px 12px",
-                              marginBottom: "6px",
-                              background: "#fff",
-                              color: "#111827",
-                              boxSizing: "border-box",
-                            }}
-                            placeholder="DFPOL7895W"
+                            className="pan-input"
+                            placeholder=""
                             maxLength={10}
                           />
 
@@ -418,7 +557,7 @@ const KycStatusCheck = () => {
                               color: "#fff",
                               border: "none",
                               borderRadius: "50px",
-                              padding: "9px 30px",
+                              padding: "6px 22px",
                               fontWeight: "500",
                               fontSize: "14px",
                               cursor:
@@ -430,6 +569,16 @@ const KycStatusCheck = () => {
                           >
                             {holder.isLoader ? "Checking..." : "Proceed"}
                           </button>
+                          {holder.holder === "third_user" && (
+
+                            <button
+                              type="button"
+                              className="skipBtn mx-2"
+                              onClick={skipHolder}
+
+                            >
+                              Skip
+                            </button>)}
                         </div>
                       )}
                     </div>

@@ -120,6 +120,40 @@ span{
   height: 33px;
   font-size: 12px;
 }
+.skipBtn {
+  color: #011EFE;
+  background-color: #FFF;
+  border-radius: 50px;
+  border: 1px solid #D0DBEA;
+  padding: 6px 22px;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  letter-spacing: 0.01em;
+}
+.panLabel{
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #9ca3af;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 6px;
+
+}
+.pan-input{
+  width: 100%;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  outline: none;
+  font-size: 15px;
+  padding: 10px 12px;
+  margin-bottom: 6px;
+  background: #fff;
+  color: #111827;
+  box-sizing: border-box;
+
+}
 
 .customCancelButton:hover {
   color: #011EFE !important;
@@ -172,7 +206,7 @@ span{
 .custom-checkbox {
   width: 20px;
   height: 20px;
-  border: 2px solid #011efe;
+  border: 2px solid #D0DBEA;
   /* Bootstrap primary color */
   transition: all 0.2s ease-in-out;
   display: inline-block;

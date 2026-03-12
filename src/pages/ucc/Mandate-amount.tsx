@@ -85,9 +85,8 @@ const MandateAmount = () => {
       };
 
       await postRequestSimple(endPoints.tempSaveUcc, { data: payload });
-      successToast("Data updated!");
 
-      if (holding_nature == "AS" && holder === "third_user") {
+      if (holding_nature == "AS" && holder === "third_user" || holding_nature === "SI") {
         navigate(
           `/nomination-details?reference_id=${reference_id}&tax_status=${tax_status}&holding_nature=${holding_nature}&pan=${pan}&holder=${holder}`
         );

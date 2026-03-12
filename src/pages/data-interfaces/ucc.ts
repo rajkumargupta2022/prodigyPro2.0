@@ -28,9 +28,9 @@ export interface fatchDeclarationsForm {
   occupation?: number;
   resident_status?: number;
   income_range?: number;
-  place_of_birth?: string;
-  no_politically_exposed?: boolean;
-  confirm_resident_indian?: boolean;
+  place_of_birth: string;
+  no_politically_exposed: boolean;
+  confirm_resident_indian: boolean;
 }
 
 export interface bankDetailForm {
