@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { bankDetailForm, uccDataRes, uccDataResKeys } from "../data-interfaces/ucc";
 import { postRequest, postRequestSimple } from "../../services/Api/HandleApi";
 import { endPoints, imageUrl } from "../../services/utils/urls";
-import { errorToast, successToast } from "../../services/utils/toast";
+import { errorToast } from "../../services/utils/toast";
 import { CurrencyRupee } from "react-bootstrap-icons";
 
 const MandateAmount = () => {

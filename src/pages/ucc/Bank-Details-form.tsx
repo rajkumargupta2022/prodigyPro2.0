@@ -4,9 +4,9 @@ import NextBar from "../../components/Next-bar";
 import TrackBar from "./Track-bar";
 import { bankDetailForm, bankNameRes, uccDataRes, uccDataResKeys } from "../data-interfaces/ucc";
 import { useEffect, useState } from "react";
-import { getRequestSimple, postRequest, postRequestSimple } from "../../services/Api/HandleApi";
+import { getRequest, getRequestSimple, postRequest, postRequestSimple } from "../../services/Api/HandleApi";
 import { endPoints } from "../../services/utils/urls";
-import { errorToast, successToast } from "../../services/utils/toast";
+import { errorToast } from "../../services/utils/toast";
 // import { varifyBankRes } from "../data-interfaces/bank-and-mandate";
 
 const BankDetailForm = () => {
@@ -36,12 +36,30 @@ const BankDetailForm = () => {
   const [holderName, setHolderName] = useState<string>("")
 
   useEffect(() => {
-    if (reference_id) {
-      fetchUccData()
+    if (pan) {
       console.log(holderName)
+      fetchKycData(pan)
+    } else if (reference_id) {
+      fetchUccData()
     }
   }, [])
 
+  const fetchKycData = async (pan: string) => {
+    try {
+      const response = await getRequest<uccDataRes>(endPoints.getKycData + "?pan=" + pan);
+      const data = response.data?.bank_details;
+      if (response.success && data) {
+        const holderData = response.data?.primary_user?.personal_details
+        setHolderName(response.data?.tax_status === 2 ? holderData?.guardian_name ?? "" : holderData?.full_name ?? "")
+        setBankDetailForm({
+          ...data
+        });
+        setConfirmAccountNumber(data.bank_account_number ?? "");
+      }
+    } catch (err) {
+      errorToast(err);
+    }
+  }
   const fetchUccData = async () => {
     try {
       const response = await postRequest<uccDataRes>(endPoints.initiateUcc, { reference_id });

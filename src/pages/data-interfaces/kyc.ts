@@ -19,3 +19,14 @@ export interface initiateKycKeys {
   transactionId: string;
   app_id: string;
 }
+
+export interface fetchKycDataRes {
+  msg: string;
+  success: boolean;
+  data: fetchKycDataKeys;
+}
+export interface fetchKycDataKeys {
+  pan_number: string;
+  kyc_status: boolean;
+  name: string;
+}

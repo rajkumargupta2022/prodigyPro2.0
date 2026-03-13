@@ -1,17 +1,18 @@
 import NavBar from "../../components/Navbar";
 import NextBar from "../../components/Next-bar";
-import { Card } from "react-bootstrap";
-import { ThreeDotsVertical } from "react-bootstrap-icons";
+import { Card, Dropdown } from "react-bootstrap";
+import { Pencil, ThreeDotsVertical, Trash } from "react-bootstrap-icons";
 import NomineeModal from "../../components/Nominee-Modal";
 import { nomineeDetailForm, uccDataRes, uccDataResKeys } from "../data-interfaces/ucc";
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { postRequest } from "../../services/Api/HandleApi";
 import { endPoints } from "../../services/utils/urls";
-import { errorToast } from "../../services/utils/toast";
+import { errorToast, successToast } from "../../services/utils/toast";
 import TrackBar from "./Track-bar";
 
 const NominationList = () => {
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const reference_id = searchParams.get("reference_id") ?? "";
   const tax_status = searchParams.get("tax_status") ?? "";
@@ -29,17 +30,45 @@ const NominationList = () => {
   const fetchUccData = async () => {
     try {
       const response = await postRequest<uccDataRes>(endPoints.initiateUcc, { reference_id });
-      if (response.success && (response.data?.nominees?.length ?? 0 > 0)) {
+      if (response.success && (response.data?.nominees && response.data?.nominees?.length > 0)) {
         setNomineeList(response.data?.nominees ?? []);
       }
     } catch (err) {
       errorToast(err);
     }
   }
+
+  const handleDelete = async (index: number) => {
+    const updatedList = nomineeList.filter((_, i) => i !== index);
+    try {
+      const payload = {
+        reference_id,
+        tax_status,
+        holding_nature,
+        nominees: updatedList
+      };
+      const res: any = await postRequest(endPoints.tempSaveUcc, { data: payload });
+      if (res.success) {
+        setNomineeList(updatedList);
+        successToast("Nominee removed successfully");
+      }
+    } catch (err) {
+      errorToast(err);
+    }
+  };
+
+  const handleEdit = (index: number) => {
+    navigate(`/nomination-details?reference_id=${reference_id}&tax_status=${tax_status}&holding_nature=${holding_nature}&pan=${pan}&holder=${holder}&edit_index=${index}`);
+  };
+
+  const handleAddNew = () => {
+    navigate(`/nomination-details?reference_id=${reference_id}&tax_status=${tax_status}&holding_nature=${holding_nature}&pan=${pan}&holder=${holder}`);
+  };
+
   return (
     <>
       <NavBar />
-      <NomineeModal toggle={true} />
+      <NomineeModal toggle={false} />
       <TrackBar />
       <div className="container pt-5">
         <div className="personal_form_container pt-4">
@@ -47,7 +76,7 @@ const NominationList = () => {
           <form className="bg-white px-5 py-4 rounded form_shadow">
 
             {nomineeList.length > 0 ? nomineeList.map((nominee: nomineeDetailForm, index: number) =>
-              <Card className="d-flex align-items-center p-3 border-0 shadow-sm rounded-3 mt-2">
+              <Card key={index} className="d-flex align-items-center p-3 border-0 shadow-sm rounded-3 mt-2">
                 <div className="d-flex align-items-center w-100">
                   {/* Profile Circle */}
                   <div
@@ -71,18 +100,39 @@ const NominationList = () => {
                     </small>
                   </div>
 
-                  {/* Menu Icon */}
-                  <ThreeDotsVertical size={20} className="text-muted" />
+                  {/* Dropdown Menu */}
+                  <Dropdown align="end">
+                    <Dropdown.Toggle as="div" className="crPointer shadow-none border-0 p-0 m-0 no-caret">
+                      <ThreeDotsVertical size={20} className="text-muted" />
+                    </Dropdown.Toggle>
+
+                    <Dropdown.Menu className="border-0 shadow-sm">
+                      <Dropdown.Item onClick={() => handleEdit(index)} className="d-flex align-items-center gap-2">
+                        <Pencil size={14} className="text-primary" /> Edit
+                      </Dropdown.Item>
+                      <Dropdown.Item onClick={() => handleDelete(index)} className="d-flex align-items-center gap-2 text-danger">
+                        <Trash size={14} /> Delete
+                      </Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
                 </div>
               </Card>
-            ) : "No nominee added yet"}
+            ) : <p className="text-muted mb-0">No nominee added yet</p>}
 
-            <div className="logoBlueColor mt-2 crPointer" >+ Add New</div>
+            <div className="logoBlueColor mt-4 crPointer fw-bold d-inline-block" onClick={handleAddNew}>
+              + Add New Nominee
+            </div>
 
           </form>
         </div>
       </div>
-      <NextBar onSaveContinue={() => { }} />
+      <NextBar onSaveContinue={() => {
+        if (nomineeList.reduce((sum, n) => sum + (Number(n.nominee_allocation) || 0), 0) >= 100) {
+          navigate(`/bank-detail?reference_id=${reference_id}&tax_status=${tax_status}&holding_nature=${holding_nature}&pan=${pan}&holder=${holder}`);
+        } else {
+          errorToast("Total allocation must be 100% to proceed.");
+        }
+      }} />
     </>
   );
 };

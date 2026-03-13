@@ -8,8 +8,8 @@ import { generateOptions } from "../re-used-html/select-box";
 import { StatevaluesEnum } from "../data/ucc-data";
 import { addressDetailForm, pincodeDetailsRes, uccDataRes, uccDataResKeys, userDataObj } from "../data-interfaces/ucc";
 import { endPoints } from "../../services/utils/urls";
-import { postRequest } from "../../services/Api/HandleApi";
-import { errorToast, successToast } from "../../services/utils/toast";
+import { getRequest, postRequest } from "../../services/Api/HandleApi";
+import { errorToast } from "../../services/utils/toast";
 
 
 const AddressDetails = () => {
@@ -25,10 +25,28 @@ const AddressDetails = () => {
   const [errors, setErrors] = useState<Partial<addressDetailForm>>({});
 
   useEffect(() => {
-    if (reference_id) {
+    if (pan) {
+      fetchKycData(pan)
+    } else if (reference_id) {
       fetchUccData()
     }
   }, [])
+
+  const fetchKycData = async (pan: string) => {
+    try {
+      const response = await getRequest<uccDataRes>(endPoints.getKycData + "?pan=" + pan);
+      const profile = response.data[holder] as userDataObj;
+      const address_details = profile.address_details;
+
+      if (response.success && address_details) {
+        setForm({
+          ...address_details
+        });
+      }
+    } catch (err) {
+      errorToast(err);
+    }
+  }
 
   const fetchUccData = async () => {
     try {

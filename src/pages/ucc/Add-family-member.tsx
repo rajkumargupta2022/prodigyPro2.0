@@ -86,6 +86,9 @@ function AddFamilyMember() {
   const handleTaxStatus = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value
     setTaxStatus(value)
+    if (value === "2" && holdingNature === "AS") {
+      setHoldingNature("")
+    }
   }
   const proceddForKyc = async () => {
     if (!holdingNature) {
@@ -165,8 +168,8 @@ function AddFamilyMember() {
                 >
                   TAX STATUS
                 </label>
-                <select className="form-control" id="exampleFormControlSelect1" onChange={handleTaxStatus}>
-                  <option>Select...</option>
+                <select className="form-control" id="exampleFormControlSelect1" value={taxStatus} onChange={handleTaxStatus}>
+                  <option value="">Select...</option>
                   {generateOptions(TaxStatusEnum, "value", "label")}
                 </select>
               </div>
@@ -178,9 +181,13 @@ function AddFamilyMember() {
                 >
                   HOLDING NATURE
                 </label>
-                <select className="form-control" id="exampleFormControlSelect1" onChange={handleHolding}>
-                  <option>Select...</option>
-                  {generateOptions(HoldingNatureEnum, "value", "label")}
+                <select className="form-control" id="exampleFormControlSelect1" value={holdingNature} onChange={handleHolding}>
+                  <option value="">Select...</option>
+                  {HoldingNatureEnum.map((item) => (
+                    <option key={item.value} value={item.value} disabled={taxStatus === "2" && item.value === "AS"}>
+                      {item.label}
+                    </option>
+                  ))}
                 </select>
               </div>
 

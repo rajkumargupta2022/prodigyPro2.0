@@ -6,7 +6,7 @@ import TrackBar from "./Track-bar";
 import { generateOptions } from "../re-used-html/select-box";
 import { IncomeRangeEnum, OccupationEnum, WealthSourceEnum } from "../data/ucc-data";
 import { fatchDeclarationsForm, uccDataRes, uccDataResKeys, userDataObj } from "../data-interfaces/ucc";
-import { postRequest, postRequestSimple } from "../../services/Api/HandleApi";
+import { getRequest, postRequest, postRequestSimple } from "../../services/Api/HandleApi";
 import { endPoints } from "../../services/utils/urls";
 import { errorToast } from "../../services/utils/toast";
 
@@ -36,7 +36,7 @@ const Declaration = () => {
     if (type === "checkbox") {
       const checked = (e.target as HTMLInputElement).checked;
       setForm((prev) => ({ ...prev, [name]: checked }));
-    } else if(name === "place_of_birth") {
+    } else if (name === "place_of_birth") {
       setForm((prev) => ({ ...prev, [name]: value !== "" ? value : "" }));
     }
     else {
@@ -65,7 +65,9 @@ const Declaration = () => {
   };
 
   useEffect(() => {
-    if (reference_id) {
+    if (pan) {
+      fetchKycData(pan)
+    } else if (reference_id) {
       fetchUccData()
     }
   }, [])
@@ -73,6 +75,21 @@ const Declaration = () => {
   const fetchUccData = async () => {
     try {
       const response = await postRequest<uccDataRes>(endPoints.initiateUcc, { reference_id });
+      const profile = response.data[holder] as userDataObj;
+      const fatca_declarations = profile.fatca_declarations;
+
+      if (response.success && fatca_declarations) {
+        setForm({
+          ...fatca_declarations
+        });
+      }
+    } catch (err) {
+      errorToast(err);
+    }
+  }
+  const fetchKycData = async (pan: string) => {
+    try {
+      const response = await getRequest<uccDataRes>(endPoints.getKycData + "?pan=" + pan);
       const profile = response.data[holder] as userDataObj;
       const fatca_declarations = profile.fatca_declarations;
 
@@ -127,7 +144,7 @@ const Declaration = () => {
 
             {/* Occupation & Source of Income */}
             <div className="row mb-3">
-                 <div className="col-md-6">
+              <div className="col-md-6">
                 <label className="form-label fw-light text-secondary">
                   PLACE OF BIRTH
                 </label>

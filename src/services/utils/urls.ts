@@ -158,6 +158,7 @@ export enum endPoints {
   ========================== */
   checkKycStatus = "kyc/status",
   initiateKyc = "kyc/initiate",
+  fetchData = "kyc/fetch-data",
 
 
    /* =========================

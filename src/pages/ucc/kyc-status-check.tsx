@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { errorToast } from "../../services/utils/toast";
 import { getRequest, postRequest, postRequestSimple } from "../../services/Api/HandleApi";
 import { endPoints } from "../../services/utils/urls";
-import { initiateKycResponse, kycStatusResponse } from "../data-interfaces/kyc";
+import { fetchKycDataRes, initiateKycResponse, kycStatusResponse } from "../data-interfaces/kyc";
 import { fetchAdminUser } from "../../services/user/adminUser";
 import { uccDataRes, uccDataResKeys } from "../data-interfaces/ucc";
 // import KycStatusMsg from "./Kyc-status-msg";
@@ -25,7 +25,9 @@ interface Holder {
   isKycCompliant: boolean | null; // null = not checked yet
   kycMsg: string;
   kycSuccess: boolean;
+  description?: string;
   isLoader: boolean;
+  btnName?: string;
 }
 // interface kycMsgObj {
 //   firstColor: string;
@@ -67,15 +69,17 @@ const KycStatusCheck = () => {
   const pending = "pending";
   const completed = "completed";
   const [holders, setHolders] = useState<Holder[]>([
-    { holder: "primary_user", label: "Primary Holder", status: active, pan: "", isKycCompliant: null, kycMsg: "", kycSuccess: false, isLoader: false },
-    { holder: "secondary_user", label: "Second Holder", status: pending, pan: "", isKycCompliant: null, kycMsg: "", kycSuccess: false, isLoader: false },
-    { holder: "third_user", label: "Third Holder", status: pending, pan: "", isKycCompliant: null, kycMsg: "", kycSuccess: false, isLoader: false },
+    { holder: "primary_user", label: "Primary Holder", status: active, pan: "", isKycCompliant: null, kycMsg: "", description: "", kycSuccess: false, isLoader: false },
+    { holder: "secondary_user", label: "Second Holder", status: pending, pan: "", isKycCompliant: null, kycMsg: "", description: "", kycSuccess: false, isLoader: false },
+    { holder: "third_user", label: "Third Holder", status: pending, pan: "", isKycCompliant: null, kycMsg: "", description: "", kycSuccess: false, isLoader: false },
   ]);
 
 
   useEffect(() => {
+
     if (reference_id) {
       fetchUccData()
+
     }
   }, [])
 
@@ -145,6 +149,8 @@ const KycStatusCheck = () => {
       updateHolder(index, {
         isKycCompliant: false,
         kycMsg: "Sorry! 😔 You are not KYC Compliant",
+        description: "",
+        btnName: "Start KYC Verification",
         kycSuccess: false,
         isLoader: false,
       });
@@ -210,7 +216,7 @@ const KycStatusCheck = () => {
         const res = await postRequestSimple<uccDataRes>(endPoints.initiateUcc, reqBody);
         if (res.success && res.data?.reference_id) {
           navigate(
-            `/personal-details?reference_id=${res.data.reference_id}&tax_status=${tax_status}&holding_nature=${holding_nature}&pan=${pan}&holder=${holder.holder}&transactionId=${kycTransactionId}`
+            `/personal-details?reference_id=${res.data.reference_id}&tax_status=${tax_status}&holding_nature=${holding_nature}&pan=${pan}&holder=${holder.holder}`
           );
         }
       } catch (err) {
@@ -243,113 +249,66 @@ const KycStatusCheck = () => {
             switch (event.status) {
               case "user_cancelled":
                 console.log("User cancelled the workflow");
-
-                // setShow(!show)
-                // setKycMsg({
-
-                //   firstColor: "#bc415f",
-                //   secondColor: "#a2547d",
-                //   heading: "You are not KYC compliant",
-                //   description_1: "You have cancelled the KYC process.",
-                //   description_2: "Please complete the KYC process to proceed.",
-                //   name: "",
-                //   pan: "",
-                //   taxStatus: "",
-                //   image: errorImg,
-                //   url: "",
-                //   footerMsg: "",
-                //   btnName: "Start KYC Verification"
-
-                // })
+                updateHolder(index, {
+                  isKycCompliant: false,
+                  kycMsg: "Sorry! 😔 You are not KYC Compliant",
+                  description: "You have cancelled the KYC process. Please complete the KYC process to proceed.",
+                  btnName: "Start KYC Verification",
+                  kycSuccess: false,
+                  isLoader: false,
+                });
                 break;
               case "error":
-                // setShow(!show)
-                // setKycMsg({
-
-                //   firstColor: "#bc415f",
-                //   secondColor: "#a2547d",
-                //   heading: "Something went wrong!",
-                //   description_1: "There appears to be a temporary technical problem.",
-                //   description_2: "Please re-submit your KYC. If the issue continues, you may contact our customer support team for assistance.",
-                //   name: "",
-                //   pan: "",
-                //   taxStatus: "",
-                //   image: errorImg,
-                //   url: "",
-                //   footerMsg: "Please ensure the details entered match your official documents.",
-                //   btnName: "Start KYC Verification"
-                // })
+                updateHolder(index, {
+                  isKycCompliant: false,
+                  kycMsg: "Something went wrong!",
+                  description: "There appears to be a temporary technical problem. Please re-submit your KYC. If the issue continues, you may contact our customer support team for assistance.",
+                  btnName: "Start KYC Verification",
+                  kycSuccess: false,
+                  isLoader: false,
+                });
                 break;
               case "auto_approved":
-                // setShow(!show)
-                // setKycMsg({
-
-                //   firstColor: "#118e72",
-                //   secondColor: "#10844e",
-                //   heading: "Something went wrong!",
-                //   description_1: "There appears to be a temporary technical problem.",
-                //   description_2: "Please re-submit your KYC. If the issue continues, you may contact our customer support team for assistance.",
-                //   name: "",
-                //   pan: "",
-                //   taxStatus: "",
-                //   image: correct,
-                //   url: `/personal-details?reference_id=${res.data.reference_id}&tax_status=${tax_status}&holding_nature=${holding_nature}&pan=${pan}&holder=${holder.holder}`,
-                //   footerMsg: "Please ensure the details entered match your official documents.",
-                //   btnName: "Start Your Investment Journey!"
-                // })
+                updateHolder(index, {
+                  isKycCompliant: true,
+                  kycMsg: "Congratulations! 🎉 Your KYC is Approved",
+                  description: "Your KYC details have been successfully verified.",
+                  btnName: "Start Your Investment Journey!",
+                  kycSuccess: true,
+                  isLoader: false,
+                });
+                fetchKycData(response.data.transactionId)
                 break;
               case "auto_declined":
-                // setShow(!show)
-                // setKycMsg({
-
-                //   firstColor: "#bc415f",
-                //   secondColor: "#a2547d",
-                //   heading: "KYC Application Rejected",
-                //   description_1: "There appears to be an issue with the information you submitted.",
-                //   description_2: "Please re-submit your KYC. If the issue continues, you may contact our customer support team for assistance.",
-                //   name: "",
-                //   pan: "",
-                //   taxStatus: "",
-                //   image: errorImg,
-                //   url: "",
-                //   footerMsg: "Please ensure the details entered match your official documents.",
-                //   btnName: "Retry Verification"
-                // })
+                updateHolder(index, {
+                  isKycCompliant: false,
+                  kycMsg: "KYC Application Rejected",
+                  description: "There appears to be an issue with the information you submitted. Please re-submit your KYC. If the issue continues, you may contact our customer support team for assistance.",
+                  btnName: "Retry Verification",
+                  kycSuccess: false,
+                  isLoader: false,
+                });
                 break;
               case "needs_review":
-                // setShow(!show)
-                // setKycMsg({
-
-                //   firstColor: "#b78b0f",
-                //   secondColor: "#d3a01c",
-                //   heading: "Your KYC is Under Review",
-                //   description_1: "Your KYC details have been received and are currently being reviewed by our internal team",
-                //   description_2: "Meanwhile, you can continue with the Investor account opening process.",
-                //   name: "",
-                //   pan: "",
-                //   taxStatus: "",
-                //   image: underReview,
-                //   url: "",
-                //   footerMsg: "Our team will notify you if any additional information is required.",
-                //   btnName: "Start Your Investment Journey!"
-                // })
+                updateHolder(index, {
+                  isKycCompliant: true,
+                  kycMsg: "Your KYC is Under Review",
+                  description: "Your KYC details have been received and are currently being reviewed by our internal team. Meanwhile, you can continue with the Investor account opening process.",
+                  btnName: "Start Your Investment Journey!",
+                  kycSuccess: true,
+                  isLoader: false,
+                });
+                fetchKycData(response.data.transactionId)
                 break;
               default:
-                // setShow(!show)
-                // setKycMsg({
-
-                //   firstColor: "#bc415f",
-                //   secondColor: "#a2547d",
-                //   heading: "Something went wrong!",
-                //   description_1: "There appears to be a temporary technical problem.",
-                //   description_2: "Please re-submit your KYC. If the issue continues, you may contact our customer support team for assistance.",
-                //   name: "",
-                //   pan: "",
-                //   taxStatus: "",
-                //   image: correct,
-                //   url: "",
-                //   footerMsg: "Please ensure the details entered match your official documents."
-                // })
+                updateHolder(index, {
+                  isKycCompliant: false,
+                  kycMsg: "Something went wrong!",
+                  description: "There appears to be a temporary technical problem. Please re-submit your KYC. If the issue continues, you may contact our customer support team for assistance.",
+                  btnName: "Start KYC Verification",
+                  kycSuccess: false,
+                  isLoader: false,
+                });
                 break;
             }
 
@@ -361,10 +320,21 @@ const KycStatusCheck = () => {
       }
     }
   };
+    const fetchKycData = async (transactionId: string) => {
+    try {
+      const response = await postRequest<fetchKycDataRes>(endPoints.fetchData, { transactionId });
+      if(response.success && response.data) {
+      }
+    } catch (error) {
+      console.error("Error fetching KYC data:", error);
+     
+    }
+  };
+
 
   const skipHolder = () => {
     navigate(
-      `/nomination-details?reference_id=${reference_id}&tax_status=${tax_status}&holding_nature=${holding_nature}&pan=${pan}&holder=${holder}`
+      `/nomination-details?reference_id=${reference_id}&tax_status=${tax_status}&holding_nature=${holding_nature}&pan=${pan}&holder=${holder}&transactionId=${kycTransactionId}`
     );
   }
 
@@ -567,7 +537,7 @@ const KycStatusCheck = () => {
                               letterSpacing: "0.01em",
                             }}
                           >
-                            {holder.isLoader ? "Checking..." : "Proceed"}
+                            {holder.isLoader ? "Checking..." : holder.btnName || "Proceed"}
                           </button>
                           {holder.holder === "third_user" && (
 

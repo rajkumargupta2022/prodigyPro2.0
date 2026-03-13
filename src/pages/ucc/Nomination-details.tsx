@@ -7,7 +7,7 @@ import { ContactRelationsEnum } from "../data/ucc-data";
 import { useEffect, useState } from "react";
 import { endPoints } from "../../services/utils/urls";
 import { postRequest } from "../../services/Api/HandleApi";
-import { errorToast } from "../../services/utils/toast";
+import { errorToast, successToast } from "../../services/utils/toast";
 import { nomineeDetailForm, pincodeDetailsRes, uccDataRes, uccDataResKeys } from "../data-interfaces/ucc";
 import { formatDateToUTCString } from "../../services/dates/dateFormater";
 
@@ -19,6 +19,7 @@ const NominationDetails = () => {
   const holding_nature = searchParams.get("holding_nature") ?? "";
   const pan = searchParams.get("pan") ?? "";
   const holder = searchParams.get("holder") as keyof uccDataResKeys;
+  const edit_index = searchParams.get("edit_index");
   const [nomineeList, setNomineeList] = useState<nomineeDetailForm[]>([]);
   const formKeys = {
     nominee_name: "",
@@ -52,8 +53,14 @@ const NominationDetails = () => {
   const fetchUccData = async () => {
     try {
       const response = await postRequest<uccDataRes>(endPoints.initiateUcc, { reference_id });
-      if (response.success && (response.data?.nominees?.length ?? 0 > 0)) {
+      if (response.success && (response.data?.nominees && response.data?.nominees?.length > 0)) {
         setNomineeList(response.data?.nominees ?? []);
+        if (edit_index !== null) {
+          const index = parseInt(edit_index);
+          if (!isNaN(index) && response.data.nominees[index]) {
+            setForm(response.data.nominees[index]);
+          }
+        }
       }
     } catch (err) {
       errorToast(err);
@@ -170,28 +177,44 @@ const NominationDetails = () => {
       errorToast("Total allocation percentage cannot exceed 100%");
       return;
     }
-    const addedNominee = nomineeList.length > 0 ? [...nomineeList] : [];
-    const payloadNominee = {
+    const updatedNomineeList = nomineeList.length > 0 ? [...nomineeList] : [];
+    const payloadNominee: any = {
       ...form,
-      nominee_guardian_name: form.is_nominee_minor ? form.nominee_guardian_name : null,
-      nominee_guardian_pan: form.is_nominee_minor ? form.nominee_guardian_pan : null,
-      nominee_pan: !form.is_nominee_minor ? form.nominee_pan : null,
-      nominee_dob:formatDateToUTCString(form.nominee_dob??"") 
+      nominee_guardian_name: form.is_nominee_minor ? form.nominee_guardian_name : undefined,
+      nominee_guardian_pan: form.is_nominee_minor ? form.nominee_guardian_pan : undefined,
+      nominee_pan: !form.is_nominee_minor ? form.nominee_pan : undefined,
+      nominee_dob: formatDateToUTCString(form.nominee_dob || ""),
+      nominee_allocation: Number(form.nominee_allocation)
     };
+
+    if (edit_index !== null) {
+      const index = parseInt(edit_index);
+      if (!isNaN(index)) {
+        updatedNomineeList[index] = payloadNominee;
+      }
+    } else {
+      updatedNomineeList.push(payloadNominee);
+    }
 
     const payload = {
       reference_id,
       tax_status,
       holding_nature,
-      nominees: [...addedNominee, payloadNominee]
+      nominees: updatedNomineeList
     };
-    await postRequest(endPoints.tempSaveUcc, { data: payload });
-    setForm(formKeys);
-    fetchUccData()
+    const res: any = await postRequest(endPoints.tempSaveUcc, { data: payload });
+    if (res.success) {
+      successToast(edit_index !== null ? "Nominee updated successfully" : "Nominee added successfully");
+      navigate(`/nomination-list?reference_id=${reference_id}&tax_status=${tax_status}&holding_nature=${holding_nature}&pan=${pan}&holder=${holder}`);
+    }
   };
   const getTotalAllocation = (): number => {
-    const total = nomineeList.reduce((sum, nominee) => sum + (nominee.nominee_allocation ?? 0), 0);
-    return total + (form.nominee_allocation ?? 0);
+    const editIndex = edit_index !== null ? parseInt(edit_index) : -1;
+    const total = nomineeList.reduce((sum, nominee, index) => {
+      if (index === editIndex) return sum;
+      return Number(sum) + (Number(nominee.nominee_allocation) ?? 0);
+    }, 0);
+    return total + (Number(form.nominee_allocation) ?? 0);
   }
   const goOnNomineeList = () => {
     const totalAllocation = getTotalAllocation();
@@ -336,8 +359,9 @@ const NominationDetails = () => {
 
             <div className="row  mb-3">
               <div className="col-md-6">
-                <button type="button" className="customButton px-2" onClick={handleAddNominee}>+ Add Nominee</button>
-                      
+                <button type="button" className="customButton px-2" onClick={handleAddNominee}>
+                  {edit_index !== null ? "Update Nominee" : "+ Add Nominee"}
+                </button>
               </div>
             </div>
           </form>

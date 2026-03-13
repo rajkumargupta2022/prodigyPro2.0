@@ -3,12 +3,12 @@ import Footer from "../../components/Next-bar";
 import TrackBar from "./Track-bar";
 import Navbar from "../../components/Navbar";
 import { generateOptions } from "../re-used-html/select-box";
-import { ContactRelationsEnum, UserGenderEnum } from "../data/ucc-data";
+import { ContactRelationsEnum, UserGenderEnum, GuardianRelationEnum } from "../data/ucc-data";
 import { useEffect, useState } from "react";
 import { personalDetailForm, uccDataRes, uccDataResKeys, userDataObj } from "../data-interfaces/ucc";
-import { postRequest } from "../../services/Api/HandleApi";
+import { getRequest, postRequest } from "../../services/Api/HandleApi";
 import { endPoints } from "../../services/utils/urls";
-import { errorToast, successToast } from "../../services/utils/toast";
+import { errorToast } from "../../services/utils/toast";
 import { formatDateToUTCString, formatUTCToDateOnly } from "../../services/dates/dateFormater";
 
 interface FormErrors {
@@ -20,6 +20,9 @@ interface FormErrors {
   dob?: string;
   gender?: string;
   occupation?: string;
+  guardian_name?: string;
+  guardian_relation?: string;
+  guardian_pan?: string;
 }
 
 const PersonalDetails = () => {
@@ -29,8 +32,8 @@ const PersonalDetails = () => {
   const tax_status = searchParams.get("tax_status") ?? "";
   const holding_nature = searchParams.get("holding_nature") ?? "";
   const pan = searchParams.get("pan") ?? "";
-   const holder = searchParams.get("holder") as keyof uccDataResKeys;
-  
+  const holder = searchParams.get("holder") as keyof uccDataResKeys;
+
 
   const [form, setForm] = useState<personalDetailForm>({
     full_name: "",
@@ -40,14 +43,18 @@ const PersonalDetails = () => {
     mobile_relation: "",
     dob: "",
     gender: "",
+    guardian_name: "",
+    guardian_relation: "",
+    guardian_pan: "",
   });
 
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    if (reference_id) {
-
+    if (pan) {
+      fetchKycData(pan)
+    } else if (reference_id) {
       fetchUccData()
       console.log(isSubmitting)
     }
@@ -56,6 +63,21 @@ const PersonalDetails = () => {
   const fetchUccData = async () => {
     try {
       const response = await postRequest<uccDataRes>(endPoints.initiateUcc, { reference_id });
+      const profile = response.data[holder] as userDataObj;
+      if (response.success && profile?.personal_details) {
+        const personalDetails = profile.personal_details;
+        setForm({
+          ...personalDetails,
+          dob: formatUTCToDateOnly(personalDetails.dob || ""),
+        });
+      }
+    } catch (err) {
+      errorToast(err);
+    }
+  }
+  const fetchKycData = async (pan: string) => {
+    try {
+      const response = await getRequest<uccDataRes>(endPoints.getKycData + "?pan=" + pan);
       const profile = response.data[holder] as userDataObj;
       if (response.success && profile?.personal_details) {
         const personalDetails = profile.personal_details;
@@ -106,21 +128,45 @@ const PersonalDetails = () => {
       newErrors.mobile_relation = "Mobile relation is required.";
     }
 
-    if (!form.dob) {
-      newErrors.dob = "Date of birth is required.";
-    } else {
-      const dob = new Date(form.dob);
-      const today = new Date();
-      const age = today.getFullYear() - dob.getFullYear();
-      if (dob >= today) newErrors.dob = "Date of birth must be in the past.";
-      else if (age > 120) newErrors.dob = "Please enter a valid date of birth.";
-    }
-
     if (!form.gender) {
       newErrors.gender = "Gender is required.";
     }
 
+    // DOB Age Validation based on Tax Status
+    if (form.dob) {
+      const dobDate = new Date(form.dob);
+      const today = new Date();
+      let age = today.getFullYear() - dobDate.getFullYear();
+      const m = today.getMonth() - dobDate.getMonth();
+      if (m < 0 || (m === 0 && today.getDate() < dobDate.getDate())) {
+        age--;
+      }
 
+      if (String(tax_status) === "2") {
+        if (age >= 18) {
+          newErrors.dob = "For minor status, age must be less than 18 years.";
+        }
+      } else {
+        if (age < 18) {
+          newErrors.dob = "For this tax status, age must be 18 years or more.";
+        }
+      }
+    }
+
+    // Guardian Fields Validation for Minor
+    if (String(tax_status) === "2") {
+      if (!form.guardian_name?.trim()) {
+        newErrors.guardian_name = "Guardian name is required.";
+      }
+      if (!form.guardian_relation) {
+        newErrors.guardian_relation = "Guardian relation is required.";
+      }
+      if (!form.guardian_pan?.trim()) {
+        newErrors.guardian_pan = "Guardian PAN is required.";
+      } else if (!/^[A-Z]{5}[0-9]{4}[A-Z]$/.test(form.guardian_pan.toUpperCase())) {
+        newErrors.guardian_pan = "Invalid PAN format.";
+      }
+    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -131,7 +177,7 @@ const PersonalDetails = () => {
 
     try {
       setIsSubmitting(true);
-      const payload = {
+      const payload: any = {
         reference_id,
         tax_status,
         holding_nature,
@@ -149,8 +195,14 @@ const PersonalDetails = () => {
             gender: form.gender,
           }
         }
-        ,
       };
+
+      if (String(tax_status) === "2") {
+        payload[holder].personal_details.guardian_name = form.guardian_name;
+        payload[holder].personal_details.guardian_relation = form.guardian_relation;
+        payload[holder].personal_details.guardian_pan = form.guardian_pan?.toUpperCase();
+      }
+
       await postRequest(endPoints.tempSaveUcc, { data: payload });
       navigate(
         `/declaration?reference_id=${reference_id}&tax_status=${tax_status}&holding_nature=${holding_nature}&pan=${pan}&holder=${holder}`
@@ -172,7 +224,7 @@ const PersonalDetails = () => {
     <>
       <Navbar />
       <TrackBar />
-      <div className="container mt-2">
+      <div className="container mt-2 mb-5">
         <div className="personal_form_container">
           <h4 className="my-4">Personal Details</h4>
           <form
@@ -284,7 +336,7 @@ const PersonalDetails = () => {
               </div>
             </div>
 
-            {/* Row 4: Gender & Occupation */}
+            {/* Row 4: Gender & Guardian Info (Conditional) */}
             <div className="row mb-3">
               <div className="col-md-6">
                 <label className="form-label fs12px">GENDER</label>
@@ -301,8 +353,59 @@ const PersonalDetails = () => {
                   <div className="invalid-feedback">{errors.gender}</div>
                 )}
               </div>
-
+              {String(tax_status) === "2" && (
+                <div className="col-md-6">
+                  <label className="form-label fs12px">GUARDIAN NAME</label>
+                  <input
+                    type="text"
+                    name="guardian_name"
+                    value={form.guardian_name}
+                    onChange={handleChange}
+                    className={inputClass("guardian_name")}
+                    placeholder=""
+                  />
+                  {errors.guardian_name && (
+                    <div className="invalid-feedback">{errors.guardian_name}</div>
+                  )}
+                </div>
+              )}
             </div>
+
+            {/* Minor Specific Fields: Guardian PAN & Relation */}
+            {String(tax_status) === "2" && (
+              <div className="row mb-3">
+                <div className="col-md-6">
+                  <label className="form-label fs12px">GUARDIAN PAN</label>
+                  <input
+                    type="text"
+                    name="guardian_pan"
+                    value={form.guardian_pan}
+                    onChange={handleChange}
+                    maxLength={10}
+                    className={inputClass("guardian_pan")}
+                    placeholder=""
+                  />
+                  {errors.guardian_pan && (
+                    <div className="invalid-feedback">{errors.guardian_pan}</div>
+                  )}
+                </div>
+                <div className="col-md-6">
+                  <label className="form-label fs12px">GUARDIAN RELATION</label>
+                  <select
+                    name="guardian_relation"
+                    value={form.guardian_relation}
+                    onChange={handleChange}
+                    className={selectClass("guardian_relation")}
+                  >
+                    <option value="">Choose...</option>
+                    {generateOptions(GuardianRelationEnum, "value", "label")}
+                  </select>
+                  {errors.guardian_relation && (
+                    <div className="invalid-feedback">{errors.guardian_relation}</div>
+                  )}
+                </div>
+              </div>
+            )}
           </form>
         </div>
       </div>

@@ -10,8 +10,8 @@ export interface personalDetailForm {
   gender?: string;
   pan?: string;
   guardian_name?: string;
-  guardian_relation?: string;
   guardian_pan?: string;
+  guardian_relation?: string;
 }
 
 export interface addressDetailForm {

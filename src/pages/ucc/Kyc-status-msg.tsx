@@ -1,7 +1,7 @@
 import React from "react";
 import Modal from "react-bootstrap/Modal";
-import group from "../../assets/img/Group.png";
-import correct from "../../assets/img/correct.png";
+// import group from "../../assets/img/Group.png";
+// import correct from "../../assets/img/correct.png";
 
 interface kycMsgObj {
   firstColor: string;
