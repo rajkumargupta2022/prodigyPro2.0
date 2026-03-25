@@ -146,15 +146,15 @@ const KycStatusCheck = () => {
 
     updateHolder(index, { isLoader: true, kycMsg: "", kycSuccess: false });
     try {
-      updateHolder(index, {
-        isKycCompliant: false,
-        kycMsg: "Sorry! 😔 You are not KYC Compliant",
-        description: "",
-        btnName: "Start KYC Verification",
-        kycSuccess: false,
-        isLoader: false,
-      });
-      return
+      // updateHolder(index, {
+      //   isKycCompliant: false,
+      //   kycMsg: "Sorry! 😔 You are not KYC Compliant",
+      //   description: "",
+      //   btnName: "Start KYC Verification",
+      //   kycSuccess: false,
+      //   isLoader: false,
+      // });
+      // return
       const response = await getRequest<kycStatusResponse>(
         `${endPoints.checkKycStatus}?pan_number=${pan}`
       );
@@ -162,14 +162,18 @@ const KycStatusCheck = () => {
         updateHolder(index, {
           isKycCompliant: true,
           kycMsg: "Congratulations! 🎉 You are KYC Compliant",
+          description:"",
+          btnName: "Start Your Investment Journey!",
           kycSuccess: true,
           isLoader: false,
         });
       } else {
         updateHolder(index, {
           isKycCompliant: false,
-          kycMsg: "Sorry! 😔 You are not KYC Compliant",
+          kycMsg: "You are not KYC Compliant",
+          description: "We couldn’t find your KYC details. Please complete your KYC to begin your investment journey.",
           kycSuccess: false,
+          btnName: "Start KYC Verification",
           isLoader: false,
         });
       }
@@ -190,21 +194,26 @@ const KycStatusCheck = () => {
 
   const handleProceed = async (index: number) => {
     const holder = holders[index];
-    const { pan, isKycCompliant } = holder;
+    // const { pan, isKycCompliant } = holder;
 
-    if (!pan) {
-      updateHolder(index, { kycMsg: "Please enter your PAN number to proceed.", kycSuccess: false });
+    if (!holder?.pan) {
+      updateHolder(index, { kycMsg: "Please enter your PAN to proceed.", kycSuccess: false });
       return;
     }
-    if (isKycCompliant === null) {
+    if (holder.isKycCompliant === null) {
       updateHolder(index, { kycMsg: "Please wait while we verify your PAN.", kycSuccess: false });
       return;
     }
+      if (pan===holder.pan) {
+      updateHolder(index, { kycMsg: "Pan can not be same from the primary holder or second holder", kycSuccess: false });
+      return;
+    }
+
 
 
     const adminUser = fetchAdminUser();
 
-    if (isKycCompliant) {
+    if (holder.isKycCompliant) {
       const adminUser = fetchAdminUser()
       try {
         const reqBody = {
@@ -216,7 +225,7 @@ const KycStatusCheck = () => {
         const res = await postRequestSimple<uccDataRes>(endPoints.initiateUcc, reqBody);
         if (res.success && res.data?.reference_id) {
           navigate(
-            `/personal-details?reference_id=${res.data.reference_id}&tax_status=${tax_status}&holding_nature=${holding_nature}&pan=${pan}&holder=${holder.holder}`
+            `/personal-details?reference_id=${res.data.reference_id}&tax_status=${tax_status}&holding_nature=${holding_nature}&pan=${holder?.pan}&holder=${holder.holder}`
           );
         }
       } catch (err) {
@@ -226,7 +235,7 @@ const KycStatusCheck = () => {
       try {
         if (!adminUser) return;
         const response = await getRequest<initiateKycResponse>(
-          `${endPoints.initiateKyc}?pan_number=${pan}`
+          `${endPoints.initiateKyc}?pan_number=${holder?.pan}`
         );
         if (response.data.success) {
           setKycTransactionId(response.data.transactionId)
@@ -237,12 +246,12 @@ const KycStatusCheck = () => {
             true
           );
           hyperKycConfig.setInputs({
-            panNumber: pan,
+            panNumber: holder?.pan || "",
             mobileNumber: adminUser?.mobile || "",
             kraStatus: "new",
           });
           hyperKycConfig.setUniqueId(response.data.unique_id);
-          hyperKycConfig.setUseLocation(false);
+          hyperKycConfig.setUseLocation(true);
           hyperKycConfig.setDefaultLangCode("en");
           await window.HyperKYCModule.launch(hyperKycConfig, (event: any) => {
             console.log("HyperKYC Event:", event);
@@ -251,9 +260,9 @@ const KycStatusCheck = () => {
                 console.log("User cancelled the workflow");
                 updateHolder(index, {
                   isKycCompliant: false,
-                  kycMsg: "Sorry! 😔 You are not KYC Compliant",
-                  description: "You have cancelled the KYC process. Please complete the KYC process to proceed.",
-                  btnName: "Start KYC Verification",
+                  kycMsg: "KYC application rejected",
+                  description: "There appears to be an issue with the information you submitted. Please re-submit your KYC. If the issue continues, you may contact our customer support team for assistance.",
+                  btnName: "Retry Verification",
                   kycSuccess: false,
                   isLoader: false,
                 });
@@ -262,7 +271,7 @@ const KycStatusCheck = () => {
                 updateHolder(index, {
                   isKycCompliant: false,
                   kycMsg: "Something went wrong!",
-                  description: "There appears to be a temporary technical problem. Please re-submit your KYC. If the issue continues, you may contact our customer support team for assistance.",
+                  description: "There appears to be a temporary technical problem.<br/>Please re-submit your KYC. If the issue continues, you may contact our customer support team for assistance.",
                   btnName: "Start KYC Verification",
                   kycSuccess: false,
                   isLoader: false,
@@ -271,8 +280,8 @@ const KycStatusCheck = () => {
               case "auto_approved":
                 updateHolder(index, {
                   isKycCompliant: true,
-                  kycMsg: "Congratulations! 🎉 Your KYC is Approved",
-                  description: "Your KYC details have been successfully verified.",
+                  kycMsg: "Congratulations!",
+                  description: "Your KYC details have been successfully submitted to the KRA. While the verification is in progress, you can continue with the Investor account opening process.",
                   btnName: "Start Your Investment Journey!",
                   kycSuccess: true,
                   isLoader: false,
@@ -293,7 +302,7 @@ const KycStatusCheck = () => {
                 updateHolder(index, {
                   isKycCompliant: true,
                   kycMsg: "Your KYC is Under Review",
-                  description: "Your KYC details have been received and are currently being reviewed by our internal team. Meanwhile, you can continue with the Investor account opening process.",
+                  description: "Your KYC details have been received and are currently being reviewed by our internal team. <br/>Meanwhile, you can continue with the Investor account opening process.",
                   btnName: "Start Your Investment Journey!",
                   kycSuccess: true,
                   isLoader: false,
@@ -304,7 +313,7 @@ const KycStatusCheck = () => {
                 updateHolder(index, {
                   isKycCompliant: false,
                   kycMsg: "Something went wrong!",
-                  description: "There appears to be a temporary technical problem. Please re-submit your KYC. If the issue continues, you may contact our customer support team for assistance.",
+                  description: "There appears to be a temporary technical problem.<br/>Please re-submit your KYC. If the issue continues, you may contact our customer support team for assistance.",
                   btnName: "Start KYC Verification",
                   kycSuccess: false,
                   isLoader: false,
@@ -320,14 +329,14 @@ const KycStatusCheck = () => {
       }
     }
   };
-    const fetchKycData = async (transactionId: string) => {
+  const fetchKycData = async (transactionId: string) => {
     try {
       const response = await postRequest<fetchKycDataRes>(endPoints.fetchData, { transactionId });
-      if(response.success && response.data) {
+      if (response.success && response.data) {
       }
     } catch (error) {
       console.error("Error fetching KYC data:", error);
-     
+
     }
   };
 
@@ -513,7 +522,9 @@ const KycStatusCheck = () => {
                               {holder.kycMsg}
                             </p>
                           )}
-
+                          {holder.description && (
+                            <p className="fs12px" dangerouslySetInnerHTML={{ __html: holder.description }} />
+                          )}
                           {/* Proceed Button */}
                           <button
                             type="button"

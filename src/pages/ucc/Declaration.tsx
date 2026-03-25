@@ -65,11 +65,13 @@ const Declaration = () => {
   };
 
   useEffect(() => {
+    if(!reference_id || !tax_status || !holding_nature || !pan){
+      navigate("/dashboard");
+      return;
+    }
     if (pan) {
       fetchKycData(pan)
-    } else if (reference_id) {
-      fetchUccData()
-    }
+    } 
   }, [])
 
   const fetchUccData = async () => {
@@ -98,8 +100,12 @@ const Declaration = () => {
           ...fatca_declarations
         });
       }
+      if(!fatca_declarations?.place_of_birth &&!fatca_declarations?.occupation){
+        fetchUccData()
+      }
     } catch (err) {
-      errorToast(err);
+     console.log(err);
+      fetchUccData()
     }
   }
 

@@ -99,7 +99,9 @@ function StateFolioDetails() {
                         <div>
                             <span className="text-secondary">Gain/Loss</span>
                             <br />
-                            <span className="value-font2">₹{getValueInSort(item.gain_loss)} <span className="text-success">{getPercentageValue(Number(item?.invested_value), item?.gain_loss)}%</span></span>
+                              <span className="value-font2">₹{getValueInSort(item.gain_loss)} <span className={`text-${item?.gain_loss >= 0 ? 'success' : 'danger'}`}>
+                                {getPercentageValue(Number(item?.invested_value), item?.gain_loss)}%
+                            </span></span>
                         </div>
                     </div>
 

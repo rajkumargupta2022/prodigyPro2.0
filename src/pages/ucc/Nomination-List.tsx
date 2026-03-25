@@ -1,7 +1,7 @@
 import NavBar from "../../components/Navbar";
 import NextBar from "../../components/Next-bar";
 import { Card, Dropdown } from "react-bootstrap";
-import { Pencil, ThreeDotsVertical, Trash } from "react-bootstrap-icons";
+import { Pencil,  Trash } from "react-bootstrap-icons";
 import NomineeModal from "../../components/Nominee-Modal";
 import { nomineeDetailForm, uccDataRes, uccDataResKeys } from "../data-interfaces/ucc";
 import { useEffect, useState } from "react";
@@ -10,6 +10,7 @@ import { postRequest } from "../../services/Api/HandleApi";
 import { endPoints } from "../../services/utils/urls";
 import { errorToast, successToast } from "../../services/utils/toast";
 import TrackBar from "./Track-bar";
+import { formatUTCToDateOnly } from "../../services/dates/dateFormater";
 
 const NominationList = () => {
   const navigate = useNavigate();
@@ -96,14 +97,14 @@ const NominationList = () => {
                   <div className="ms-3 flex-grow-1">
                     <h6 className="mb-1 fw-bold">{nominee.nominee_name ?? ""}</h6>
                     <small className="text-muted text-secondary">
-                      {nominee.nominee_dob ?? ""} • {nominee.nominee_relation ?? ""} • Allocation: {nominee.nominee_allocation ?? ""}%
+                      {formatUTCToDateOnly(nominee.nominee_dob??"") ?? ""} • {nominee.nominee_relation ?? ""} • Allocation: {nominee.nominee_allocation ?? ""}%
                     </small>
                   </div>
 
                   {/* Dropdown Menu */}
                   <Dropdown align="end">
                     <Dropdown.Toggle as="div" className="crPointer shadow-none border-0 p-0 m-0 no-caret">
-                      <ThreeDotsVertical size={20} className="text-muted" />
+                      {/* <ThreeDotsVertical size={20} className="text-muted" /> */}
                     </Dropdown.Toggle>
 
                     <Dropdown.Menu className="border-0 shadow-sm">

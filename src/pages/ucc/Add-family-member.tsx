@@ -20,7 +20,7 @@ function AddFamilyMember() {
   const [holdingNature, setHoldingNature] = useState<string>("")
   const [taxStatus, setTaxStatus] = useState<string>("")
   // const accountState = "link";
-  const [accountState, setAccountState] = useState<string>("link")
+  const [accountState, setAccountState] = useState<string>("")
 
   useEffect(() => {
     fetchRelation()

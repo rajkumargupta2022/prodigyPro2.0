@@ -9,7 +9,7 @@ import { endPoints } from "../../services/utils/urls";
 import { postRequest } from "../../services/Api/HandleApi";
 import { errorToast, successToast } from "../../services/utils/toast";
 import { nomineeDetailForm, pincodeDetailsRes, uccDataRes, uccDataResKeys } from "../data-interfaces/ucc";
-import { formatDateToUTCString } from "../../services/dates/dateFormater";
+import { formatDateToUTCString, formatUTCToDateOnly } from "../../services/dates/dateFormater";
 
 const NominationDetails = () => {
   const navigate = useNavigate();
@@ -57,8 +57,12 @@ const NominationDetails = () => {
         setNomineeList(response.data?.nominees ?? []);
         if (edit_index !== null) {
           const index = parseInt(edit_index);
-          if (!isNaN(index) && response.data.nominees[index]) {
-            setForm(response.data.nominees[index]);
+          let nomineeData = response.data.nominees[index];
+          if (!isNaN(index) && nomineeData) {
+            setForm({
+              ...nomineeData,
+              nominee_dob: formatUTCToDateOnly(nomineeData.nominee_dob || ""),
+            });
           }
         }
       }
@@ -205,7 +209,11 @@ const NominationDetails = () => {
     const res: any = await postRequest(endPoints.tempSaveUcc, { data: payload });
     if (res.success) {
       successToast(edit_index !== null ? "Nominee updated successfully" : "Nominee added successfully");
-      navigate(`/nomination-list?reference_id=${reference_id}&tax_status=${tax_status}&holding_nature=${holding_nature}&pan=${pan}&holder=${holder}`);
+      setForm(formKeys);
+      if(edit_index !== null) {
+              navigate(`/nomination-list?reference_id=${reference_id}&tax_status=${tax_status}&holding_nature=${holding_nature}&pan=${pan}&holder=${holder}`);
+
+      }
     }
   };
   const getTotalAllocation = (): number => {

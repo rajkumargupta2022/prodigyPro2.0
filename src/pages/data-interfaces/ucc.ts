@@ -93,3 +93,7 @@ export interface bankNameRes{
   bank_name: string,
   branch_name: string
 }
+export interface checkUploadRes{
+  success: boolean,
+  img: string
+}

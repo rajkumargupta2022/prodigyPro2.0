@@ -127,7 +127,7 @@ const PanVarification = () => {
           });
           hyperKycConfig.setUniqueId(response.data.unique_id)
           // setUseLocation is optional
-          hyperKycConfig.setUseLocation(false);
+          hyperKycConfig.setUseLocation(true);
           // setDefaultLangCode is optional
           hyperKycConfig.setDefaultLangCode('en');
           console.log('INITIATE DATA:', hyperKycConfig);
@@ -136,26 +136,26 @@ const PanVarification = () => {
             switch (event.status) {
               case "user_cancelled":
                 setIsKycCompliant(false);
-                setNoKycMsg("Sorry! 😔 You are not KYC Compliant");
+                setNoKycMsg("KYC application rejected");
                 setKySuccessMsg("");
-                setDescription("You have cancelled the KYC process. Please complete the KYC process to proceed.");
-                setBtnName("Start KYC Verification");
+                setDescription("There appears to be an issue with the information you submitted. Please re-submit your KYC. If the issue continues, you may contact our customer support team for assistance.");
+                setBtnName("Retry Verification");
                 setIsLoader(false);
-                
+
                 break;
               case "error":
                 setIsKycCompliant(false);
                 setNoKycMsg("Something went wrong!");
                 setKySuccessMsg("");
-                setDescription("There appears to be a temporary technical problem. Please re-submit your KYC. If the issue continues, you may contact our customer support team for assistance.");
+                setDescription("There appears to be a temporary technical problem.<br/>Please re-submit your KYC. If the issue continues, you may contact our customer support team for assistance.");
                 setBtnName("Start KYC Verification");
                 setIsLoader(false);
                 break;
               case "auto_approved":
                 setIsKycCompliant(true);
-                setKySuccessMsg("Congratulations! 🎉 Your KYC is Approved");
+                setKySuccessMsg("Congratulations!");
                 setNoKycMsg("");
-                setDescription("Your KYC details have been successfully verified.");
+                setDescription("Your KYC details have been successfully submitted to the KRA. While the verification is in progress, you can continue with the Investor account opening process.");
                 setBtnName("Start Your Investment Journey!");
                 fetchKycData(response.data.transactionId)
                 setIsLoader(false);
@@ -172,7 +172,7 @@ const PanVarification = () => {
                 setIsKycCompliant(true);
                 setKySuccessMsg("Your KYC is Under Review");
                 setNoKycMsg("");
-                setDescription("Your KYC details have been received and are currently being reviewed by our internal team. Meanwhile, you can continue with the Investor account opening process.");
+                setDescription("Your KYC details have been received and are currently being reviewed by our internal team. <br/>Meanwhile, you can continue with the Investor account opening process.");
                 setBtnName("Start Your Investment Journey!");
                 fetchKycData(response.data.transactionId)
                 setIsLoader(false);
@@ -181,10 +181,9 @@ const PanVarification = () => {
                 setIsKycCompliant(false);
                 setNoKycMsg("Something went wrong!");
                 setKySuccessMsg("");
-                setDescription("There appears to be a temporary technical problem. Please re-submit your KYC. If the issue continues, you may contact our customer support team for assistance.");
+                setDescription("There appears to be a temporary technical problem.<br/>Please re-submit your KYC. If the issue continues, you may contact our customer support team for assistance.");
                 setBtnName("Start KYC Verification");
                 setIsLoader(false);
-                break;
             }
           });
 
@@ -195,16 +194,16 @@ const PanVarification = () => {
       }
     }
   }
-     const fetchKycData = async (transactionId: string) => {
-      try {
-        const response = await postRequest<fetchKycDataRes>(endPoints.fetchData, { transactionId });
-        if(response.success && response.data) {
-        }
-      } catch (error) {
-        console.error("Error fetching KYC data:", error);
-       
+  const fetchKycData = async (transactionId: string) => {
+    try {
+      const response = await postRequest<fetchKycDataRes>(endPoints.fetchData, { transactionId });
+      if (response.success && response.data) {
       }
-    };
+    } catch (error) {
+      console.error("Error fetching KYC data:", error);
+
+    }
+  };
 
 
   const panHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -231,31 +230,31 @@ const PanVarification = () => {
             <h6 className="text-dark font-weight-bold">
               Are you investment ready?
             </h6>
-              <p className="pb-1 fs12px">Know it within the seconds</p>
+            <p className="pb-1 fs12px">Know it within the seconds</p>
 
-              {/* <label className="form-label fs12px">PAN</label> */}
-              <div className="input-group mb-3">
-                <input
-                  type="text"
-                  value={userPan ?? ""}
-                  onChange={panHandler}
-                  className="form-control mx-1 rounded"
-                  placeholder={`${String(tax_status) === "2" ? "Enter Guardian PAN" : "Enter PAN"}`}
-                />
-              </div>
-              {kySuccessMsg && <h4 className="fs14px congratesColor font-weight-bold">{kySuccessMsg}</h4>}
-              {noKycMsg && <h4 className="fs14px errorColor font-weight-bold">{noKycMsg}</h4>}
-              {description && <p className="fs12px text-secondary">{description}</p>}
+            {/* <label className="form-label fs12px">PAN</label> */}
+            <div className="input-group mb-3">
+              <input
+                type="text"
+                value={userPan ?? ""}
+                onChange={panHandler}
+                className="form-control mx-1 rounded"
+                placeholder={`${String(tax_status) === "2" ? "Enter Guardian PAN" : "Enter PAN"}`}
+              />
+            </div>
+            {kySuccessMsg && <h4 className="fs14px congratesColor font-weight-bold">{kySuccessMsg}</h4>}
+            {noKycMsg && <h4 className="fs14px errorColor font-weight-bold">{noKycMsg}</h4>}
+            {description && <p className="fs12px text-secondary" dangerouslySetInnerHTML={{ __html: description }} />}
 
-              {/* <p className="errorColor sm ">
+            {/* <p className="errorColor sm ">
                 We do not have your details with us. You need to register to
                 start your investment journey Please share your details and you
                 are all set for investing
               </p> */}
-              <button type="button" className="customButton col-12 mt-3" onClick={proceedForKyc} disabled={isLoader}>
-                {isLoader ? "Processing..." : btnName || "Proceed"}
-              </button>
-       
+            <button type="button" className="customButton col-12 mt-3" onClick={proceedForKyc} disabled={isLoader}>
+              {isLoader ? "Processing..." : btnName || "Proceed"}
+            </button>
+
           </div>
         </div>
       </div>

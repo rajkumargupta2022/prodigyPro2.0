@@ -52,12 +52,14 @@ const PersonalDetails = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
+    if(!reference_id || !tax_status || !holding_nature){
+      navigate("/dashboard");
+      return;
+    }
     if (pan) {
       fetchKycData(pan)
-    } else if (reference_id) {
-      fetchUccData()
       console.log(isSubmitting)
-    }
+    } 
   }, [])
 
   const fetchUccData = async () => {
@@ -85,9 +87,13 @@ const PersonalDetails = () => {
           ...personalDetails,
           dob: formatUTCToDateOnly(personalDetails.dob || ""),
         });
+        if(!profile.personal_details?.full_name){
+          fetchUccData()
+        }
       }
     } catch (err) {
-      errorToast(err);
+      console.log(err);
+      fetchUccData()
     }
   }
 

@@ -36,7 +36,12 @@ const MandateAmount = () => {
     is_bank_verified: false,
   })
   useEffect(() => {
-    if (reference_id) {
+
+    if(!reference_id || !tax_status || !holding_nature || !pan){
+      navigate("/dashboard");
+      return;
+    }
+      if (reference_id) {
       fetchUccData()
     }
   }, [])
@@ -55,7 +60,7 @@ const MandateAmount = () => {
   }
   const amountHandler = (e: React.ChangeEvent<HTMLInputElement>, maxAmount: number,): void => {
     let value = Number(e.target.value.trim());
-    if (value <= 1000000000) {
+    if (value <= 100000000) {
       setMandateAmount(value);
       setMandateAmountError("")
 
@@ -86,11 +91,14 @@ const MandateAmount = () => {
 
       await postRequestSimple(endPoints.tempSaveUcc, { data: payload });
 
-      if (holding_nature == "AS" && holder === "third_user" || holding_nature === "SI") {
+      if (holding_nature == "AS" && holder === "third_user" && tax_status === "1") {
         navigate(
           `/nomination-details?reference_id=${reference_id}&tax_status=${tax_status}&holding_nature=${holding_nature}&pan=${pan}&holder=${holder}`
         );
-      } else {
+      } else if(holding_nature === "SI" && tax_status === "2"){
+           finalDataSubmit()
+      }
+      else {
         navigate(
           `/kyc-status-check?reference_id=${reference_id}&tax_status=${tax_status}&holding_nature=${holding_nature}&pan=${pan}&holder=${holder}`
         );
@@ -99,6 +107,17 @@ const MandateAmount = () => {
       errorToast(err);
     }
   };
+
+  const finalDataSubmit = async () => { 
+    try {
+      await postRequest(endPoints.submit, { reference_id });
+      //to do
+    } catch (err) {
+      errorToast(err);
+    }
+  };
+
+
   return (
     <>
       <NavBar />

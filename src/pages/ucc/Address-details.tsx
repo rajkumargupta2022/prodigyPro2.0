@@ -24,12 +24,14 @@ const AddressDetails = () => {
   const [form, setForm] = useState<addressDetailForm>({});
   const [errors, setErrors] = useState<Partial<addressDetailForm>>({});
 
-  useEffect(() => {
+   useEffect(() => {
+    if(!reference_id || !tax_status || !holding_nature || !pan){
+      navigate("/dashboard");
+      return;
+    }
     if (pan) {
       fetchKycData(pan)
-    } else if (reference_id) {
-      fetchUccData()
-    }
+    } 
   }, [])
 
   const fetchKycData = async (pan: string) => {
@@ -43,8 +45,12 @@ const AddressDetails = () => {
           ...address_details
         });
       }
+      if(!profile.address_details?.address_1 && !profile.address_details?.pincode){
+        fetchUccData()
+      }
     } catch (err) {
-      errorToast(err);
+      console.log(err);
+      fetchUccData()
     }
   }
 
@@ -219,7 +225,7 @@ const AddressDetails = () => {
                   name="state"
                   className="form-select"
                   value={form.state || ""}
-                  onChange={handleChange}
+                 
                 >
                   <option value="">Choose...</option>
                   {generateOptions(StatevaluesEnum, "label", "label")}
@@ -238,7 +244,7 @@ const AddressDetails = () => {
                   name="city"
                   className="form-control"
                   value={form.city || ""}
-                  onChange={handleChange}
+                 
                 />
                 {errors.city && (
                   <small className="text-danger">{errors.city}</small>
@@ -252,7 +258,7 @@ const AddressDetails = () => {
                   name="country"
                   className="form-control"
                   value={form.country || ""}
-                  onChange={handleChange}
+               
                 />
                 {errors.country && (
                   <small className="text-danger">{errors.country}</small>

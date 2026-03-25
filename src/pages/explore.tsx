@@ -53,7 +53,7 @@ const Explore = () => {
             </div>
             <div className="py-2 text-center" onClick={()=>navigate("/sif-funds")}>
               <img src={Star} alt="" width={28} height={28} />
-              <h6 className="fs14pxBlack">SIF Funds</h6>
+              <h6 className="fs14pxBlack">SIF</h6>
             </div>
            
             <div className="py-2 text-center" onClick={()=>goToFundPage("Tax Saver",[1],[8],content[0])}>

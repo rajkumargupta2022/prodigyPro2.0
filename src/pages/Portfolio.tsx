@@ -60,7 +60,7 @@ const Portfolio = () => {
             <div className="borderColor p-3 rounded-4 bg-white">
               <div className="row text-center">
                 <div className="col">
-                  <small className="fw-semibold">OVERALL PROFIT</small> <span className="fs12px ms-1" > As on {currentDateInStringNumber()}</span>
+                  <small className="fw-semibold">OVERALL {`${snapshotData?.Gainloss >= 0 ? "PROFIT" : "LOSS"}`}</small> <span className="fs12px ms-1" > As on {currentDateInStringNumber()}</span>
                 </div>
                 <h3 className={`fw-bold ${snapshotData?.Gainloss >= 0 ? "congratesColor" : "errorColor2"}`}><CurrencyRupee className="mb-1" />{Math.abs(snapshotData?.Gainloss)?.toLocaleString("en-In")}<small className={`fs-6 ${snapshotData?.Gainloss >= 0 ? "congratesColor" : "errorColor2"}`} >({snapshotData?.Finalcagr}%)</small></h3>
                 <div className="textColor">1 Day change

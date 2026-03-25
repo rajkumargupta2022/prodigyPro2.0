@@ -167,6 +167,8 @@ export enum endPoints {
    initiateUcc = "ucc/initiate",
    tempSaveUcc = "ucc/temp-save",
    getPincodeDetails = "ucc/get-pincode-details",
-   getKycData="ucc/get-kyc-data"
+   getKycData="ucc/get-kyc-data",
+   saveBankProof="ucc/save-bank-proof",
+   submit = "ucc/submit"
 
 }
