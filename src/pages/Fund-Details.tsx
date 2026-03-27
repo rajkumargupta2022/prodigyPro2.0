@@ -426,7 +426,7 @@ const FundDetails = () => {
                   <h4 className="fs-6">{schemeList[0]?.risk || "N/A"}</h4>
                 </div>
                 <div className="col-6 py-2">
-                  <span className="text-secondary text-uppercase fs-7">Min. Investment</span>
+                  <span className="text-secondary text-uppercase fs-7">Min. SIP</span>
                   <h4 className="fs-6">₹{schemeList[0]?.minSIPAmt ?? 0}</h4>
                 </div>
                 <div className="col-6 py-2">

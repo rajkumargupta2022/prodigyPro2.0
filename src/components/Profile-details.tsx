@@ -45,7 +45,7 @@ function MyProfile() {
 
         <div>
           <p className="m-0 fs12px">EMAIL ADDRESS</p>
-          <p className="fs16px">{adminUser?.email}</p>
+          <p className="fs16px">{adminUser?.email?.toLowerCase()}</p>
         </div>
 
         <div>

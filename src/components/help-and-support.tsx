@@ -51,8 +51,7 @@ function HelpSupport() {
         </span>
         <br />
         <span className="note">
-          Time: 9:30 AM to 6:00 PM on market Trading days. Standard calling
-          rates apply.
+         Support Hours: 9:30 AM – 6:30 PM (Weekdays).
         </span>
         <br />
         <button className="mandate-button mt-2" onClick={() =>
@@ -90,8 +89,7 @@ function HelpSupport() {
         </span>
         <br />
         <span className="note">
-          Time: 9:30 AM to 6:00 PM on market Trading days. Standard calling
-          rates apply.
+          Support Hours: 9:30 AM – 6:30 PM (Weekdays).
         </span>
         <br />
         <button className="mandate-button mt-2" onClick={() =>
@@ -110,8 +108,7 @@ function HelpSupport() {
           </span>
           <br />
           <span className="note">
-            Time: 9:30 AM to 6:00 PM on market Trading days. Standard calling
-            rates apply.
+            Support Hours: 9:30 AM – 6:30 PM (Weekdays).
           </span>
           <br />
           <button className="mandate-button mt-2" onClick={() =>

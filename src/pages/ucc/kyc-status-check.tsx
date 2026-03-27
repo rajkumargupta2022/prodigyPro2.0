@@ -146,15 +146,15 @@ const KycStatusCheck = () => {
 
     updateHolder(index, { isLoader: true, kycMsg: "", kycSuccess: false });
     try {
-      // updateHolder(index, {
-      //   isKycCompliant: false,
-      //   kycMsg: "Sorry! 😔 You are not KYC Compliant",
-      //   description: "",
-      //   btnName: "Start KYC Verification",
-      //   kycSuccess: false,
-      //   isLoader: false,
-      // });
-      // return
+      updateHolder(index, {
+        isKycCompliant: false,
+        kycMsg: "Sorry! 😔 You are not KYC Compliant",
+        description: "",
+        btnName: "Start KYC Verification",
+        kycSuccess: false,
+        isLoader: false,
+      });
+      return
       const response = await getRequest<kycStatusResponse>(
         `${endPoints.checkKycStatus}?pan_number=${pan}`
       );
@@ -329,9 +329,9 @@ const KycStatusCheck = () => {
       }
     }
   };
-  const fetchKycData = async (transactionId: string) => {
+  const fetchKycData = async (transaction_id: string) => {
     try {
-      const response = await postRequest<fetchKycDataRes>(endPoints.fetchData, { transactionId });
+      const response = await postRequest<fetchKycDataRes>(endPoints.fetchData, { transaction_id });
       if (response.success && response.data) {
       }
     } catch (error) {

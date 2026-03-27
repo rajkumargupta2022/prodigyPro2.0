@@ -65,6 +65,15 @@ const NominationList = () => {
   const handleAddNew = () => {
     navigate(`/nomination-details?reference_id=${reference_id}&tax_status=${tax_status}&holding_nature=${holding_nature}&pan=${pan}&holder=${holder}`);
   };
+  const finalSubmit =async () => { 
+      const res = await postRequest<any>(endPoints.submit, { reference_id });
+      if(res.success){
+        successToast("UCC process completed successfully");
+        // navigate("/ucc-success")
+      }else{
+        errorToast("Something went wrong. Please try again.")
+      }
+  }
 
   return (
     <>
@@ -127,13 +136,7 @@ const NominationList = () => {
           </form>
         </div>
       </div>
-      <NextBar onSaveContinue={() => {
-        if (nomineeList.reduce((sum, n) => sum + (Number(n.nominee_allocation) || 0), 0) >= 100) {
-          navigate(`/bank-detail?reference_id=${reference_id}&tax_status=${tax_status}&holding_nature=${holding_nature}&pan=${pan}&holder=${holder}`);
-        } else {
-          errorToast("Total allocation must be 100% to proceed.");
-        }
-      }} />
+      <NextBar onSaveContinue={finalSubmit} />
     </>
   );
 };
