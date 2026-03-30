@@ -40,13 +40,9 @@ const SwitchFund: React.FC<SwitchFundProp> = ({
   useEffect(() => {
     if (productCodes.length > 0) {
       fetchPerformanceScheme();
-      directSchemes()
     }
   }, [productCodes]);
-  const directSchemes = () => {
 
-   
-  }
 
   const fetchPerformanceScheme = async () => {
     try {

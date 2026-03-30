@@ -20,7 +20,7 @@ function AddFamilyMember() {
   const [holdingNature, setHoldingNature] = useState<string>("")
   const [taxStatus, setTaxStatus] = useState<string>("")
   // const accountState = "link";
-  const [accountState, setAccountState] = useState<string>("")
+  const [accountState, setAccountState] = useState<string>("link")
 
   useEffect(() => {
     fetchRelation()
@@ -120,7 +120,7 @@ function AddFamilyMember() {
             <button type="button" className={`btn statementBtn ${accountState == "link" && "statementBtnActive"} mx-1`} onClick={() => setAccountState("link")}>Link Account</button>
 
 
-            <button type="button" className={`btn statementBtn ${accountState == "" && "statementBtnActive"} mx-1`} onClick={() => setAccountState("")}>Create Account</button>
+            {/* <button type="button" className={`btn statementBtn ${accountState == "" && "statementBtnActive"} mx-1`} onClick={() => setAccountState("")}>Create Account</button> */}
           </div>
 
           {accountState == "link" ? (
