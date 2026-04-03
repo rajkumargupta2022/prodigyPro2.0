@@ -215,6 +215,7 @@ const KycStatusCheck = () => {
 
     if (holder.isKycCompliant) {
       const adminUser = fetchAdminUser()
+      if (!adminUser) return;
       try {
         const reqBody = {
           tax_status: tax_status,

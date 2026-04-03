@@ -3,7 +3,7 @@ import NextBar from "../../components/Next-bar";
 import { Card, Dropdown } from "react-bootstrap";
 import { Pencil,  Trash } from "react-bootstrap-icons";
 import NomineeModal from "../../components/Nominee-Modal";
-import { nomineeDetailForm, uccDataRes, uccDataResKeys } from "../data-interfaces/ucc";
+import { nomineeDetailForm, uccDataRes, uccDataResKeys, uccSubmitRes } from "../data-interfaces/ucc";
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { postRequest } from "../../services/Api/HandleApi";
@@ -65,15 +65,16 @@ const NominationList = () => {
   const handleAddNew = () => {
     navigate(`/nomination-details?reference_id=${reference_id}&tax_status=${tax_status}&holding_nature=${holding_nature}&pan=${pan}&holder=${holder}`);
   };
-  const finalSubmit =async () => { 
-      const res = await postRequest<any>(endPoints.submit, { reference_id });
-      if(res.success){
-        successToast("UCC process completed successfully");
-        // navigate("/ucc-success")
-      }else{
-        errorToast("Something went wrong. Please try again.")
+  const finalDataSubmit = async () => {
+    try {
+      const res = await postRequest<uccSubmitRes>(endPoints.submit, { reference_id });
+      if (res.success) {
+        navigate("/ucc-submit");
       }
-  }
+    } catch (err) {
+      errorToast(err);
+    }
+  };
 
   return (
     <>
@@ -136,7 +137,7 @@ const NominationList = () => {
           </form>
         </div>
       </div>
-      <NextBar onSaveContinue={finalSubmit} />
+      <NextBar onSaveContinue={finalDataSubmit} />
     </>
   );
 };

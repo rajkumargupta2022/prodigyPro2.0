@@ -3,7 +3,7 @@ import NavBar from "../../components/Navbar";
 import NextBar from "../../components/Next-bar";
 import TrackBar from "./Track-bar";
 import { useEffect, useState } from "react";
-import { bankDetailForm, uccDataRes, uccDataResKeys } from "../data-interfaces/ucc";
+import { bankDetailForm, uccDataRes, uccDataResKeys, uccSubmitRes } from "../data-interfaces/ucc";
 import { postRequest, postRequestSimple } from "../../services/Api/HandleApi";
 import { endPoints, imageUrl } from "../../services/utils/urls";
 import { errorToast } from "../../services/utils/toast";
@@ -25,7 +25,7 @@ const MandateAmount = () => {
   const pan = searchParams.get("pan") ?? "";
   const holder = searchParams.get("holder") as keyof uccDataResKeys;
 
-  const [mandateAmount, setMandateAmount] = useState<number | undefined>(undefined)
+  const [mandateAmount, setMandateAmount] = useState<number | undefined>(10000)
   const [mandateAmountError, setMandateAmountError] = useState<string>("")
   const [bankDetails, setBankDetails] = useState<bankDetailForm>({
     bank_name: "",
@@ -37,11 +37,11 @@ const MandateAmount = () => {
   })
   useEffect(() => {
 
-    if(!reference_id || !tax_status || !holding_nature || !pan){
+    if (!reference_id || !tax_status || !holding_nature || !pan) {
       navigate("/dashboard");
       return;
     }
-      if (reference_id) {
+    if (reference_id) {
       fetchUccData()
     }
   }, [])
@@ -95,8 +95,8 @@ const MandateAmount = () => {
         navigate(
           `/nomination-details?reference_id=${reference_id}&tax_status=${tax_status}&holding_nature=${holding_nature}&pan=${pan}&holder=${holder}`
         );
-      } else if(holding_nature === "SI" && tax_status === "2"){
-           finalDataSubmit()
+      } else if (holding_nature === "SI" && tax_status === "2") {
+        finalDataSubmit()
       }
       else {
         navigate(
@@ -108,10 +108,12 @@ const MandateAmount = () => {
     }
   };
 
-  const finalDataSubmit = async () => { 
+  const finalDataSubmit = async () => {
     try {
-      await postRequest(endPoints.submit, { reference_id });
-      //to do
+      const res = await postRequest<uccSubmitRes>(endPoints.submit, { reference_id });
+      if (res.success) {
+        navigate("/ucc-submit");
+      }
     } catch (err) {
       errorToast(err);
     }

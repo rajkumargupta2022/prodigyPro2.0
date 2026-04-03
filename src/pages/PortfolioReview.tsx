@@ -12,8 +12,10 @@ import UnderWatchPerformance from "../components/Underwatch-performance";
 import RedemptionPerformance from "../components/Redemption-performance";
 import PortfolioEmpty from "./PortfolioEmpty";
 import emptyImg from "../assets/img/empty-img.svg"
+import { useAdminUser } from "../context/AdminContext";
 
 const PortfolioReview = () => {
+  const {isSwitched} = useAdminUser()
   const [openSwitchFund, setOpenSwitchFund] = useState<boolean>(false)
   const [satisfactoryList, setSatisfactoryList] = useState<portfolioReviewKeys[]>([])
   const [satisfactoryListProps, setSatisfactoryListProps] = useState<portfolioReviewKeys[]>([])
@@ -33,9 +35,8 @@ const PortfolioReview = () => {
 
 
   useEffect(() => {
-
     fetchSchemePerformance()
-  }, [])
+  }, [isSwitched])
 
   const fetchPortfolioExpert = async () => {
     try {

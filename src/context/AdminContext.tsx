@@ -18,7 +18,8 @@ interface AdminUserContextType {
   fetchDetailedPortfolio: (value: string) => void;
   setPortfolioDetailData: (value: any) => void;
   portfolioDetailData: detailPortfolioSchemeType[];
-  fetchFamilyPortfoloData:()=>void
+  fetchFamilyPortfoloData: () => void
+  isSwitched: boolean;
 
 }
 
@@ -31,6 +32,7 @@ export const AdminUserProvider = ({ children }: { children: ReactNode }) => {
   const [adminUser, setAdminUser] = useState<allFamilyListKeys>()
   const [familySnapShotData, setFamilySnapShotData] = useState<familyDataType[]>([])
   const [portfolioDetailData, setPortfolioDetailData] = useState<detailPortfolioSchemeType[]>([])
+  const [isSwitched, setIsSwitched] = useState(false)
 
   const [snapshotData, setSnapshotData] = useState<familyDataType>({
     Totalpurchase: 0,
@@ -149,7 +151,7 @@ export const AdminUserProvider = ({ children }: { children: ReactNode }) => {
   ) => {
     localStorage.setItem("adminUser", JSON.stringify(adminData));
     setAdminUser(adminData);
-
+    setIsSwitched(isSwitched => !isSwitched)
     // Re-filter the family data to update family member list
     let familyListData: any = localStorage.getItem("familyList")
     if (familyListData) {
@@ -244,7 +246,8 @@ export const AdminUserProvider = ({ children }: { children: ReactNode }) => {
       fetchDetailedPortfolio,
       setPortfolioDetailData,
       portfolioDetailData,
-      fetchFamilyPortfoloData
+      fetchFamilyPortfoloData,
+      isSwitched
     }}>
       {children}
     </AdminUserContext.Provider>

@@ -34,9 +34,9 @@ function PortfolioNotes({ portfolioType }: MsgModelProps) {
   const handleClose = () => {
     setShow(false)
   }
-  function convertToHTML(text: string) {
+  function convertToHTML(text: string):string {
     if(!text){
-      return <p></p>
+      return "<p></p>"
     }
     const html = text
       .replace(/\n\n+/g, '</p><p>')
@@ -50,19 +50,19 @@ function PortfolioNotes({ portfolioType }: MsgModelProps) {
       ' <small class="logoBlueColor crPointer" id="readMoreBtn">Read More</small></p>'
     );    // add closing </p>
   }
-    function convertToHTMLLongMsg(text: string) {
-    if(!text){
-      return <p></p>
-    }
-    const html = text
-      .replace(/\n\n+/g, '</p><p>')
-      .replace(/\n/g, '<br/>')
-      .replace(/^/, '<p>')
-      .replace(/$/, '</p>');
-
-    // Add Read More inside last paragraph
-    return html    // add closing </p>
+  function convertToHTMLLongMsg(text: string): string {
+  if (!text) {
+    return "<p></p>"; // ✅ string instead of JSX
   }
+
+  const html = text
+    .replace(/\n\n+/g, "</p><p>")
+    .replace(/\n/g, "<br/>")
+    .replace(/^/, "<p>")
+    .replace(/$/, "</p>");
+
+  return html;
+}
   return (
     <>
       <div

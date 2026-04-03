@@ -72,28 +72,36 @@ export interface uccDataResKeys {
   nominees?: nomineeDetailForm[];
 }
 export interface userDataObj {
- personal_details?: personalDetailForm;
- address_details?: addressDetailForm;
- fatca_declarations?: fatchDeclarationsForm;
+  personal_details?: personalDetailForm;
+  address_details?: addressDetailForm;
+  fatca_declarations?: fatchDeclarationsForm;
 }
 
 export interface pincodeDetailsRes {
   success: boolean;
-  msg: string
-  data: pincodeDetailsKeys
+  msg: string;
+  data: pincodeDetailsKeys;
 }
-export interface pincodeDetailsKeys{
+export interface pincodeDetailsKeys {
   pincode: string;
   district: string;
   state: string;
   country: string;
 }
-export interface bankNameRes{
-    success: boolean,
-  bank_name: string,
-  branch_name: string
+export interface bankNameRes {
+  success: boolean;
+  bank_name: string;
+  branch_name: string;
 }
-export interface checkUploadRes{
-  success: boolean,
-  img: string
+export interface checkUploadRes {
+  success: boolean;
+  img: string;
+}
+export interface uccSubmitRes {
+  success: boolean;
+  data: boolean;
+}
+export interface uccSubmitKeys {
+  client_code: string;
+  auth_link: string;
 }
