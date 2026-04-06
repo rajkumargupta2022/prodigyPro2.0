@@ -1,7 +1,7 @@
 // AdminUserContext.tsx
 import { createContext, useContext, useState, ReactNode, useEffect } from "react";
 import { allFamilyListKeys, allFamilyResponseType, familyDataType, familySnapshotResponseType } from "../pages/data-interfaces/dashboard";
-import { postRequest } from "../services/Api/HandleApi";
+import { postRequestSimple } from "../services/Api/HandleApi";
 import { endPoints } from "../services/utils/urls";
 import { detailPortfolioSchemeType, detailPortfolioType } from "../pages/data-interfaces/portfolio";
 
@@ -13,9 +13,9 @@ interface AdminUserContextType {
   ) => void;
   familySnapShotData: familyDataType[];
   snapshotData: familyDataType;
-  familyPortfolio: (adminData: allFamilyListKeys, fromPortfolio?: boolean) => void;
+  familyPortfolio: (adminData: allFamilyListKeys, fromPortfolio?: boolean) => Promise<void>;
   setSnapshotData: (value: any) => void;
-  fetchDetailedPortfolio: (value: string) => void;
+  fetchDetailedPortfolio: (value: string) => Promise<void>;
   setPortfolioDetailData: (value: any) => void;
   portfolioDetailData: detailPortfolioSchemeType[];
   fetchFamilyPortfoloData: () => void
@@ -57,7 +57,7 @@ export const AdminUserProvider = ({ children }: { children: ReactNode }) => {
     let adminData: any = localStorage.getItem("familyList")
     adminData = JSON.parse(adminData)
     if (pan && !adminData) {
-      const res = await postRequest<allFamilyResponseType>(endPoints.getAllFamily, {
+      const res = await postRequestSimple<allFamilyResponseType>(endPoints.getAllFamily, {
         pan
       });
       if (res) {
@@ -166,7 +166,7 @@ export const AdminUserProvider = ({ children }: { children: ReactNode }) => {
 
   const familyPortfolio = async (adminUser: any, fromPortfolio: boolean = false) => {
     if (adminUser?.ucc) {
-      const res = await postRequest<familySnapshotResponseType>(endPoints.getFamilySnapshot, {
+      const res = await postRequestSimple<familySnapshotResponseType>(endPoints.getFamilySnapshot, {
         ucc: adminUser?.ucc
       });
       if (res) {
@@ -222,7 +222,7 @@ export const AdminUserProvider = ({ children }: { children: ReactNode }) => {
 
   const fetchDetailedPortfolio = async (ucc: string) => {
     try {
-      const res = await postRequest<detailPortfolioType>(endPoints.getDetailedPortfolio, { ucc });
+      const res = await postRequestSimple<detailPortfolioType>(endPoints.getDetailedPortfolio, { ucc });
       if (res) {
         const modifiedData = res.dataSent.data.filter((item) => Number(item.purchase) > 0)
         setPortfolioDetailData(modifiedData)

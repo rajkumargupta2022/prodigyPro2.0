@@ -3,7 +3,7 @@ import { ChevronRight, Envelope, Telephone } from "react-bootstrap-icons";
 import { useEffect, useState } from "react";
 import SwitchFund from "../components/SwitchFund";
 import { fetchAdminUser } from "../services/user/adminUser";
-import { getRequest, postRequest } from "../services/Api/HandleApi";
+import { getRequestSimple, postRequestSimple } from "../services/Api/HandleApi";
 import { endPoints, imageUrl } from "../services/utils/urls";
 import { portfolioReviewKeys, portfolioReviewRes, summaryInsideKeys, portfolioSummaryRes, portfolioExpertRes, portfolioExpertKeys } from "./data-interfaces/portfolio";
 import { getPercentageValue, getValueInSort } from "../services/calculation/percentageCalculate";
@@ -13,10 +13,13 @@ import RedemptionPerformance from "../components/Redemption-performance";
 import PortfolioEmpty from "./PortfolioEmpty";
 import emptyImg from "../assets/img/empty-img.svg"
 import { useAdminUser } from "../context/AdminContext";
+import { PortfolioReviewSkeleton } from "./PortfolioReviewSkeleton";
+
 
 const PortfolioReview = () => {
-  const {isSwitched} = useAdminUser()
+  const { isSwitched } = useAdminUser()
   const [openSwitchFund, setOpenSwitchFund] = useState<boolean>(false)
+  const [isLoading, setIsLoading] = useState<boolean>(true)
   const [satisfactoryList, setSatisfactoryList] = useState<portfolioReviewKeys[]>([])
   const [satisfactoryListProps, setSatisfactoryListProps] = useState<portfolioReviewKeys[]>([])
   const [underWatchList, setUnderWatchList] = useState<portfolioReviewKeys[]>([])
@@ -40,7 +43,7 @@ const PortfolioReview = () => {
 
   const fetchPortfolioExpert = async () => {
     try {
-      const res = await getRequest<portfolioExpertRes>(endPoints.getPortfolioExpert)
+      const res = await getRequestSimple<portfolioExpertRes>(endPoints.getPortfolioExpert)
       if (res.success) {
         setPortfolioExpertData(res.data)
       }
@@ -50,20 +53,23 @@ const PortfolioReview = () => {
   }
   const fetchSchemePerformance = async () => {
     try {
+      setIsLoading(true)
       const adminUser = fetchAdminUser()
       if (adminUser?.ucc) {
         const reqBody = {
           ucc: adminUser?.ucc
         }
-        const res = await postRequest<portfolioSummaryRes>(endPoints.getSchemePerformanceSummary, reqBody)
+        const res = await postRequestSimple<portfolioSummaryRes>(endPoints.getSchemePerformanceSummary, reqBody)
         if (res.success) {
           setPortfolioSummaryList(res.data?.performance_summary)
           setTotalInvested(res.data?.total)
-          fetchSatisfactorySchemes()
-          fetchUnderWatchSchemes()
-          fetchRedemptionSchemes()
-          fetchSwitchSchemes()
-          fetchPortfolioExpert()
+          await Promise.all([
+            fetchSatisfactorySchemes(),
+            fetchUnderWatchSchemes(),
+            fetchRedemptionSchemes(),
+            fetchSwitchSchemes(),
+            fetchPortfolioExpert()
+          ])
 
         } else {
           setPortfolioSummaryList([])
@@ -71,6 +77,8 @@ const PortfolioReview = () => {
       }
     } catch (err) {
       setPortfolioSummaryList([])
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -81,7 +89,7 @@ const PortfolioReview = () => {
         const reqBody = {
           ucc: adminUser?.ucc
         }
-        const res = await postRequest<any>(endPoints.getSatisfactoryPerformanceSchemes, reqBody)
+        const res = await postRequestSimple<any>(endPoints.getSatisfactoryPerformanceSchemes, reqBody)
         if (res.success) {
           setSatisfactoryList(res.data)
 
@@ -100,7 +108,7 @@ const PortfolioReview = () => {
         const reqBody = {
           ucc: adminUser?.ucc
         }
-        const res = await postRequest<portfolioReviewRes>(endPoints.getUnderwatchSchemes, reqBody)
+        const res = await postRequestSimple<portfolioReviewRes>(endPoints.getUnderwatchSchemes, reqBody)
         if (res.success) {
           setUnderWatchList(res.data)
         } else {
@@ -119,7 +127,7 @@ const PortfolioReview = () => {
         const reqBody = {
           ucc: adminUser?.ucc
         }
-        const res = await postRequest<portfolioReviewRes>(endPoints.getRedemptionRecommendedSchemes, reqBody)
+        const res = await postRequestSimple<portfolioReviewRes>(endPoints.getRedemptionRecommendedSchemes, reqBody)
         if (res.success) {
           setRedemptionList(res.data)
         } else {
@@ -137,7 +145,7 @@ const PortfolioReview = () => {
         const reqBody = {
           ucc: adminUser?.ucc
         }
-        const res = await postRequest<portfolioReviewRes>(endPoints.getSwitchSchemes, reqBody)
+        const res = await postRequestSimple<portfolioReviewRes>(endPoints.getSwitchSchemes, reqBody)
         if (res.success) {
           setSwitchList(res.data)
         } else {
@@ -149,16 +157,16 @@ const PortfolioReview = () => {
     }
   }
 
-  const singleSatisfactoryInvest = (item:portfolioReviewKeys) => {
+  const singleSatisfactoryInvest = (item: portfolioReviewKeys) => {
     setProductCodes([item.accordSchemeCode])
     setSatisfactoryListProps([item])
     setOpenInvestMore(true)
 
   }
   const singleSwitcTransaction = (item: portfolioReviewKeys) => {
-  
-      setProductCodes([item.accordSchemeCode, item.target?.accordProductCode??0])
-    
+
+    setProductCodes([item.accordSchemeCode, item.target?.accordProductCode ?? 0])
+
     setSwitchListForProps([item])
     setOpenSwitchFund(true)
 
@@ -209,7 +217,7 @@ const PortfolioReview = () => {
       <NavBar />
       <div className="container px-4 mt-3" >
         <div className="row">
-          {portfolioSummaryList?.length > 0 ? <>
+          {isLoading ? <PortfolioReviewSkeleton /> : portfolioSummaryList?.length > 0 ? <>
             <div className="col-12 d-flex align-items-start">
               <h4>Portfolio Review</h4>
             </div>
@@ -217,7 +225,7 @@ const PortfolioReview = () => {
               <div className="col-12 bg-white rounded-2 p-2 px-2 mt-4">
                 <h5>Fund Performance Summary</h5>
 
-                {portfolioSummaryList?.length > 0 ? portfolioSummaryList?.map((item,i) => {
+                {portfolioSummaryList?.length > 0 ? portfolioSummaryList?.map((item, i) => {
                   return <div className="mb-3" key={i}>
                     <div className="d-flex justify-content-between">
                       <span>{item.name} ({item.scheme_count})</span>
@@ -231,32 +239,32 @@ const PortfolioReview = () => {
 
 
               </div>
-              {switchList?.length >0&&
-              <div className="col-12 bg-white rounded-2 p-2 px-2 my-3">
-                <div className="row px-3 my-3">
-                  <h5>Switch ({switchList.length} funds)</h5>
-                  <div className="col-12">
-                    <p className="m-0 fs14px"> Consider reviewing or replacing these funds, as they are underperforming.</p>
-                  </div>
-                  <hr className="text-warning border-2" />
-                  {switchList?.length ? switchList.map((item: portfolioReviewKeys, i) => {
-                    return <>
-                      <div className="col-11 p-2 d-flex align-items-start crPointer" key={i} onClick={() => singleSwitcTransaction(item)}>
-                        <img src={`${imageUrl + item.accordAMCCode}.png`} alt="" height={40} width={40} className="rounded" />
-                        <div className="d-flex flex-column ps-3">
-                          <small className="mb-0">{item.scheme}</small>
-                          <small className="fs12px">Folio: {item.folio}</small>
+              {switchList?.length > 0 &&
+                <div className="col-12 bg-white rounded-2 p-2 px-2 my-3">
+                  <div className="row px-3 my-3">
+                    <h5>Switch ({switchList.length} funds)</h5>
+                    <div className="col-12">
+                      <p className="m-0 fs14px"> Consider reviewing or replacing these funds, as they are underperforming.</p>
+                    </div>
+                    <hr className="text-warning border-2" />
+                    {switchList?.length ? switchList.map((item: portfolioReviewKeys, i) => {
+                      return <>
+                        <div className="col-11 p-2 d-flex align-items-start crPointer" key={i} onClick={() => singleSwitcTransaction(item)}>
+                          <img src={`${imageUrl + item.accordAMCCode}.png`} alt="" height={40} width={40} className="rounded" />
+                          <div className="d-flex flex-column ps-3">
+                            <small className="mb-0">{item.scheme}</small>
+                            <small className="fs12px">Folio: {item.folio}</small>
+                          </div>
                         </div>
-                      </div>
-                      <div className="col-1"  onClick={() => singleSwitcTransaction(item)}>
-                        <ChevronRight className="text-secondary" />
-                      </div>
-                    </>
-                  }) : <p className="logoBlueColor text-center">Loading...</p>}
-                  <div className="col text-start fs12px mt-2" onClick={handleBulkSwitch}><button type="button" className="btn transactBtn">Switch All</button></div>
+                        <div className="col-1" onClick={() => singleSwitcTransaction(item)}>
+                          <ChevronRight className="text-secondary" />
+                        </div>
+                      </>
+                    }) : <p className="logoBlueColor text-center">Loading...</p>}
+                    <div className="col text-start fs12px mt-2" onClick={handleBulkSwitch}><button type="button" className="btn transactBtn">Switch All</button></div>
+                  </div>
                 </div>
-              </div>
-}
+              }
 
               {/* stisfactory performane****************************** */}
               {satisfactoryList?.length > 0 &&
@@ -368,7 +376,7 @@ const PortfolioReview = () => {
         </div>
 
       </div>
-      <InvestMoreScheme show={openInvestMore} setShow={setOpenInvestMore} productCodes={productCodes}satisfactorySchemeList={satisfactoryListProps}  number={portfolioExpertData?.phone ?? ""} />
+      <InvestMoreScheme show={openInvestMore} setShow={setOpenInvestMore} productCodes={productCodes} satisfactorySchemeList={satisfactoryListProps} number={portfolioExpertData?.phone ?? ""} />
       <SwitchFund show={openSwitchFund} setShow={setOpenSwitchFund} productCodes={productCodes} switchSchemeList={switchListForProps} number={portfolioExpertData?.phone ?? ""} />
       <RedemptionPerformance show={openRedumptinPerformance} setShow={setOpenRedumptinPerformance} productCodes={productCodes} redemptionList={redemptionListProps} number={portfolioExpertData?.phone ?? ""} />
       <UnderWatchPerformance show={openUnderwatchModel} setShow={setOpenUnderwatchModel} productCodes={productCodes} underWatchDetail={underWatchDetail} />

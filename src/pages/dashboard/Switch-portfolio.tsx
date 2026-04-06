@@ -16,28 +16,28 @@ interface investmetProps {
 
 }
 const SwitchPortfolio: React.FC<investmetProps> = ({ show, setShow, target, refData }) => {
-  const {familySnapShotData,setSnapshotData} = useAdminUser()
+  const { familySnapShotData, setSnapshotData } = useAdminUser()
   const [selected, setSelected] = useState<"my" | "family">("my");
   // const [familyPortfolioData, setFamilyPortfolioData] = useState<familyWiseType[]>([])
 
-  useEffect(()=>{
-   const portfolioType = localStorage.getItem("portfolioType")
-   if(portfolioType==="family"){
-     setSelected(portfolioType)
-     handleCheckboxChange(portfolioType)  
-   }else{
-     setSelected("my")
-     handleCheckboxChange("my")
-   }
-  },[])
+  useEffect(() => {
+    const portfolioType = localStorage.getItem("portfolioType")
+    if (portfolioType === "family") {
+      setSelected(portfolioType)
+      handleCheckboxChange(portfolioType)
+    } else {
+      setSelected("my")
+      handleCheckboxChange("my")
+    }
+  }, [])
 
   const handleCheckboxChange = (type: "my" | "family") => {
     if (type === "my") {
-      localStorage.setItem("portfolioType",type)
+      localStorage.setItem("portfolioType", type)
       let family = familySnapShotData?.filter((item) => item?.myPortfolio === true)
       setSnapshotData(family[0])
     } else {
-      localStorage.setItem("portfolioType",type)
+      localStorage.setItem("portfolioType", type)
       let family = familySnapShotData?.filter((item) => item?.myPortfolio !== true)
       setSnapshotData(family[0])
     }
@@ -55,11 +55,13 @@ const SwitchPortfolio: React.FC<investmetProps> = ({ show, setShow, target, refD
         container={refData}
         placement="bottom"
         containerPadding={20}
+        rootClose
+        onHide={() => setShow(false)}
       >
         <Popover id="popover-contained">
           <Popover.Body>
             <div className="my-portfolio-area25 border-bottom crPointer" onClick={() => handleCheckboxChange("my")}>
-                    
+
               <div className="check-box-area25 " >
                 <div className="round">
                   <input
@@ -90,7 +92,7 @@ const SwitchPortfolio: React.FC<investmetProps> = ({ show, setShow, target, refD
                     className="roundCheckbox"
                     id="familyPortfolio"
                     checked={selected === "family"}
-                    
+
                   />
                   <label className="mt-0" htmlFor="familyPortfolio"></label>
                   <div className="ms-2 my-port-paragraph">

@@ -79,8 +79,7 @@ const Disclaimer: React.FC<DisclaimerProps> = ({ linkRef }) => {
                     ×
                 </button>
                 <p style={{ margin: 0 }}>
-                    Mutual Fund investments are subject to market risks. Read all scheme-related documents carefully.
-                    The past performance of the mutual funds is not necessarily indicative of the future performance of the schemes.
+                    Investment in securities market are subject to market risks. Read all the related documents carefully before investing.
                 </p>
             </div>
         );

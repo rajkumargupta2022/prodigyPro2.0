@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Form } from 'react-bootstrap';
 import { amcListKeys, amcListResponse, riskListKey, riskListRes } from "../data-interfaces/explore";
 import { endPoints } from "../../services/utils/urls";
-import { getRequest } from "../../services/Api/HandleApi";
+import { getRequestSimple } from "../../services/Api/HandleApi";
 
 interface FiltersProps {
   handleFilter: (value: number, type: string) => void;
@@ -24,7 +24,7 @@ function Filters({ handleFilter, isAvailable, riskValue, setRiskValue }: Filters
 
   const fetchAmcList = async () => {
     try {
-      const res = await getRequest<amcListResponse>(endPoints.getAmcList)
+      const res = await getRequestSimple<amcListResponse>(endPoints.getAmcList)
       if (res.data) {
         setAmcListData(res.data)
       }
@@ -34,7 +34,7 @@ function Filters({ handleFilter, isAvailable, riskValue, setRiskValue }: Filters
   }
   const fetchRiskFilter = async () => {
     try {
-      const res = await getRequest<riskListRes>(endPoints.getRiskFilters)
+      const res = await getRequestSimple<riskListRes>(endPoints.getRiskFilters)
       if (res.data) {
         setRiskList(res.data)
       }
@@ -59,7 +59,7 @@ function Filters({ handleFilter, isAvailable, riskValue, setRiskValue }: Filters
       >
         <h5 className="mt-3 font-size-16 mb-3">Risk</h5>
         <Form className="checkbox-grid-setprodgy">
-          {riskList?.length > 0 && riskList.map((item,i) => {
+          {riskList?.length > 0 && riskList.map((item, i) => {
             return <Form.Check type="checkbox" key={i} label={item.risk} id={`risk-${item.risk_code}`} value={item.risk_code} checked={riskValue === item.risk_code} name="risk" onChange={handleRiskValue} />
           })}
 

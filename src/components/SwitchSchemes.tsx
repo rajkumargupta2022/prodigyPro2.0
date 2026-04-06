@@ -15,6 +15,7 @@ import emptyScheme from "../assets/img/empty-scheme.svg"
 import axios from "axios";
 import PortfolioEmpty from "../pages/PortfolioEmpty";
 import { yearKeys } from "../services/utils/keys";
+import { AllMutualFundsSkeleton } from "../pages/AllMutualFundsSkeleton";
 
 
 type OptionType = {
@@ -37,7 +38,8 @@ interface SchemesProps {
   shortByHandler:(value:any)=>void;
   shortValue:string;
   returnsYear:number;
-  setReturnsYear:(value:number)=>void
+  setReturnsYear:(value:number)=>void;
+  isLoading?: boolean;
 }
 
 const SwitchSchemes: React.FC<SchemesProps> = ({
@@ -56,7 +58,8 @@ const SwitchSchemes: React.FC<SchemesProps> = ({
   shortByHandler,
   shortValue,
   returnsYear,
-  setReturnsYear
+  setReturnsYear,
+  isLoading
 
 }) => {
   const navigate = useNavigate();
@@ -71,17 +74,7 @@ const SwitchSchemes: React.FC<SchemesProps> = ({
   const totalPages = Math.ceil((filteredSchemes?.length || 0) / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const [showLoader, setShowLoader] = useState(true);
   const [loading, setLoading] = useState<boolean>(false)
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowLoader(false);
-    }, 5000); // 5 seconds
-
-    return () => clearTimeout(timer); // cleanup on unmount
-  }, []);
-
 
   // Get current page items with memoization
   const currentItems = useMemo(() => {
@@ -338,7 +331,13 @@ const SwitchSchemes: React.FC<SchemesProps> = ({
       <div className="col">
         <Row className="justify-content-between pb-4 pt-md-0 pt-4 align-items-center">
           <Col md={8} className="">
-            <h5 className="fw-bold mb-0">{filteredSchemes?.length || 0} Mutual Funds</h5>
+            <h5 className="fw-bold mb-0">
+              {isLoading && filteredSchemes?.length === 0 ? (
+                <span className="placeholder col-4 placeholder-wave rounded"></span>
+              ) : (
+                `${filteredSchemes?.length || 0} Mutual Funds`
+              )}
+            </h5>
 
             {filteredSchemes && filteredSchemes.length > 0 && (
               <div className="d-flex align-items-center mt-2 flex-wrap">
@@ -485,17 +484,12 @@ const SwitchSchemes: React.FC<SchemesProps> = ({
               </Card>
             ))}
           </>
+        ) : isLoading ? (
+          <AllMutualFundsSkeleton />
         ) : (
 
           <div className="text-center py-5">
-            {showLoader ? (
-              <>
-                <div className="spinner-border text-primary" role="status">
-                  <span className="visually-hidden">Loading...</span>
-                </div>
-                <p className="mt-2 text-muted">Loading mutual funds...</p>
-              </>
-            ) : <PortfolioEmpty images={emptyScheme} title={"No Funds Available"} body={"Looks like there aren't any funds display Fresh opportunities are on the way!"} btnName={""} btnUrl={""} />}
+             <PortfolioEmpty images={emptyScheme} title={"No Funds Available"} body={"Looks like there aren't any funds display Fresh opportunities are on the way!"} btnName={""} btnUrl={""} />
           </div>
         )}
 

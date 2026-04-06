@@ -12,14 +12,14 @@ import {
 } from "react-bootstrap-icons";
 import ProfileModel from "./ProfileModel";
 import { useState } from "react";
-import { Link,useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useAdminUser } from "../context/AdminContext";
 
 const MyNavbar = () => {
   const location = useLocation();
-  const {adminUser} = useAdminUser()
+  const { adminUser } = useAdminUser()
   const [openProfileModel, setOpenProfileModel] = useState<boolean>(false)
-// console.log('Current path:', location.pathname);
+  // console.log('Current path:', location.pathname);
   const handleProfileModel = () => {
     setOpenProfileModel(true)
   }
@@ -45,7 +45,7 @@ const MyNavbar = () => {
             style={{ maxHeight: "100vh" }}
             navbarScroll
           >
-            <Link className={`prodgy_menu m-2 ${location.pathname==="/dashboard" && "active_menu"}`} to={"/dashboard"}>
+            <Link className={`prodgy_menu m-2 mx-3 ${location.pathname === "/dashboard" && "active_menu"}`} to={"/dashboard"}>
               <div className="d-flex gap-2">
                 <div className="">
                   {" "}
@@ -54,7 +54,7 @@ const MyNavbar = () => {
                 <div className="">Home</div>
               </div>
             </Link>
-            <Link className={`prodgy_menu m-2 ${location.pathname==="/explore" && "active_menu"}`} to={"/explore"}>
+            <Link className={`prodgy_menu m-2 mx-4 ${location.pathname === "/explore" && "active_menu"}`} to={"/explore"}>
               <div className="d-flex gap-2">
                 <div className="">
                   {" "}
@@ -63,7 +63,7 @@ const MyNavbar = () => {
                 <div className="">Explore</div>
               </div>
             </Link>
-            <Link className={`prodgy_menu m-2 ${location.pathname==="/portfolio" && "active_menu"}`} to={"/portfolio"}>
+            <Link className={`prodgy_menu m-2 mx-4 ${location.pathname === "/portfolio" && "active_menu"}`} to={"/portfolio"}>
               <div className="d-flex gap-2">
                 <div className="">
                   {" "}
@@ -72,7 +72,7 @@ const MyNavbar = () => {
                 <div className="">Portfolio</div>
               </div>
             </Link>
-            <Link className={`prodgy_menu  m-2 ${location.pathname==="/my-profile" && "active_menu"}`} to={"/my-profile"}>
+            <Link className={`prodgy_menu  m-2 mx-4 ${location.pathname === "/my-profile" && "active_menu"}`} to={"/my-profile"}>
               <div className="d-flex gap-2">
                 <div className="">
                   {" "}
@@ -89,22 +89,22 @@ const MyNavbar = () => {
             {/* <Link to="#" className="prodgy_menu">
               <Bell size={24} />
             </Link> */}
-        
+
             <Link to="#" className="profileNameSize prodgy_menu">
               <div className="d-flex gap-2" onClick={handleProfileModel}>
-                {adminUser?.profilePic?
-                 <div className="circle">
- <img
-                    className=""
-                    src={adminUser.profilePic}
-                    alt="Logo"
-                    height="35"
-                  />
-                 </div> : <div className="nameTitle">
-                   {adminUser?.name?.split(" ")?.slice(0, 2).map(word => word[0]).join("").toUpperCase()}
-                </div>}
-               
-                 
+                {adminUser?.profilePic ?
+                  <div className="circle">
+                    <img
+                      className=""
+                      src={adminUser.profilePic}
+                      alt="Logo"
+                      height="35"
+                    />
+                  </div> : <div className="nameTitle">
+                    {adminUser?.name?.split(" ")?.slice(0, 2).map(word => word[0]).join("").toUpperCase()}
+                  </div>}
+
+
                 <div className="align-self-center">
                   {adminUser?.name} <ChevronDown />{" "}
                 </div>

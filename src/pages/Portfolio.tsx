@@ -11,6 +11,7 @@ import PortfolioEmpty from "./PortfolioEmpty";
 import emptyImg from "../assets/img/empty-img.svg"
 import Footer from "../components/Footer";
 import { detailPortfolioSchemeType } from "./data-interfaces/portfolio";
+import { PortfolioSkeleton } from "./PortfolioSkeleton";
 
 
 const Portfolio = () => {
@@ -25,11 +26,24 @@ const Portfolio = () => {
 
 
 
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
   useEffect(() => {
     const pan = localStorage.getItem("pan")
     if (pan) {
-      familyPortfolio(adminUser,true)
-      fetchDetailedPortfolio(adminUser?.ucc)
+      const fetchData = async () => {
+        setIsLoading(true);
+        try {
+          await Promise.all([
+            familyPortfolio(adminUser, true),
+            fetchDetailedPortfolio(adminUser?.ucc)
+          ]);
+        } catch (e) {}
+        setIsLoading(false);
+      }
+      fetchData();
+    } else {
+      setIsLoading(false);
     }
   }, [])
 
@@ -53,9 +67,10 @@ const Portfolio = () => {
   return (
     <>
       <NavBar />
-
-      <div className="container py-2 mt-4 portfolio_sticky_2025">
-        <div className="personal_form_container">
+      {isLoading ? <PortfolioSkeleton /> : (
+        <>
+          <div className="container py-2 mt-4 portfolio_sticky_2025">
+            <div className="personal_form_container">
           {portfolioDetailData?.length > 0 ? <>
             <div className="borderColor p-3 rounded-4 bg-white">
               <div className="row text-center">
@@ -134,8 +149,8 @@ const Portfolio = () => {
         )
       }) : ""}
 
-
-        
+        </>
+      )}
 
         <Footer />
     </>
