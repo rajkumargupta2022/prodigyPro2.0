@@ -40,6 +40,7 @@ const MyNavbar = () => {
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="navbarScroll" />
         <Navbar.Collapse className="justify-content-end" id="navbarScroll">
+          {adminUser?.name &&
           <Nav
             className=" my-lg-0 menu_list"
             style={{ maxHeight: "100vh" }}
@@ -81,7 +82,7 @@ const MyNavbar = () => {
                 <div className="">Account</div>
               </div>
             </Link>
-          </Nav>
+          </Nav>}
           <div className="user_profile_icon prodgy_menu m-2">
             <Link to="/help-and-support" className="prodgy_menu">
               <QuestionCircle size={24} />
@@ -90,7 +91,7 @@ const MyNavbar = () => {
               <Bell size={24} />
             </Link> */}
 
-            <Link to="#" className="profileNameSize prodgy_menu">
+            <div  className="profileNameSize prodgy_menu crPointer">
               <div className="d-flex gap-2" onClick={handleProfileModel}>
                 {adminUser?.profilePic ?
                   <div className="circle">
@@ -106,10 +107,10 @@ const MyNavbar = () => {
 
 
                 <div className="align-self-center">
-                  {adminUser?.name} <ChevronDown />{" "}
+                  {adminUser?.name} <ChevronDown />
                 </div>
               </div>
-            </Link>
+            </div>
           </div>
         </Navbar.Collapse>
       </Container>

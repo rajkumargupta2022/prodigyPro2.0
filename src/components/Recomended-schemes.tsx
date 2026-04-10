@@ -70,6 +70,11 @@ const RecomendedSchemes: React.FC<pageProps> = ({ from, url = endPoints.goalPlan
     setOpenInvestmentConfirmation(true)
   }
   const filterData = async (data: schemeDeatilDataKeys[]) => {
+    if(!data || data.length<=0){
+      setSchemeList([])
+      setSelectedSchemeList([])
+      return
+    }
     const arr = data.filter(item => item.nseProductCode
     )
     setSchemeList(arr)

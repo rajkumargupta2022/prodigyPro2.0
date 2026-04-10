@@ -45,31 +45,13 @@ const AddressDetails = () => {
           ...address_details
         });
       }
-      if(!profile.address_details?.address_1 && !profile.address_details?.pincode){
-        fetchUccData()
-      }
+    
     } catch (err) {
       console.log(err);
-      fetchUccData()
     }
   }
 
-  const fetchUccData = async () => {
-    try {
-      const response = await postRequest<uccDataRes>(endPoints.initiateUcc, { reference_id });
-      const profile = response.data[holder] as userDataObj;
-      const address_details = profile.address_details;
-
-      if (response.success && address_details) {
-        setForm({
-          ...address_details
-        });
-      }
-    } catch (err) {
-      errorToast(err);
-    }
-  }
-
+ 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {

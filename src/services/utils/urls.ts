@@ -16,6 +16,7 @@ export enum endPoints {
   addFamilyMember = "register/add-family-member",
   resendFamilyMemberOtp = "register/resend-family-member-otp",
   verifyFamilyMemberOtp = "register/verify-family-member-otp",
+  checkNewPan = "register/check-new-pan",
 
   /* =========================
      USER / PROFILE

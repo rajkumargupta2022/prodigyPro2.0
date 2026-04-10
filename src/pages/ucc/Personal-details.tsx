@@ -62,21 +62,7 @@ const PersonalDetails = () => {
     } 
   }, [])
 
-  const fetchUccData = async () => {
-    try {
-      const response = await postRequest<uccDataRes>(endPoints.initiateUcc, { reference_id });
-      const profile = response.data[holder] as userDataObj;
-      if (response.success && profile?.personal_details) {
-        const personalDetails = profile.personal_details;
-        setForm({
-          ...personalDetails,
-          dob: formatUTCToDateOnly(personalDetails.dob || ""),
-        });
-      }
-    } catch (err) {
-      errorToast(err);
-    }
-  }
+
   const fetchKycData = async (pan: string) => {
     try {
       const response = await getRequest<uccDataRes>(endPoints.getKycData + "?pan=" + pan);
@@ -87,13 +73,11 @@ const PersonalDetails = () => {
           ...personalDetails,
           dob: formatUTCToDateOnly(personalDetails.dob || ""),
         });
-        if(!profile.personal_details?.full_name){
-          fetchUccData()
-        }
+     
       }
     } catch (err) {
       console.log(err);
-      fetchUccData()
+    
     }
   }
 

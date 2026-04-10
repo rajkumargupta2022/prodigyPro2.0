@@ -9,8 +9,10 @@ import elssEmpty from "../assets/img/elssEmpty.png"
 import PortfolioEmpty from "../pages/PortfolioEmpty";
 import Paginations from "./Pagination";
 import { dateInStringNumber } from "../services/dates/dateFormater";
+import { useAdminUser } from "../context/AdminContext";
 
 function Dividends() {
+   const {isSwitched} = useAdminUser()
   const [selectedDate, setSelectedDate] = useState<string>()
   const [yearList, setYearList] = useState<string[]>([])
   const [schemeList, setSchemeList] = useState<dividendsSchemeKey[]>([])
@@ -25,7 +27,7 @@ function Dividends() {
 
   useEffect(() => {
     fetchYearList()
-  }, [])
+  }, [isSwitched])
   const fetchYearList = (startYear: number = 2000): void => {
     const today = new Date();
     let currentYear = today.getFullYear();

@@ -51,7 +51,7 @@ const MandateAmount = () => {
       const response = await postRequest<uccDataRes>(endPoints.initiateUcc, { reference_id });
       const data = response.data?.bank_details;
       if (response.success && data) {
-        setMandateAmount(response?.data?.mandate_amount ?? undefined)
+        setMandateAmount(response?.data?.mandate_amount ?? 10000)
         setBankDetails({ ...data })
       }
     } catch (err) {
@@ -97,6 +97,10 @@ const MandateAmount = () => {
         );
       } else if (holding_nature === "SI" && tax_status === "2") {
         finalDataSubmit()
+      }else if (holding_nature === "SI" && tax_status === "1") {
+         navigate(
+          `/nomination-details?reference_id=${reference_id}&tax_status=${tax_status}&holding_nature=${holding_nature}&pan=${pan}&holder=${holder}`
+        );
       }
       else {
         navigate(

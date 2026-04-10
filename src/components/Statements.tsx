@@ -6,7 +6,9 @@ import Dividends from "./Dividends";
 import CapitalGain from "./Capital-gains";
 import PortfolioViaEmail from "./Portfolio-via-email";
 
+
 function Statements() {
+ 
   const [active, setActive] = useState("folio-details");
   const [previousActive, setPreviousActive] = useState<string>("");
 

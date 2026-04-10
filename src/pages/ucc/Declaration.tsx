@@ -74,21 +74,21 @@ const Declaration = () => {
     } 
   }, [])
 
-  const fetchUccData = async () => {
-    try {
-      const response = await postRequest<uccDataRes>(endPoints.initiateUcc, { reference_id });
-      const profile = response.data[holder] as userDataObj;
-      const fatca_declarations = profile.fatca_declarations;
+  // const fetchUccData = async () => {
+  //   try {
+  //     const response = await postRequest<uccDataRes>(endPoints.initiateUcc, { reference_id });
+  //     const profile = response.data[holder] as userDataObj;
+  //     const fatca_declarations = profile.fatca_declarations;
 
-      if (response.success && fatca_declarations) {
-        setForm({
-          ...fatca_declarations
-        });
-      }
-    } catch (err) {
-      errorToast(err);
-    }
-  }
+  //     if (response.success && fatca_declarations) {
+  //       setForm({
+  //         ...fatca_declarations
+  //       });
+  //     }
+  //   } catch (err) {
+  //     errorToast(err);
+  //   }
+  // }
   const fetchKycData = async (pan: string) => {
     try {
       const response = await getRequest<uccDataRes>(endPoints.getKycData + "?pan=" + pan);
@@ -100,12 +100,9 @@ const Declaration = () => {
           ...fatca_declarations
         });
       }
-      if(!fatca_declarations?.place_of_birth &&!fatca_declarations?.occupation){
-        fetchUccData()
-      }
+     
     } catch (err) {
      console.log(err);
-      fetchUccData()
     }
   }
 

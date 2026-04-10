@@ -8,14 +8,16 @@ import PortfolioEmpty from "../pages/PortfolioEmpty";
 import { getValueInSort } from "../services/calculation/percentageCalculate";
 import NofolioImg from "../assets/img/no-folio-founds.jpeg";
 import { filterData } from "../services/utils/services";
+import { useAdminUser } from "../context/AdminContext";
 
 function FolioDetailsList() {
+   const {isSwitched} = useAdminUser()
   const navigate = useNavigate()
   const [folioList,setFolioList] = useState<folioStatementKey[]>([])
 
   useEffect(()=>{
     fetchFolioList()
-  },[])
+  },[isSwitched])
      
   const fetchFolioList =async ()=>{
     try{

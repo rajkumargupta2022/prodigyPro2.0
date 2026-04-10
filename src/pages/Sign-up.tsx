@@ -8,9 +8,11 @@ import { errorToast } from "../services/utils/toast";
 import { postRequest } from "../services/Api/HandleApi";
 import { endPoints } from "../services/utils/urls";
 import RequestSent from "../components/Request-sent";
+import { useNavigate } from "react-router-dom";
 
 
 const SighnUp = () => {
+  const navigate = useNavigate();
   const [name, setName] = useState<string>("");
   const [pan, setPan] = useState<string>("");
   const [validated, setValidated] = useState(false);
@@ -29,8 +31,8 @@ const SighnUp = () => {
         const res = await postRequest<any>(endPoints.tempOnboarding, reqBody)
 
         if (res.success) {
-          localStorage.clear()
-       setRequestModel(true)
+          // localStorage.clear()
+         navigate(`/pan-verification?tax_status=SI&holding_nature=01`)
         }
       } catch (err) {
         errorToast(err)

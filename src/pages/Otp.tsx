@@ -60,7 +60,7 @@ const Otp = () => {
         }
         if (res.success && !res?.portfolioUser) {
           localStorage.setItem("token", res.token);
-          navigate("/sign-up")
+          navigate(`/pan-verification?tax_status=1&holding_nature=SI&mobile=${location?.state?.mobile}`)
         }
         // successToast(res);
       } else {

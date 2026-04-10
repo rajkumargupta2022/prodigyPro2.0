@@ -59,3 +59,8 @@ export interface resendOtpRes {
   success: boolean;
   msg: string;
 }
+export interface checkNewPanRes {
+  success: boolean;
+  exists: boolean;
+  msg: string;
+}

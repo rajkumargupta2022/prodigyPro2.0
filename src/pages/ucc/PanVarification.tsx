@@ -1,12 +1,13 @@
 import LoginLeftImage from "../../components/LoginLeftImage";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { errorToast } from "../../services/utils/toast";
 import { getRequest, postRequest, postRequestSimple } from "../../services/Api/HandleApi";
 import { endPoints } from "../../services/utils/urls";
 import { fetchKycDataRes, initiateKycResponse, kycStatusResponse } from "../data-interfaces/kyc";
 import { fetchAdminUser } from "../../services/user/adminUser";
 import { uccDataRes } from "../data-interfaces/ucc";
+import { checkNewPanRes } from "../data-interfaces/users";
 
 
 
@@ -15,6 +16,8 @@ const PanVarification = () => {
   // const reference_id = searchParams.get("reference_id") ?? "";
   const tax_status = searchParams.get("tax_status") ?? "";
   const holding_nature = searchParams.get("holding_nature") ?? "";
+  const mobile = searchParams.get("mobile") ?? "";
+
   // const holder = searchParams.get("holder") as keyof uccDataResKeys;
   const [userPan, setUserPan] = useState<string>("");
   const [isLoader, setIsLoader] = useState<boolean>(false);
@@ -25,22 +28,48 @@ const PanVarification = () => {
   const [isKycCompliant, setIsKycCompliant] = useState<boolean>(false);
   const navigate = useNavigate()
 
+  useEffect(() => {
+    if (!tax_status || !holding_nature) {
+      navigate("/add-family-member")
+    }
+  }, [])
+
+  const inNewPan = async (pan: string, mobile: string) => {
+    try {
+      setIsLoader(true);
+      const response = await postRequest<checkNewPanRes>(endPoints.checkNewPan, { pan, mobile });
+      setIsLoader(false);
+      if (response.success) {
+        return response.exists;
+      }
+    } catch (err) {
+      setIsLoader(false);
+      errorToast(err);
+      return true;
+    }
+  };
+
   const completeKyc = async (pan: string) => {
 
     if (!pan) {
-      setNoKycMsg("Please enter your PAN number to proceed.");
+      setNoKycMsg("Please enter your PAN to proceed.");
       return
     }
-    setIsKycCompliant(false);
-    setNoKycMsg("Sorry! 😔 You are not KYC Compliant");
-    setKySuccessMsg("");
-    setDescription("");
-    setBtnName("Start KYC Verification");
-    setIsLoader(false);
-    return
+    // setIsKycCompliant(false);
+    // setNoKycMsg("Sorry! 😔 You are not KYC Compliant");
+    // setKySuccessMsg("");
+    // setDescription("");
+    // setBtnName("Start KYC Verification");
+    // setIsLoader(false);
+    // return
     const panRegex = /^[A-Z]{5}[0-9]{4}[A-Z]$/;
-
     if (panRegex.test(pan)) {
+      if (mobile) {
+        if (await inNewPan(pan, mobile)) {
+          setNoKycMsg("PAN already exists with a user");
+          return
+        }
+      }
       try {
 
         setIsLoader(true);
@@ -50,13 +79,14 @@ const PanVarification = () => {
           setIsKycCompliant(response.data.kyc_status)
           setKySuccessMsg("Congratulations! 🎉 You are KYC Compliant");
           setDescription("Your KYC details have been successfully verified.");
+          setNoKycMsg("");
           setBtnName("Start Your Investment Journey!");
           setIsLoader(false)
         } else if (!response.data.kyc_status) {
           setIsKycCompliant(false)
           setNoKycMsg("Sorry! 😔 You are not KYC Compliant");
           setKySuccessMsg(""); // Clear success message if not compliant
-          setDescription("Please complete the KYC process to proceed.");
+          setDescription("");
           setBtnName("Start KYC Verification");
           setIsLoader(false)
         }
@@ -79,21 +109,25 @@ const PanVarification = () => {
 
   const proceedForKyc = async (e: React.FormEvent) => {
     e.preventDefault();
-
-
     const adminUser = fetchAdminUser()
+
+    if (holding_nature === "" || tax_status === "") {
+      errorToast("Holding nature and tax status are required");
+      return;
+    }
+
     if (isKycCompliant) {
       try {
         const adminUser = fetchAdminUser()
         const reqBody: any = {
           tax_status: tax_status, // RI / Minor
           holding_nature: holding_nature, // SI / AS
-          mobile_number: adminUser?.mobile, // (10 digits)
+          mobile_number: mobile ? mobile : adminUser?.mobile, // (10 digits)
         };
         if (String(tax_status) === "2") {
-          reqBody.guardian_pan = adminUser?.pan;
+          reqBody.guardian_pan = adminUser?.pan ?? "";
         } else {
-          reqBody.primary_pan = adminUser?.pan;
+          reqBody.primary_pan = adminUser?.pan ? adminUser.pan : userPan;
         }
         const res = await postRequestSimple<uccDataRes>(endPoints.initiateUcc, reqBody)
         if (res.success && res.data?.reference_id) {

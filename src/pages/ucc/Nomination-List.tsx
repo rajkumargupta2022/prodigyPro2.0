@@ -1,7 +1,7 @@
 import NavBar from "../../components/Navbar";
 import NextBar from "../../components/Next-bar";
 import { Card, Dropdown } from "react-bootstrap";
-import { Pencil,  Trash } from "react-bootstrap-icons";
+import { Pencil, Trash } from "react-bootstrap-icons";
 import NomineeModal from "../../components/Nominee-Modal";
 import { nomineeDetailForm, uccDataRes, uccDataResKeys, uccSubmitRes } from "../data-interfaces/ucc";
 import { useEffect, useState } from "react";
@@ -65,26 +65,43 @@ const NominationList = () => {
   const handleAddNew = () => {
     navigate(`/nomination-details?reference_id=${reference_id}&tax_status=${tax_status}&holding_nature=${holding_nature}&pan=${pan}&holder=${holder}`);
   };
+  const getTotalAllocation = (): number => {
+    const total = nomineeList.reduce((sum, nominee) => {
+      return Number(sum) + (Number(nominee.nominee_allocation) ?? 0);
+    }, 0);
+    return total;
+  }
   const finalDataSubmit = async () => {
-    try {
-      const res = await postRequest<uccSubmitRes>(endPoints.submit, { reference_id });
-      if (res.success) {
-        navigate("/ucc-submit");
+    const totalAllocation = getTotalAllocation();
+    if (totalAllocation === 100) {
+      try {
+        const res = await postRequest<uccSubmitRes>(endPoints.submit, { reference_id });
+        if (res.success) {
+          navigate("/ucc-submit");
+        }
+      } catch (err) {
+        errorToast(err);
       }
-    } catch (err) {
-      errorToast(err);
+    }else {
+      errorToast("Total allocation percentage should be 100%. Currently it is " + totalAllocation + "%")
     }
-  };
 
+  };
+// const fetchAllFanilyMembers = async () => {
+//   try {
+//     const response = await postRequest<familyMembersRes>(endPoints.getAllFamily, {pan}); 
+//   }catch (err) {
+//     errorToast(err);
+//   }
   return (
     <>
       <NavBar />
       <NomineeModal toggle={false} />
       <TrackBar />
-      <div className="container pt-5">
-        <div className="personal_form_container pt-4">
+      <div className="container pt-4">
+        <div className="personal_form_container pt-2">
           <h3 className="mb-4 text-dark fw-bolder">List of Nominee(s)</h3>
-          <form className="bg-white px-5 py-4 rounded form_shadow">
+          <form className="bg-white px-5 py-2 rounded form_shadow">
 
             {nomineeList.length > 0 ? nomineeList.map((nominee: nomineeDetailForm, index: number) =>
               <Card key={index} className="d-flex align-items-center p-3 border-0 shadow-sm rounded-3 mt-2">
@@ -107,7 +124,7 @@ const NominationList = () => {
                   <div className="ms-3 flex-grow-1">
                     <h6 className="mb-1 fw-bold">{nominee.nominee_name ?? ""}</h6>
                     <small className="text-muted text-secondary">
-                      {formatUTCToDateOnly(nominee.nominee_dob??"") ?? ""} • {nominee.nominee_relation ?? ""} • Allocation: {nominee.nominee_allocation ?? ""}%
+                      {formatUTCToDateOnly(nominee.nominee_dob ?? "") ?? ""} • {nominee.nominee_relation ?? ""} • Allocation: {nominee.nominee_allocation ?? ""}%
                     </small>
                   </div>
 

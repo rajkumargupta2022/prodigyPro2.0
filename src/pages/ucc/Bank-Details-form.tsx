@@ -27,7 +27,7 @@ const BankDetailForm = () => {
     bank_name: "",
     bank_ifsc: "",
     bank_branch: "",
-    bank_account_type: "",
+    bank_account_type: "SB",
     bank_account_number: "",
     is_bank_verified: false,
   });
@@ -58,31 +58,13 @@ const BankDetailForm = () => {
           ...data
         });
         setConfirmAccountNumber(data.bank_account_number ?? "");
-        if(!data.bank_account_number && !data.bank_ifsc){
-          fetchUccData()
-        }
+       
       }
     } catch (err) {
       console.log(err);
-      fetchUccData()
     }
   }
-  const fetchUccData = async () => {
-    try {
-      const response = await postRequest<uccDataRes>(endPoints.initiateUcc, { reference_id });
-      const data = response.data?.bank_details;
-      if (response.success && data) {
-        const holderData = response.data?.primary_user?.personal_details
-        setHolderName(response.data?.tax_status === 2 ? holderData?.guardian_name ?? "" : holderData?.full_name ?? "")
-        setBankDetailForm({
-          ...data
-        });
-        setConfirmAccountNumber(data.bank_account_number ?? "");
-      }
-    } catch (err) {
-      errorToast(err);
-    }
-  }
+ 
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;

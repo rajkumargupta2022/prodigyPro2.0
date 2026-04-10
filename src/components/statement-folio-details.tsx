@@ -62,8 +62,8 @@ function StateFolioDetails() {
                 </div>
             </div>
             {
-              schemes.length>0?schemes?.map((item)=>{
-                 return<div    className="p-4 shadow-sm bg-white border-0 rounded-4 mb-2" >
+              schemes?.length>0?schemes?.map((item)=>{
+                 return<div    className="p-4 shadow-sm bg-white border-0 rounded-4 mb-2" key={item?.folio_number}>
 
                     <div className="row justify-content-between">
                         <div className="col-lg-8 col-md-12 col-12">
