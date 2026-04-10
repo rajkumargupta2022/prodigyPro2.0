@@ -11,6 +11,8 @@ import { endPoints } from "../../services/utils/urls";
 import { errorToast, successToast } from "../../services/utils/toast";
 import TrackBar from "./Track-bar";
 import { formatUTCToDateOnly } from "../../services/dates/dateFormater";
+import { allFamilyListKeys, allFamilyResponseType } from "../data-interfaces/dashboard";
+import { NomineeRelationEnum } from "../data/ucc-data";
 
 const NominationList = () => {
   const navigate = useNavigate();
@@ -77,22 +79,65 @@ const NominationList = () => {
       try {
         const res = await postRequest<uccSubmitRes>(endPoints.submit, { reference_id });
         if (res.success) {
-          navigate("/ucc-submit");
+          // navigate("/ucc-submit");
+          fetchAllFanilyMembers(res.data.client_code)
         }
       } catch (err) {
         errorToast(err);
       }
-    }else {
+    } else {
       errorToast("Total allocation percentage should be 100%. Currently it is " + totalAllocation + "%")
     }
 
   };
-// const fetchAllFanilyMembers = async () => {
-//   try {
-//     const response = await postRequest<familyMembersRes>(endPoints.getAllFamily, {pan}); 
-//   }catch (err) {
-//     errorToast(err);
-//   }
+  const fetchAllFanilyMembers = async (ucc: string) => {
+    try {
+      let familyMember: allFamilyListKeys[] = []
+      const res = await postRequest<allFamilyResponseType>(endPoints.getAllFamily, { pan });
+      if (res.success) {
+        let flag = false;
+        res.data.forEach((member) => {
+          const formattedItem = {
+            ...member,
+            name: nameFormatter(member.name || ''),
+            relation: nameFormatter(member.relation || ''),
+            jh1_name: nameFormatter(member.jh1_name || ''),
+            jh2_name: nameFormatter(member.jh2_name || '')
+          }
+          if (member?.ucc === ucc) {
+            flag = true;
+            localStorage.setItem("adminUser", JSON.stringify(formattedItem))
+          }
+          else {
+            const formattedItem = {
+                ...member,
+                name: nameFormatter(member.name || ''),
+                relation: nameFormatter(member.relation || ''),
+                jh1_name: nameFormatter(member.jh1_name || ''),
+                jh2_name: nameFormatter(member.jh2_name || '')
+              }
+            familyMember.push(formattedItem)
+          }
+        })
+        if(flag) {
+          localStorage.setItem("familyList", JSON.stringify(familyMember))
+          navigate("/ucc-submit")
+        } else {
+          errorToast("Getting error while matching client code")
+        }
+      }
+    } catch (err) {
+      errorToast(err);
+    }
+  }
+  const nameFormatter = (name: string): string => {
+    if (!name) return '';
+    return name
+      .toLowerCase()
+      .replace(/\b\w/g, (char: string) => char.toUpperCase());
+  };
+ 
+
   return (
     <>
       <NavBar />
@@ -124,7 +169,7 @@ const NominationList = () => {
                   <div className="ms-3 flex-grow-1">
                     <h6 className="mb-1 fw-bold">{nominee.nominee_name ?? ""}</h6>
                     <small className="text-muted text-secondary">
-                      {formatUTCToDateOnly(nominee.nominee_dob ?? "") ?? ""} • {nominee.nominee_relation ?? ""} • Allocation: {nominee.nominee_allocation ?? ""}%
+                      {formatUTCToDateOnly(nominee.nominee_dob ?? "") ?? ""} • {NomineeRelationEnum.find(r => r.value === Number(nominee.nominee_relation))?.label} • Allocation: {nominee.nominee_allocation ?? ""}%
                     </small>
                   </div>
 

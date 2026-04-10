@@ -3,7 +3,7 @@ import NavBar from "../../components/Navbar";
 import NextBar from "../../components/Next-bar";
 import TrackBar from "./Track-bar";
 import { generateOptions } from "../re-used-html/select-box";
-import { ContactRelationsEnum } from "../data/ucc-data";
+import {  NomineeRelationEnum, StatevaluesEnum } from "../data/ucc-data";
 import { useEffect, useState } from "react";
 import { endPoints } from "../../services/utils/urls";
 import { postRequest } from "../../services/Api/HandleApi";
@@ -80,7 +80,7 @@ const NominationDetails = () => {
             ...prev,
             nominee_address: {
               ...prev.nominee_address,
-              state: res.data.state,
+              state: getStateCode(res.data.state),
               country: res.data.country,
               pincode: res.data.pincode,
               city: res.data.district
@@ -92,6 +92,8 @@ const NominationDetails = () => {
       }
     }
   }
+const getStateCode = (name:string) =>
+  StatevaluesEnum.find(s => s.label === name)?.value;
 
   const calculateAge = (dobString: string) => {
     if (!dobString) return 0;
@@ -188,7 +190,8 @@ const NominationDetails = () => {
       nominee_guardian_pan: form.is_nominee_minor ? form.nominee_guardian_pan : undefined,
       nominee_pan: !form.is_nominee_minor ? form.nominee_pan : undefined,
       nominee_dob: formatDateToUTCString(form.nominee_dob || ""),
-      nominee_allocation: Number(form.nominee_allocation)
+      nominee_allocation: Number(form.nominee_allocation),
+      nominee_relation: Number(form.nominee_relation)
     };
 
     if (edit_index !== null) {
@@ -280,7 +283,7 @@ const NominationDetails = () => {
                 </label>
                 <select name="nominee_relation" value={form.nominee_relation} onChange={handleChange} className={`form-select ${errors.nominee_relation ? 'is-invalid' : ''}`}>
                   <option value="">Choose...</option>
-                  {generateOptions(ContactRelationsEnum, "value", "label")}
+                  {generateOptions(NomineeRelationEnum, "value", "label")}
                 </select>
                 {errors.nominee_relation && <div className="invalid-feedback">{errors.nominee_relation}</div>}
               </div>

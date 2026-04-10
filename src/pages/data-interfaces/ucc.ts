@@ -99,7 +99,7 @@ export interface checkUploadRes {
 }
 export interface uccSubmitRes {
   success: boolean;
-  data: boolean;
+  data: uccSubmitKeys;
 }
 export interface uccSubmitKeys {
   client_code: string;

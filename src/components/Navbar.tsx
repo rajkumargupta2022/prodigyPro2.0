@@ -104,8 +104,6 @@ const MyNavbar = () => {
                   </div> : <div className="nameTitle">
                     {adminUser?.name?.split(" ")?.slice(0, 2).map(word => word[0]).join("").toUpperCase()}
                   </div>}
-
-
                 <div className="align-self-center">
                   {adminUser?.name} <ChevronDown />
                 </div>

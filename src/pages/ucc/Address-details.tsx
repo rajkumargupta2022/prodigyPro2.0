@@ -77,13 +77,16 @@ const AddressDetails = () => {
       try {
         const res = await postRequest<pincodeDetailsRes>(endPoints.getPincodeDetails, { pincode });
         if (res.data) {
-          setForm({ ...form, state: res.data.state, country: res.data.country, pincode: res.data.pincode, city: res.data.district });
+          setForm({ ...form, state:getStateCode(res.data.state), country: res.data.country, pincode: res.data.pincode, city: res.data.district });
         }
       } catch (err) {
-
+            console.log(err);
       }
     }
   }
+  const getStateCode = (name:string) =>
+  StatevaluesEnum.find(s => s.label === name)?.value ;
+
   const validate = (): boolean => {
     const newErrors: Partial<addressDetailForm> = {};
 
@@ -210,7 +213,7 @@ const AddressDetails = () => {
                  
                 >
                   <option value="">Choose...</option>
-                  {generateOptions(StatevaluesEnum, "label", "label")}
+                  {generateOptions(StatevaluesEnum, "value", "label")}
                 </select>
                 {errors.state && (
                   <small className="text-danger">{errors.state}</small>
