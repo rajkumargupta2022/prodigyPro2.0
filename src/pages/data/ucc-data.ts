@@ -106,8 +106,8 @@ export const StatevaluesEnum = [
 ];
 
 export const TaxStatusEnum = [
-  { value: 1, label: "Resident Individual" },
-  { value: 2, label: "On Behalf of Minor" },
+  { value: "1", label: "Resident Individual" },
+  { value: "2", label: "On Behalf of Minor" },
 ];
 
 export const UserGenderEnum =[
@@ -132,3 +132,23 @@ export const WealthSourceEnum =[
    { value: 7, label: "Royalty" },
    { value: 8, label: "Other" }
 ]
+export const UccStatusEnum = {
+  ACTIVE: "ACTIVE",
+  INACTIVE: "INACTIVE",
+  PENDING: "PENDING",
+  REJECTED: "REJECTED",
+  ON_HOLD: "ON_HOLD",
+  EXPIRED: "EXPIRED",
+  NOT_FOUND: "NOT_FOUND",
+}
+export const uccMsg = {
+  uccUpdateMsg: "Invester account is not active",
+}
+export const taxStatus = {
+  ON_BEHALF_OF_MINOR: "2",
+  RESIDENT_INDIVIDUAL: "1",
+}
+export const holdingNature = {
+  SINGLE: "SI",
+  AOS: "AS",
+}

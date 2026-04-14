@@ -2,9 +2,18 @@
 import { createContext, useContext, useState, ReactNode, useEffect } from "react";
 import { allFamilyListKeys, allFamilyResponseType, familyDataType, familySnapshotResponseType } from "../pages/data-interfaces/dashboard";
 import { postRequestSimple } from "../services/Api/HandleApi";
+import { getRequestSimple } from "../services/Api/HandleApi";
+import { errorToast } from "../services/utils/toast";
+import { kycUpdateRes } from "../pages/data-interfaces/ucc";
+import { UccStatusEnum } from "../pages/data/ucc-data";
 import { endPoints } from "../services/utils/urls";
 import { detailPortfolioSchemeType, detailPortfolioType } from "../pages/data-interfaces/portfolio";
 
+export interface UccStatusInfo {
+  isShowKycMsg: boolean;
+  isLoadingKyc: boolean;
+  uccStatusData: kycUpdateRes | null;
+}
 
 interface AdminUserContextType {
   adminUser?: allFamilyListKeys;
@@ -18,8 +27,10 @@ interface AdminUserContextType {
   fetchDetailedPortfolio: (value: string) => Promise<void>;
   setPortfolioDetailData: (value: any) => void;
   portfolioDetailData: detailPortfolioSchemeType[];
-  fetchFamilyPortfoloData: () => void
+  fetchFamilyPortfoloData: () => void;
   isSwitched: boolean;
+  uccStatusInfo: UccStatusInfo;
+  fetchUccStatus: (ucc: string) => Promise<void>;
 
 }
 
@@ -33,6 +44,11 @@ export const AdminUserProvider = ({ children }: { children: ReactNode }) => {
   const [familySnapShotData, setFamilySnapShotData] = useState<familyDataType[]>([])
   const [portfolioDetailData, setPortfolioDetailData] = useState<detailPortfolioSchemeType[]>([])
   const [isSwitched, setIsSwitched] = useState(false)
+  const [uccStatusInfo, setUccStatusInfo] = useState<UccStatusInfo>({
+    isShowKycMsg: false,
+    isLoadingKyc: true,
+    uccStatusData: null
+  });
 
   const [snapshotData, setSnapshotData] = useState<familyDataType>({
     Totalpurchase: 0,
@@ -65,7 +81,7 @@ export const AdminUserProvider = ({ children }: { children: ReactNode }) => {
         localStorage.setItem("familyList", JSON.stringify(res.data))
         filterAdmin(res.data)
       }
-    } 
+    }
     // else if (adminData && adminData.length > 0 && adminData[0]?.ucc) {
     //   filterAdmin(adminData)
     // }
@@ -90,6 +106,7 @@ export const AdminUserProvider = ({ children }: { children: ReactNode }) => {
         localStorage.setItem("adminUser", JSON.stringify(formattedItem))
         setAdminUser(formattedItem)
         familyPortfolio(formattedItem)
+        fetchUccStatus(formattedItem.ucc || "")
         setFamilyMemberList([formattedItem])
         return
       }
@@ -106,6 +123,7 @@ export const AdminUserProvider = ({ children }: { children: ReactNode }) => {
           localStorage.setItem("adminUser", JSON.stringify(formattedItem))
           setAdminUser(formattedItem)
           familyPortfolio(formattedItem)
+          fetchUccStatus(formattedItem.ucc || "")
         } else {
           familyMember.push(formattedItem)
         }
@@ -137,6 +155,7 @@ export const AdminUserProvider = ({ children }: { children: ReactNode }) => {
       // If current admin is found, fetch their portfolio
       if (currentAdmin) {
         familyPortfolio(currentAdmin)
+        fetchUccStatus(currentAdmin.ucc || "")
       }
     }
   }
@@ -153,6 +172,7 @@ export const AdminUserProvider = ({ children }: { children: ReactNode }) => {
   ) => {
     localStorage.setItem("adminUser", JSON.stringify(adminData));
     setAdminUser(adminData);
+    fetchUccStatus(adminData.ucc)
     setIsSwitched(isSwitched => !isSwitched)
     // Re-filter the family data to update family member list
     let familyListData: any = localStorage.getItem("familyList")
@@ -164,6 +184,28 @@ export const AdminUserProvider = ({ children }: { children: ReactNode }) => {
     familyPortfolio(adminData)
     fetchDetailedPortfolio(adminData?.ucc)
     if (setShow) setShow(false);
+  };
+  const fetchUccStatus = async (ucc: string) => {
+    if (!ucc) {
+      setUccStatusInfo(prev => ({ ...prev, isLoadingKyc: false }));
+      errorToast("UCC not found for the user. Please complete your registration.");
+      return;
+    }
+    try {
+      setUccStatusInfo(prev => ({ ...prev, isLoadingKyc: true }));
+      const res = await getRequestSimple<kycUpdateRes>(endPoints.getUccUpdate + "?client_code=" + ucc);
+      localStorage.setItem("uccStatus", res.status);
+      
+      setUccStatusInfo(prev => ({
+        ...prev,
+        uccStatusData: res,
+        isShowKycMsg: res.status !== UccStatusEnum.ACTIVE
+      }));
+    } catch (error) {
+      console.error("Error fetching UCC status:", error);
+    } finally {
+      setUccStatusInfo(prev => ({ ...prev, isLoadingKyc: false }));
+    }
   };
 
   const familyPortfolio = async (adminUser: any, fromPortfolio: boolean = false) => {
@@ -249,7 +291,9 @@ export const AdminUserProvider = ({ children }: { children: ReactNode }) => {
       setPortfolioDetailData,
       portfolioDetailData,
       fetchFamilyPortfoloData,
-      isSwitched
+      isSwitched,
+      uccStatusInfo,
+      fetchUccStatus
     }}>
       {children}
     </AdminUserContext.Provider>

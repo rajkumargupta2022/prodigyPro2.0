@@ -1,10 +1,13 @@
 import { Link } from "react-router-dom";
-import { useAdminUser } from "../context/AdminContext"
+import { useAdminUser } from "../context/AdminContext";
+import { UccStatusEnum, uccMsg } from "../pages/data/ucc-data";
+import { errorToast } from "../services/utils/toast";
 
 
 function Profile() {
   const { switchProfile, adminUser, familyMemberList } = useAdminUser()
-   
+  const uccStatus = localStorage.getItem("uccStatus");
+  const isAddDisabled = uccStatus !== UccStatusEnum.ACTIVE;
   return (
     <main className="col-md-9 ms-sm-auto col-lg-9 px-md-4 py-4">
       <h3>
@@ -35,7 +38,16 @@ function Profile() {
 
         <div className="d-flex">
           <h5 style={{ flex: 1 }}>Family Members</h5>
-          <Link className="logoBlueColor" to={"/add-family-member"}>+ Add New</Link>
+          <Link 
+            className={`${isAddDisabled ? "text-muted disabled-link" : "logoBlueColor"}`} 
+            to={"/add-family-member"}
+            onClick={(e) => {
+              if (isAddDisabled) {
+                e.preventDefault();
+                errorToast(uccMsg.uccUpdateMsg);
+              }
+            }}
+          >+ Add New</Link>
         </div>
 
         <div className="row">

@@ -8,6 +8,8 @@ import { postRequest, postRequestSimple } from "../../services/Api/HandleApi";
 import { endPoints, imageUrl } from "../../services/utils/urls";
 import { errorToast } from "../../services/utils/toast";
 import { CurrencyRupee } from "react-bootstrap-icons";
+import { allFamilyListKeys, allFamilyResponseType } from "../data-interfaces/dashboard";
+import { useAdminUser } from "../../context/AdminContext";
 
 const MandateAmount = () => {
   const shortAmount = {
@@ -17,6 +19,7 @@ const MandateAmount = () => {
     fiveKValue: 100000
 
   }
+  const { switchProfile } = useAdminUser()
   const navigate = useNavigate()
   const [searchParams] = useSearchParams();
   const reference_id = searchParams.get("reference_id") ?? "";
@@ -97,8 +100,8 @@ const MandateAmount = () => {
         );
       } else if (holding_nature === "SI" && tax_status === "2") {
         finalDataSubmit()
-      }else if (holding_nature === "SI" && tax_status === "1") {
-         navigate(
+      } else if (holding_nature === "SI" && tax_status === "1") {
+        navigate(
           `/nomination-details?reference_id=${reference_id}&tax_status=${tax_status}&holding_nature=${holding_nature}&pan=${pan}&holder=${holder}`
         );
       }
@@ -116,12 +119,59 @@ const MandateAmount = () => {
     try {
       const res = await postRequest<uccSubmitRes>(endPoints.submit, { reference_id });
       if (res.success) {
-        navigate("/ucc-submit");
+        fetchAllFanilyMembers(res.data.client_code)
       }
     } catch (err) {
       errorToast(err);
     }
   };
+  const fetchAllFanilyMembers = async (ucc: string) => {
+    try {
+      let familyMember: allFamilyListKeys[] = []
+      const res = await postRequest<allFamilyResponseType>(endPoints.getAllFamily, { pan });
+      if (res.success) {
+        let flag = false;
+        res.data.forEach((member) => {
+          const formattedItem = {
+            ...member,
+            name: nameFormatter(member.name || ''),
+            relation: nameFormatter(member.relation || ''),
+            jh1_name: nameFormatter(member.jh1_name || ''),
+            jh2_name: nameFormatter(member.jh2_name || '')
+          }
+          if (member?.ucc === ucc) {
+            flag = true;
+            switchProfile(formattedItem)
+          }
+          else {
+            const formattedItem = {
+              ...member,
+              name: nameFormatter(member.name || ''),
+              relation: nameFormatter(member.relation || ''),
+              jh1_name: nameFormatter(member.jh1_name || ''),
+              jh2_name: nameFormatter(member.jh2_name || '')
+            }
+            familyMember.push(formattedItem)
+          }
+        })
+        if (flag) {
+          localStorage.setItem("familyList", JSON.stringify(familyMember))
+          navigate("/ucc-submit?client_code=" + ucc);
+        } else {
+          errorToast("Getting error while matching client code")
+        }
+      }
+    } catch (err) {
+      errorToast(err);
+    }
+  }
+  const nameFormatter = (name: string): string => {
+    if (!name) return '';
+    return name
+      .toLowerCase()
+      .replace(/\b\w/g, (char: string) => char.toUpperCase());
+  };
+
 
 
   return (

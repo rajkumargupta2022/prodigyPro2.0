@@ -3,7 +3,7 @@ import NavBar from "../../components/Navbar";
 import NextBar from "../../components/Next-bar";
 import TrackBar from "./Track-bar";
 import { generateOptions } from "../re-used-html/select-box";
-import {  NomineeRelationEnum, StatevaluesEnum } from "../data/ucc-data";
+import { NomineeRelationEnum, StatevaluesEnum } from "../data/ucc-data";
 import { useEffect, useState } from "react";
 import { endPoints } from "../../services/utils/urls";
 import { postRequest } from "../../services/Api/HandleApi";
@@ -64,6 +64,11 @@ const NominationDetails = () => {
               nominee_dob: formatUTCToDateOnly(nomineeData.nominee_dob || ""),
             });
           }
+        } else {
+          const totalAllocation = response.data.nominees.reduce((sum, item) => sum + (item.nominee_allocation || 0), 0);
+          if (totalAllocation === 100) {
+            navigate(`/nomination-list?reference_id=${reference_id}&tax_status=${tax_status}&holding_nature=${holding_nature}&pan=${pan}&holder=${holder}`, { replace: true });
+          }
         }
       }
     } catch (err) {
@@ -92,8 +97,8 @@ const NominationDetails = () => {
       }
     }
   }
-const getStateCode = (name:string) =>
-  StatevaluesEnum.find(s => s.label === name)?.value;
+  const getStateCode = (name: string) =>
+    StatevaluesEnum.find(s => s.label === name)?.value;
 
   const calculateAge = (dobString: string) => {
     if (!dobString) return 0;
@@ -146,19 +151,19 @@ const getStateCode = (name:string) =>
   const handleAddNominee = async () => {
 
     const newErrors: any = {};
-    if (!form.nominee_name?.trim()) newErrors.nominee_name = "Required";
+    if (!form.nominee_name?.trim()) newErrors.nominee_name = "Nominee name is required";
     if (!form.nominee_email?.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.nominee_email)) {
       newErrors.nominee_email = "Valid email required";
     }
     if (!form.nominee_mobile?.trim() || !/^[6-9]\d{9}$/.test(form.nominee_mobile)) {
       newErrors.nominee_mobile = "Valid mobile required";
     }
-    if (!form.nominee_dob) newErrors.nominee_dob = "Required";
-    if (!form.nominee_relation) newErrors.nominee_relation = "Required";
-    if (!form.nominee_allocation || form.nominee_allocation <= 0) newErrors.nominee_allocation = "Required";
+    if (!form.nominee_dob) newErrors.nominee_dob = "Nominee date of birth is required";
+    if (!form.nominee_relation) newErrors.nominee_relation = "Nominee relation is required";
+    if (!form.nominee_allocation || form.nominee_allocation <= 0) newErrors.nominee_allocation = "Nominee allocation is required";
 
     if (form.is_nominee_minor) {
-      if (!form.nominee_guardian_name?.trim()) newErrors.nominee_guardian_name = "Required";
+      if (!form.nominee_guardian_name?.trim()) newErrors.nominee_guardian_name = "Gaurdian name is required";
       if (!form.nominee_guardian_pan?.trim() || !/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(form.nominee_guardian_pan.toUpperCase())) {
         newErrors.nominee_guardian_pan = "Valid PAN required";
       }
@@ -168,11 +173,11 @@ const getStateCode = (name:string) =>
       }
     }
 
-    if (!form.nominee_address?.pincode?.trim()) newErrors.address_pincode = "Required";
-    if (!form.nominee_address?.address_1?.trim()) newErrors.address_address_1 = "Required";
-    if (!form.nominee_address?.city?.trim()) newErrors.address_city = "Required";
-    if (!form.nominee_address?.state?.trim()) newErrors.address_state = "Required";
-    if (!form.nominee_address?.country?.trim()) newErrors.address_country = "Required";
+    if (!form.nominee_address?.pincode?.trim()) newErrors.address_pincode = "Pincode is required";
+    if (!form.nominee_address?.address_1?.trim()) newErrors.address_address_1 = "Address is required";
+    if (!form.nominee_address?.city?.trim()) newErrors.address_city = "City is required";
+    if (!form.nominee_address?.state?.trim()) newErrors.address_state = "State is required";
+    if (!form.nominee_address?.country?.trim()) newErrors.address_country = "Country is required";
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -213,9 +218,9 @@ const getStateCode = (name:string) =>
     if (res.success) {
       successToast(edit_index !== null ? "Nominee updated successfully" : "Nominee added successfully");
       setForm(formKeys);
-      if(edit_index !== null) {
-              navigate(`/nomination-list?reference_id=${reference_id}&tax_status=${tax_status}&holding_nature=${holding_nature}&pan=${pan}&holder=${holder}`);
-
+      setNomineeList(updatedNomineeList);
+      if (edit_index !== null || totalAllocation === 100) {
+        navigate(`/nomination-list?reference_id=${reference_id}&tax_status=${tax_status}&holding_nature=${holding_nature}&pan=${pan}&holder=${holder}`);
       }
     }
   };
@@ -229,7 +234,7 @@ const getStateCode = (name:string) =>
   }
   const goOnNomineeList = () => {
     const totalAllocation = getTotalAllocation();
-    if (totalAllocation >= 100) {
+    if (totalAllocation == 100) {
       navigate(
         `/nomination-list?reference_id=${reference_id}&tax_status=${tax_status}&holding_nature=${holding_nature}&pan=${pan}&holder=${holder}`
       );
@@ -319,7 +324,7 @@ const getStateCode = (name:string) =>
                 <label className="form-label fw-light text-secondary">
                   ALLOCATION PERCENTAGE
                 </label>
-                <input type="number" name="nominee_allocation" value={form.nominee_allocation} onChange={handleChange} className={`form-control ${errors.nominee_allocation ? 'is-invalid' : ''}`} />
+                <input type="text" name="nominee_allocation" value={form.nominee_allocation} onChange={handleChange} className={`form-control ${errors.nominee_allocation ? 'is-invalid' : ''}`} />
                 {errors.nominee_allocation && <div className="invalid-feedback">{errors.nominee_allocation}</div>}
               </div>
 
@@ -361,6 +366,11 @@ const getStateCode = (name:string) =>
                   <input type="text" name="address_country" value={form.nominee_address?.country} className={`form-control ${errors.address_country ? 'is-invalid' : ''}`} />
                   {errors.address_country && <div className="invalid-feedback">{errors.address_country}</div>}
                 </div>
+                <div className="col-md-6 d-flex justify-content-end align-items-end">
+                  <button type="button" className="customButton px-2" onClick={handleAddNominee}>
+                    {edit_index !== null ? "Update Nominee" : "+ Add Nominee"}
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -368,13 +378,13 @@ const getStateCode = (name:string) =>
 
             {/* Country & State */}
 
-            <div className="row  mb-3">
+            {/* <div className="row  mb-3">
               <div className="col-md-6">
                 <button type="button" className="customButton px-2" onClick={handleAddNominee}>
                   {edit_index !== null ? "Update Nominee" : "+ Add Nominee"}
                 </button>
               </div>
-            </div>
+            </div> */}
           </form>
         </div>
       </div>

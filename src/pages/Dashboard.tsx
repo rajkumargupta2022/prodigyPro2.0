@@ -14,13 +14,17 @@ import { useAdminUser } from "../context/AdminContext";
 import SwitchPortfolio from "./dashboard/Switch-portfolio";
 import Footer from "../components/Footer";
 import OurServices from "./dashboard/Our-services";
+import KycMsg from "./dashboard/Kyc-msg";
+import KycMsgSkeleton from "./dashboard/Kyc-msg-skeleton";
+import DashboardSkeleton from "./DashboardSkeleton";
 
 
 
 const Dashboard = () => {
-  const { familySnapShotData, familyPortfolio, snapshotData } = useAdminUser()
+  const { familySnapShotData, familyPortfolio, snapshotData, uccStatusInfo, fetchUccStatus } = useAdminUser()
 
   const [openPortfolioSwitch, setOpenPortfolioSwitch] = useState<boolean>(false);
+  const [isDashboardLoading, setIsDashboardLoading] = useState<boolean>(true);
 
 
   const [target, setTarget] = useState(null);
@@ -37,8 +41,19 @@ const Dashboard = () => {
     }
   };
   useEffect(() => {
-    familyPortfolio(adminUser)
-  }, [])
+    fetchUccStatus(adminUser?.ucc)
+    const loadDashboardData = async () => {
+      try {
+        setIsDashboardLoading(true);
+        await familyPortfolio(adminUser);
+      } finally {
+        setIsDashboardLoading(false);
+      }
+    };
+    loadDashboardData();
+  }, [adminUser?.ucc])
+
+
 
   return (
     <>
@@ -46,40 +61,45 @@ const Dashboard = () => {
       <section className="closeModel">
         <div className="container-fluid">
           <div className="row mt-3 justify-content-md-center">
-            <div className="col-lg-7 col-sm-12">
-              {/* <KycMsg/>  */}
-              <Card border="light" className="my-3 cardRadius">
-                <Card.Body>
-                  <div className="row border-bottom">
-                    <div className="col d-flex align-items-center">
-                      <h6 className="fw-semibold mb-0">PORTFOLIO SUMMARY</h6> <span className="fs12px ms-2" > As on {currentDateInStringNumber()}</span>
-                    </div>
-                    <h3 className="fw-bold"><CurrencyRupee className="mb-1" />{snapshotData?.Totalmarketvalue.toLocaleString("en-In")}{familySnapShotData.length > 1 && <small className="fs-6 crPointer" onClick={handleClick}>  <ChevronDown className="mx-1" /></small>}</h3>
-                  </div>
-                  <div className="mt-2 textColor" >
-                    1 Day change{" "}
-                    {snapshotData?.Totaldayschange >= 0 ? (
-                      <span className="congratesColor">
-                        <ArrowUpCircleFill />
-                        <CurrencyRupee className="mb-1" />
-                        {snapshotData?.Totaldayschange.toLocaleString("en-In")}  ({getPercentageValue(Number(snapshotData?.Totalmarketvalue), snapshotData?.Totaldayschange)}%)
-                      </span>
-                    ) : snapshotData?.Totaldayschange < 0 && (
-                      <span className="errorColor2">
-                        <ArrowDownCircleFill />
-                        <CurrencyRupee className="mb-1" />
-                        {snapshotData?.Totaldayschange.toLocaleString("en-In")} ({getPercentageValue(Number(snapshotData?.Totalmarketvalue), snapshotData?.Totaldayschange)}%)
-                      </span>
-                    )}
-                  </div>
-                </Card.Body>
-              </Card>
-              <OurServices />
-              <GoalPlanning />
-              <PopularFunds />
-            </div>
-            <DiscoverFUnds />
-
+            {isDashboardLoading ? (
+              <DashboardSkeleton kycSection={uccStatusInfo?.isLoadingKyc ? <KycMsgSkeleton /> : uccStatusInfo?.isShowKycMsg ? <KycMsg uccStatusData={uccStatusInfo?.uccStatusData} /> : null} />
+            ) : (
+              <>
+                <div className="col-lg-7 col-sm-12">
+                  {uccStatusInfo?.isLoadingKyc ? <KycMsgSkeleton /> : uccStatusInfo?.isShowKycMsg && <KycMsg uccStatusData={uccStatusInfo?.uccStatusData} />}
+                  <Card border="light" className="my-3 cardRadius">
+                    <Card.Body>
+                      <div className="row border-bottom">
+                        <div className="col d-flex align-items-center">
+                          <h6 className="fw-semibold mb-0">PORTFOLIO SUMMARY</h6> <span className="fs12px ms-2" > As on {currentDateInStringNumber()}</span>
+                        </div>
+                        <h3 className="fw-bold"><CurrencyRupee className="mb-1" />{snapshotData?.Totalmarketvalue.toLocaleString("en-In")}{familySnapShotData.length > 1 && <small className="fs-6 crPointer" onClick={handleClick}>  <ChevronDown className="mx-1" /></small>}</h3>
+                      </div>
+                      <div className="mt-2 textColor" >
+                        1 Day change{" "}
+                        {snapshotData?.Totaldayschange >= 0 ? (
+                          <span className="congratesColor">
+                            <ArrowUpCircleFill />
+                            <CurrencyRupee className="mb-1" />
+                            {snapshotData?.Totaldayschange.toLocaleString("en-In")}  ({getPercentageValue(Number(snapshotData?.Totalmarketvalue), snapshotData?.Totaldayschange)}%)
+                          </span>
+                        ) : snapshotData?.Totaldayschange < 0 && (
+                          <span className="errorColor2">
+                            <ArrowDownCircleFill />
+                            <CurrencyRupee className="mb-1" />
+                            {snapshotData?.Totaldayschange.toLocaleString("en-In")} ({getPercentageValue(Number(snapshotData?.Totalmarketvalue), snapshotData?.Totaldayschange)}%)
+                          </span>
+                        )}
+                      </div>
+                    </Card.Body>
+                  </Card>
+                  <OurServices />
+                  <GoalPlanning />
+                  <PopularFunds />
+                </div>
+                <DiscoverFUnds />
+              </>
+            )}
           </div>
         </div>
       </section>

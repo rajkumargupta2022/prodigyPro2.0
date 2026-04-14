@@ -170,8 +170,8 @@ const BankDetailForm = () => {
 
   const varifyBank = async () => {
     try {
-      setShowCheckUpload(true)
-     return false
+    //   setShowCheckUpload(true)
+    //  return false
       const reqBody = {
         beneficiaryAccount: bankDetailForm?.bank_account_number ?? "",
         beneficiaryIFSC: bankDetailForm?.bank_ifsc ?? "",
@@ -179,16 +179,14 @@ const BankDetailForm = () => {
       }
       const res = await postRequest<varifyBankRes>(endPoints.verifyBank, reqBody)
       console.log("verify bank", res)
-      if (res.data.nameMatch.toLocaleLowerCase() === "yes") {
+    
+      if (res.data.nameMatchScore === 100) {
         handleSubmit()
 
-      } else if (res.data.nameMatch.toLocaleLowerCase() === "no") {
+      } else if (res.data.nameMatchScore < 100) {
          setShowCheckUpload(true)
 
-      } else {
-        errorToast(res.data.reason)
-       
-      }
+      } 
     } catch (err) {
       errorToast("Something went wrong")
       

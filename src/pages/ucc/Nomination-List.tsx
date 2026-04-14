@@ -13,8 +13,10 @@ import TrackBar from "./Track-bar";
 import { formatUTCToDateOnly } from "../../services/dates/dateFormater";
 import { allFamilyListKeys, allFamilyResponseType } from "../data-interfaces/dashboard";
 import { NomineeRelationEnum } from "../data/ucc-data";
+import { useAdminUser } from "../../context/AdminContext";
 
 const NominationList = () => {
+  const { switchProfile } = useAdminUser()
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const reference_id = searchParams.get("reference_id") ?? "";
@@ -106,22 +108,22 @@ const NominationList = () => {
           }
           if (member?.ucc === ucc) {
             flag = true;
-            localStorage.setItem("adminUser", JSON.stringify(formattedItem))
+            switchProfile(formattedItem)
           }
           else {
             const formattedItem = {
-                ...member,
-                name: nameFormatter(member.name || ''),
-                relation: nameFormatter(member.relation || ''),
-                jh1_name: nameFormatter(member.jh1_name || ''),
-                jh2_name: nameFormatter(member.jh2_name || '')
-              }
+              ...member,
+              name: nameFormatter(member.name || ''),
+              relation: nameFormatter(member.relation || ''),
+              jh1_name: nameFormatter(member.jh1_name || ''),
+              jh2_name: nameFormatter(member.jh2_name || '')
+            }
             familyMember.push(formattedItem)
           }
         })
-        if(flag) {
+        if (flag) {
           localStorage.setItem("familyList", JSON.stringify(familyMember))
-          navigate("/ucc-submit")
+          navigate("/ucc-submit?client_code=" + ucc);
         } else {
           errorToast("Getting error while matching client code")
         }
@@ -136,7 +138,7 @@ const NominationList = () => {
       .toLowerCase()
       .replace(/\b\w/g, (char: string) => char.toUpperCase());
   };
- 
+
 
   return (
     <>
@@ -191,10 +193,10 @@ const NominationList = () => {
                 </div>
               </Card>
             ) : <p className="text-muted mb-0">No nominee added yet</p>}
-
-            <div className="logoBlueColor mt-4 crPointer fw-bold d-inline-block" onClick={handleAddNew}>
-              + Add New Nominee
-            </div>
+            {getTotalAllocation() !== 100 &&
+              <div className="logoBlueColor mt-4 crPointer fw-bold d-inline-block" onClick={handleAddNew}>
+                + Add New Nominee
+              </div>}
 
           </form>
         </div>

@@ -170,6 +170,8 @@ export enum endPoints {
    getPincodeDetails = "ucc/get-pincode-details",
    getKycData="ucc/get-kyc-data",
    saveBankProof="ucc/save-bank-proof",
-   submit = "ucc/submit"
+   submit = "ucc/submit",
+   getKycUpdate="ucc/get-kyc-update",
+   getUccUpdate="ucc/get-ucc-update",
 
 }

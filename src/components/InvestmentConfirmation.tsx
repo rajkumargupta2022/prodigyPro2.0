@@ -19,6 +19,8 @@ import DatePicker from 'react-datepicker';
 // import { errorToast } from '../services/utils/toast';
 import { Form } from 'react-bootstrap';
 import Disclaimer from './Disclaimer'
+import { UccStatusEnum } from '../pages/data/ucc-data';
+import { errorToast } from '../services/utils/toast';
 
 interface investmetProps {
   show: boolean;
@@ -149,6 +151,11 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
   });
 
   const handleFolioSelection = () => {
+    const uccStatus = localStorage.getItem("uccStatus")
+    if (uccStatus !== UccStatusEnum.ACTIVE) {
+      errorToast("Invester Account is not active")
+      return
+    }
 
     const total = schemeList.reduce((acc, scheme) => {
       const minAmount = scheme.amount ?? 0; // use 0 if undefined
@@ -264,47 +271,47 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
     }
   };
 
- const distributeAmount = (total: number) => {
-  const eligibleIndexes = getEligibleIndexes();
-  const count = eligibleIndexes.length;
+  const distributeAmount = (total: number) => {
+    const eligibleIndexes = getEligibleIndexes();
+    const count = eligibleIndexes.length;
 
-  if (count === 0) return;
+    if (count === 0) return;
 
-  const perScheme = Math.floor(total / count);
-  const remainder = total % count;
+    const perScheme = Math.floor(total / count);
+    const remainder = total % count;
 
-  let remainderUsed = false;
+    let remainderUsed = false;
 
-  const updatedList = schemeList.map((item, index) => {
-    if (!eligibleIndexes.includes(index)) {
-      return { ...item, amount: 0 }; // or keep previous amount
-    }
+    const updatedList = schemeList.map((item, index) => {
+      if (!eligibleIndexes.includes(index)) {
+        return { ...item, amount: 0 }; // or keep previous amount
+      }
 
-    let amount = perScheme;
+      let amount = perScheme;
 
-    if (!remainderUsed) {
-      amount += remainder;
-      remainderUsed = true;
-    }
+      if (!remainderUsed) {
+        amount += remainder;
+        remainderUsed = true;
+      }
 
-    return {
-      ...item,
-      amount,
-    };
-  });
+      return {
+        ...item,
+        amount,
+      };
+    });
 
-  setSchemeList(updatedList);
-};
+    setSchemeList(updatedList);
+  };
 
   const getEligibleIndexes = () => {
-  return schemeList
-    .map((item, index) => {
-      if (isSipTransaction && item.sipAllowed) return index;
-      if (isLumpsumTransaction && item.purchaseAllowed) return index;
-      return null;
-    })
-    .filter((index) => index !== null) as number[];
-};
+    return schemeList
+      .map((item, index) => {
+        if (isSipTransaction && item.sipAllowed) return index;
+        if (isLumpsumTransaction && item.purchaseAllowed) return index;
+        return null;
+      })
+      .filter((index) => index !== null) as number[];
+  };
 
 
   const handleMinAmount = async (type: boolean = isSipTransaction) => {

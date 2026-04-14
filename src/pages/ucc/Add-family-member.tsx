@@ -184,7 +184,7 @@ function AddFamilyMember() {
                 <select className="form-control" id="exampleFormControlSelect1" value={holdingNature} onChange={handleHolding}>
                   <option value="">Select...</option>
                   {HoldingNatureEnum.map((item) => (
-                    <option key={item.value} value={item.value} disabled={taxStatus === "2" && item.value === "AS"}>
+                    <option key={item.value} value={item.value} disabled={(taxStatus === "2" && item.value === "AS")|| (taxStatus === "1" && item.value === "SI")}>
                       {item.label}
                     </option>
                   ))}

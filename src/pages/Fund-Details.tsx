@@ -24,6 +24,8 @@ import { detailPortfolioSchemeType } from "./data-interfaces/portfolio";
 import SwpConfirmation from "../components/Swp-confirmation";
 import MsgModel from "../components/MsgModel";
 import InstaRedeem from "./mfSavings/InstaRedeem";
+import { errorToast } from "../services/utils/toast";
+import { uccMsg, UccStatusEnum } from "./data/ucc-data";
 
 interface ChartState {
   options: ApexOptions;
@@ -201,7 +203,7 @@ const FundDetails = () => {
         }
       })
       monthData.push({ value: -1, label: "Max" })
-      fetchNavHistory(monthData[Math.floor(monthData.length/2)]?.value)
+      fetchNavHistory(monthData[Math.floor(monthData.length / 2)]?.value)
       setMonthList(monthData)
       handleNearSipDate(res.data[0].sipDateList)
 
@@ -234,7 +236,7 @@ const FundDetails = () => {
       const res = await postRequest<navHistoryResponse>(endPoints.getNavHistory, { productcode: location.state.accordSchemeCode, duration: durationMonth })
       setCagr(res.cagr)
       setNavDate(res.history.map(item => item.date))
-     setDuration(durationMonth)
+      setDuration(durationMonth)
       setNavValue(res.history.map(item => parseFloat(Number(item.nav).toFixed(2))))
     } catch (err) {
       setNavDate([])
@@ -315,13 +317,23 @@ const FundDetails = () => {
   };
 
   const handleInvestMore = () => {
-    setOpenInvestPopup(true)
+    const uccStatus = localStorage.getItem("uccStatus")
+    if (uccStatus !== UccStatusEnum.ACTIVE) {
+      errorToast(uccMsg.uccUpdateMsg)
+    } else {
+      setOpenInvestPopup(true)
+    }
   }
 
   const handleSwitch = (type: string) => {
-    setTransactionType(type)
-    setOpenSwitchSchemeModel(true)
-    setShow(false)
+    const uccStatus = localStorage.getItem("uccStatus")
+    if (uccStatus !== UccStatusEnum.ACTIVE) {
+      errorToast(uccMsg.uccUpdateMsg)
+    } else {
+      setTransactionType(type)
+      setOpenSwitchSchemeModel(true)
+      setShow(false)
+    }
   }
   const handleRedmptionModel = () => {
     const result = schemeList.find(item => checkIsSIFScheme(item.scheme));
@@ -329,20 +341,35 @@ const FundDetails = () => {
       setOpenMsgModel(true)
       setShow(false)
     } else {
-      setOpenRedumptionModel(true)
-      setShow(false)
+      const uccStatus = localStorage.getItem("uccStatus")
+      if (uccStatus !== UccStatusEnum.ACTIVE) {
+        errorToast(uccMsg.uccUpdateMsg)
+      } else {
+        setOpenRedumptionModel(true)
+        setShow(false)
+      }
     }
   }
   const handleSwp = () => {
-    setOpenSwpModel(true)
-    setShow(false)
+    const uccStatus = localStorage.getItem("uccStatus")
+    if (uccStatus !== UccStatusEnum.ACTIVE) {
+      errorToast(uccMsg.uccUpdateMsg)
+    } else {
+      setOpenSwpModel(true)
+      setShow(false)
+    }
 
   }
   const goTransactionHistory = (item: schemeDeatilDataKeys) => {
     navigate("/transaction-history", { state: { accord_product_code: item.accordSchemeCode, folio_number: location.state?.folio } })
   }
   const handleInstaRedeem = () => {
-    setOpenInstaRedeem(true)
+    const uccStatus = localStorage.getItem("uccStatus")
+    if (uccStatus !== UccStatusEnum.ACTIVE) {
+      errorToast(uccMsg.uccUpdateMsg)
+    } else {
+      setOpenInstaRedeem(true)
+    }
   }
 
 
@@ -384,7 +411,7 @@ const FundDetails = () => {
               </div>
 
               <div className="d-flex justify-content-between align-items-center mx-4 mt-0 crPointer" >
-                {monthList.map((item: monthKeys,i:number) => {
+                {monthList.map((item: monthKeys, i: number) => {
                   return <p className={`${duration === item.value && "activeDuratin"}`} key={i} onClick={() => fetchNavHistory(item.value)}>{item.label}</p>
                 })}
               </div>

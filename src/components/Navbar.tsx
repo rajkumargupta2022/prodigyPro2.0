@@ -13,11 +13,11 @@ import {
 import ProfileModel from "./ProfileModel";
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { useAdminUser } from "../context/AdminContext";
+import { fetchAdminUser } from "../services/user/adminUser";
 
 const MyNavbar = () => {
   const location = useLocation();
-  const { adminUser } = useAdminUser()
+  const adminUser = fetchAdminUser()
   const [openProfileModel, setOpenProfileModel] = useState<boolean>(false)
   // console.log('Current path:', location.pathname);
   const handleProfileModel = () => {
@@ -41,48 +41,48 @@ const MyNavbar = () => {
         <Navbar.Toggle aria-controls="navbarScroll" />
         <Navbar.Collapse className="justify-content-end" id="navbarScroll">
           {adminUser?.name &&
-          <Nav
-            className=" my-lg-0 menu_list"
-            style={{ maxHeight: "100vh" }}
-            navbarScroll
-          >
-            <Link className={`prodgy_menu m-2 mx-3 ${location.pathname === "/dashboard" && "active_menu"}`} to={"/dashboard"}>
-              <div className="d-flex gap-2">
-                <div className="">
-                  {" "}
-                  <HouseDoorFill size={24} />
+            <Nav
+              className=" my-lg-0 menu_list"
+              style={{ maxHeight: "100vh" }}
+              navbarScroll
+            >
+              <Link className={`prodgy_menu m-2 mx-3 ${location.pathname === "/dashboard" && "active_menu"}`} to={"/dashboard"}>
+                <div className="d-flex gap-2">
+                  <div className="">
+                    {" "}
+                    <HouseDoorFill size={24} />
+                  </div>
+                  <div className="">Home</div>
                 </div>
-                <div className="">Home</div>
-              </div>
-            </Link>
-            <Link className={`prodgy_menu m-2 mx-4 ${location.pathname === "/explore" && "active_menu"}`} to={"/explore"}>
-              <div className="d-flex gap-2">
-                <div className="">
-                  {" "}
-                  <CurrencyRupee size={24} />
+              </Link>
+              <Link className={`prodgy_menu m-2 mx-4 ${location.pathname === "/explore" && "active_menu"}`} to={"/explore"}>
+                <div className="d-flex gap-2">
+                  <div className="">
+                    {" "}
+                    <CurrencyRupee size={24} />
+                  </div>
+                  <div className="">Explore</div>
                 </div>
-                <div className="">Explore</div>
-              </div>
-            </Link>
-            <Link className={`prodgy_menu m-2 mx-4 ${location.pathname === "/portfolio" && "active_menu"}`} to={"/portfolio"}>
-              <div className="d-flex gap-2">
-                <div className="">
-                  {" "}
-                  <GraphUpArrow size={24} />
+              </Link>
+              <Link className={`prodgy_menu m-2 mx-4 ${location.pathname === "/portfolio" && "active_menu"}`} to={"/portfolio"}>
+                <div className="d-flex gap-2">
+                  <div className="">
+                    {" "}
+                    <GraphUpArrow size={24} />
+                  </div>
+                  <div className="">Portfolio</div>
                 </div>
-                <div className="">Portfolio</div>
-              </div>
-            </Link>
-            <Link className={`prodgy_menu  m-2 mx-4 ${location.pathname === "/my-profile" && "active_menu"}`} to={"/my-profile"}>
-              <div className="d-flex gap-2">
-                <div className="">
-                  {" "}
-                  <Person size={24} />
+              </Link>
+              <Link className={`prodgy_menu  m-2 mx-4 ${location.pathname === "/my-profile" && "active_menu"}`} to={"/my-profile"}>
+                <div className="d-flex gap-2">
+                  <div className="">
+                    {" "}
+                    <Person size={24} />
+                  </div>
+                  <div className="">Account</div>
                 </div>
-                <div className="">Account</div>
-              </div>
-            </Link>
-          </Nav>}
+              </Link>
+            </Nav>}
           <div className="user_profile_icon prodgy_menu m-2">
             <Link to="/help-and-support" className="prodgy_menu">
               <QuestionCircle size={24} />
@@ -91,7 +91,7 @@ const MyNavbar = () => {
               <Bell size={24} />
             </Link> */}
 
-            <div  className="profileNameSize prodgy_menu crPointer">
+            <div className="profileNameSize prodgy_menu crPointer">
               <div className="d-flex gap-2" onClick={handleProfileModel}>
                 {adminUser?.profilePic ?
                   <div className="circle">
@@ -102,7 +102,7 @@ const MyNavbar = () => {
                       height="35"
                     />
                   </div> : <div className="nameTitle">
-                    {adminUser?.name?.split(" ")?.slice(0, 2).map(word => word[0]).join("").toUpperCase()}
+                    {adminUser?.name?.split(" ")?.slice(0, 2).map((word: any) => word[0]).join("").toUpperCase()}
                   </div>}
                 <div className="align-self-center">
                   {adminUser?.name} <ChevronDown />

@@ -10,6 +10,8 @@ import { checkTransactionAllowed } from "../services/utils/services";
 import { keys } from "../services/utils/keys";
 import { daysAdded } from "../services/dates/dateFormater";
 import DatePicker from "react-datepicker";
+import { uccMsg, UccStatusEnum } from "../pages/data/ucc-data";
+import { errorToast } from "../services/utils/toast";
 // import { errorToast } from "../services/utils/toast";
 
 
@@ -27,10 +29,10 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
   const [minimumDate, setMinimumDate] = useState<Date>()
 
   useEffect(() => {
-  
+
     if (
       schemeList.length > 0 &&
-      schemeList[0].folioList === undefined && 
+      schemeList[0].folioList === undefined &&
       schemeList[0].sipDateList?.length > 0
     ) {
 
@@ -178,15 +180,15 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
       // map returns promise array
       const updatedSchemes = await Promise.all(
         schemeList.map(async (scheme) => {
-          
+
           if (regex.test(scheme.scheme)) {
             const value = await fetchFolioFOrSIF(scheme.accordSchemeCode);
             return {
               ...scheme,
-              minSIPAmt: value ? scheme.minSIPAmt:0,
-              minLumSumAmt: value ? 10000:1000000,
-              amount: value?scheme.minSIPAmt:1000000,
-               start_date: daysAdded(30, sipDateList),
+              minSIPAmt: value ? scheme.minSIPAmt : 0,
+              minLumSumAmt: value ? 10000 : 1000000,
+              amount: value ? scheme.minSIPAmt : 1000000,
+              start_date: daysAdded(30, sipDateList),
             };
           }
           else {
@@ -194,7 +196,7 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
             return {
               ...scheme,
               amount: minAmount,
-               start_date: daysAdded(30, sipDateList),
+              start_date: daysAdded(30, sipDateList),
             };
           }
 
@@ -230,13 +232,18 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
         }
       }
     } catch (error) {
-         setIsSipTransaction(false)
+      setIsSipTransaction(false)
       return false
     }
 
   };
 
   const handleFolioSelection = () => {
+    const uccStatus = localStorage.getItem("uccStatus")
+    if (uccStatus !== UccStatusEnum.ACTIVE) {
+      errorToast(uccMsg.uccUpdateMsg)
+      return
+    }
     const minTotal = isSipTransaction ? schemeList[0]?.minSIPAmt : schemeList[0]?.minLumSumAmt
 
     if (!schemeList[0]?.start_date && isSipTransaction) {
@@ -275,7 +282,7 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
         <h5>Invest Now</h5>
         <hr />
         <div className="row text-center mt-2 ">
-          {(checkTransactionAllowed(schemeList, keys.sip))&&
+          {(checkTransactionAllowed(schemeList, keys.sip)) &&
             <div className={`col py-2 py-md-0`}>
               <div className={`${isSipTransaction ? "text-white logobg_color" : "logoBlueColor"} w-100 border  text-center monthly_btn crPointer`} onClick={() => { handleTransactionType(true) }}> Monthly SIP</div>
             </div>}
@@ -304,7 +311,7 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
                   minDate={minimumDate}
                   className="focus_datepickers121"
                 />
-                <div className="prod_view_fund align-self-center">  
+                <div className="prod_view_fund align-self-center">
                   <div className="crPointer dateIcon"><Calendar4 className='' /></div>
                 </div>
               </div>

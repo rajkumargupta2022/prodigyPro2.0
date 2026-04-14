@@ -12,6 +12,7 @@ export interface personalDetailForm {
   guardian_name?: string;
   guardian_pan?: string;
   guardian_relation?: string;
+  guardian_dob?: string;
 }
 
 export interface addressDetailForm {
@@ -104,4 +105,11 @@ export interface uccSubmitRes {
 export interface uccSubmitKeys {
   client_code: string;
   auth_link: string;
+}
+export interface kycUpdateRes {
+  success: boolean;
+  status: string;
+  description: string;
+  actinText?:string;
+  actionUrl?:string
 }

@@ -23,7 +23,7 @@ const SipCalculator = () => {
   const [monthlySaving, setMonthlySaving] = useState<number>(10000);
   const [expectedRateOfReturn, setExpectedRateOfReturn] =
     useState<number>(16.5);
-     const [resultRateOfReturn, setResultRateOfReturn] =
+  const [resultRateOfReturn, setResultRateOfReturn] =
     useState<number>(16.5);
   const [gains, setGains] = useState<number>(3017292);
   const [totalYear, setTotalYear] = useState<number>(10);
@@ -41,47 +41,63 @@ const SipCalculator = () => {
 
   const yearInString = (): string[] => {
     let xAxisArray: string[] = [];
-    if(totalYear>16){
-      for (let i = 1; i <= totalYear; i=i+2) {
+    if (totalYear > 16) {
+      for (let i = 1; i <= totalYear; i = i + 2) {
         xAxisArray.push(i + "Y");
       }
-      if(totalYear%2 ===0){
-        xAxisArray.push(totalYear+"Y")
+      if (totalYear % 2 === 0) {
+        xAxisArray.push(totalYear + "Y")
       }
-      
-    }else{
+
+    } else {
       for (let i = 1; i <= totalYear; i++) {
         xAxisArray.push(i + "Y");
       }
     }
-    
+
     return xAxisArray;
   };
-  const valueForGraph = (data: number): number[] => {
+  const valueForGraph = (type: "market" | "invested"): number[] => {
     let graphValue: number[] = [];
-    if(totalYear>16){
-      for (let i = totalYear; i > 0; i=i-2) {
-        graphValue.push(Math.round(data / i));
+    let monthlyRate: number = resultRateOfReturn / 12 / 100;
+
+    const calcValue = (years: number) => {
+      let months = years * 12;
+      if (type === "invested") {
+        return oneMonthSaving * months;
+      } else {
+        if (monthlyRate === 0) return oneMonthSaving * months;
+        let futureValue =
+          ((oneMonthSaving * (Math.pow(1 + monthlyRate, months) - 1)) /
+            monthlyRate) *
+          (1 + monthlyRate);
+        return Math.round(futureValue);
       }
-      if(totalYear%2 ===0){
-        graphValue.push(Math.round(data))
+    };
+
+    if (totalYear > 16) {
+      for (let i = 1; i <= totalYear; i = i + 2) {
+        graphValue.push(calcValue(i));
       }
-    }else {
-      for (let i = totalYear; i > 0; i--) {
-        graphValue.push(Math.round(data / i));
+      if (totalYear % 2 === 0) {
+        graphValue.push(calcValue(totalYear));
       }
-    }   
+    } else {
+      for (let i = 1; i <= totalYear; i++) {
+        graphValue.push(calcValue(i));
+      }
+    }
     return graphValue;
   };
   const state: ChartState = {
     series: [
       {
         name: "Market Value",
-        data: valueForGraph(gains+totalMonthlySaving),
+        data: valueForGraph("market"),
       },
       {
         name: "Invested Amount",
-        data: valueForGraph(totalMonthlySaving),
+        data: valueForGraph("invested"),
       },
     ],
     options: {
@@ -130,34 +146,34 @@ const SipCalculator = () => {
 
     if (isValidated) {
       let monthlyRate: number = expectedRateOfReturn / 12 / 100;
-    let months: number = investmentPeriod * 12;
-    let futureValue: number = 0;
-    futureValue = ((monthlySaving * (Math.pow(1 + monthlyRate, months) - 1)) / monthlyRate)*(1+monthlyRate);
+      let months: number = investmentPeriod * 12;
+      let futureValue: number = 0;
+      futureValue = ((monthlySaving * (Math.pow(1 + monthlyRate, months) - 1)) / monthlyRate) * (1 + monthlyRate);
 
-    let mainresults: number = Math.round(futureValue);
-    let totalSaving: number = monthlySaving * months;
-    let gain: number = mainresults - monthlySaving * months;
-    setGains(Math.round(gain));
-    setTotalYear(investmentPeriod);
-    setTotalMonthlySaving(totalSaving);
-    setOneMonthSaving(monthlySaving);
-    setResultRateOfReturn(expectedRateOfReturn)
-    // let a = parseInt(totalSaving)
-    // let g = parseInt(gains)
-    // let gainss = a + g
-    setTotalGains(totalSaving + gain);
+      let mainresults: number = Math.round(futureValue);
+      let totalSaving: number = monthlySaving * months;
+      let gain: number = mainresults - monthlySaving * months;
+      setGains(Math.round(gain));
+      setTotalYear(investmentPeriod);
+      setTotalMonthlySaving(totalSaving);
+      setOneMonthSaving(monthlySaving);
+      setResultRateOfReturn(expectedRateOfReturn)
+      // let a = parseInt(totalSaving)
+      // let g = parseInt(gains)
+      // let gainss = a + g
+      setTotalGains(totalSaving + gain);
     }
   };
-   const handleRecomendedScheme = () => {
-      navigate("/recommended-scheme-goal", {
-        state: {
-          title: "Recommended",
-          paragraph: "Discover expertly curated fund baskets tailored to your financial goals. Simplify your investment journey with the right mix of funds for every need!",
-          investmentPeriod: investmentPeriod,
-          newsipamt: monthlySaving,
-        }
-      })
-    }
+  const handleRecomendedScheme = () => {
+    navigate("/recommended-scheme-goal", {
+      state: {
+        title: "Recommended",
+        paragraph: "Discover expertly curated fund baskets tailored to your financial goals. Simplify your investment journey with the right mix of funds for every need!",
+        investmentPeriod: investmentPeriod,
+        newsipamt: monthlySaving,
+      }
+    })
+  }
 
 
   return (
@@ -192,7 +208,7 @@ const SipCalculator = () => {
                         id="monthlysip"
                         aria-describedby="emailHelp"
                         placeholder=""
-                        validate={[isNotEmpty, minAmount(500),maxAmount(1000000)]}
+                        validate={[isNotEmpty, minAmount(500), maxAmount(1000000)]}
                       />
                     </div>
                     <div className="form-group">
@@ -209,7 +225,7 @@ const SipCalculator = () => {
                         }
                         id="expectedrateofreturn"
                         placeholder=""
-                        validate={[isNotEmpty, minAmount(1),maxAmount(50)]}
+                        validate={[isNotEmpty, minAmount(1), maxAmount(50)]}
                       />
                     </div>
                     <RangeBar
@@ -263,9 +279,9 @@ const SipCalculator = () => {
                   </div>
                 </div>
               </div>
-                <button type="button" className="btn investBtn mt-2 shadow-lg" onClick={handleRecomendedScheme}>
-                  Invest
-                </button>
+              <button type="button" className="btn investBtn mt-2 shadow-lg" onClick={handleRecomendedScheme}>
+                Invest
+              </button>
             </div>
           </div>
         </div>

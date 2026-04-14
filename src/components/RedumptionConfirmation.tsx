@@ -6,6 +6,7 @@ import RedumptionForm from './RedumptionForm';
 import { redeemTransaction } from '../services/utils/transactionApi';
 import { errorToast } from '../services/utils/toast';
 import { checkIsSIFScheme } from '../services/utils/services';
+import { uccMsg, UccStatusEnum } from '../pages/data/ucc-data';
 interface investmetProps {
   show: boolean;
   setShow: (show: boolean) => void;
@@ -24,6 +25,11 @@ const RedumptionConfirmation: React.FC<investmetProps> = ({ show, setShow, redee
     setSelectedList(JSON.parse(JSON.stringify(redeemList)))
   }, [show])
   const handleSwitch = () => {
+    const uccStatus = localStorage.getItem("uccStatus")
+    if (uccStatus !== UccStatusEnum.ACTIVE) {
+      errorToast(uccMsg.uccUpdateMsg)
+      return
+    }
 
     const finalData = redeemList.filter(rs => {
       return selectedList.some((ss: any) => rs.id === ss.id);

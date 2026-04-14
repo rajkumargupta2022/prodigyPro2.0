@@ -3,7 +3,7 @@ import Footer from "../../components/Next-bar";
 import TrackBar from "./Track-bar";
 import Navbar from "../../components/Navbar";
 import { generateOptions } from "../re-used-html/select-box";
-import { ContactRelationsEnum, UserGenderEnum, GuardianRelationEnum } from "../data/ucc-data";
+import { ContactRelationsEnum, UserGenderEnum, GuardianRelationEnum, taxStatus } from "../data/ucc-data";
 import { useEffect, useState } from "react";
 import { personalDetailForm, uccDataRes, uccDataResKeys, userDataObj } from "../data-interfaces/ucc";
 import { getRequest, postRequest } from "../../services/Api/HandleApi";
@@ -23,6 +23,7 @@ interface FormErrors {
   guardian_name?: string;
   guardian_relation?: string;
   guardian_pan?: string;
+  guardian_dob?: string;
 }
 
 const PersonalDetails = () => {
@@ -46,20 +47,21 @@ const PersonalDetails = () => {
     guardian_name: "",
     guardian_relation: "",
     guardian_pan: "",
+    guardian_dob: "",
   });
 
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    if(!reference_id || !tax_status || !holding_nature){
+    if (!reference_id || !tax_status || !holding_nature) {
       navigate("/dashboard");
       return;
     }
     if (pan) {
       fetchKycData(pan)
       console.log(isSubmitting)
-    } 
+    }
   }, [])
 
 
@@ -69,15 +71,22 @@ const PersonalDetails = () => {
       const profile = response.data[holder] as userDataObj;
       if (response.success && profile?.personal_details) {
         const personalDetails = profile.personal_details;
-        setForm({
-          ...personalDetails,
-          dob: formatUTCToDateOnly(personalDetails.dob || ""),
-        });
-     
+        if (tax_status === taxStatus.ON_BEHALF_OF_MINOR) {
+          setForm(prev => ({
+            ...prev,
+            guardian_name: personalDetails.full_name || "",
+            guardian_pan: pan,
+            guardian_dob: formatUTCToDateOnly(personalDetails.dob || ""),
+          }));
+        } else {
+          setForm({
+            ...personalDetails,
+            dob: formatUTCToDateOnly(personalDetails.dob || ""),
+          });
+        }
       }
     } catch (err) {
       console.log(err);
-    
     }
   }
 
@@ -156,6 +165,20 @@ const PersonalDetails = () => {
       } else if (!/^[A-Z]{5}[0-9]{4}[A-Z]$/.test(form.guardian_pan.toUpperCase())) {
         newErrors.guardian_pan = "Invalid PAN format.";
       }
+      if (!form.guardian_dob) {
+        newErrors.guardian_dob = "Guardian DOB is required.";
+      } else {
+        const gDobDate = new Date(form.guardian_dob);
+        const today = new Date();
+        let gAge = today.getFullYear() - gDobDate.getFullYear();
+        const m = today.getMonth() - gDobDate.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < gDobDate.getDate())) {
+          gAge--;
+        }
+        if (gAge < 18) {
+          newErrors.guardian_dob = "Guardian must be at least 18 years old.";
+        }
+      }
     }
 
     setErrors(newErrors);
@@ -191,6 +214,7 @@ const PersonalDetails = () => {
         payload[holder].personal_details.guardian_name = form.guardian_name;
         payload[holder].personal_details.guardian_relation = form.guardian_relation;
         payload[holder].personal_details.guardian_pan = form.guardian_pan?.toUpperCase();
+        payload[holder].personal_details.guardian_dob = formatDateToUTCString(form.guardian_dob || "");
       }
 
       await postRequest(endPoints.tempSaveUcc, { data: payload });
@@ -363,38 +387,56 @@ const PersonalDetails = () => {
 
             {/* Minor Specific Fields: Guardian PAN & Relation */}
             {String(tax_status) === "2" && (
-              <div className="row mb-3">
-                <div className="col-md-6">
-                  <label className="form-label fs12px">GUARDIAN PAN</label>
-                  <input
-                    type="text"
-                    name="guardian_pan"
-                    value={form.guardian_pan}
-                    onChange={handleChange}
-                    maxLength={10}
-                    className={inputClass("guardian_pan")}
-                    placeholder=""
-                  />
-                  {errors.guardian_pan && (
-                    <div className="invalid-feedback">{errors.guardian_pan}</div>
-                  )}
+              <>
+                <div className="row mb-3">
+                  <div className="col-md-6">
+                    <label className="form-label fs12px">GUARDIAN PAN</label>
+                    <input
+                      type="text"
+                      name="guardian_pan"
+                      value={form.guardian_pan}
+                      onChange={handleChange}
+                      maxLength={10}
+                      className={inputClass("guardian_pan")}
+                      placeholder=""
+                    />
+                    {errors.guardian_pan && (
+                      <div className="invalid-feedback">{errors.guardian_pan}</div>
+                    )}
+                  </div>
+                  <div className="col-md-6">
+                    <label className="form-label fs12px">GUARDIAN RELATION</label>
+                    <select
+                      name="guardian_relation"
+                      value={form.guardian_relation}
+                      onChange={handleChange}
+                      className={selectClass("guardian_relation")}
+                    >
+                      <option value="">Choose...</option>
+                      {generateOptions(GuardianRelationEnum, "value", "label")}
+                    </select>
+                    {errors.guardian_relation && (
+                      <div className="invalid-feedback">{errors.guardian_relation}</div>
+                    )}
+                  </div>
                 </div>
-                <div className="col-md-6">
-                  <label className="form-label fs12px">GUARDIAN RELATION</label>
-                  <select
-                    name="guardian_relation"
-                    value={form.guardian_relation}
-                    onChange={handleChange}
-                    className={selectClass("guardian_relation")}
-                  >
-                    <option value="">Choose...</option>
-                    {generateOptions(GuardianRelationEnum, "value", "label")}
-                  </select>
-                  {errors.guardian_relation && (
-                    <div className="invalid-feedback">{errors.guardian_relation}</div>
-                  )}
+                <div className="row mb-3">
+                  <div className="col-md-6">
+                    <label className="form-label fs12px">GUARDIAN DOB</label>
+                    <input
+                      type="date"
+                      name="guardian_dob"
+                      value={form.guardian_dob}
+                      onChange={handleChange}
+                      max={new Date().toISOString().split("T")[0]}
+                      className={inputClass("guardian_dob")}
+                    />
+                    {errors.guardian_dob && (
+                      <div className="invalid-feedback">{errors.guardian_dob}</div>
+                    )}
+                  </div>
                 </div>
-              </div>
+              </>
             )}
           </form>
         </div>

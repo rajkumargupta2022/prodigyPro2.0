@@ -133,8 +133,10 @@ const KycStatusCheck = () => {
   };
 
   const checkKycStatus = async (index: number, pan: string) => {
+    console.log(index, pan);
+    const adminUser = fetchAdminUser();
     if (!pan) {
-      updateHolder(index, { kycMsg: "Please enter your PAN number to proceed.", kycSuccess: false, isKycCompliant: null });
+      updateHolder(index, { kycMsg: "Please enter individual's PAN", kycSuccess: false, isKycCompliant: null });
       return;
     }
     const panRegex = /^[A-Z]{5}[0-9]{4}[A-Z]$/;
@@ -142,6 +144,29 @@ const KycStatusCheck = () => {
       updateHolder(index, { kycMsg: "", kycSuccess: false, isKycCompliant: null });
       errorToast("Invalid PAN format. Please enter a valid PAN number.");
       return;
+    }
+
+    if (index === 0 && pan !== adminUser?.pan) {
+      updateHolder(index, { kycMsg: "Primary holder's PAN must be same as admin PAN", kycSuccess: false, isKycCompliant: null });
+      return;
+    }
+
+    if (index === 1) {
+      if (pan === holders[0].pan || pan === adminUser?.pan) {
+        updateHolder(index, { kycMsg: "Second holder's PAN cannot be same as primary holder's PAN", kycSuccess: false, isKycCompliant: null });
+        return;
+      }
+    }
+
+    if (index === 2) {
+      if (pan === holders[0].pan || pan === adminUser?.pan) {
+        updateHolder(index, { kycMsg: "Third holder's PAN cannot be same as primary holder's PAN", kycSuccess: false, isKycCompliant: null });
+        return;
+      }
+      if (pan === holders[1].pan) {
+        updateHolder(index, { kycMsg: "Third holder's PAN cannot be same as second holder's PAN", kycSuccess: false, isKycCompliant: null });
+        return;
+      }
     }
 
     updateHolder(index, { isLoader: true, kycMsg: "", kycSuccess: false });
@@ -162,7 +187,7 @@ const KycStatusCheck = () => {
         updateHolder(index, {
           isKycCompliant: true,
           kycMsg: "Congratulations! 🎉 You are KYC Compliant",
-          description:"",
+          description: "",
           btnName: "Start Your Investment Journey!",
           kycSuccess: true,
           isLoader: false,
@@ -204,7 +229,7 @@ const KycStatusCheck = () => {
       updateHolder(index, { kycMsg: "Please wait while we verify your PAN.", kycSuccess: false });
       return;
     }
-      if (pan===holder.pan) {
+    if (pan === holder.pan) {
       updateHolder(index, { kycMsg: "Pan can not be same from the primary holder or second holder", kycSuccess: false });
       return;
     }
@@ -473,7 +498,7 @@ const KycStatusCheck = () => {
                         >
                           {holder.label}
                         </span>
-                        {holder.status === completed && (
+                        {/* {holder.status === completed && (
                           <span
                             style={{
                               fontSize: "12px",
@@ -484,7 +509,7 @@ const KycStatusCheck = () => {
                           >
                             KYC Completed
                           </span>
-                        )}
+                        )}*/}
                       </div>
 
                       {/* Active Form */}

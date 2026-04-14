@@ -7,7 +7,8 @@ import {
   Person,
 } from "react-bootstrap-icons";
 import Footer from "../components/Footer";
-
+import { UccStatusEnum, uccMsg } from "./data/ucc-data";
+import { errorToast } from "../services/utils/toast";
 const Account = ({ Component }: { Component: any }) => {
   const { pathname } = useLocation();
 
@@ -51,15 +52,25 @@ const Account = ({ Component }: { Component: any }) => {
               <div className="position-sticky">
                 <ul className="nav flex-column">
                   {navBar.map((el, i) => {
+                    const isDisabled = el.name === "Add Family Member" && localStorage.getItem("uccStatus") !== UccStatusEnum.ACTIVE;
                     return (
-                      <Link className="nav-link" to={el.url} key={el.url}>
+                      <Link
+                        className={`nav-link ${isDisabled ? "disabled-link" : ""}`}
+                        to={el.url}
+                        key={el.url}
+                        onClick={(e) => {
+                          if (isDisabled) {
+                            e.preventDefault();
+                            errorToast(uccMsg.uccUpdateMsg);
+                          }
+                        }}
+                      >
                         <li
-                          className={`nav-item  d-flex justify-content-between align-items-center ${i !== 6 && "border-bottom"} ${pathname === el.url ? "active" : ""
-                            }`}
+                          className={`nav-item  d-flex justify-content-between align-items-center ${i !== 6 && "border-bottom"} ${pathname === el.url ? "active" : ""} ${isDisabled ? "text-muted" : ""}`}
                         >
 
                           {el.name}
-                          <ChevronRight size={15} className="text-secondary me-3" />
+                          <ChevronRight size={15} className={`me-3 ${isDisabled ? "text-muted" : "text-secondary"}`} />
                         </li>
                       </Link>
                     );

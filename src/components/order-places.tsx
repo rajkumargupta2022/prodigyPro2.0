@@ -6,6 +6,7 @@ import successImg from "../assets/img/bg-image/successImg.png"
 import errorImg from "../assets/img/bg-image/errorBg.png"
 import { Link } from "react-router-dom";
 import Carousel from 'react-bootstrap/Carousel';
+import { useEffect } from "react";
 
 interface OrderPlaces {
   show: boolean;
@@ -15,6 +16,11 @@ interface OrderPlaces {
 }
 
 const OrderPlaces: React.FC<OrderPlaces> = ({ show, setShow, successData,isRedeem=false }) => {
+  useEffect(() => {
+    if (show) {
+     console.log("Success Data:", successData);
+    }
+  }, [show]);
 
   return (
     <>
@@ -83,7 +89,7 @@ const OrderPlaces: React.FC<OrderPlaces> = ({ show, setShow, successData,isRedee
                         </div>}
                       <div className="d-flex text-start fs12pxWhite">
                         <p className="order-Placed-modal">STATUS:</p>
-                        <p className="fs16">{item.reg_status ? "Initiated" : "Failed"}</p>
+                        <p className="fs16">{item.reg_status ? "Pending for authorization" : "Failed"}</p>
                       </div>
                       {item?.reg_remark !== " " &&
                         <div className="d-flex text-start fs12pxWhite">

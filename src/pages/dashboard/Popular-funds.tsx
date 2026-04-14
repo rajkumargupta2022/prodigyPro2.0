@@ -3,7 +3,7 @@ import Card from 'react-bootstrap/Card';
 
 import { filteredSchemeResponse, filteredSchemesKeys } from "../data-interfaces/explore";
 import { endPoints, imageUrl } from "../../services/utils/urls";
-import { postRequest } from "../../services/Api/HandleApi";
+import { postRequestSimple } from "../../services/Api/HandleApi";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -24,7 +24,7 @@ const PopularFunds = () => {
       classcode: [value]
     }
     try {
-      const res = await postRequest<filteredSchemeResponse>(endPoints.getFilteredScheme + "?page=" + 1 + "&returns=" + 3, reBody)
+      const res = await postRequestSimple<filteredSchemeResponse>(endPoints.getFilteredScheme + "?page=" + 1 + "&returns=" + 3, reBody)
       if (res.data) {
         setFilteredSchemes(res.data.slice(0, 10))
       } else {
@@ -39,8 +39,8 @@ const PopularFunds = () => {
     fetchFilteredScheme(value)
     setCategory(value)
   }
-   const fundDetails = (item: filteredSchemesKeys) => {
-    
+  const fundDetails = (item: filteredSchemesKeys) => {
+
     navigate("/fund-details", { state: { accordSchemeCode: item.accordSchemeCode, fromPortfolio: false } })
   }
 
@@ -49,7 +49,7 @@ const PopularFunds = () => {
     <Card border="light" className="mb-3 cardRadius">
       <Card.Body>
         <div className="row">
-         <div className="col-sm-12 col-lg-7 d-flex justify-content-between w-100 mb-3">
+          <div className="col-sm-12 col-lg-7 d-flex justify-content-between w-100 mb-3">
             <div className="fw-semibold">Popular Funds</div>
             <Link to="/all-mutual-funds" className="text-end logoBlueColor crPointer">View all</Link>
           </div>
@@ -72,9 +72,9 @@ const PopularFunds = () => {
             </button>
 
           </div>
-          {filteredSchemes?.map((item,i) => {
+          {filteredSchemes?.map((item, i) => {
             return <div className="col-12 mt-2 crPointer" key={i}>
-              <div className="d-flex gap-3 border-bottom borderColor py-2" onClick={()=>fundDetails(item)}>
+              <div className="d-flex gap-3 border-bottom borderColor py-2" onClick={() => fundDetails(item)}>
                 <div className="">
                   <img src={imageUrl + item?.accordAMCCode + ".png"} height={45} width={45} alt="" className='rounded' />
                 </div>
@@ -82,7 +82,7 @@ const PopularFunds = () => {
                   <small className="">
                     {item.scheme}<br />
                     <small className="congratesColor">{item.threeYearCAGR}%</small> 3Y Returns
-                     {item.minSIPAmt && <small>  Min. SIP </small>} ₹{item.minSIPAmt}
+                    {item.minSIPAmt && <small>  Min. SIP </small>} ₹{item.minSIPAmt}
                   </small>
                 </div>
               </div>

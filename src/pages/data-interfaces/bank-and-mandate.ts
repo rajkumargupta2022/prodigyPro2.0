@@ -46,8 +46,7 @@ export interface varifyBankRes {
   data: varifyBankKeys;
 }
 export interface varifyBankKeys {
-  active: string;
-  reason: string;
-  nameMatch: string;
-  nameMatchScore: string;
+  active: boolean;
+  nameMatch: boolean;
+  nameMatchScore: number;
 }
