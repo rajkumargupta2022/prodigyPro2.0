@@ -25,7 +25,6 @@ const SipCalculator = () => {
     useState<number>(16.5);
   const [resultRateOfReturn, setResultRateOfReturn] =
     useState<number>(16.5);
-  const [gains, setGains] = useState<number>(3017292);
   const [totalYear, setTotalYear] = useState<number>(10);
   const [totalGains, setTotalGains] = useState<number>(3017292);
   const [totalMonthlySaving, setTotalMonthlySaving] = useState<number>(1200000);
@@ -153,7 +152,6 @@ const SipCalculator = () => {
       let mainresults: number = Math.round(futureValue);
       let totalSaving: number = monthlySaving * months;
       let gain: number = mainresults - monthlySaving * months;
-      setGains(Math.round(gain));
       setTotalYear(investmentPeriod);
       setTotalMonthlySaving(totalSaving);
       setOneMonthSaving(monthlySaving);

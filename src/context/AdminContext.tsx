@@ -3,11 +3,13 @@ import { createContext, useContext, useState, ReactNode, useEffect } from "react
 import { allFamilyListKeys, allFamilyResponseType, familyDataType, familySnapshotResponseType } from "../pages/data-interfaces/dashboard";
 import { postRequestSimple } from "../services/Api/HandleApi";
 import { getRequestSimple } from "../services/Api/HandleApi";
-import { errorToast } from "../services/utils/toast";
 import { kycUpdateRes } from "../pages/data-interfaces/ucc";
 import { UccStatusEnum } from "../pages/data/ucc-data";
 import { endPoints } from "../services/utils/urls";
 import { detailPortfolioSchemeType, detailPortfolioType } from "../pages/data-interfaces/portfolio";
+import { useNavigate } from "react-router-dom";
+import { errorToast } from "../services/utils/toast";
+
 
 export interface UccStatusInfo {
   isShowKycMsg: boolean;
@@ -31,6 +33,7 @@ interface AdminUserContextType {
   isSwitched: boolean;
   uccStatusInfo: UccStatusInfo;
   fetchUccStatus: (ucc: string) => Promise<void>;
+  fetchFanilyMembersForUcc: (ucc: string, pan: string) => Promise<void>;
 
 }
 
@@ -39,6 +42,7 @@ const AdminUserContext = createContext<AdminUserContextType | undefined>(undefin
 
 
 export const AdminUserProvider = ({ children }: { children: ReactNode }) => {
+  const navigate = useNavigate()
   const [familyMemberList, setFamilyMemberList] = useState<allFamilyListKeys[]>([])
   const [adminUser, setAdminUser] = useState<allFamilyListKeys>()
   const [familySnapShotData, setFamilySnapShotData] = useState<familyDataType[]>([])
@@ -67,6 +71,47 @@ export const AdminUserProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     fetchFamilyPortfoloData()
   }, [])
+  const fetchFanilyMembersForUcc = async (ucc: string, pan: string) => {
+    try {
+      let familyMember: allFamilyListKeys[] = []
+      const res = await postRequestSimple<allFamilyResponseType>(endPoints.getAllFamily, { pan });
+      if (res.success) {
+        let flag = false;
+        res.data.forEach((member) => {
+          const formattedItem = {
+            ...member,
+            name: nameFormatter(member.name || ''),
+            relation: nameFormatter(member.relation || ''),
+            jh1_name: nameFormatter(member.jh1_name || ''),
+            jh2_name: nameFormatter(member.jh2_name || '')
+          }
+          if (member?.ucc === ucc) {
+            flag = true;
+            localStorage.setItem("pan", pan)
+            switchProfile(formattedItem)
+          }
+          else {
+            const formattedItem = {
+              ...member,
+              name: nameFormatter(member.name || ''),
+              relation: nameFormatter(member.relation || ''),
+              jh1_name: nameFormatter(member.jh1_name || ''),
+              jh2_name: nameFormatter(member.jh2_name || '')
+            }
+            familyMember.push(formattedItem)
+          }
+        })
+        if (flag) {
+          localStorage.setItem("familyList", JSON.stringify(familyMember))
+          navigate("/ucc-submit?client_code=" + ucc);
+        } else {
+          errorToast("Getting error while matching client code")
+        }
+      }
+    } catch (err) {
+      errorToast(err);
+    }
+  }
 
   const fetchFamilyPortfoloData = async () => {
     const pan = localStorage.getItem("pan")
@@ -188,14 +233,13 @@ export const AdminUserProvider = ({ children }: { children: ReactNode }) => {
   const fetchUccStatus = async (ucc: string) => {
     if (!ucc) {
       setUccStatusInfo(prev => ({ ...prev, isLoadingKyc: false }));
-      errorToast("UCC not found for the user. Please complete your registration.");
       return;
     }
     try {
       setUccStatusInfo(prev => ({ ...prev, isLoadingKyc: true }));
       const res = await getRequestSimple<kycUpdateRes>(endPoints.getUccUpdate + "?client_code=" + ucc);
       localStorage.setItem("uccStatus", res.status);
-      
+
       setUccStatusInfo(prev => ({
         ...prev,
         uccStatusData: res,
@@ -293,7 +337,8 @@ export const AdminUserProvider = ({ children }: { children: ReactNode }) => {
       fetchFamilyPortfoloData,
       isSwitched,
       uccStatusInfo,
-      fetchUccStatus
+      fetchUccStatus,
+      fetchFanilyMembersForUcc
     }}>
       {children}
     </AdminUserContext.Provider>

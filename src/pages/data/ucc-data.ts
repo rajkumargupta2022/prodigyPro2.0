@@ -152,3 +152,8 @@ export const holdingNature = {
   SINGLE: "SI",
   AOS: "AS",
 }
+export const holder_type={
+  primary_user: "primary_user",
+  secondry_user: "secondry_user",
+  third_user: "third_user",
+}

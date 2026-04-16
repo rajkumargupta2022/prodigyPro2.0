@@ -2186,3 +2186,9 @@ margin-bottom: 0px;
 .minorKyc__proceedBtn:hover:not(:disabled) {
   opacity: 0.9;
 }
+.btn:disabled {
+  opacity: 1 !important;
+  background-color: #8ea2ff !important; /* lighter blue */
+  color: #fff;
+  cursor: not-allowed;
+}

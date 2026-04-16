@@ -6,7 +6,7 @@ import TrackBar from "./Track-bar";
 import { generateOptions } from "../re-used-html/select-box";
 import { IncomeRangeEnum, OccupationEnum, WealthSourceEnum } from "../data/ucc-data";
 import { fatchDeclarationsForm, uccDataRes, uccDataResKeys, userDataObj } from "../data-interfaces/ucc";
-import { getRequest, postRequest, postRequestSimple } from "../../services/Api/HandleApi";
+import { getRequest, postRequestSimple } from "../../services/Api/HandleApi";
 import { endPoints } from "../../services/utils/urls";
 import { errorToast } from "../../services/utils/toast";
 
@@ -65,13 +65,13 @@ const Declaration = () => {
   };
 
   useEffect(() => {
-    if(!reference_id || !tax_status || !holding_nature || !pan){
+    if (!reference_id || !tax_status || !holding_nature || !pan) {
       navigate("/dashboard");
       return;
     }
     if (pan) {
       fetchKycData(pan)
-    } 
+    }
   }, [])
 
   // const fetchUccData = async () => {
@@ -100,9 +100,9 @@ const Declaration = () => {
           ...fatca_declarations
         });
       }
-     
+
     } catch (err) {
-     console.log(err);
+      console.log(err);
     }
   }
 

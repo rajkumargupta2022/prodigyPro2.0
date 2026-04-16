@@ -6,9 +6,8 @@ import { useState, useEffect } from "react";
 import { ArrowLeft } from "react-bootstrap-icons";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { errorToast, successToast } from "../services/utils/toast";
-import { userStatusResponse } from "./data-interfaces/users";
 import { endPoints } from "../services/utils/urls";
-import { getRequest, postRequest } from "../services/Api/HandleApi";
+import { postRequest } from "../services/Api/HandleApi";
 interface responseType {
   msg: string;
   success: boolean;
@@ -51,9 +50,9 @@ const Otp = () => {
       if (res) {
         if (res?.success && res.portfolioUser) {
           localStorage.setItem("token", res.token);
-          res.PAN ? localStorage.setItem("pan", res.PAN) :localStorage.setItem("pan", res.GPAN);
-            navigate("/dashboard");
-       
+          res.PAN ? localStorage.setItem("pan", res.PAN) : localStorage.setItem("pan", res.GPAN);
+          navigate("/dashboard");
+
         }
         if (res.success && !res?.portfolioUser) {
           localStorage.setItem("token", res.token);

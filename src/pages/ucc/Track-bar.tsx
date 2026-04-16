@@ -1,7 +1,7 @@
 import { Link, useLocation, useSearchParams } from "react-router-dom";
 
 import { ChevronRight } from "react-bootstrap-icons";
-import {  uccDataResKeys } from "../data-interfaces/ucc";
+import { uccDataResKeys } from "../data-interfaces/ucc";
 
 const steps = [
   { name: "Personal Details", path: "/personal-details" },
@@ -16,7 +16,7 @@ const steps = [
 
 const TrackBar = () => {
   const location = useLocation();
-    const [searchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const reference_id = searchParams.get("reference_id") ?? "";
   const tax_status = searchParams.get("tax_status") ?? "";
   const holding_nature = searchParams.get("holding_nature") ?? "";
@@ -41,7 +41,7 @@ const TrackBar = () => {
               return (
                 <div key={index} className="d-flex align-items-center">
                   <Link
-                    to={step.path+`?reference_id=${reference_id}&tax_status=${tax_status}&holding_nature=${holding_nature}&pan=${pan}&holder=${holder}`}
+                    to={step.path + `?reference_id=${reference_id}&tax_status=${tax_status}&holding_nature=${holding_nature}&pan=${pan}&holder=${holder}`}
                     className={`text-decoration-none fw-500 ${isCompletedOrActive
                       ? "logoBlueColor"
                       : "text-dark"

@@ -61,7 +61,7 @@ const Login = () => {
   const handleNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
     handleNumbers(10, e.target.value, setMobile);
   };
-  const goTermAndConditions = ()=>{
+  const goTermAndConditions = () => {
     navigate("/terms-and-conditions")
   }
 

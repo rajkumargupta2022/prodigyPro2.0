@@ -54,6 +54,7 @@ export interface nomineeDetailForm {
   is_nominee_minor?: boolean;
   nominee_guardian_name?: string; // String
   nominee_guardian_pan?: string; // String
+  minor_nominee_aadhaar?: string;
   nominee_address?: addressDetailForm;
 }
 
@@ -63,7 +64,7 @@ export interface uccDataRes {
 }
 export interface uccDataResKeys {
   reference_id?: string;
-  tax_status?: number;
+  tax_status?: string;
   holding_nature?: string;
   primary_user?: userDataObj;
   secondary_user?: userDataObj;
@@ -71,6 +72,7 @@ export interface uccDataResKeys {
   bank_details?: bankDetailForm;
   mandate_amount?: number;
   nominees?: nomineeDetailForm[];
+  nominee_opt_out?: boolean;
 }
 export interface userDataObj {
   personal_details?: personalDetailForm;

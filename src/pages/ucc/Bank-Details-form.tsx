@@ -9,6 +9,7 @@ import { endPoints } from "../../services/utils/urls";
 import { errorToast } from "../../services/utils/toast";
 import { varifyBankRes } from "../data-interfaces/bank-and-mandate";
 import CheckUpload from "./Check-upload";
+import { taxStatus } from "../data/ucc-data";
 
 const BankDetailForm = () => {
   const navigate = useNavigate();
@@ -38,13 +39,13 @@ const BankDetailForm = () => {
   const [showCheckUpload, setShowCheckUpload] = useState<boolean>(false)
 
   useEffect(() => {
-    if(!reference_id || !tax_status || !holding_nature || !pan){
+    if (!reference_id || !tax_status || !holding_nature || !pan) {
       navigate("/dashboard");
       return;
     }
     if (pan) {
       fetchKycData(pan)
-    } 
+    }
   }, [])
 
   const fetchKycData = async (pan: string) => {
@@ -53,18 +54,18 @@ const BankDetailForm = () => {
       const data = response.data?.bank_details;
       if (response.success && data) {
         const holderData = response.data?.primary_user?.personal_details
-        setHolderName(response.data?.tax_status === 2 ? holderData?.guardian_name ?? "" : holderData?.full_name ?? "")
+        setHolderName(response.data?.tax_status === taxStatus.ON_BEHALF_OF_MINOR ? holderData?.guardian_name ?? "" : holderData?.full_name ?? "")
         setBankDetailForm({
           ...data
         });
         setConfirmAccountNumber(data.bank_account_number ?? "");
-       
+
       }
     } catch (err) {
       console.log(err);
     }
   }
- 
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -170,26 +171,24 @@ const BankDetailForm = () => {
 
   const varifyBank = async () => {
     try {
-    //   setShowCheckUpload(true)
-    //  return false
+      //   setShowCheckUpload(true)
+      //  return false
       const reqBody = {
         beneficiaryAccount: bankDetailForm?.bank_account_number ?? "",
         beneficiaryIFSC: bankDetailForm?.bank_ifsc ?? "",
         beneficiaryName: holderName
       }
       const res = await postRequest<varifyBankRes>(endPoints.verifyBank, reqBody)
-      console.log("verify bank", res)
-    
-      if (res.data.nameMatchScore === 100) {
+      if (res.data.nameMatchScore === 100 || bankDetailForm?.is_bank_verified) {
         handleSubmit()
 
       } else if (res.data.nameMatchScore < 100) {
-         setShowCheckUpload(true)
+        setShowCheckUpload(true)
 
-      } 
+      }
     } catch (err) {
       errorToast("Something went wrong")
-      
+
     }
 
 
@@ -197,7 +196,7 @@ const BankDetailForm = () => {
 
   const handleSubmit = async () => {
     if (!validateForm()) return;
-   
+
     try {
       const payload = {
         reference_id,
@@ -213,7 +212,7 @@ const BankDetailForm = () => {
         },
       };
 
-      await postRequestSimple(endPoints.tempSaveUcc, { data: payload });
+      await postRequest(endPoints.tempSaveUcc, { data: payload });
       navigate(
         `/mandate-amount?reference_id=${reference_id}&tax_status=${tax_status}&holding_nature=${holding_nature}&pan=${pan}&holder=${holder}`
       );
@@ -225,9 +224,9 @@ const BankDetailForm = () => {
   return (
     <>
       <NavBar />
-    <CheckUpload show={showCheckUpload} setShow={setShowCheckUpload} handleSubmit={handleSubmit}/>
+      <CheckUpload show={showCheckUpload} setShow={setShowCheckUpload} handleSubmit={handleSubmit} />
       <TrackBar />
-       
+
       <div className="container">
         <div className="personal_form_container">
           <h5 className="mb-3 mt-1">Bank Details</h5>

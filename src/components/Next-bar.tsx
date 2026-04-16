@@ -13,7 +13,7 @@ const Footer = ({
       <Container>
         <Row>
           <Col className="text-start">
-            <Button  className="customCancelButton px-3" onClick={()=>navigate(-1)}>
+            <Button className="customCancelButton px-3" onClick={() => navigate(-1)}>
               Back
             </Button>
           </Col>
@@ -21,7 +21,7 @@ const Footer = ({
             <Button variant="primary" className="customButton px-2" onClick={onSaveContinue}>
               Save & Continue
             </Button>
-            
+
           </Col>
         </Row>
       </Container>

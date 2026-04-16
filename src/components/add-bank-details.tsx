@@ -26,7 +26,7 @@ function AddBankDetails() {
   const [openAlertModel, setOpenAlertModel] = useState<boolean>(false)
   const [openCreateMandate, setOpenCreateMandate] = useState<boolean>(false)
   const [score, setScore] = useState<number>(0)
-  const [inputType,setInputType] = useState<string>("text")
+  const [inputType, setInputType] = useState<string>("text")
 
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -46,15 +46,15 @@ function AddBankDetails() {
           beneficiaryName: adminUser.name.toUpperCase()
         }
         const res = await postRequest<varifyBankRes>(endPoints.verifyBank, reqBody)
-        if (res.data.nameMatch.toLocaleLowerCase() === "yes" && Number(res.data.nameMatchScore) === 1) {
+        if (res.data.nameMatchScore === 100) {
           setScore(Number(res.data.nameMatchScore))
           saveBank()
-        } else if (res.data.nameMatch.toLocaleLowerCase() === "no" && Number(res.data.nameMatchScore) >= 0.8) {
-          navigate("/add-verification-details",{state:{accountNumber,ifscCode,accountType}})
+        } else if (res.data.nameMatchScore < 100) {
+          navigate("/add-verification-details", { state: { accountNumber, ifscCode, accountType } })
           setScore(Number(res.data.nameMatchScore))
           setOpenAlertModel(true)
         } else {
-          errorToast(res.data.reason)
+          errorToast("Somethig went wrong")
         }
       } catch (err) {
         errorToast("Something went wrong")
@@ -79,7 +79,7 @@ function AddBankDetails() {
         if (score === 1) {
           setOpenCreateMandate(true)
         } else if (score >= 0.8 && score < 1) {
-          navigate("/add-verification-details",{state:{accountNumber,ifscCode,accountType}})
+          navigate("/add-verification-details", { state: { accountNumber, ifscCode, accountType } })
         }
       } else {
         errorToast("Something went wromg..")
@@ -214,7 +214,7 @@ function AddBankDetails() {
         <button type="submit" className={`customButton px-2 mt-2`}   >Save & Continue</button>
       </Form>
       <AlertModel show={openAlertModel} setShow={setOpenAlertModel} title={"Proceed"} msg={"The name on your UCC does not match with the bank name on your account. This can lead to possible rejections. \nDo you want to continue?"} apiFun={saveBank} />
-      <CreateMandate show={openCreateMandate} setShow={setOpenCreateMandate} accountNumber={accountNumber} ifscCode={ifscCode} accountType={accountType}/>
+      <CreateMandate show={openCreateMandate} setShow={setOpenCreateMandate} accountNumber={accountNumber} ifscCode={ifscCode} accountType={accountType} />
     </main>
   );
 }

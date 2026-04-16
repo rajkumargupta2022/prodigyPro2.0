@@ -32,6 +32,7 @@ const NominationDetails = () => {
     is_nominee_minor: false,
     nominee_guardian_name: "",
     nominee_guardian_pan: "",
+    minor_nominee_aadhaar: "",
     nominee_address: {
       pincode: "",
       address_1: "",
@@ -167,9 +168,18 @@ const NominationDetails = () => {
       if (!form.nominee_guardian_pan?.trim() || !/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(form.nominee_guardian_pan.toUpperCase())) {
         newErrors.nominee_guardian_pan = "Valid PAN required";
       }
+      if (form.nominee_guardian_pan === pan) {
+        newErrors.nominee_guardian_pan = "Primary PAN and Nominee gaurdian PAN should not be same";
+      }
+      if (!form.minor_nominee_aadhaar?.trim() || !/^\d{12}$/.test(form.minor_nominee_aadhaar)) {
+        newErrors.minor_nominee_aadhaar = "Valid 12-digit Aadhaar required";
+      }
     } else {
       if (!form.nominee_pan?.trim() || !/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(form.nominee_pan.toUpperCase())) {
         newErrors.nominee_pan = "Valid PAN required";
+      }
+      if (form.nominee_pan === pan) {
+        newErrors.nominee_pan = "Primary PAN and Nominee PAN should not be same";
       }
     }
 
@@ -308,6 +318,13 @@ const NominationDetails = () => {
                     </label>
                     <input type="text" name="nominee_guardian_pan" value={form.nominee_guardian_pan} onChange={handleChange} className={`form-control ${errors.nominee_guardian_pan ? 'is-invalid' : ''}`} style={{ textTransform: 'uppercase' }} />
                     {errors.nominee_guardian_pan && <div className="invalid-feedback">{errors.nominee_guardian_pan}</div>}
+                  </div>
+                  <div className="col-md-6">
+                    <label className="form-label fw-light text-secondary">
+                      NOMINEE AADHAAR
+                    </label>
+                    <input type="text" name="minor_nominee_aadhaar" value={form.minor_nominee_aadhaar} onChange={handleChange} className={`form-control ${errors.minor_nominee_aadhaar ? 'is-invalid' : ''}`} maxLength={12} />
+                    {errors.minor_nominee_aadhaar && <div className="invalid-feedback">{errors.minor_nominee_aadhaar}</div>}
                   </div>
                 </>
               ) : (

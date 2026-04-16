@@ -8,8 +8,9 @@ import { postRequest, postRequestSimple } from "../../services/Api/HandleApi";
 import { endPoints, imageUrl } from "../../services/utils/urls";
 import { errorToast } from "../../services/utils/toast";
 import { CurrencyRupee } from "react-bootstrap-icons";
-import { allFamilyListKeys, allFamilyResponseType } from "../data-interfaces/dashboard";
 import { useAdminUser } from "../../context/AdminContext";
+import { holder_type, holdingNature, taxStatus } from "../data/ucc-data";
+import NomineeOptOut from "./Nominee-opt-out";
 
 const MandateAmount = () => {
   const shortAmount = {
@@ -19,7 +20,7 @@ const MandateAmount = () => {
     fiveKValue: 100000
 
   }
-  const { switchProfile } = useAdminUser()
+  const { fetchFanilyMembersForUcc } = useAdminUser()
   const navigate = useNavigate()
   const [searchParams] = useSearchParams();
   const reference_id = searchParams.get("reference_id") ?? "";
@@ -30,6 +31,7 @@ const MandateAmount = () => {
 
   const [mandateAmount, setMandateAmount] = useState<number | undefined>(10000)
   const [mandateAmountError, setMandateAmountError] = useState<string>("")
+  const [isNomineeOptOut, setIsNomineeOptOut] = useState<boolean>(false)
   const [bankDetails, setBankDetails] = useState<bankDetailForm>({
     bank_name: "",
     bank_ifsc: "",
@@ -89,21 +91,24 @@ const MandateAmount = () => {
         reference_id,
         tax_status,
         holding_nature,
-        mandate_amount: Number(mandateAmount)
+        mandate_amount: Number(mandateAmount),
+        nominees: []
       };
 
       await postRequestSimple(endPoints.tempSaveUcc, { data: payload });
 
-      if (holding_nature == "AS" && holder === "third_user" && tax_status === "1") {
-        navigate(
-          `/nomination-details?reference_id=${reference_id}&tax_status=${tax_status}&holding_nature=${holding_nature}&pan=${pan}&holder=${holder}`
-        );
-      } else if (holding_nature === "SI" && tax_status === "2") {
+      if (holding_nature == holdingNature.AOS && holder === holder_type.third_user && tax_status === taxStatus.RESIDENT_INDIVIDUAL) {
+        // navigate(
+        //   `/nomination-details?reference_id=${reference_id}&tax_status=${tax_status}&holding_nature=${holding_nature}&pan=${pan}&holder=${holder}`
+        // );
+        setIsNomineeOptOut(true)
+      } else if (holding_nature === holdingNature.SINGLE && tax_status === taxStatus.ON_BEHALF_OF_MINOR) {
         finalDataSubmit()
-      } else if (holding_nature === "SI" && tax_status === "1") {
-        navigate(
-          `/nomination-details?reference_id=${reference_id}&tax_status=${tax_status}&holding_nature=${holding_nature}&pan=${pan}&holder=${holder}`
-        );
+      } else if (holding_nature === holdingNature.SINGLE && tax_status === taxStatus.RESIDENT_INDIVIDUAL) {
+        // navigate(
+        //   `/nomination-details?reference_id=${reference_id}&tax_status=${tax_status}&holding_nature=${holding_nature}&pan=${pan}&holder=${holder}`
+        // );
+        setIsNomineeOptOut(true)
       }
       else {
         navigate(
@@ -119,58 +124,13 @@ const MandateAmount = () => {
     try {
       const res = await postRequest<uccSubmitRes>(endPoints.submit, { reference_id });
       if (res.success) {
-        fetchAllFanilyMembers(res.data.client_code)
+        fetchFanilyMembersForUcc(res.data.client_code, pan)
       }
     } catch (err) {
       errorToast(err);
     }
   };
-  const fetchAllFanilyMembers = async (ucc: string) => {
-    try {
-      let familyMember: allFamilyListKeys[] = []
-      const res = await postRequest<allFamilyResponseType>(endPoints.getAllFamily, { pan });
-      if (res.success) {
-        let flag = false;
-        res.data.forEach((member) => {
-          const formattedItem = {
-            ...member,
-            name: nameFormatter(member.name || ''),
-            relation: nameFormatter(member.relation || ''),
-            jh1_name: nameFormatter(member.jh1_name || ''),
-            jh2_name: nameFormatter(member.jh2_name || '')
-          }
-          if (member?.ucc === ucc) {
-            flag = true;
-            switchProfile(formattedItem)
-          }
-          else {
-            const formattedItem = {
-              ...member,
-              name: nameFormatter(member.name || ''),
-              relation: nameFormatter(member.relation || ''),
-              jh1_name: nameFormatter(member.jh1_name || ''),
-              jh2_name: nameFormatter(member.jh2_name || '')
-            }
-            familyMember.push(formattedItem)
-          }
-        })
-        if (flag) {
-          localStorage.setItem("familyList", JSON.stringify(familyMember))
-          navigate("/ucc-submit?client_code=" + ucc);
-        } else {
-          errorToast("Getting error while matching client code")
-        }
-      }
-    } catch (err) {
-      errorToast(err);
-    }
-  }
-  const nameFormatter = (name: string): string => {
-    if (!name) return '';
-    return name
-      .toLowerCase()
-      .replace(/\b\w/g, (char: string) => char.toUpperCase());
-  };
+
 
 
 
@@ -178,6 +138,7 @@ const MandateAmount = () => {
     <>
       <NavBar />
       <TrackBar />
+      <NomineeOptOut show={isNomineeOptOut} setShow={setIsNomineeOptOut} />
       <div className="container pt-3">
         <div className="personal_form_container ">
           <h3 className="mb-4 text-dark fw-bolder">Bank Mandate</h3>

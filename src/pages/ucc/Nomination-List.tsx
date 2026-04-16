@@ -11,12 +11,11 @@ import { endPoints } from "../../services/utils/urls";
 import { errorToast, successToast } from "../../services/utils/toast";
 import TrackBar from "./Track-bar";
 import { formatUTCToDateOnly } from "../../services/dates/dateFormater";
-import { allFamilyListKeys, allFamilyResponseType } from "../data-interfaces/dashboard";
 import { NomineeRelationEnum } from "../data/ucc-data";
 import { useAdminUser } from "../../context/AdminContext";
 
 const NominationList = () => {
-  const { switchProfile } = useAdminUser()
+  const { fetchFanilyMembersForUcc } = useAdminUser()
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const reference_id = searchParams.get("reference_id") ?? "";
@@ -81,8 +80,7 @@ const NominationList = () => {
       try {
         const res = await postRequest<uccSubmitRes>(endPoints.submit, { reference_id });
         if (res.success) {
-          // navigate("/ucc-submit");
-          fetchAllFanilyMembers(res.data.client_code)
+          fetchFanilyMembersForUcc(res.data.client_code, pan)
         }
       } catch (err) {
         errorToast(err);
@@ -92,52 +90,53 @@ const NominationList = () => {
     }
 
   };
-  const fetchAllFanilyMembers = async (ucc: string) => {
-    try {
-      let familyMember: allFamilyListKeys[] = []
-      const res = await postRequest<allFamilyResponseType>(endPoints.getAllFamily, { pan });
-      if (res.success) {
-        let flag = false;
-        res.data.forEach((member) => {
-          const formattedItem = {
-            ...member,
-            name: nameFormatter(member.name || ''),
-            relation: nameFormatter(member.relation || ''),
-            jh1_name: nameFormatter(member.jh1_name || ''),
-            jh2_name: nameFormatter(member.jh2_name || '')
-          }
-          if (member?.ucc === ucc) {
-            flag = true;
-            switchProfile(formattedItem)
-          }
-          else {
-            const formattedItem = {
-              ...member,
-              name: nameFormatter(member.name || ''),
-              relation: nameFormatter(member.relation || ''),
-              jh1_name: nameFormatter(member.jh1_name || ''),
-              jh2_name: nameFormatter(member.jh2_name || '')
-            }
-            familyMember.push(formattedItem)
-          }
-        })
-        if (flag) {
-          localStorage.setItem("familyList", JSON.stringify(familyMember))
-          navigate("/ucc-submit?client_code=" + ucc);
-        } else {
-          errorToast("Getting error while matching client code")
-        }
-      }
-    } catch (err) {
-      errorToast(err);
-    }
-  }
-  const nameFormatter = (name: string): string => {
-    if (!name) return '';
-    return name
-      .toLowerCase()
-      .replace(/\b\w/g, (char: string) => char.toUpperCase());
-  };
+  // const fetchAllFanilyMembers = async (ucc: string) => {
+  //   try {
+  //     let familyMember: allFamilyListKeys[] = []
+  //     const res = await postRequest<allFamilyResponseType>(endPoints.getAllFamily, { pan });
+  //     if (res.success) {
+  //       let flag = false;
+  //       res.data.forEach((member) => {
+  //         const formattedItem = {
+  //           ...member,
+  //           name: nameFormatter(member.name || ''),
+  //           relation: nameFormatter(member.relation || ''),
+  //           jh1_name: nameFormatter(member.jh1_name || ''),
+  //           jh2_name: nameFormatter(member.jh2_name || '')
+  //         }
+  //         if (member?.ucc === ucc) {
+  //           flag = true;
+  //           localStorage.setItem("pan", pan)
+  //           switchProfile(formattedItem)
+  //         }
+  //         else {
+  //           const formattedItem = {
+  //             ...member,
+  //             name: nameFormatter(member.name || ''),
+  //             relation: nameFormatter(member.relation || ''),
+  //             jh1_name: nameFormatter(member.jh1_name || ''),
+  //             jh2_name: nameFormatter(member.jh2_name || '')
+  //           }
+  //           familyMember.push(formattedItem)
+  //         }
+  //       })
+  //       if (flag) {
+  //         localStorage.setItem("familyList", JSON.stringify(familyMember))
+  //         navigate("/ucc-submit?client_code=" + ucc);
+  //       } else {
+  //         errorToast("Getting error while matching client code")
+  //       }
+  //     }
+  //   } catch (err) {
+  //     errorToast(err);
+  //   }
+  // }
+  // const nameFormatter = (name: string): string => {
+  //   if (!name) return '';
+  //   return name
+  //     .toLowerCase()
+  //     .replace(/\b\w/g, (char: string) => char.toUpperCase());
+  // };
 
 
   return (

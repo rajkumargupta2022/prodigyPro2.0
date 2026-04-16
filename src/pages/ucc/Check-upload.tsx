@@ -41,7 +41,7 @@ const CheckUpload: React.FC<CheckUploadProps> = ({ show, setShow, handleSubmit }
 
     const pdf = new jsPDF();
 
-    const imgData = await fileToBase64(image);
+    const imgData = await convertImageToJpegDataUrl(image);
 
     pdf.addImage(imgData as string, "JPEG", 10, 10, 180, 160);
 
@@ -71,12 +71,28 @@ const CheckUpload: React.FC<CheckUploadProps> = ({ show, setShow, handleSubmit }
   };
 
   // ✅ Helpers
-  const fileToBase64 = (file: File) => {
+  const convertImageToJpegDataUrl = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
+      reader.onload = (event) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          canvas.width = img.width;
+          canvas.height = img.height;
+          const ctx = canvas.getContext("2d");
+          if (!ctx) return reject(new Error("Canvas not supported"));
+          // Fill with white background in case of transparent image (e.g. PNG)
+          ctx.fillStyle = "#ffffff";
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.drawImage(img, 0, 0);
+          resolve(canvas.toDataURL("image/jpeg", 0.9));
+        };
+        img.onerror = reject;
+        img.src = event.target?.result as string;
+      };
       reader.onerror = reject;
+      reader.readAsDataURL(file);
     });
   };
 
