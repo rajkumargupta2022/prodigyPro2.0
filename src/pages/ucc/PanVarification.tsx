@@ -30,7 +30,7 @@ const PanVarification = () => {
 
   useEffect(() => {
     if (!tax_status || !holding_nature) {
-      navigate("/add-family-member")
+      navigate("/login")
     }
   }, [])
 

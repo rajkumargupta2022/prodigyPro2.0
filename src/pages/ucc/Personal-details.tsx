@@ -48,6 +48,7 @@ const PersonalDetails = () => {
     guardian_relation: "",
     guardian_pan: "",
     guardian_dob: "",
+
   });
 
   const [errors, setErrors] = useState<FormErrors>({});
@@ -132,6 +133,9 @@ const PersonalDetails = () => {
     }
 
     // DOB Age Validation based on Tax Status
+    if(!form.dob) {
+      newErrors.dob = "Date of Birth is required.";
+    }
     if (form.dob) {
       const dobDate = new Date(form.dob);
       const today = new Date();
@@ -194,6 +198,7 @@ const PersonalDetails = () => {
         reference_id,
         tax_status,
         holding_nature,
+        nominee_opt_out: false,
         [holder]: {
           personal_details: {
             pan: pan,
