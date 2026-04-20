@@ -29,7 +29,7 @@ const Otp = () => {
   }, [counter]);
   useEffect(() => {
     if (!location?.state?.mobile) {
-      navigate("/");
+      navigate("/login");
     }
   }, [])
 

@@ -85,11 +85,13 @@ const Declaration = () => {
       const profile = response.data[holder] as userDataObj;
       const fatca_declarations = profile.fatca_declarations;
 
-      if (response.success && fatca_declarations) {
+      if (response.success && fatca_declarations?.income_range && fatca_declarations.occupation && fatca_declarations.wealth_source) {
         setIsInputDisabled(true)
         setForm({
           ...fatca_declarations
         });
+      }else{
+        fetchUccData()
       }
 
     } catch (err) {

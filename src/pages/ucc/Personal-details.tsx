@@ -60,7 +60,7 @@ const PersonalDetails = () => {
     try {
       const response = await getRequest<uccDataRes>(endPoints.getKycData + "?pan=" + pan);
       const profile = response.data[holder] as userDataObj;
-      if (response.success && profile?.personal_details) {
+      if (response.success && profile?.personal_details?.email && profile?.personal_details?.mobile) {
         const personalDetails = profile.personal_details;
         if (tax_status === taxStatus.ON_BEHALF_OF_MINOR) {
           setForm(prev => ({
@@ -81,6 +81,8 @@ const PersonalDetails = () => {
             dob: formatUTCToDateOnly(personalDetails.dob || ""),
           });
         }
+      }else {
+        fetchUccData()
       }
     } catch (err) {
       fetchUccData()

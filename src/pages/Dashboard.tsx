@@ -17,10 +17,12 @@ import OurServices from "./dashboard/Our-services";
 import KycMsg from "./dashboard/Kyc-msg";
 import KycMsgSkeleton from "./dashboard/Kyc-msg-skeleton";
 import DashboardSkeleton from "./DashboardSkeleton";
+import { useNavigate } from "react-router";
 
 
 
 const Dashboard = () => {
+  const navigate = useNavigate()
   const { familySnapShotData, familyPortfolio, snapshotData, uccStatusInfo, fetchUccStatus } = useAdminUser()
 
   const [openPortfolioSwitch, setOpenPortfolioSwitch] = useState<boolean>(false);
@@ -41,6 +43,10 @@ const Dashboard = () => {
     }
   };
   useEffect(() => {
+    if(!adminUser?.ucc){
+      localStorage.clear()
+      navigate("/login")
+    }
     fetchUccStatus(adminUser?.ucc)
     const loadDashboardData = async () => {
       try {

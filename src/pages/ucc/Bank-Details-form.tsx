@@ -51,15 +51,17 @@ const BankDetailForm = () => {
   const fetchKycData = async (pan: string) => {
     try {
       const response = await getRequest<uccDataRes>(endPoints.getKycData + "?pan=" + pan);
-      const data = response.data?.bank_details;
+      const data = response.data?.bank_details as bankDetailForm;
       const holderData = response.data?.primary_user?.personal_details
-      if (response.success && holderData.full_name) {
-        setHolderName(holderData?.full_name)
+      if (response.success && data.bank_account_number && data.bank_ifsc && data.bank_name && data.bank_branch && data.bank_account_type) {
+        setHolderName(holderData?.full_name ??"")
         setBankDetailForm({
           ...data
         });
         setIsInputDisabled(true)
         setConfirmAccountNumber(data.bank_account_number ?? "");
+      }else{
+        fetchUccData()
       }
     } catch (err) {
       fetchUccData()

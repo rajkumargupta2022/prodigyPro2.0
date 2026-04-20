@@ -56,11 +56,13 @@ const AddressDetails = () => {
       const profile = response.data[holder] as userDataObj;
       const address_details = profile.address_details;
 
-      if (response.success && address_details) {
+      if (response.success && address_details?.city && address_details.country && address_details.pincode && address_details.state && address_details.address_1) {
         setIsInputDisabled(true)
         setForm({
           ...address_details
         });
+      }else{
+        fetchUccData()
       }
 
     } catch (err) {
