@@ -6,9 +6,10 @@ import TrackBar from "./Track-bar";
 import { generateOptions } from "../re-used-html/select-box";
 import { IncomeRangeEnum, OccupationEnum, WealthSourceEnum } from "../data/ucc-data";
 import { fatchDeclarationsForm, uccDataRes, uccDataResKeys, userDataObj } from "../data-interfaces/ucc";
-import { getRequest, postRequestSimple } from "../../services/Api/HandleApi";
+import { getRequest, postRequest, postRequestSimple } from "../../services/Api/HandleApi";
 import { endPoints } from "../../services/utils/urls";
 import { errorToast } from "../../services/utils/toast";
+import { validateDeclarationForm } from "../validation/ucc-validation";
 
 const Declaration = () => {
   const navigate = useNavigate();
@@ -28,7 +29,7 @@ const Declaration = () => {
     confirm_resident_indian: true,
     place_of_birth: "",
   });
-
+  const [isInputDisabled, setIsInputDisabled] = useState(false);
   const [errors, setErrors] = useState<Partial<Record<keyof fatchDeclarationsForm, string>>>({});
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
@@ -46,23 +47,12 @@ const Declaration = () => {
   };
 
   const handleIncomeRange = (value: number) => {
+    if (isInputDisabled) return;
     setForm((prev) => ({ ...prev, income_range: value }));
     setErrors((prev) => ({ ...prev, income_range: "" }));
   };
 
-  const validate = (): boolean => {
-    const newErrors: Partial<Record<keyof fatchDeclarationsForm, string>> = {};
-    if (!form.occupation) newErrors.occupation = "Occupation is required.";
-    if (!form.place_of_birth) newErrors.place_of_birth = "Place of birth is required.";
-    if (!form.wealth_source) newErrors.wealth_source = "Source of income is required.";
-    if (!form.income_range) newErrors.income_range = "Please select an income range.";
-    if (!form.no_politically_exposed)
-      newErrors.no_politically_exposed = "You must confirm you are not a politically exposed person.";
-    if (!form.confirm_resident_indian)
-      newErrors.confirm_resident_indian = "You must confirm you are a resident Indian taxpayer.";
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+
 
   useEffect(() => {
     if (!reference_id || !tax_status || !holding_nature || !pan) {
@@ -74,24 +64,9 @@ const Declaration = () => {
     }
   }, [])
 
-  // const fetchUccData = async () => {
-  //   try {
-  //     const response = await postRequest<uccDataRes>(endPoints.initiateUcc, { reference_id });
-  //     const profile = response.data[holder] as userDataObj;
-  //     const fatca_declarations = profile.fatca_declarations;
-
-  //     if (response.success && fatca_declarations) {
-  //       setForm({
-  //         ...fatca_declarations
-  //       });
-  //     }
-  //   } catch (err) {
-  //     errorToast(err);
-  //   }
-  // }
-  const fetchKycData = async (pan: string) => {
+  const fetchUccData = async () => {
     try {
-      const response = await getRequest<uccDataRes>(endPoints.getKycData + "?pan=" + pan);
+      const response = await postRequest<uccDataRes>(endPoints.initiateUcc, { reference_id });
       const profile = response.data[holder] as userDataObj;
       const fatca_declarations = profile.fatca_declarations;
 
@@ -100,14 +75,30 @@ const Declaration = () => {
           ...fatca_declarations
         });
       }
+    } catch (err) {
+      errorToast(err);
+    }
+  }
+  const fetchKycData = async (pan: string) => {
+    try {
+      const response = await getRequest<uccDataRes>(endPoints.getKycData + "?pan=" + pan);
+      const profile = response.data[holder] as userDataObj;
+      const fatca_declarations = profile.fatca_declarations;
+
+      if (response.success && fatca_declarations) {
+        setIsInputDisabled(true)
+        setForm({
+          ...fatca_declarations
+        });
+      }
 
     } catch (err) {
-      console.log(err);
+      fetchUccData()
     }
   }
 
   const handleSubmit = async () => {
-    if (!validate()) return;
+    if (!validateDeclarationForm(form, setErrors)) return;
 
     try {
       const payload = {
@@ -151,7 +142,7 @@ const Declaration = () => {
                 <label className="form-label fw-light text-secondary">
                   PLACE OF BIRTH
                 </label>
-                <input type="text" name="place_of_birth" value={form.place_of_birth} onChange={handleChange} className={`form-control ${errors.place_of_birth ? 'is-invalid' : ''}`} />
+                <input type="text" name="place_of_birth" value={form.place_of_birth} onChange={handleChange} className={`form-control ${errors.place_of_birth ? 'is-invalid' : ''}`} disabled={isInputDisabled} />
                 {errors.place_of_birth && <div className="invalid-feedback">{errors.place_of_birth}</div>}
               </div>
               <div className="col-md-6">
@@ -160,6 +151,7 @@ const Declaration = () => {
                   name="occupation"
                   value={form.occupation ?? ""}
                   onChange={handleChange}
+                  disabled={isInputDisabled}
                   className={`form-select${errors.occupation ? " is-invalid" : ""}`}
                 >
                   <option value="">Choose...</option>
@@ -174,6 +166,7 @@ const Declaration = () => {
                   name="wealth_source"
                   value={form.wealth_source ?? ""}
                   onChange={handleChange}
+                  disabled={isInputDisabled}
                   className={`form-select${errors.wealth_source ? " is-invalid" : ""}`}
                 >
                   <option value="">Choose...</option>

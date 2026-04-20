@@ -69,18 +69,22 @@ const KycStatusCheck = () => {
   const pending = "pending";
   const completed = "completed";
   const [holders, setHolders] = useState<Holder[]>([
-    { holder: "primary_user", label: "Primary Holder", status: active, pan: "", isKycCompliant: null, kycMsg: "", description: "", kycSuccess: false, isLoader: false },
+    { holder: "primary_user", label: "Primary Holder", status: active, pan: localStorage.getItem("pan") || "", isKycCompliant: null, kycMsg: "", description: "", kycSuccess: false, isLoader: false },
     { holder: "secondary_user", label: "Second Holder", status: pending, pan: "", isKycCompliant: null, kycMsg: "", description: "", kycSuccess: false, isLoader: false },
     { holder: "third_user", label: "Third Holder", status: pending, pan: "", isKycCompliant: null, kycMsg: "", description: "", kycSuccess: false, isLoader: false },
   ]);
 
 
   useEffect(() => {
+    const adminPan = localStorage.getItem("pan");
+    if (adminPan && adminPan.length === 10 && !reference_id) {
+      checkKycStatus(0, adminPan);
+    }
 
     if (reference_id) {
       fetchUccData()
-
     }
+
   }, [])
 
   const fetchUccData = async () => {

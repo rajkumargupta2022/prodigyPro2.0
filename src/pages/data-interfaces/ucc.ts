@@ -115,3 +115,17 @@ export interface kycUpdateRes {
   actinText?:string;
   actionUrl?:string
 }
+export interface personalFormErrors {
+  full_name?: string;
+  email?: string;
+  email_relation?: string;
+  mobile?: string;
+  mobile_relation?: string;
+  dob?: string;
+  gender?: string;
+  occupation?: string;
+  guardian_name?: string;
+  guardian_relation?: string;
+  guardian_pan?: string;
+  guardian_dob?: string;
+}

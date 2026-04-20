@@ -23,20 +23,21 @@ const AddressDetails = () => {
 
   const [form, setForm] = useState<addressDetailForm>({});
   const [errors, setErrors] = useState<Partial<addressDetailForm>>({});
+  const [isInputDisabled, setIsInputDisabled] = useState(false);
 
-   useEffect(() => {
-    if(!reference_id || !tax_status || !holding_nature || !pan){
+  useEffect(() => {
+    if (!reference_id || !tax_status || !holding_nature || !pan) {
       navigate("/dashboard");
       return;
     }
     if (pan) {
       fetchKycData(pan)
-    } 
+    }
   }, [])
 
-  const fetchKycData = async (pan: string) => {
+  const fetchUccData = async () => {
     try {
-      const response = await getRequest<uccDataRes>(endPoints.getKycData + "?pan=" + pan);
+      const response = await postRequest<uccDataRes>(endPoints.initiateUcc, { reference_id });
       const profile = response.data[holder] as userDataObj;
       const address_details = profile.address_details;
 
@@ -45,27 +46,54 @@ const AddressDetails = () => {
           ...address_details
         });
       }
-    
     } catch (err) {
-      console.log(err);
+      errorToast(err);
+    }
+  }
+  const fetchKycData = async (pan: string) => {
+    try {
+      const response = await getRequest<uccDataRes>(endPoints.getKycData + "?pan=" + pan);
+      const profile = response.data[holder] as userDataObj;
+      const address_details = profile.address_details;
+
+      if (response.success && address_details) {
+        setIsInputDisabled(true)
+        setForm({
+          ...address_details
+        });
+      }
+
+    } catch (err) {
+      fetchUccData()
     }
   }
 
- 
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
 
-    setForm((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-    if (name === "pincode" && value.length === 6) {
-      pinCodeDetails(value)
+    let updatedValue = value;
+
+    // 🔒 Special handling for pincode
+    if (name === "pincode") {
+      // Allow only digits
+      updatedValue = value.replace(/\D/g, "");
+
+      // Restrict max length to 6
+      if (updatedValue.length > 6) return;
+      // Call API when exactly 6 digits
+      if (updatedValue.length === 6) {
+        pinCodeDetails(updatedValue);
+      }
     }
 
-    // clear error on change
+    setForm((prev) => ({
+      ...prev,
+      [name]: updatedValue,
+    }));
+
     setErrors((prev) => ({
       ...prev,
       [name]: "",
@@ -77,15 +105,17 @@ const AddressDetails = () => {
       try {
         const res = await postRequest<pincodeDetailsRes>(endPoints.getPincodeDetails, { pincode });
         if (res.data) {
-          setForm({ ...form, state:getStateCode(res.data.state), country: res.data.country, pincode: res.data.pincode, city: res.data.district });
+          setForm({ ...form, state: getStateCode(res.data.state), country: res.data.country, pincode: res.data.pincode, city: res.data.district });
         }
       } catch (err) {
-            console.log(err);
+        console.log(err);
+        errorToast(err)
+        setForm({ ...form, state: "", country: "", pincode: "", city: "" });
       }
     }
   }
-  const getStateCode = (name:string) =>
-  StatevaluesEnum.find(s => s.label === name)?.value ;
+  const getStateCode = (name: string) =>
+    StatevaluesEnum.find(s => s.label === name)?.value;
 
   const validate = (): boolean => {
     const newErrors: Partial<addressDetailForm> = {};
@@ -171,6 +201,7 @@ const AddressDetails = () => {
                   className="form-control"
                   value={form.pincode || ""}
                   onChange={handleChange}
+                  disabled={isInputDisabled}
                 />
                 {errors.pincode && (
                   <small className="text-danger">{errors.pincode}</small>
@@ -185,6 +216,7 @@ const AddressDetails = () => {
                   className="form-control"
                   value={form.address_1 || ""}
                   onChange={handleChange}
+                  disabled={isInputDisabled}
                 />
                 {errors.address_1 && (
                   <small className="text-danger">{errors.address_1}</small>
@@ -201,6 +233,7 @@ const AddressDetails = () => {
                   className="form-control"
                   value={form.address_2 || ""}
                   onChange={handleChange}
+                  disabled={isInputDisabled}
                 />
               </div>
 
@@ -210,7 +243,8 @@ const AddressDetails = () => {
                   name="state"
                   className="form-select"
                   value={form.state || ""}
-                 
+                  disabled={isInputDisabled}
+
                 >
                   <option value="">Choose...</option>
                   {generateOptions(StatevaluesEnum, "value", "label")}
@@ -229,7 +263,8 @@ const AddressDetails = () => {
                   name="city"
                   className="form-control"
                   value={form.city || ""}
-                 
+                  disabled={isInputDisabled}
+
                 />
                 {errors.city && (
                   <small className="text-danger">{errors.city}</small>
@@ -243,7 +278,7 @@ const AddressDetails = () => {
                   name="country"
                   className="form-control"
                   value={form.country || ""}
-               
+                  disabled={isInputDisabled}
                 />
                 {errors.country && (
                   <small className="text-danger">{errors.country}</small>

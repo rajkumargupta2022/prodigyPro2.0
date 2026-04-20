@@ -29,7 +29,7 @@ const MandateAmount = () => {
   const pan = searchParams.get("pan") ?? "";
   const holder = searchParams.get("holder") as keyof uccDataResKeys;
 
-  const [mandateAmount, setMandateAmount] = useState<number | undefined>(10000)
+  const [mandateAmount, setMandateAmount] = useState<number | undefined>(50000)
   const [mandateAmountError, setMandateAmountError] = useState<string>("")
   const [isNomineeOptOut, setIsNomineeOptOut] = useState<boolean>(false)
   const [bankDetails, setBankDetails] = useState<bankDetailForm>({
@@ -56,7 +56,7 @@ const MandateAmount = () => {
       const response = await postRequest<uccDataRes>(endPoints.initiateUcc, { reference_id });
       const data = response.data?.bank_details;
       if (response.success && data) {
-        setMandateAmount(response?.data?.mandate_amount ?? 10000)
+        setMandateAmount(response?.data?.mandate_amount ?? 50000)
         setBankDetails({ ...data })
       }
     } catch (err) {
@@ -91,6 +91,7 @@ const MandateAmount = () => {
         reference_id,
         tax_status,
         holding_nature,
+        nominee_opt_out: taxStatus.ON_BEHALF_OF_MINOR === tax_status ? true : false,
         mandate_amount: Number(mandateAmount),
         nominees: []
       };

@@ -5,26 +5,14 @@ import Navbar from "../../components/Navbar";
 import { generateOptions } from "../re-used-html/select-box";
 import { ContactRelationsEnum, UserGenderEnum, GuardianRelationEnum, taxStatus } from "../data/ucc-data";
 import { useEffect, useState } from "react";
-import { personalDetailForm, uccDataRes, uccDataResKeys, userDataObj } from "../data-interfaces/ucc";
+import { personalDetailForm, personalFormErrors, uccDataRes, uccDataResKeys, userDataObj } from "../data-interfaces/ucc";
 import { getRequest, postRequest } from "../../services/Api/HandleApi";
 import { endPoints } from "../../services/utils/urls";
 import { errorToast } from "../../services/utils/toast";
 import { formatDateToUTCString, formatUTCToDateOnly } from "../../services/dates/dateFormater";
+import { validatePersonalForm } from "../validation/ucc-validation";
 
-interface FormErrors {
-  full_name?: string;
-  email?: string;
-  email_relation?: string;
-  mobile?: string;
-  mobile_relation?: string;
-  dob?: string;
-  gender?: string;
-  occupation?: string;
-  guardian_name?: string;
-  guardian_relation?: string;
-  guardian_pan?: string;
-  guardian_dob?: string;
-}
+
 
 const PersonalDetails = () => {
   const navigate = useNavigate();
@@ -48,11 +36,13 @@ const PersonalDetails = () => {
     guardian_relation: "",
     guardian_pan: "",
     guardian_dob: "",
+    pan: "",
 
   });
 
-  const [errors, setErrors] = useState<FormErrors>({});
+  const [errors, setErrors] = useState<personalFormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isInputDisabled, setIsInputDisabled] = useState(false);
 
   useEffect(() => {
     if (!reference_id || !tax_status || !holding_nature) {
@@ -75,11 +65,17 @@ const PersonalDetails = () => {
         if (tax_status === taxStatus.ON_BEHALF_OF_MINOR) {
           setForm(prev => ({
             ...prev,
+            pan: "",
+            email_relation: personalDetails.email_relation || "",
+            guardian_relation: "6",
+            mobile_relation: personalDetails.mobile_relation || "",
+            gender: personalDetails.gender || "",
             guardian_name: personalDetails.full_name || "",
             guardian_pan: pan,
             guardian_dob: formatUTCToDateOnly(personalDetails.dob || ""),
           }));
         } else {
+          setIsInputDisabled(true)
           setForm({
             ...personalDetails,
             dob: formatUTCToDateOnly(personalDetails.dob || ""),
@@ -87,7 +83,32 @@ const PersonalDetails = () => {
         }
       }
     } catch (err) {
-      console.log(err);
+      fetchUccData()
+    }
+  }
+  const fetchUccData = async () => {
+    try {
+      const response = await postRequest<uccDataRes>(endPoints.initiateUcc, { reference_id });
+      const profile = response.data[holder] as userDataObj;
+      if (response.success && profile?.personal_details) {
+        const personalDetails = profile.personal_details;
+        if (tax_status === taxStatus.ON_BEHALF_OF_MINOR) {
+          setForm({
+            ...personalDetails,
+            pan: "",
+            dob: formatUTCToDateOnly(personalDetails.dob || ""),
+            guardian_dob: formatUTCToDateOnly(personalDetails.guardian_dob || ""),
+          });
+        } else {
+          // setIsInputDisabled(true)
+          setForm({
+            ...personalDetails,
+            dob: formatUTCToDateOnly(personalDetails.dob || ""),
+          });
+        }
+      }
+    } catch (err) {
+      errorToast(err);
     }
   }
 
@@ -99,98 +120,10 @@ const PersonalDetails = () => {
     setErrors((prev) => ({ ...prev, [name]: undefined }));
   };
 
-  const validate = (): boolean => {
-    const newErrors: FormErrors = {};
 
-    if (!form.full_name?.trim()) {
-      newErrors.full_name = "Full name is required.";
-    } else if (form.full_name.trim().length < 3) {
-      newErrors.full_name = "Full name must be at least 3 characters.";
-    }
-
-    if (!form.email?.trim()) {
-      newErrors.email = "Email address is required.";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
-      newErrors.email = "Please enter a valid email address.";
-    }
-
-    if (!form.email_relation) {
-      newErrors.email_relation = "Email relation is required.";
-    }
-
-    if (!form.mobile?.trim()) {
-      newErrors.mobile = "Mobile number is required.";
-    } else if (!/^[6-9]\d{9}$/.test(form.mobile)) {
-      newErrors.mobile = "Enter a valid 10-digit mobile number.";
-    }
-
-    if (!form.mobile_relation) {
-      newErrors.mobile_relation = "Mobile relation is required.";
-    }
-
-    if (!form.gender) {
-      newErrors.gender = "Gender is required.";
-    }
-
-    // DOB Age Validation based on Tax Status
-    if(!form.dob) {
-      newErrors.dob = "Date of Birth is required.";
-    }
-    if (form.dob) {
-      const dobDate = new Date(form.dob);
-      const today = new Date();
-      let age = today.getFullYear() - dobDate.getFullYear();
-      const m = today.getMonth() - dobDate.getMonth();
-      if (m < 0 || (m === 0 && today.getDate() < dobDate.getDate())) {
-        age--;
-      }
-
-      if (String(tax_status) === "2") {
-        if (age >= 18) {
-          newErrors.dob = "For minor status, age must be less than 18 years.";
-        }
-      } else {
-        if (age < 18) {
-          newErrors.dob = "For this tax status, age must be 18 years or more.";
-        }
-      }
-    }
-
-    // Guardian Fields Validation for Minor
-    if (String(tax_status) === "2") {
-      if (!form.guardian_name?.trim()) {
-        newErrors.guardian_name = "Guardian name is required.";
-      }
-      if (!form.guardian_relation) {
-        newErrors.guardian_relation = "Guardian relation is required.";
-      }
-      if (!form.guardian_pan?.trim()) {
-        newErrors.guardian_pan = "Guardian PAN is required.";
-      } else if (!/^[A-Z]{5}[0-9]{4}[A-Z]$/.test(form.guardian_pan.toUpperCase())) {
-        newErrors.guardian_pan = "Invalid PAN format.";
-      }
-      if (!form.guardian_dob) {
-        newErrors.guardian_dob = "Guardian DOB is required.";
-      } else {
-        const gDobDate = new Date(form.guardian_dob);
-        const today = new Date();
-        let gAge = today.getFullYear() - gDobDate.getFullYear();
-        const m = today.getMonth() - gDobDate.getMonth();
-        if (m < 0 || (m === 0 && today.getDate() < gDobDate.getDate())) {
-          gAge--;
-        }
-        if (gAge < 18) {
-          newErrors.guardian_dob = "Guardian must be at least 18 years old.";
-        }
-      }
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
 
   const handleSaveContinue = async () => {
-    if (!validate()) return;
+    if (!validatePersonalForm(form, tax_status, setErrors)) return;
 
     try {
       setIsSubmitting(true);
@@ -201,7 +134,7 @@ const PersonalDetails = () => {
         nominee_opt_out: false,
         [holder]: {
           personal_details: {
-            pan: pan,
+            pan: form?.pan,
             mobile_verified: true,
             email_verified: true,
             full_name: form.full_name,
@@ -215,7 +148,7 @@ const PersonalDetails = () => {
         }
       };
 
-      if (String(tax_status) === "2") {
+      if (String(tax_status) === taxStatus.ON_BEHALF_OF_MINOR) {
         payload[holder].personal_details.guardian_name = form.guardian_name;
         payload[holder].personal_details.guardian_relation = form.guardian_relation;
         payload[holder].personal_details.guardian_pan = form.guardian_pan?.toUpperCase();
@@ -233,10 +166,10 @@ const PersonalDetails = () => {
     }
   };
 
-  const inputClass = (field: keyof FormErrors) =>
+  const inputClass = (field: keyof personalFormErrors) =>
     `form-control${errors[field] ? " is-invalid" : ""}`;
 
-  const selectClass = (field: keyof FormErrors) =>
+  const selectClass = (field: keyof personalFormErrors) =>
     `form-select${errors[field] ? " is-invalid" : ""}`;
 
   return (
@@ -265,6 +198,7 @@ const PersonalDetails = () => {
                   onChange={handleChange}
                   className={inputClass("full_name")}
                   placeholder=""
+                  disabled={isInputDisabled}
                 />
                 {errors.full_name && (
                   <div className="invalid-feedback">{errors.full_name}</div>
@@ -279,6 +213,7 @@ const PersonalDetails = () => {
                   onChange={handleChange}
                   className={inputClass("email")}
                   placeholder=""
+                  disabled={isInputDisabled}
                 />
                 {errors.email && (
                   <div className="invalid-feedback">{errors.email}</div>
@@ -295,6 +230,7 @@ const PersonalDetails = () => {
                   value={form.email_relation}
                   onChange={handleChange}
                   className={selectClass("email_relation")}
+                  disabled={isInputDisabled}
                 >
                   <option value="">Choose...</option>
                   {generateOptions(ContactRelationsEnum, "value", "label")}
@@ -312,6 +248,7 @@ const PersonalDetails = () => {
                   onChange={handleChange}
                   maxLength={10}
                   className={inputClass("mobile")}
+                  disabled={isInputDisabled}
                   placeholder=""
                 />
                 {errors.mobile && (
@@ -329,6 +266,7 @@ const PersonalDetails = () => {
                   value={form.mobile_relation}
                   onChange={handleChange}
                   className={selectClass("mobile_relation")}
+                  disabled={isInputDisabled}
                 >
                   <option value="">Choose...</option>
                   {generateOptions(ContactRelationsEnum, "value", "label")}
@@ -348,6 +286,7 @@ const PersonalDetails = () => {
                   onChange={handleChange}
                   max={new Date().toISOString().split("T")[0]}
                   className={inputClass("dob")}
+                  disabled={isInputDisabled}
                 />
                 {errors.dob && (
                   <div className="invalid-feedback">{errors.dob}</div>
@@ -364,6 +303,7 @@ const PersonalDetails = () => {
                   value={form.gender}
                   onChange={handleChange}
                   className={selectClass("gender")}
+                  disabled={isInputDisabled}
                 >
                   <option value="">Choose...</option>
                   {generateOptions(UserGenderEnum, "value", "label")}
@@ -382,6 +322,7 @@ const PersonalDetails = () => {
                     onChange={handleChange}
                     className={inputClass("guardian_name")}
                     placeholder=""
+                    disabled={isInputDisabled}
                   />
                   {errors.guardian_name && (
                     <div className="invalid-feedback">{errors.guardian_name}</div>
@@ -404,6 +345,7 @@ const PersonalDetails = () => {
                       maxLength={10}
                       className={inputClass("guardian_pan")}
                       placeholder=""
+                      disabled={isInputDisabled}
                     />
                     {errors.guardian_pan && (
                       <div className="invalid-feedback">{errors.guardian_pan}</div>
@@ -416,6 +358,7 @@ const PersonalDetails = () => {
                       value={form.guardian_relation}
                       onChange={handleChange}
                       className={selectClass("guardian_relation")}
+                      disabled={isInputDisabled}
                     >
                       <option value="">Choose...</option>
                       {generateOptions(GuardianRelationEnum, "value", "label")}
@@ -435,6 +378,7 @@ const PersonalDetails = () => {
                       onChange={handleChange}
                       max={new Date().toISOString().split("T")[0]}
                       className={inputClass("guardian_dob")}
+                      disabled={isInputDisabled}
                     />
                     {errors.guardian_dob && (
                       <div className="invalid-feedback">{errors.guardian_dob}</div>

@@ -29,8 +29,13 @@ const PanVarification = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
+    const adminPan = localStorage.getItem("pan")
     if (!tax_status || !holding_nature) {
       navigate("/login")
+    }
+    if (adminPan) {
+      setUserPan(adminPan)
+      completeKyc(adminPan)
     }
   }, [])
 

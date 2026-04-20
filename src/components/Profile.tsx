@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useAdminUser } from "../context/AdminContext";
-import { UccStatusEnum, uccMsg } from "../pages/data/ucc-data";
+import { UccStatusEnum, holdingNature, uccMsg } from "../pages/data/ucc-data";
 import { errorToast } from "../services/utils/toast";
 
 
@@ -33,43 +33,43 @@ function Profile() {
         </div>
 
       </form>
-     { familyMemberList.length>0 &&
-      <div className="p-4 shadow-sm bg-white border-0 rounded-4 mt-4">
+      {familyMemberList.length > 0 &&
+        <div className="p-4 shadow-sm bg-white border-0 rounded-4 mt-4">
 
-        <div className="d-flex">
-          <h5 style={{ flex: 1 }}>Family Members</h5>
-          <Link 
-            className={`${isAddDisabled ? "text-muted disabled-link" : "logoBlueColor"}`} 
-            to={"/add-family-member"}
-            onClick={(e) => {
-              if (isAddDisabled) {
-                e.preventDefault();
-                errorToast(uccMsg.uccUpdateMsg);
-              }
-            }}
-          >+ Add New</Link>
-        </div>
+          <div className="d-flex">
+            <h5 style={{ flex: 1 }}>Family Members</h5>
+            <Link
+              className={`${isAddDisabled ? "text-muted disabled-link" : "logoBlueColor"}`}
+              to={"/add-family-member"}
+              onClick={(e) => {
+                if (isAddDisabled) {
+                  e.preventDefault();
+                  errorToast(uccMsg.uccUpdateMsg);
+                }
+              }}
+            >+ Add New</Link>
+          </div>
 
-        <div className="row">
-          {familyMemberList.length > 0 && familyMemberList.map((item,i) => {
-            return <>
-              <div className="col-lg-4 col-md-6 col-sm-12 py-2" key={i}>
-                <div
-                  className="profileCard"
-                >
-                  {adminUser?.profilePic ? <img src={adminUser?.profilePic} className='circleImg-2' alt="Image not found" /> : <div className="nameTitle">
-                    {item?.name?.split(" ")?.slice(0, 2).map(word => word[0]).join("").toUpperCase()}
-                  </div>}
+          <div className="row">
+            {familyMemberList.length > 0 && familyMemberList.map((item, i) => {
+              return <>
+                <div className="col-lg-4 col-md-6 col-sm-12 py-2" key={i}>
+                  <div
+                    className="profileCard"
+                  >
+                    {adminUser?.profilePic ? <img src={adminUser?.profilePic} className='circleImg-2' alt="Image not found" /> : <div className="nameTitle">
+                      {item?.name?.split(" ")?.slice(0, 2).map(word => word[0]).join("").toUpperCase()}
+                    </div>}
 
-                  <h5> {item.name}</h5>
-                  <p className="fs14px">    {item.hold_n_code==="SI" ? "Single Holder" : `AOS ( ${item.jh1_name} ${item.jh2_name && ","+item.jh2_name})` }</p>
-                  <p className="logoBlueColor" onClick={() => switchProfile(item)}>Switch Profile</p>
+                    <h5> {item.name}</h5>
+                    <p className="fs14px">    {item.hold_n_code === holdingNature.SINGLE ? "Single Holder" : `AOS ( ${item.jh1_name} ${item.jh2_name && "," + item.jh2_name})`}</p>
+                    <p className="logoBlueColor" onClick={() => switchProfile(item)}>Switch Profile</p>
+                  </div>
                 </div>
-              </div>
-            </>
-          })}
-        </div>
-      </div>}
+              </>
+            })}
+          </div>
+        </div>}
     </main>
   );
 }

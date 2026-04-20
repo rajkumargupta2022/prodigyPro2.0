@@ -4,12 +4,11 @@ import NextBar from "../../components/Next-bar";
 import TrackBar from "./Track-bar";
 import { bankDetailForm, bankNameRes, uccDataRes, uccDataResKeys } from "../data-interfaces/ucc";
 import { useEffect, useState } from "react";
-import { getRequest, getRequestSimple, postRequest, postRequestSimple } from "../../services/Api/HandleApi";
+import { getRequest, getRequestSimple, postRequest } from "../../services/Api/HandleApi";
 import { endPoints } from "../../services/utils/urls";
 import { errorToast } from "../../services/utils/toast";
 import { varifyBankRes } from "../data-interfaces/bank-and-mandate";
 import CheckUpload from "./Check-upload";
-import { taxStatus } from "../data/ucc-data";
 
 const BankDetailForm = () => {
   const navigate = useNavigate();
@@ -37,6 +36,7 @@ const BankDetailForm = () => {
   const [accountHidden, setAccountHidden] = useState(false);
   const [holderName, setHolderName] = useState<string>("")
   const [showCheckUpload, setShowCheckUpload] = useState<boolean>(false)
+  const [isInputDisabled, setIsInputDisabled] = useState(false)
 
   useEffect(() => {
     if (!reference_id || !tax_status || !holding_nature || !pan) {
@@ -52,9 +52,28 @@ const BankDetailForm = () => {
     try {
       const response = await getRequest<uccDataRes>(endPoints.getKycData + "?pan=" + pan);
       const data = response.data?.bank_details;
+      const holderData = response.data?.primary_user?.personal_details
+      if (response.success && holderData.full_name) {
+        setHolderName(holderData?.full_name)
+        setBankDetailForm({
+          ...data
+        });
+        setIsInputDisabled(true)
+        setConfirmAccountNumber(data.bank_account_number ?? "");
+      }
+    } catch (err) {
+      fetchUccData()
+      console.log(err);
+    }
+  }
+
+  const fetchUccData = async () => {
+    try {
+      const response = await postRequest<uccDataRes>(endPoints.initiateUcc, { reference_id });
+      const holderData = response.data?.primary_user?.personal_details
+      setHolderName(holderData?.full_name ?? "")
+      const data = response.data?.bank_details;
       if (response.success && data) {
-        const holderData = response.data?.primary_user?.personal_details
-        setHolderName(response.data?.tax_status === taxStatus.ON_BEHALF_OF_MINOR ? holderData?.guardian_name ?? "" : holderData?.full_name ?? "")
         setBankDetailForm({
           ...data
         });
@@ -184,7 +203,6 @@ const BankDetailForm = () => {
 
       } else if (res.data.nameMatchScore < 100) {
         setShowCheckUpload(true)
-
       }
     } catch (err) {
       errorToast("Something went wrong")
@@ -246,6 +264,7 @@ const BankDetailForm = () => {
                   className="form-control"
                   value={bankDetailForm.bank_account_number}
                   onChange={handleChange}
+                  disabled={isInputDisabled}
                 />
 
                 {errors.bank_account_number && (
@@ -265,6 +284,7 @@ const BankDetailForm = () => {
                   className="form-control"
                   value={confirmAccountNumber}
                   onChange={handleConfirmAccount}
+                  disabled={isInputDisabled}
                 />
 
                 {errors.bank_account_number_confirm && (
@@ -292,12 +312,14 @@ const BankDetailForm = () => {
                     ? "activeBtnIncome"
                     : ""
                     }`}
-                  onClick={() =>
+                  onClick={() => {
+                    if (isInputDisabled) return;
                     setBankDetailForm({
                       ...bankDetailForm,
                       bank_account_type: "SB",
                     })
-                  }
+                  }}
+
                 >
                   Saving Account
                 </button>
@@ -308,12 +330,13 @@ const BankDetailForm = () => {
                     ? "activeBtnIncome"
                     : ""
                     }`}
-                  onClick={() =>
+                  onClick={() => {
+                    if (isInputDisabled) return;
                     setBankDetailForm({
                       ...bankDetailForm,
                       bank_account_type: "CA",
                     })
-                  }
+                  }}
                 >
                   Current Account
                 </button>
@@ -337,6 +360,7 @@ const BankDetailForm = () => {
                   value={bankDetailForm.bank_ifsc}
                   className="form-control"
                   onChange={handleChange}
+                  disabled={isInputDisabled}
                 />
 
                 {errors.bank_ifsc && (
@@ -361,6 +385,7 @@ const BankDetailForm = () => {
                   className="form-control"
                   value={bankDetailForm.bank_name}
                   readOnly
+                  disabled={isInputDisabled}
 
                 />
 
@@ -381,6 +406,7 @@ const BankDetailForm = () => {
                   className="form-control"
                   value={bankDetailForm.bank_branch}
                   readOnly
+                  disabled={isInputDisabled}
                 />
 
               </div>

@@ -1,7 +1,11 @@
 export const ContactRelationsEnum=[
     { value: "SE", label: "Self" },
  { value: "SP", label: "Spouse" },
-  { value: "GD", label: "Guardian" }
+  { value: "GD", label: "Guardian" },
+  { value: "DC", label: "Dependent Children" },
+  { value: "DS", label: "Dependent Siblings" },
+  { value: "DP", label: "Dependent Parents" },
+
 ]
 
 export const GuardianRelationEnum = [
