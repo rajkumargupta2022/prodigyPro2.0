@@ -62,6 +62,7 @@ const PersonalDetails = () => {
       const profile = response.data[holder] as userDataObj;
       if (response.success && profile?.personal_details?.email && profile?.personal_details?.mobile) {
         const personalDetails = profile.personal_details;
+        setIsInputDisabled(true)
         if (tax_status === taxStatus.ON_BEHALF_OF_MINOR) {
           setForm(prev => ({
             ...prev,
@@ -75,13 +76,12 @@ const PersonalDetails = () => {
             guardian_dob: formatUTCToDateOnly(personalDetails.dob || ""),
           }));
         } else {
-          setIsInputDisabled(true)
           setForm({
             ...personalDetails,
             dob: formatUTCToDateOnly(personalDetails.dob || ""),
           });
         }
-      }else {
+      } else {
         fetchUccData()
       }
     } catch (err) {
@@ -200,7 +200,7 @@ const PersonalDetails = () => {
                   onChange={handleChange}
                   className={inputClass("full_name")}
                   placeholder=""
-                  disabled={isInputDisabled}
+                  disabled={tax_status === taxStatus.ON_BEHALF_OF_MINOR ? false : isInputDisabled}
                 />
                 {errors.full_name && (
                   <div className="invalid-feedback">{errors.full_name}</div>
@@ -215,7 +215,6 @@ const PersonalDetails = () => {
                   onChange={handleChange}
                   className={inputClass("email")}
                   placeholder=""
-                  disabled={isInputDisabled}
                 />
                 {errors.email && (
                   <div className="invalid-feedback">{errors.email}</div>
@@ -232,7 +231,6 @@ const PersonalDetails = () => {
                   value={form.email_relation}
                   onChange={handleChange}
                   className={selectClass("email_relation")}
-                  disabled={isInputDisabled}
                 >
                   <option value="">Choose...</option>
                   {generateOptions(ContactRelationsEnum, "value", "label")}
@@ -250,7 +248,6 @@ const PersonalDetails = () => {
                   onChange={handleChange}
                   maxLength={10}
                   className={inputClass("mobile")}
-                  disabled={isInputDisabled}
                   placeholder=""
                 />
                 {errors.mobile && (
@@ -268,7 +265,6 @@ const PersonalDetails = () => {
                   value={form.mobile_relation}
                   onChange={handleChange}
                   className={selectClass("mobile_relation")}
-                  disabled={isInputDisabled}
                 >
                   <option value="">Choose...</option>
                   {generateOptions(ContactRelationsEnum, "value", "label")}
@@ -288,7 +284,6 @@ const PersonalDetails = () => {
                   onChange={handleChange}
                   max={new Date().toISOString().split("T")[0]}
                   className={inputClass("dob")}
-                  disabled={isInputDisabled}
                 />
                 {errors.dob && (
                   <div className="invalid-feedback">{errors.dob}</div>
@@ -305,7 +300,7 @@ const PersonalDetails = () => {
                   value={form.gender}
                   onChange={handleChange}
                   className={selectClass("gender")}
-                  disabled={isInputDisabled}
+                  disabled={tax_status === taxStatus.ON_BEHALF_OF_MINOR ? false : isInputDisabled}
                 >
                   <option value="">Choose...</option>
                   {generateOptions(UserGenderEnum, "value", "label")}
@@ -347,7 +342,6 @@ const PersonalDetails = () => {
                       maxLength={10}
                       className={inputClass("guardian_pan")}
                       placeholder=""
-                      disabled={isInputDisabled}
                     />
                     {errors.guardian_pan && (
                       <div className="invalid-feedback">{errors.guardian_pan}</div>
@@ -360,7 +354,6 @@ const PersonalDetails = () => {
                       value={form.guardian_relation}
                       onChange={handleChange}
                       className={selectClass("guardian_relation")}
-                      disabled={isInputDisabled}
                     >
                       <option value="">Choose...</option>
                       {generateOptions(GuardianRelationEnum, "value", "label")}
@@ -380,7 +373,6 @@ const PersonalDetails = () => {
                       onChange={handleChange}
                       max={new Date().toISOString().split("T")[0]}
                       className={inputClass("guardian_dob")}
-                      disabled={isInputDisabled}
                     />
                     {errors.guardian_dob && (
                       <div className="invalid-feedback">{errors.guardian_dob}</div>

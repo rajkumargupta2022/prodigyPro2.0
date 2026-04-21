@@ -3,7 +3,7 @@ import NavBar from "../../components/Navbar";
 import NextBar from "../../components/Next-bar";
 import TrackBar from "./Track-bar";
 import { generateOptions } from "../re-used-html/select-box";
-import { NomineeRelationEnum, StatevaluesEnum } from "../data/ucc-data";
+import { aadhar, NomineeRelationEnum, pan_value, passport, StatevaluesEnum } from "../data/ucc-data";
 import { useEffect, useState } from "react";
 import { endPoints } from "../../services/utils/urls";
 import { postRequest } from "../../services/Api/HandleApi";
@@ -27,12 +27,12 @@ const NominationDetails = () => {
     nominee_mobile: "",
     nominee_dob: "",
     nominee_relation: "",
-    nominee_pan: "",
+    nominee_id_type: pan_value,
+    nominee_id_number: "",
     nominee_allocation: 100,
     is_nominee_minor: false,
     nominee_guardian_name: "",
     nominee_guardian_pan: "",
-    minor_nominee_aadhaar: "",
     nominee_address: {
       pincode: "",
       address_1: "",
@@ -54,28 +54,48 @@ const NominationDetails = () => {
   const fetchUccData = async () => {
     try {
       const response = await postRequest<uccDataRes>(endPoints.initiateUcc, { reference_id });
-      if (response.success && (response.data?.nominees && response.data?.nominees?.length > 0)) {
-        setNomineeList(response.data?.nominees ?? []);
-        if (edit_index !== null) {
-          const index = parseInt(edit_index);
-          let nomineeData = response.data.nominees[index];
-          if (!isNaN(index) && nomineeData) {
-            setForm({
-              ...nomineeData,
-              nominee_dob: formatUTCToDateOnly(nomineeData.nominee_dob || ""),
-            });
+      if (response.success) {
+        const addressFallback = response.data.primary_user?.address_details;
+        const nominees = response.data.nominees || [];
+        setNomineeList(nominees);
+
+        if (nominees.length > 0) {
+          if (edit_index !== null) {
+            const index = parseInt(edit_index);
+            let nomineeData = nominees[index];
+            if (!isNaN(index) && nomineeData) {
+              setForm(prev => ({
+                ...prev,
+                ...nomineeData,
+                nominee_dob: formatUTCToDateOnly(nomineeData.nominee_dob || ""),
+                nominee_address: nomineeData.nominee_address || addressFallback,
+              }));
+            }
+          } else {
+            const totalAllocation = nominees.reduce((sum, item) => sum + (item.nominee_allocation || 0), 0);
+            if (totalAllocation >= 100) {
+              navigate(`/nomination-list?reference_id=${reference_id}&tax_status=${tax_status}&holding_nature=${holding_nature}&pan=${pan}&holder=${holder}`, { replace: true });
+            } else {
+              setForm(prev => ({
+                ...prev,
+                nominee_address: addressFallback,
+                nominee_allocation: 100 - totalAllocation
+              }));
+            }
           }
         } else {
-          const totalAllocation = response.data.nominees.reduce((sum, item) => sum + (item.nominee_allocation || 0), 0);
-          if (totalAllocation === 100) {
-            navigate(`/nomination-list?reference_id=${reference_id}&tax_status=${tax_status}&holding_nature=${holding_nature}&pan=${pan}&holder=${holder}`, { replace: true });
-          }
+          setForm(prev => ({
+            ...prev,
+            nominee_address: addressFallback,
+            nominee_allocation: 100
+          }));
         }
       }
     } catch (err) {
       errorToast(err);
     }
   }
+
 
   const pinCodeDetails = async (pincode: string) => {
     if (pincode.length === 6) {
@@ -89,7 +109,8 @@ const NominationDetails = () => {
               state: getStateCode(res.data.state),
               country: res.data.country,
               pincode: res.data.pincode,
-              city: res.data.district
+              city: res.data.district,
+              address_1: ""
             }
           }));
         }
@@ -131,16 +152,19 @@ const NominationDetails = () => {
       }
     } else {
       setForm((prev) => {
-        const newValue = (name === "nominee_pan" || name === "nominee_guardian_pan") ? value.toUpperCase() : value;
+        const newValue = (name === "nominee_id_number" || name === "nominee_guardian_pan") ? value.toUpperCase() : value;
         const newForm = { ...prev, [name]: newValue };
         if (name === "nominee_dob") {
           const age = calculateAge(value);
           newForm.is_nominee_minor = age < 18;
+          newForm.nominee_id_number = "";
           if (newForm.is_nominee_minor) {
-            newForm.nominee_pan = "";
+            newForm.nominee_id_type = aadhar;
           } else {
+            newForm.nominee_id_type = pan_value;
             newForm.nominee_guardian_name = "";
             newForm.nominee_guardian_pan = "";
+            newForm.nominee_id_number = "";
           }
         }
         return newForm;
@@ -171,15 +195,21 @@ const NominationDetails = () => {
       if (form.nominee_guardian_pan === pan) {
         newErrors.nominee_guardian_pan = "Primary PAN and Nominee gaurdian PAN should not be same";
       }
-      if (!form.minor_nominee_aadhaar?.trim() || !/^\d{12}$/.test(form.minor_nominee_aadhaar)) {
-        newErrors.minor_nominee_aadhaar = "Valid 12-digit Aadhaar required";
+      if (form.nominee_id_type === aadhar || !form.nominee_id_type) {
+        if (!form.nominee_id_number?.trim() || !/^\d{4}$/.test(form.nominee_id_number)) {
+          newErrors.nominee_id_number = "Valid 4-digit Aadhaar required";
+        }
+      } else if (form.nominee_id_type === passport) {
+        if (!form.nominee_id_number?.trim()) {
+          newErrors.nominee_id_number = "Passport number is required";
+        }
       }
     } else {
-      if (!form.nominee_pan?.trim() || !/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(form.nominee_pan.toUpperCase())) {
-        newErrors.nominee_pan = "Valid PAN required";
+      if (!form.nominee_id_number?.trim() || !/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(form.nominee_id_number.toUpperCase())) {
+        newErrors.nominee_id_number = "Valid PAN required";
       }
-      if (form.nominee_pan === pan) {
-        newErrors.nominee_pan = "Primary PAN and Nominee PAN should not be same";
+      if (form.nominee_id_number === pan) {
+        newErrors.nominee_id_number = "Primary PAN and Nominee PAN should not be same";
       }
     }
 
@@ -203,10 +233,10 @@ const NominationDetails = () => {
       ...form,
       nominee_guardian_name: form.is_nominee_minor ? form.nominee_guardian_name : undefined,
       nominee_guardian_pan: form.is_nominee_minor ? form.nominee_guardian_pan : undefined,
-      nominee_pan: !form.is_nominee_minor ? form.nominee_pan : undefined,
       nominee_dob: formatDateToUTCString(form.nominee_dob || ""),
       nominee_allocation: Number(form.nominee_allocation),
-      nominee_relation: Number(form.nominee_relation)
+      nominee_relation: Number(form.nominee_relation),
+      nominee_id_type: Number(form.nominee_id_type)
     };
 
     if (edit_index !== null) {
@@ -243,12 +273,10 @@ const NominationDetails = () => {
     return total + (Number(form.nominee_allocation) ?? 0);
   }
   const goOnNomineeList = () => {
-    const totalAllocation = getTotalAllocation();
-    if (totalAllocation == 100) {
-      navigate(
-        `/nomination-list?reference_id=${reference_id}&tax_status=${tax_status}&holding_nature=${holding_nature}&pan=${pan}&holder=${holder}`
-      );
-    }
+    navigate(
+      `/nomination-list?reference_id=${reference_id}&tax_status=${tax_status}&holding_nature=${holding_nature}&pan=${pan}&holder=${holder}`
+    );
+
   }
 
 
@@ -264,36 +292,30 @@ const NominationDetails = () => {
 
             <div className="row mb-3">
               <div className="col-md-6">
-                <label className="form-label fw-light text-secondary">
+                <label className="form-label  text-secondary">
                   NAME
                 </label>
                 <input type="text" name="nominee_name" value={form.nominee_name} onChange={handleChange} className={`form-control ${errors.nominee_name ? 'is-invalid' : ''}`} />
                 {errors.nominee_name && <div className="invalid-feedback">{errors.nominee_name}</div>}
               </div>
               <div className="col-md-6">
-                <label className="form-label fw-light text-secondary">
+                <label className="form-label  text-secondary">
                   NOMINEE EMAIL
                 </label>
                 <input type="text" name="nominee_email" value={form.nominee_email} onChange={handleChange} className={`form-control ${errors.nominee_email ? 'is-invalid' : ''}`} />
                 {errors.nominee_email && <div className="invalid-feedback">{errors.nominee_email}</div>}
               </div>
               <div className="col-md-6">
-                <label className="form-label fw-light text-secondary">
+                <label className="form-label  text-secondary">
                   NOMINEE MOBILE
                 </label>
                 <input type="text" name="nominee_mobile" value={form.nominee_mobile} onChange={handleChange} maxLength={10} className={`form-control ${errors.nominee_mobile ? 'is-invalid' : ''}`} />
                 {errors.nominee_mobile && <div className="invalid-feedback">{errors.nominee_mobile}</div>}
               </div>
-              <div className="col-md-6">
-                <label className="form-label fw-light text-secondary">
-                  DATE OF BIRTH
-                </label>
-                <input type="date" name="nominee_dob" value={form.nominee_dob} onChange={handleChange} max={new Date().toISOString().split("T")[0]} className={`form-control ${errors.nominee_dob ? 'is-invalid' : ''}`} />
-                {errors.nominee_dob && <div className="invalid-feedback">{errors.nominee_dob}</div>}
-              </div>
+
 
               <div className="col-md-6">
-                <label className="form-label fw-light text-secondary">
+                <label className="form-label  text-secondary">
                   RELATIONSHIP
                 </label>
                 <select name="nominee_relation" value={form.nominee_relation} onChange={handleChange} className={`form-select ${errors.nominee_relation ? 'is-invalid' : ''}`}>
@@ -302,43 +324,75 @@ const NominationDetails = () => {
                 </select>
                 {errors.nominee_relation && <div className="invalid-feedback">{errors.nominee_relation}</div>}
               </div>
+              <div className="col-md-6">
+                <label className="form-label  text-secondary">
+                  DATE OF BIRTH
+                </label>
+                <input type="date" name="nominee_dob" value={form.nominee_dob} onChange={handleChange} max={new Date().toISOString().split("T")[0]} className={`form-control ${errors.nominee_dob ? 'is-invalid' : ''}`} />
+                {errors.nominee_dob && <div className="invalid-feedback">{errors.nominee_dob}</div>}
+              </div>
+
 
               {form.is_nominee_minor ? (
                 <>
                   <div className="col-md-6">
-                    <label className="form-label fw-light text-secondary">
+                    <label className="form-label  text-secondary">
                       GUARDIAN NAME
                     </label>
                     <input type="text" name="nominee_guardian_name" value={form.nominee_guardian_name} onChange={handleChange} className={`form-control ${errors.nominee_guardian_name ? 'is-invalid' : ''}`} />
-                    {errors.nominee_guardian_name && <div className="invalid-feedback">{errors.nominee_guardian_name}</div>}
+                    <small id="guardian_name" className="form-text fw-light  text-muted">Guardian name is required in case of minor</small>
+                    {errors.nominee_guardian_name && <div className="invalid-feedback mt-0">{errors.nominee_guardian_name}</div>}
                   </div>
                   <div className="col-md-6">
-                    <label className="form-label fw-light text-secondary">
+                    <label className="form-label  text-secondary">
                       GUARDIAN PAN
                     </label>
                     <input type="text" name="nominee_guardian_pan" value={form.nominee_guardian_pan} onChange={handleChange} className={`form-control ${errors.nominee_guardian_pan ? 'is-invalid' : ''}`} style={{ textTransform: 'uppercase' }} />
-                    {errors.nominee_guardian_pan && <div className="invalid-feedback">{errors.nominee_guardian_pan}</div>}
+                    <small id="guardian_name" className="form-text fw-light  text-muted">Guardian PAN is required in case of minor</small>
+                    {errors.nominee_guardian_pan && <div className="invalid-feedback mt-0">{errors.nominee_guardian_pan}</div>}
                   </div>
                   <div className="col-md-6">
-                    <label className="form-label fw-light text-secondary">
-                      NOMINEE AADHAAR
+                    <label className="form-label  text-secondary">
+                      NOMINEE ID TYPE
                     </label>
-                    <input type="text" name="minor_nominee_aadhaar" value={form.minor_nominee_aadhaar} onChange={handleChange} className={`form-control ${errors.minor_nominee_aadhaar ? 'is-invalid' : ''}`} maxLength={12} />
-                    {errors.minor_nominee_aadhaar && <div className="invalid-feedback">{errors.minor_nominee_aadhaar}</div>}
+                    <select name="nominee_id_type" value={form.nominee_id_type ?? 2} onChange={handleChange} className={`form-select ${errors.nominee_id_type ? 'is-invalid' : ''}`}>
+                      <option value={"2"}>Aadhar Number</option>
+                      <option value={"4"}>Passport Number</option>
+
+                    </select>
+                    {errors.nominee_id_type && <div className="invalid-feedback">{errors.nominee_id_type}</div>}
+                  </div>
+                  <div className="col-md-6">
+                    <label className="form-label  text-secondary">
+                      {form.nominee_id_type == aadhar ? "NOMINEE AADHAAR" : "NOMINEE PASSPORT"}
+                    </label>
+                    {form.nominee_id_type == aadhar ? (
+                      <div className={`d-flex align-items-center form-control p-0 overflow-hidden ${errors.nominee_id_number ? 'is-invalid' : ''}`}>
+                        <span className="ps-3 text-secondary" style={{ whiteSpace: 'pre' }}>XXXX XXXX </span>
+                        <input type="text" name="nominee_id_number" value={form.nominee_id_number} onChange={(e) => {
+                          const val = e.target.value.replace(/\D/g, '');
+                          e.target.value = val;
+                          handleChange(e);
+                        }} className={`form-control border-0 shadow-none`} placeholder="Last 4-digits" maxLength={4} />
+                      </div>
+                    ) : (
+                      <input type="text" name="nominee_id_number" value={form.nominee_id_number} onChange={handleChange} className={`form-control ${errors.nominee_id_number ? 'is-invalid' : ''}`} maxLength={20} />
+                    )}
+                    {errors.nominee_id_number && <div className="invalid-feedback d-block">{errors.nominee_id_number}</div>}
                   </div>
                 </>
               ) : (
                 <div className="col-md-6">
-                  <label className="form-label fw-light text-secondary">
+                  <label className="form-label  text-secondary">
                     NOMINEE PAN
                   </label>
-                  <input type="text" name="nominee_pan" value={form.nominee_pan} onChange={handleChange} className={`form-control ${errors.nominee_pan ? 'is-invalid' : ''}`} style={{ textTransform: 'uppercase' }} />
-                  {errors.nominee_pan && <div className="invalid-feedback">{errors.nominee_pan}</div>}
+                  <input type="text" name="nominee_id_number" value={form.nominee_id_number} onChange={handleChange} className={`form-control ${errors.nominee_id_number ? 'is-invalid' : ''}`} style={{ textTransform: 'uppercase' }} />
+                  {errors.nominee_id_number && <div className="invalid-feedback">{errors.nominee_id_number}</div>}
                 </div>
               )}
 
               <div className="col-md-6">
-                <label className="form-label fw-light text-secondary">
+                <label className="form-label  text-secondary">
                   ALLOCATION PERCENTAGE
                 </label>
                 <input type="text" name="nominee_allocation" value={form.nominee_allocation} onChange={handleChange} className={`form-control ${errors.nominee_allocation ? 'is-invalid' : ''}`} />
@@ -349,35 +403,35 @@ const NominationDetails = () => {
 
               <div className="row mb-3">
                 <div className="col-md-6">
-                  <label className="form-label fw-light text-secondary">
+                  <label className="form-label  text-secondary">
                     PINCODE
                   </label>
                   <input type="text" name="address_pincode" value={form.nominee_address?.pincode} onChange={handleChange} className={`form-control ${errors.address_pincode ? 'is-invalid' : ''}`} />
                   {errors.address_pincode && <div className="invalid-feedback">{errors.address_pincode}</div>}
                 </div>
                 <div className="col-md-6">
-                  <label className="form-label fw-light text-secondary">
+                  <label className="form-label  text-secondary">
                     ADDRESS
                   </label>
                   <input type="text" name="address_address_1" value={form.nominee_address?.address_1} onChange={handleChange} className={`form-control ${errors.address_address_1 ? 'is-invalid' : ''}`} />
                   {errors.address_address_1 && <div className="invalid-feedback">{errors.address_address_1}</div>}
                 </div>
                 <div className="col-md-6">
-                  <label className="form-label fw-light text-secondary">
+                  <label className="form-label  text-secondary">
                     CITY
                   </label>
                   <input type="text" name="address_city" value={form.nominee_address?.city} className={`form-control ${errors.address_city ? 'is-invalid' : ''}`} />
                   {errors.address_city && <div className="invalid-feedback">{errors.address_city}</div>}
                 </div>
                 <div className="col-md-6">
-                  <label className="form-label fw-light text-secondary">
+                  <label className="form-label  text-secondary">
                     STATE
                   </label>
                   <input type="text" name="address_state" value={form.nominee_address?.state} className={`form-control ${errors.address_state ? 'is-invalid' : ''}`} />
                   {errors.address_state && <div className="invalid-feedback">{errors.address_state}</div>}
                 </div>
                 <div className="col-md-6">
-                  <label className="form-label fw-light text-secondary">
+                  <label className="form-label  text-secondary">
                     COUNTRY
                   </label>
                   <input type="text" name="address_country" value={form.nominee_address?.country} className={`form-control ${errors.address_country ? 'is-invalid' : ''}`} />

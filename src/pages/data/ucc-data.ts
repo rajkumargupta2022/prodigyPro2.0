@@ -16,8 +16,15 @@ export const GuardianRelationEnum = [
 
 export const HoldingNatureEnum = [
   { value: "SI", label: "Single" },
-  { value: "AS", label: "Anyone / Survivor" },
+  // { value: "AS", label: "Anyone / Survivor" },
 ];
+export const NomineeIdTypeEnum = [
+  { value: "1", label: "Aadhar Number" },
+  { value: "4", label: "Passport Number" },
+]
+export const aadhar = "2"
+export const pan_value = "1"
+export const passport = "4"
 
 
 export const IncomeRangeEnum = [
@@ -110,7 +117,7 @@ export const StatevaluesEnum = [
 ];
 
 export const TaxStatusEnum = [
-  { value: "1", label: "Resident Individual" },
+  // { value: "1", label: "Resident Individual" },
   { value: "2", label: "On Behalf of Minor" },
 ];
 
@@ -161,3 +168,10 @@ export const holder_type={
   secondry_user: "secondry_user",
   third_user: "third_user",
 }
+export const pan= "pan"
+export const token = "token"
+export const reference_id = "reference_id"
+export const mobile = "mobile"
+export const adminUser = "adminUser"
+export const userPan = "userPan"
+export const isnewUser = "new"

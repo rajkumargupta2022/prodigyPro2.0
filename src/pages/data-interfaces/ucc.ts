@@ -47,15 +47,15 @@ export interface nomineeDetailForm {
   nominee_name?: string;
   nominee_relation?: string;
   nominee_allocation?: number;
-  nominee_pan?: string;
   nominee_email?: string;
   nominee_mobile?: string;
   nominee_dob?: string;
   is_nominee_minor?: boolean;
   nominee_guardian_name?: string; // String
-  nominee_guardian_pan?: string; // String
-  minor_nominee_aadhaar?: string;
+  nominee_guardian_pan?: string; // 
   nominee_address?: addressDetailForm;
+  nominee_id_type?: string;
+  nominee_id_number?: string;
 }
 
 export interface uccDataRes {
@@ -129,3 +129,4 @@ export interface personalFormErrors {
   guardian_pan?: string;
   guardian_dob?: string;
 }
+

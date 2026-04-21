@@ -8,6 +8,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { errorToast, successToast } from "../services/utils/toast";
 import { endPoints } from "../services/utils/urls";
 import { postRequest } from "../services/Api/HandleApi";
+import { isnewUser } from "./data/ucc-data";
 interface responseType {
   msg: string;
   success: boolean;
@@ -51,11 +52,14 @@ const Otp = () => {
         if (res?.success && res.portfolioUser) {
           localStorage.setItem("token", res.token);
           res.PAN ? localStorage.setItem("pan", res.PAN) : localStorage.setItem("pan", res.GPAN);
+          localStorage.removeItem("isNewUser");
           navigate("/dashboard");
 
         }
         if (res.success && !res?.portfolioUser) {
           localStorage.setItem("token", res.token);
+          localStorage.setItem("isNewUser", isnewUser);
+          localStorage.setItem("mobile", location?.state?.mobile);
           navigate(`/pan-verification?tax_status=1&holding_nature=SI&mobile=${location?.state?.mobile}`)
         }
         // successToast(res);

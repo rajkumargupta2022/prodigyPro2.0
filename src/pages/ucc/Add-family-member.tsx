@@ -17,8 +17,8 @@ function AddFamilyMember() {
   const [memberPan, setMemberPan] = useState<string>("")
   const [familyRelationList, setFamilyRelationList] = useState<familyRelationKeys[]>([])
   const [mobile, setMobile] = useState<string>("")
-  const [holdingNature, setHoldingNature] = useState<string>("")
-  const [taxStatus, setTaxStatus] = useState<string>("")
+  const [holdingNature, setHoldingNature] = useState<string>("SI")
+  const [taxStatus, setTaxStatus] = useState<string>("2")
   // const accountState = "link";
   const [accountState, setAccountState] = useState<string>("")
 
@@ -120,7 +120,7 @@ function AddFamilyMember() {
             <button type="button" className={`btn statementBtn ${accountState == "link" && "statementBtnActive"} mx-1`} onClick={() => setAccountState("link")}>Link Account</button>
 
 
-          <button type="button" className={`btn statementBtn ${accountState == "" && "statementBtnActive"} mx-1`} onClick={() => setAccountState("")}>Create Account</button> 
+            <button type="button" className={`btn statementBtn ${accountState == "" && "statementBtnActive"} mx-1`} onClick={() => setAccountState("")}>Create Account</button>
           </div>
 
           {accountState == "link" ? (
@@ -184,7 +184,7 @@ function AddFamilyMember() {
                 <select className="form-control" id="exampleFormControlSelect1" value={holdingNature} onChange={handleHolding}>
                   <option value="">Select...</option>
                   {HoldingNatureEnum.map((item) => (
-                    <option key={item.value} value={item.value} disabled={(taxStatus === "2" && item.value === "AS")|| (taxStatus === "1" && item.value === "SI")}>
+                    <option key={item.value} value={item.value} disabled={(taxStatus === "2" && item.value === "AS") || (taxStatus === "1" && item.value === "SI")}>
                       {item.label}
                     </option>
                   ))}

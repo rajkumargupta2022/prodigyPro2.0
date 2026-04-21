@@ -29,7 +29,6 @@ const Declaration = () => {
     confirm_resident_indian: true,
     place_of_birth: "",
   });
-  const [isInputDisabled, setIsInputDisabled] = useState(false);
   const [errors, setErrors] = useState<Partial<Record<keyof fatchDeclarationsForm, string>>>({});
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
@@ -47,7 +46,6 @@ const Declaration = () => {
   };
 
   const handleIncomeRange = (value: number) => {
-    if (isInputDisabled) return;
     setForm((prev) => ({ ...prev, income_range: value }));
     setErrors((prev) => ({ ...prev, income_range: "" }));
   };
@@ -86,11 +84,10 @@ const Declaration = () => {
       const fatca_declarations = profile.fatca_declarations;
 
       if (response.success && fatca_declarations?.income_range && fatca_declarations.occupation && fatca_declarations.wealth_source) {
-        setIsInputDisabled(true)
         setForm({
           ...fatca_declarations
         });
-      }else{
+      } else {
         fetchUccData()
       }
 
@@ -144,7 +141,7 @@ const Declaration = () => {
                 <label className="form-label fw-light text-secondary">
                   PLACE OF BIRTH
                 </label>
-                <input type="text" name="place_of_birth" value={form.place_of_birth} onChange={handleChange} className={`form-control ${errors.place_of_birth ? 'is-invalid' : ''}`} disabled={isInputDisabled} />
+                <input type="text" name="place_of_birth" value={form.place_of_birth} onChange={handleChange} className={`form-control ${errors.place_of_birth ? 'is-invalid' : ''}`} />
                 {errors.place_of_birth && <div className="invalid-feedback">{errors.place_of_birth}</div>}
               </div>
               <div className="col-md-6">
@@ -153,7 +150,6 @@ const Declaration = () => {
                   name="occupation"
                   value={form.occupation ?? ""}
                   onChange={handleChange}
-                  disabled={isInputDisabled}
                   className={`form-select${errors.occupation ? " is-invalid" : ""}`}
                 >
                   <option value="">Choose...</option>
@@ -168,7 +164,6 @@ const Declaration = () => {
                   name="wealth_source"
                   value={form.wealth_source ?? ""}
                   onChange={handleChange}
-                  disabled={isInputDisabled}
                   className={`form-select${errors.wealth_source ? " is-invalid" : ""}`}
                 >
                   <option value="">Choose...</option>

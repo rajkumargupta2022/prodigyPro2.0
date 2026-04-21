@@ -2192,3 +2192,10 @@ margin-bottom: 0px;
   color: #fff;
   cursor: not-allowed;
 }
+.placeholder-gray::placeholder {
+  color: #6c757d; /* Bootstrap gray */
+  opacity: 1;
+}
+.date-input {
+  color: #6c757d;   /* default = grey */
+}

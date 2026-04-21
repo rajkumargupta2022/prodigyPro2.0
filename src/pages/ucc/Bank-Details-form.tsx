@@ -54,13 +54,15 @@ const BankDetailForm = () => {
       const data = response.data?.bank_details as bankDetailForm;
       const holderData = response.data?.primary_user?.personal_details
       if (response.success && data.bank_account_number && data.bank_ifsc && data.bank_name && data.bank_branch && data.bank_account_type) {
-        setHolderName(holderData?.full_name ??"")
+        setHolderName(holderData?.full_name ?? "")
         setBankDetailForm({
           ...data
         });
-        setIsInputDisabled(true)
+        if (data.is_bank_verified) {
+          setIsInputDisabled(true)
+        }
         setConfirmAccountNumber(data.bank_account_number ?? "");
-      }else{
+      } else {
         fetchUccData()
       }
     } catch (err) {
@@ -192,6 +194,11 @@ const BankDetailForm = () => {
 
   const varifyBank = async () => {
     try {
+      if (bankDetailForm.is_bank_verified) {
+
+        handleSubmit()
+        return
+      }
       //   setShowCheckUpload(true)
       //  return false
       const reqBody = {
@@ -200,7 +207,8 @@ const BankDetailForm = () => {
         beneficiaryName: holderName
       }
       const res = await postRequest<varifyBankRes>(endPoints.verifyBank, reqBody)
-      if (res.data.nameMatchScore === 100 || bankDetailForm?.is_bank_verified) {
+      if (res.data.nameMatchScore === 100) {
+        console.log("resss", res)
         handleSubmit()
 
       } else if (res.data.nameMatchScore < 100) {
@@ -252,8 +260,22 @@ const BankDetailForm = () => {
           <h5 className="mb-3 mt-1">Bank Details</h5>
 
           <form className="bg-white px-5 py-4 rounded form_shadow">
+            <div className="col-md-6 mb-2">
+              <label className="form-label fs12px">
+                PRIMARY HOLDER / GUARDIAN NAME
+              </label>
 
+              <input
+                name="guardian_name"
+                className="form-control"
+                value={holderName}
+                disabled={true}
+              />
+
+
+            </div>
             <div className="row mb-3">
+
 
               <div className="col-md-6">
                 <label className="form-label fs12px">

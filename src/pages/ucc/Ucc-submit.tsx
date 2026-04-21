@@ -49,7 +49,7 @@ const UccSubmit = () => {
 
             <div className="mx-lg-4 mt-4 mb-2">
               <p className="text-white fs14px">Client Code : {client_code ?? ""}</p>
-              <small className="text-white fs12px">Your investor account will get approved within 2 working days</small>
+              <small className="text-white fs12px">You will be redirected to NSE Invest for authorization. You can also get authorization link on your registered mail id or mobile number. The investor account will get activated post authorization.</small>
             </div>
 
             <Link className="btn btn-light my-4 logoBlueColor" to="/">

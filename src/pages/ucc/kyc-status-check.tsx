@@ -8,6 +8,7 @@ import { endPoints } from "../../services/utils/urls";
 import { fetchKycDataRes, initiateKycResponse, kycStatusResponse } from "../data-interfaces/kyc";
 import { fetchAdminUser } from "../../services/user/adminUser";
 import { uccDataRes, uccDataResKeys } from "../data-interfaces/ucc";
+import { dateForInputField, formatDateToUTCString } from "../../services/dates/dateFormater";
 // import KycStatusMsg from "./Kyc-status-msg";
 // import correct from "../../assets/img/correct.png";
 // import underReview from "../../assets/img/icons/under-review.svg";
@@ -22,6 +23,7 @@ interface Holder {
   label: string;
   status: HolderStatus;
   pan: string;
+  dob: string;
   isKycCompliant: boolean | null; // null = not checked yet
   kycMsg: string;
   kycSuccess: boolean;
@@ -29,33 +31,9 @@ interface Holder {
   isLoader: boolean;
   btnName?: string;
 }
-// interface kycMsgObj {
-//   firstColor: string;
-//   secondColor: string;
-//   heading: string;
-//   description_1?: string;
-//   description_2?: string;
-//   name?: string;
-//   pan?: string;
-//   taxStatus?: string;
-//   image: string;
-//   url?: string;
-//   footerMsg?: string
-//   btnName?: string
-// }
+
 const KycStatusCheck = () => {
   const navigate = useNavigate();
-
-  // const msgObj ={
-  //     firstColor: string;
-  // secondColor: string;
-  // heading:string;
-  // description_1?:string;
-  // description_2?:string;
-  // name?:string;
-  // pan?:string;
-  // taxStatus?:string;
-  // }
 
   const [searchParams] = useSearchParams();
   const reference_id = searchParams.get("reference_id") ?? "";
@@ -69,9 +47,9 @@ const KycStatusCheck = () => {
   const pending = "pending";
   const completed = "completed";
   const [holders, setHolders] = useState<Holder[]>([
-    { holder: "primary_user", label: "Primary Holder", status: active, pan: localStorage.getItem("pan") || "", isKycCompliant: null, kycMsg: "", description: "", kycSuccess: false, isLoader: false },
-    { holder: "secondary_user", label: "Second Holder", status: pending, pan: "", isKycCompliant: null, kycMsg: "", description: "", kycSuccess: false, isLoader: false },
-    { holder: "third_user", label: "Third Holder", status: pending, pan: "", isKycCompliant: null, kycMsg: "", description: "", kycSuccess: false, isLoader: false },
+    { holder: "primary_user", label: "Primary Holder", status: active, pan: localStorage.getItem("pan") || "", dob: "", isKycCompliant: null, kycMsg: "", description: "", kycSuccess: false, isLoader: false },
+    { holder: "secondary_user", label: "Second Holder", status: pending, pan: "", dob: "", isKycCompliant: null, kycMsg: "", description: "", kycSuccess: false, isLoader: false },
+    { holder: "third_user", label: "Third Holder", status: pending, pan: "", dob: "", isKycCompliant: null, kycMsg: "", description: "", kycSuccess: false, isLoader: false },
   ]);
 
 
@@ -136,11 +114,15 @@ const KycStatusCheck = () => {
     setHolders((prev) => prev.map((h, i) => (i === index ? { ...h, ...partial } : h)));
   };
 
-  const checkKycStatus = async (index: number, pan: string) => {
-    console.log(index, pan);
+  const checkKycStatus = async (index: number, pan: string, dob?: string) => {
+    console.log(index, pan, dob);
     const adminUser = fetchAdminUser();
     if (!pan) {
       updateHolder(index, { kycMsg: "Please enter individual's PAN", kycSuccess: false, isKycCompliant: null });
+      return;
+    }
+    if (!dob) {
+      updateHolder(index, { kycMsg: "Please enter your Date of Birth", kycSuccess: false, isKycCompliant: null });
       return;
     }
     const panRegex = /^[A-Z]{5}[0-9]{4}[A-Z]$/;
@@ -185,7 +167,7 @@ const KycStatusCheck = () => {
       // });
       // return
       const response = await getRequest<kycStatusResponse>(
-        `${endPoints.checkKycStatus}?pan_number=${pan}`
+        `${endPoints.checkKycStatus}?pan_number=${pan}&dob=${formatDateToUTCString(dob)}`
       );
       if (response.data.kyc_status) {
         updateHolder(index, {
@@ -216,9 +198,11 @@ const KycStatusCheck = () => {
     const pan = value.toUpperCase().trim();
     if (pan.length > 10) return;
     updateHolder(index, { pan, kycMsg: "", kycSuccess: false, isKycCompliant: null });
-    if (pan.length === 10) {
-      checkKycStatus(index, pan);
-    }
+    // Check KYC when proceeding
+  };
+
+  const handleDobChange = (index: number, value: string) => {
+    updateHolder(index, { dob: value, kycMsg: "", kycSuccess: false, isKycCompliant: null });
   };
 
   const handleProceed = async (index: number) => {
@@ -229,11 +213,15 @@ const KycStatusCheck = () => {
       updateHolder(index, { kycMsg: "Please enter your PAN to proceed.", kycSuccess: false });
       return;
     }
-    if (holder.isKycCompliant === null) {
-      updateHolder(index, { kycMsg: "Please wait while we verify your PAN.", kycSuccess: false });
+    if (!holder?.dob) {
+      updateHolder(index, { kycMsg: "Please enter your Date of Birth to proceed.", kycSuccess: false });
       return;
     }
-    if (pan === holder.pan) {
+    if (holder.isKycCompliant === null) {
+      await checkKycStatus(index, holder.pan, holder.dob);
+      return;
+    }
+    if (pan === holder.pan && holder.holder !== "primary_user") {
       updateHolder(index, { kycMsg: "Pan can not be same from the primary holder or second holder", kycSuccess: false });
       return;
     }
@@ -502,18 +490,7 @@ const KycStatusCheck = () => {
                         >
                           {holder.label}
                         </span>
-                        {/* {holder.status === completed && (
-                          <span
-                            style={{
-                              fontSize: "12px",
-                              color: "#6b7280",
-                              marginTop: "0px",
-                              marginBottom: "4px",
-                            }}
-                          >
-                            KYC Completed
-                          </span>
-                        )}*/}
+
                       </div>
 
                       {/* Active Form */}
@@ -535,6 +512,12 @@ const KycStatusCheck = () => {
                             placeholder=""
                             maxLength={10}
                           />
+
+                          {/* DOB Input */}
+                          <div className="form-group mt-2 mb-2">
+                            <label className="fs14px text-secondary">DATE OF BIRTH (AS PER PAN)</label>
+                            <input type="date" value={holder.dob} max={dateForInputField(new Date())} onChange={(e) => handleDobChange(index, e.target.value)} className="form-control date-input" />
+                          </div>
 
                           {/* KYC Status Messages */}
                           {holder.isLoader && (
@@ -559,10 +542,10 @@ const KycStatusCheck = () => {
                           <button
                             type="button"
                             onClick={() => handleProceed(index)}
-                            disabled={holder.isLoader || holder.isKycCompliant === null}
+                            disabled={holder.isLoader}
                             style={{
                               backgroundColor:
-                                holder.isLoader || holder.isKycCompliant === null
+                                holder.isLoader
                                   ? "#9ca3af"
                                   : "#1a34fe",
                               color: "#fff",
@@ -572,7 +555,7 @@ const KycStatusCheck = () => {
                               fontWeight: "500",
                               fontSize: "14px",
                               cursor:
-                                holder.isLoader || holder.isKycCompliant === null
+                                holder.isLoader
                                   ? "not-allowed"
                                   : "pointer",
                               letterSpacing: "0.01em",

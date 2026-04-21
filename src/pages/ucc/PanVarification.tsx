@@ -8,6 +8,8 @@ import { fetchKycDataRes, initiateKycResponse, kycStatusResponse } from "../data
 import { fetchAdminUser } from "../../services/user/adminUser";
 import { uccDataRes } from "../data-interfaces/ucc";
 import { checkNewPanRes } from "../data-interfaces/users";
+import { taxStatus } from "../data/ucc-data";
+import { dateForInputField, formatDateToUTCString } from "../../services/dates/dateFormater";
 
 
 
@@ -20,6 +22,7 @@ const PanVarification = () => {
 
   // const holder = searchParams.get("holder") as keyof uccDataResKeys;
   const [userPan, setUserPan] = useState<string>("");
+  const [dob, setDob] = useState<string>("")
   const [isLoader, setIsLoader] = useState<boolean>(false);
   const [kySuccessMsg, setKySuccessMsg] = useState<string>("");
   const [noKycMsg, setNoKycMsg] = useState<string>("");
@@ -78,12 +81,12 @@ const PanVarification = () => {
       try {
 
         setIsLoader(true);
-        const response = await getRequest<kycStatusResponse>(`${endPoints.checkKycStatus}?pan_number=${pan}`);
+        const response = await getRequest<kycStatusResponse>(`${endPoints.checkKycStatus}?pan_number=${pan}&dob=${formatDateToUTCString(dob)}`);
 
         if (response.data.kyc_status) {
           setIsKycCompliant(response.data.kyc_status)
           setKySuccessMsg("Congratulations! 🎉 You are KYC Compliant");
-          setDescription("Your KYC details have been successfully verified.");
+          setDescription("");
           setNoKycMsg("");
           setBtnName("Start Your Investment Journey!");
           setIsLoader(false)
@@ -114,12 +117,26 @@ const PanVarification = () => {
 
   const proceedForKyc = async (e: React.FormEvent) => {
     e.preventDefault();
-    const adminUser = fetchAdminUser()
+    if (!userPan) {
+      errorToast("Please enter your PAN.");
+      return
+    }
+    if (!dob) {
+      errorToast("Please enter your Date of Birth.");
+      return
+    }
 
     if (holding_nature === "" || tax_status === "") {
       errorToast("Holding nature and tax status are required");
       return;
     }
+
+    if (!btnName) {
+      await completeKyc(userPan);
+      return;
+    }
+
+    const adminUser = fetchAdminUser()
 
     if (isKycCompliant) {
       try {
@@ -129,7 +146,7 @@ const PanVarification = () => {
           holding_nature: holding_nature, // SI / AS
           mobile_number: mobile ? mobile : adminUser?.mobile, // (10 digits)
         };
-        if (String(tax_status) === "2") {
+        if (String(tax_status) === taxStatus.ON_BEHALF_OF_MINOR) {
           reqBody.guardian_pan = adminUser?.pan ?? "";
         } else {
           reqBody.primary_pan = adminUser?.pan ? adminUser.pan : userPan;
@@ -147,9 +164,7 @@ const PanVarification = () => {
 
     } else {
       try {
-        if (!adminUser) {
-          return
-        }
+
         const response = await getRequest<initiateKycResponse>(`${endPoints.initiateKyc}?pan_number=${userPan}`);
         if (response.data.success) {
           const hyperKycConfig = new window.HyperKycConfig(
@@ -250,10 +265,6 @@ const PanVarification = () => {
     if (pan.length < 11) {
       setUserPan(pan.trim());
     }
-    if (pan.length === 10) {
-      completeKyc(pan)
-
-    }
   };
 
   return (
@@ -272,24 +283,25 @@ const PanVarification = () => {
             <p className="pb-1 fs12px">Know it within the seconds</p>
 
             {/* <label className="form-label fs12px">PAN</label> */}
-            <div className="input-group mb-3">
+            <div className="form-group">
+              <label htmlFor="dob" className="fs14px">{`${String(tax_status) === taxStatus.ON_BEHALF_OF_MINOR ? "GUARDIAN PAN" : "PAN"}`}
+              </label>
               <input
                 type="text"
                 value={userPan ?? ""}
                 onChange={panHandler}
-                className="form-control mx-1 rounded"
-                placeholder={`${String(tax_status) === "2" ? "Enter Guardian PAN" : "Enter PAN"}`}
+                className="form-control placeholder-gray"
+                placeholder={`${String(tax_status) === taxStatus.ON_BEHALF_OF_MINOR ? "Enter Guardian PAN" : "Enter PAN"}`}
               />
             </div>
             {kySuccessMsg && <h4 className="fs14px congratesColor font-weight-bold">{kySuccessMsg}</h4>}
             {noKycMsg && <h4 className="fs14px errorColor font-weight-bold">{noKycMsg}</h4>}
             {description && <p className="fs12px text-secondary" dangerouslySetInnerHTML={{ __html: description }} />}
 
-            {/* <p className="errorColor sm ">
-                We do not have your details with us. You need to register to
-                start your investment journey Please share your details and you
-                are all set for investing
-              </p> */}
+            <div className="form-group mt-2">
+              <label htmlFor="dob" className="fs14px">DATE OF BIRTH (AS PER PAN)</label>
+              <input type="date" value={dob} max={dateForInputField(new Date())} onChange={(e) => setDob(e.target.value)} className="form-control date-input" id="dob" placeholder="" />
+            </div>
             <button type="button" className="customButton col-12 mt-3" onClick={proceedForKyc} disabled={isLoader}>
               {isLoader ? "Processing..." : btnName || "Proceed"}
             </button>

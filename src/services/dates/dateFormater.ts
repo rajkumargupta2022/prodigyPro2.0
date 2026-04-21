@@ -207,6 +207,10 @@ export const formatUTCToDateOnly = (utcDate: string): string => {
   const date = new Date(isoDate);
 
   if (isNaN(date.getTime())) return "";
-
   return date.toISOString().split("T")[0]; // YYYY-MM-DD
 };
+export const dateForInputField = (date: Date): string => {
+  if (!date) return "";
+  const updatedDate = new Date().toISOString().split("T")[0]
+  return updatedDate;
+}
