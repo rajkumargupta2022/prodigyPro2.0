@@ -134,3 +134,14 @@ export const validatePersonalForm = (form:personalDetailForm,tax_status:string,s
   
       return Object.keys(newErrors).length === 0;
     };
+    export const isMinor = (dob: string): boolean => {
+       const dobDate = new Date(dob);
+      const today = new Date();
+      let age = today.getFullYear() - dobDate.getFullYear();
+      const m = today.getMonth() - dobDate.getMonth();
+      if (m < 0 || (m === 0 && today.getDate() < dobDate.getDate())) {
+        age--;
+      }
+      return age < 18;
+
+    }

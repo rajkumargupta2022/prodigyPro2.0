@@ -10,6 +10,7 @@ import { uccDataRes } from "../data-interfaces/ucc";
 import { checkNewPanRes } from "../data-interfaces/users";
 import { taxStatus } from "../data/ucc-data";
 import { dateForInputField, formatDateToUTCString } from "../../services/dates/dateFormater";
+import { isMinor } from "../validation/ucc-validation";
 
 
 
@@ -125,6 +126,11 @@ const PanVarification = () => {
       errorToast("Please enter your Date of Birth.");
       return
     }
+    if (isMinor(dob)) {
+      errorToast("You must be at least 18 years old to proceed.");
+      return;
+    }
+
 
     if (holding_nature === "" || tax_status === "") {
       errorToast("Holding nature and tax status are required");
@@ -299,8 +305,8 @@ const PanVarification = () => {
             {description && <p className="fs12px text-secondary" dangerouslySetInnerHTML={{ __html: description }} />}
 
             <div className="form-group mt-2">
-              <label htmlFor="dob" className="fs14px">DATE OF BIRTH (AS PER PAN)</label>
-              <input type="date" value={dob} max={dateForInputField(new Date())} onChange={(e) => setDob(e.target.value)} className="form-control date-input" id="dob" placeholder="" />
+              <label htmlFor="dob" className="fs14px"> {`${String(tax_status) === taxStatus.ON_BEHALF_OF_MINOR ? "GUARDIAN DOB (AS PER  PAN)" : "DATE OF BIRTH (AS PER PAN)"}`}</label>
+              <input type="date" value={dob} max={dateForInputField(new Date(), 18)} onChange={(e) => setDob(e.target.value)} className="form-control date-input" id="dob" placeholder="" />
             </div>
             <button type="button" className="customButton col-12 mt-3" onClick={proceedForKyc} disabled={isLoader}>
               {isLoader ? "Processing..." : btnName || "Proceed"}

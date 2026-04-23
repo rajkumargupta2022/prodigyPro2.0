@@ -92,53 +92,7 @@ const NominationList = () => {
     }
 
   };
-  // const fetchAllFanilyMembers = async (ucc: string) => {
-  //   try {
-  //     let familyMember: allFamilyListKeys[] = []
-  //     const res = await postRequest<allFamilyResponseType>(endPoints.getAllFamily, { pan });
-  //     if (res.success) {
-  //       let flag = false;
-  //       res.data.forEach((member) => {
-  //         const formattedItem = {
-  //           ...member,
-  //           name: nameFormatter(member.name || ''),
-  //           relation: nameFormatter(member.relation || ''),
-  //           jh1_name: nameFormatter(member.jh1_name || ''),
-  //           jh2_name: nameFormatter(member.jh2_name || '')
-  //         }
-  //         if (member?.ucc === ucc) {
-  //           flag = true;
-  //           localStorage.setItem("pan", pan)
-  //           switchProfile(formattedItem)
-  //         }
-  //         else {
-  //           const formattedItem = {
-  //             ...member,
-  //             name: nameFormatter(member.name || ''),
-  //             relation: nameFormatter(member.relation || ''),
-  //             jh1_name: nameFormatter(member.jh1_name || ''),
-  //             jh2_name: nameFormatter(member.jh2_name || '')
-  //           }
-  //           familyMember.push(formattedItem)
-  //         }
-  //       })
-  //       if (flag) {
-  //         localStorage.setItem("familyList", JSON.stringify(familyMember))
-  //         navigate("/ucc-submit?client_code=" + ucc);
-  //       } else {
-  //         errorToast("Getting error while matching client code")
-  //       }
-  //     }
-  //   } catch (err) {
-  //     errorToast(err);
-  //   }
-  // }
-  // const nameFormatter = (name: string): string => {
-  //   if (!name) return '';
-  //   return name
-  //     .toLowerCase()
-  //     .replace(/\b\w/g, (char: string) => char.toUpperCase());
-  // };
+ 
 
 
   return (

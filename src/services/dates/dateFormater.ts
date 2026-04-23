@@ -209,8 +209,12 @@ export const formatUTCToDateOnly = (utcDate: string): string => {
   if (isNaN(date.getTime())) return "";
   return date.toISOString().split("T")[0]; // YYYY-MM-DD
 };
-export const dateForInputField = (date: Date): string => {
-  if (!date) return "";
-  const updatedDate = new Date().toISOString().split("T")[0]
-  return updatedDate;
-}
+export const dateForInputField = (date?: Date, subtractYears?: number): string => {
+  const baseDate = date ? new Date(date) : new Date();
+
+  if (subtractYears) {
+    baseDate.setFullYear(baseDate.getFullYear() - subtractYears);
+  }
+
+  return baseDate.toISOString().split("T")[0];
+};

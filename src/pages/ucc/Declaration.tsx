@@ -133,7 +133,7 @@ const Declaration = () => {
       <div className="container">
         <div className="personal_form_container">
           <h5 className="mb-4">Declarations</h5>
-          <form className="bg-white px-5 py-4 rounded-4 form_shadow">
+          <form className="bg-white px-5 py-3 rounded-4 form_shadow">
 
             {/* Occupation & Source of Income */}
             <div className="row mb-3">
@@ -174,7 +174,7 @@ const Declaration = () => {
             </div>
 
             {/* Income Range */}
-            <div className="row mb-3">
+            <div className="row mb-1">
               <div className="col-12">
                 <small className="fs14px lightBlack">INCOME RANGE</small>
                 <br />
@@ -199,9 +199,9 @@ const Declaration = () => {
             </div>
 
             {/* Resident Status */}
-            <div className="row mb-3">
-              <div className="col-md-6 mt-2">
-                <span className="mt-2 fs14px">RESIDENT STATUS</span>
+            <div className="row mb-1">
+              <div className="col-md-6 ">
+                <span className=" fs14px">RESIDENT STATUS</span>
                 <br />
                 <div className="mt-1">
                   {/* Fixed as Indian (resident_status: 1) */}
@@ -216,7 +216,7 @@ const Declaration = () => {
             </div>
 
             {/* Declarations / Checkboxes */}
-            <div className="row mb-3">
+            <div className="row mb-0">
               <div className="form-check mb-2">
                 <input
                   type="checkbox"
