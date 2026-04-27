@@ -15,7 +15,7 @@ import SwitchPortfolio from "./dashboard/Switch-portfolio";
 import Footer from "../components/Footer";
 import OurServices from "./dashboard/Our-services";
 import KycMsg from "./dashboard/Kyc-msg";
-import KycMsgSkeleton from "./dashboard/Kyc-msg-skeleton";
+
 import DashboardSkeleton from "./DashboardSkeleton";
 import { useNavigate } from "react-router";
 import { holdingNature, isnewUser, taxStatus } from "./data/ucc-data";
@@ -24,7 +24,7 @@ import { holdingNature, isnewUser, taxStatus } from "./data/ucc-data";
 
 const Dashboard = () => {
   const navigate = useNavigate()
-  const { familySnapShotData, familyPortfolio, snapshotData, uccStatusInfo, fetchUccStatus } = useAdminUser()
+  const { familySnapShotData, fetchFamilyPortfoloData, familyPortfolio, snapshotData, uccStatusInfo, fetchUccStatus } = useAdminUser()
 
   const [openPortfolioSwitch, setOpenPortfolioSwitch] = useState<boolean>(false);
   const [isDashboardLoading, setIsDashboardLoading] = useState<boolean>(true);
@@ -51,6 +51,7 @@ const Dashboard = () => {
       navigate(`/pan-verification?tax_status=${taxStatus.RESIDENT_INDIVIDUAL}&holding_nature=${holdingNature.SINGLE}&mobile=${mobile}`)
     }
     fetchUccStatus(adminUser?.ucc)
+    fetchFamilyPortfoloData()
     const loadDashboardData = async () => {
       try {
         setIsDashboardLoading(true);
@@ -71,11 +72,11 @@ const Dashboard = () => {
         <div className="container-fluid">
           <div className="row mt-3 justify-content-md-center">
             {isDashboardLoading ? (
-              <DashboardSkeleton kycSection={uccStatusInfo?.isLoadingKyc ? <KycMsgSkeleton /> : uccStatusInfo?.isShowKycMsg ? <KycMsg uccStatusData={uccStatusInfo?.uccStatusData} /> : null} />
+              <DashboardSkeleton kycSection={uccStatusInfo?.isShowKycMsg ? <KycMsg uccStatusData={uccStatusInfo?.uccStatusData} /> : null} />
             ) : (
               <>
                 <div className="col-lg-7 col-sm-12">
-                  {uccStatusInfo?.isLoadingKyc ? <KycMsgSkeleton /> : uccStatusInfo?.isShowKycMsg && <KycMsg uccStatusData={uccStatusInfo?.uccStatusData} />}
+                  {uccStatusInfo?.isShowKycMsg && <KycMsg uccStatusData={uccStatusInfo?.uccStatusData} />}
                   <Card border="light" className="my-3 cardRadius">
                     <Card.Body>
                       <div className="row border-bottom">

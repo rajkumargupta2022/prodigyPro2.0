@@ -24,9 +24,7 @@ function MyProfile() {
           </div>}
           </div>
 
-          <div className="">
-            <Link to="/my-profile" className="logoBlueColor fs16px mt-2">Change Profile</Link>
-          </div>
+         
         </div>
 
         <div className="mt-4">

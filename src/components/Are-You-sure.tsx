@@ -9,8 +9,15 @@ const AreYouSure: React.FC<AreYouSureProps> = ({ show, setShow }) => {
   const navigate = useNavigate()
 
   const handleClose = () => setShow(false);
-  const logout = ()=>{
-       localStorage.clear()
+  const logout = () => {
+    localStorage.removeItem("token")
+    localStorage.removeItem("pan")
+    localStorage.removeItem("isNewUser")
+    localStorage.removeItem("mobile")
+    localStorage.removeItem("adminUser")
+    localStorage.removeItem("familyList")
+    localStorage.removeItem("uccStatus")
+    localStorage.removeItem("portfolioType")
     navigate("/")
   }
   return (

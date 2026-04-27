@@ -216,6 +216,7 @@ export const AdminUserProvider = ({ children }: { children: ReactNode }) => {
     adminData: allFamilyListKeys, setShow?: (show: boolean) => void
   ) => {
     localStorage.setItem("adminUser", JSON.stringify(adminData));
+    console.log("Admin data switched to:", adminData);
     setAdminUser(adminData);
     fetchUccStatus(adminData.ucc)
     setIsSwitched(isSwitched => !isSwitched)
@@ -253,11 +254,14 @@ export const AdminUserProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const familyPortfolio = async (adminUser: any, fromPortfolio: boolean = false) => {
-    if (adminUser?.ucc) {
+        try{
+ if (adminUser?.ucc) {
+  
       const res = await postRequestSimple<familySnapshotResponseType>(endPoints.getFamilySnapshot, {
         ucc: adminUser?.ucc
       });
       if (res) {
+        console.log("Family snapshot response:", res);
         setFamilySnapShotData(res.finalArray)
         if (res?.finalArray?.length > 1) {
           const portfolioType = localStorage.getItem("portfolioType")
@@ -291,7 +295,8 @@ export const AdminUserProvider = ({ children }: { children: ReactNode }) => {
         }
       }
     } else {
-      fetchFamilyPortfoloData();
+      // fetchFamilyPortfoloData();
+      setFamilySnapShotData([])
       setSnapshotData({
         Totalpurchase: 0,
         Totalmarketvalue: 0,
@@ -306,6 +311,23 @@ export const AdminUserProvider = ({ children }: { children: ReactNode }) => {
         myPortfolio: false,
       })
     }
+      }catch(err){
+        setFamilySnapShotData([])
+      setSnapshotData({
+        Totalpurchase: 0,
+        Totalmarketvalue: 0,
+        Finaldays: 0,
+        Finalcagr: "",
+        Totaldayschange: 0,
+        Gainloss: 0,
+        Dividend: 0,
+        debtPercentFinal: "",
+        goldPercentFinal: "",
+        equityPercentFinal: "",
+        myPortfolio: false,
+      })
+      }
+   
   }
 
   const fetchDetailedPortfolio = async (ucc: string) => {

@@ -31,6 +31,7 @@ const Account = ({ Component }: { Component: any }) => {
   ];
 
   const [isActive, setIsActive] = useState(false);
+  
 
   const handleToggle = () => {
     setIsActive(!isActive);
