@@ -46,6 +46,18 @@ export enum endPoints {
   getBankInsights = "mf-savings/get-bank-insights",
   revokeBankConsent = "mf-savings/revoke-bank-consent",
 
+
+  /* =========================
+     Loan Against MF
+  ========================== */
+   loanAgainstMfEligibility = "lamf/get-url",
+
+
+
+
+
+
+
   /* =========================
      BAJAJ INSTA REDEEM
   ========================== */
