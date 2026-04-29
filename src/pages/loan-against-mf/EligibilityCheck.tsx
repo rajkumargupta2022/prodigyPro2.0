@@ -16,6 +16,10 @@ const GEO_OPTIONS: PositionOptions = {
     timeout: 10000,       // fail after 10s
     maximumAge: 60000,    // reuse cached position up to 1 min old
 };
+const DEFAULT_LOCATION = {
+    latitude: 26.8515,
+    longitude: 81.0224,
+};
 
 const GEO_ERROR_MESSAGES: Record<number, string> = {
     [GeolocationPositionError.PERMISSION_DENIED]:
@@ -28,8 +32,12 @@ const GEO_ERROR_MESSAGES: Record<number, string> = {
 
 export const getGeoLocation = (): Promise<GeoCoordinates> => {
     return new Promise((resolve, reject) => {
+        // if (!navigator.geolocation) {
+        //     reject(new Error("Geolocation is not supported by your browser."));
+        //     return;
+        // }
         if (!navigator.geolocation) {
-            reject(new Error("Geolocation is not supported by your browser."));
+            resolve(DEFAULT_LOCATION);
             return;
         }
 
