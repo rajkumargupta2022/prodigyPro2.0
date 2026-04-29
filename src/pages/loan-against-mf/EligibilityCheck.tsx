@@ -11,47 +11,47 @@ import { errorToast } from "../../services/utils/toast";
 import { GeoCoordinates, EligibilityResponse } from "../data-interfaces/loan-against-mf";
 import { INACTIVE } from "../data/static-data";
 
-const GEO_OPTIONS: PositionOptions = {
-    enableHighAccuracy: true,
-    timeout: 10000,       // fail after 10s
-    maximumAge: 60000,    // reuse cached position up to 1 min old
-};
+// const GEO_OPTIONS: PositionOptions = {
+//     enableHighAccuracy: true,
+//     timeout: 10000,       // fail after 10s
+//     maximumAge: 60000,    // reuse cached position up to 1 min old
+// };
 const DEFAULT_LOCATION = {
-    latitude: 26.8515,
-    longitude: 81.0224,
+    latitude: 12.9716,
+    longitude: 77.5946
 };
 
-const GEO_ERROR_MESSAGES: Record<number, string> = {
-    [GeolocationPositionError.PERMISSION_DENIED]:
-        "Location access denied. Please allow location access and try again.",
-    [GeolocationPositionError.POSITION_UNAVAILABLE]:
-        "Location unavailable. Please check your device settings.",
-    [GeolocationPositionError.TIMEOUT]:
-        "Location request timed out. Please try again.",
-};
+// const GEO_ERROR_MESSAGES: Record<number, string> = {
+//     [GeolocationPositionError.PERMISSION_DENIED]:
+//         "Location access denied. Please allow location access and try again.",
+//     [GeolocationPositionError.POSITION_UNAVAILABLE]:
+//         "Location unavailable. Please check your device settings.",
+//     [GeolocationPositionError.TIMEOUT]:
+//         "Location request timed out. Please try again.",
+// };
 
 export const getGeoLocation = (): Promise<GeoCoordinates> => {
-    return new Promise((resolve, reject) => {
-        // if (!navigator.geolocation) {
-        //     reject(new Error("Geolocation is not supported by your browser."));
-        //     return;
-        // }
-        if (!navigator.geolocation) {
-            resolve(DEFAULT_LOCATION);
-            return;
-        }
-
-        navigator.geolocation.getCurrentPosition(
-            ({ coords }) => resolve({
-                latitude: coords.latitude,
-                longitude: coords.longitude,
-            }),
-            (error) => reject(
-                new Error(GEO_ERROR_MESSAGES[error.code] ?? "Failed to get location.")
-            ),
-            GEO_OPTIONS
-        );
-    });
+    // return new Promise((resolve, reject) => {
+    // if (!navigator.geolocation) {
+    //     reject(new Error("Geolocation is not supported by your browser."));
+    //     return;
+    // }
+    // if (!navigator.geolocation) {
+    //     resolve(DEFAULT_LOCATION);
+    //     return;
+    // }
+    return Promise.resolve(DEFAULT_LOCATION);
+    // navigator.geolocation.getCurrentPosition(
+    //     ({ coords }) => resolve({
+    //         latitude: coords.latitude,
+    //         longitude: coords.longitude,
+    //     }),
+    //     (error) => reject(
+    //         new Error(GEO_ERROR_MESSAGES[error.code] ?? "Failed to get location.")
+    //     ),
+    //     GEO_OPTIONS
+    // );
+// });
 };
 
 export default function CheckEligibility() {
