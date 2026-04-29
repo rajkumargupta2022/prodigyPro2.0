@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { useAdminUser } from "../context/AdminContext";
 import { UccStatusEnum, holdingNature, uccMsg } from "../pages/data/ucc-data";
 import { errorToast } from "../services/utils/toast";
+import { HiOutlineUser } from "react-icons/hi2";
 
 
 function Profile() {
@@ -17,9 +18,29 @@ function Profile() {
       <hr className="fw-light text-secondary" />
       <form className="d-flex p-4 shadow-sm bg-white border-0 rounded-4">
         <div>
-          {adminUser?.profilePic ? <img src={adminUser?.profilePic} className='circleIMg' alt="Image not found" /> : <div className="nameTitleMain">
-            {adminUser?.name?.split(" ")?.slice(0, 2).map(word => word[0]).join("").toUpperCase()}
-          </div>}
+          {adminUser?.profilePic ? (
+            <img
+              src={adminUser.profilePic}
+              className="circleIMg"
+              alt="Profile"
+            />
+          ) : (
+            <div
+              className="nameTitleMain"
+              style={{ backgroundColor: !adminUser?.name ? "#6778FE" : "" }}
+            >
+              {adminUser?.name ? (
+                adminUser.name
+                  .split(" ")
+                  .slice(0, 2)
+                  .map((word) => word[0])
+                  .join("")
+                  .toUpperCase()
+              ) : (
+                <HiOutlineUser color="#fff" />
+              )}
+            </div>
+          )}
         </div>
         <div className="m-2 " style={{ flex: 1 }}>
           <h5>{adminUser?.name}</h5>

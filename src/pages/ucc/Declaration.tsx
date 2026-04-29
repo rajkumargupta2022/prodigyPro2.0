@@ -57,8 +57,8 @@ const Declaration = () => {
       navigate("/dashboard");
       return;
     }
-    if (pan) {
-      fetchKycData(pan)
+    if (reference_id) {
+      fetchUccData()
     }
   }, [])
 
@@ -72,9 +72,12 @@ const Declaration = () => {
         setForm({
           ...fatca_declarations
         });
+      } else {
+        fetchKycData(pan)
       }
     } catch (err) {
       errorToast(err);
+      fetchKycData(pan)
     }
   }
   const fetchKycData = async (pan: string) => {
@@ -83,16 +86,14 @@ const Declaration = () => {
       const profile = response.data[holder] as userDataObj;
       const fatca_declarations = profile.fatca_declarations;
 
-      if (response.success && fatca_declarations?.income_range && fatca_declarations.occupation && fatca_declarations.wealth_source) {
+      if (response.success && fatca_declarations) {
         setForm({
           ...fatca_declarations
         });
-      } else {
-        fetchUccData()
       }
 
     } catch (err) {
-      fetchUccData()
+      console.log(err)
     }
   }
 

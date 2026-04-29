@@ -39,6 +39,7 @@ const NominationDetails = () => {
       city: "",
       state: "",
       country: "",
+      address_2: "",
     }
   } as nomineeDetailForm;
   const [form, setForm] = useState<nomineeDetailForm>(formKeys);
@@ -110,7 +111,8 @@ const NominationDetails = () => {
               country: res.data.country,
               pincode: res.data.pincode,
               city: res.data.district,
-              address_1: ""
+              address_1: "",
+              address_2: "",
             }
           }));
         }

@@ -14,6 +14,7 @@ import ProfileModel from "./ProfileModel";
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { fetchAdminUser } from "../services/user/adminUser";
+import { renderAdminAvatar } from "../pages/re-used-html/avtar";
 
 const MyNavbar = () => {
   const location = useLocation();
@@ -93,17 +94,7 @@ const MyNavbar = () => {
 
             <div className="profileNameSize prodgy_menu crPointer">
               <div className="d-flex gap-2" onClick={handleProfileModel}>
-                {adminUser?.profilePic ?
-                  <div className="circle">
-                    <img
-                      className=""
-                      src={adminUser.profilePic}
-                      alt="Logo"
-                      height="35"
-                    />
-                  </div> : <div className="nameTitle">
-                    {adminUser?.name?.split(" ")?.slice(0, 2).map((word: any) => word[0]).join("").toUpperCase()}
-                  </div>}
+                {renderAdminAvatar(adminUser)}
                 <div className="align-self-center">
                   {adminUser?.name} <ChevronDown />
                 </div>

@@ -46,7 +46,6 @@ const Dashboard = () => {
   useEffect(() => {
     const userType = localStorage.getItem("isNewUser")
     const mobile = localStorage.getItem("mobile")
-    console.log("ssss", userType)
     if (userType === isnewUser) {
       navigate(`/pan-verification?tax_status=${taxStatus.RESIDENT_INDIVIDUAL}&holding_nature=${holdingNature.SINGLE}&mobile=${mobile}`)
     }

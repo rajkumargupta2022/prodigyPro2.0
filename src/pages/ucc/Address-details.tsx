@@ -43,7 +43,8 @@ const AddressDetails = () => {
 
       if (response.success && address_details) {
         setForm({
-          ...address_details
+          ...address_details,
+          address_2: address_details.address_2 ?address_details.address_2: "",
         });
       }
     } catch (err) {
@@ -59,7 +60,8 @@ const AddressDetails = () => {
       if (response.success && address_details?.city && address_details.country && address_details.pincode && address_details.state && address_details.address_1) {
         setIsInputDisabled(true)
         setForm({
-          ...address_details
+          ...address_details,
+          address_2: address_details.address_2 ? address_details.address_2 : "",
         });
       } else {
         fetchUccData()

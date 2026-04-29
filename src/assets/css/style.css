@@ -1405,7 +1405,7 @@ input[type="number"] {
 }
 
 .nameTitleMain {
-  background-color: #011EFE !important;
+  background-color: #011EFE;
   color: #f1f1f1 !important;
   font-size: 18px;
   padding-top: 10px !important;

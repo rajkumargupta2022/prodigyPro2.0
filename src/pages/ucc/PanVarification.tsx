@@ -182,7 +182,7 @@ const PanVarification = () => {
           // setInputs is optional, you can skip it if your workflow doesn't require any inputs
           hyperKycConfig.setInputs({
             'panNumber': userPan,
-            'mobileNumber': adminUser?.mobile || "",
+            'mobileNumber':  mobile ? mobile : adminUser?.mobile,
             'kraStatus': 'new',
           });
           hyperKycConfig.setUniqueId(response.data.unique_id)

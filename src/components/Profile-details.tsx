@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAdminUser } from "../context/AdminContext"
 import { dateInStringNumber } from "../services/dates/dateFormater";
 import { ArrowLeft } from "react-bootstrap-icons";
+import { renderAdminAvatar } from "../pages/re-used-html/avtar";
 
 
 function MyProfile() {
@@ -11,7 +12,7 @@ function MyProfile() {
 
   return (
     <main className="col-md-9 ms-sm-auto col-lg-9 px-md-4 py-4">
-      <h3 onClick={()=>navigate("/my-profile")}><ArrowLeft className="crPointer" size={20} />
+      <h3 onClick={() => navigate("/my-profile")}><ArrowLeft className="crPointer" size={20} />
         My
         Profile
       </h3>
@@ -19,27 +20,25 @@ function MyProfile() {
       <form className="align-items-center p-4 shadow-sm bg-white border-0 rounded-4">
         <div className="d-flex align-items-center">
           <div className="me-2">
-           {adminUser?.profilePic ? <img src={adminUser?.profilePic} className='circleIMg' alt="Image not found" /> : <div className="nameTitleMain">
-            {adminUser?.name?.split(" ")?.slice(0, 2).map(word => word[0]).join("").toUpperCase()}
-          </div>}
+            {renderAdminAvatar(adminUser)}
           </div>
 
-         
+
         </div>
 
         <div className="mt-4">
           <p className="m-0 fs12px">FULL NAME</p>
           <p className="fs16px">{adminUser?.name}</p>
         </div>
-        {adminUser?.jh1_name &&   <div className="mt-4">
+        {adminUser?.jh1_name && <div className="mt-4">
           <p className="m-0 fs12px">SECOND HOLDER NAME</p>
           <p className="fs16px">{adminUser?.jh1_name}</p>
         </div>}
-          {adminUser?.jh2_name &&   <div className="mt-4">
+        {adminUser?.jh2_name && <div className="mt-4">
           <p className="m-0 fs12px">SECOND HOLDER NAME</p>
           <p className="fs16px">{adminUser?.jh2_name}</p>
         </div>}
-       
+
 
         <div>
           <p className="m-0 fs12px">EMAIL ADDRESS</p>
@@ -57,15 +56,15 @@ function MyProfile() {
         </div>
 
         <div>
-          <p className="m-0 fs12px">{adminUser?.gPan?"GUARDIAN":"PAN NUMBER"}</p>
+          <p className="m-0 fs12px">{adminUser?.gPan ? "GUARDIAN" : "PAN NUMBER"}</p>
           <p className="fs16px">{adminUser?.pan ?
             adminUser?.pan :
             adminUser?.gPan ?
               adminUser?.gPan : ""}</p>
         </div>
-            <div>
+        <div>
           <p className="m-0 fs12px">HOLDING NATURE</p>
-          <p className="fs16px">{adminUser?.hold_n_code=="AS"?"Anyone / Survivor":"Individual"}</p>
+          <p className="fs16px">{adminUser?.hold_n_code == "AS" ? "Anyone / Survivor" : "Individual"}</p>
         </div>
       </form>
       <p className="text-center mt-2 fs14px">

@@ -13,6 +13,7 @@ import TrackBar from "./Track-bar";
 import { formatUTCToDateOnly } from "../../services/dates/dateFormater";
 import { NomineeRelationEnum } from "../data/ucc-data";
 import { useAdminUser } from "../../context/AdminContext";
+import NomineeOptOut from "./Nominee-opt-out";
 
 const NominationList = () => {
   const { fetchFanilyMembersForUcc } = useAdminUser()
@@ -24,6 +25,7 @@ const NominationList = () => {
   const pan = searchParams.get("pan") ?? "";
   const holder = searchParams.get("holder") as keyof uccDataResKeys;
   const [nomineeList, setNomineeList] = useState<nomineeDetailForm[]>([]);
+  const [isNomineeOptOut, setIsNomineeOptOut] = useState(false);
 
   useEffect(() => {
     if (reference_id) {
@@ -92,7 +94,7 @@ const NominationList = () => {
     }
 
   };
- 
+
 
 
   return (
@@ -100,9 +102,14 @@ const NominationList = () => {
       <NavBar />
       <NomineeModal toggle={false} />
       <TrackBar />
+      <NomineeOptOut show={isNomineeOptOut} setShow={setIsNomineeOptOut} />
       <div className="container pt-4">
         <div className="personal_form_container pt-2">
-          <h3 className="mb-4 text-dark fw-bolder">List of Nominee(s)</h3>
+          <div className="d-flex justify-content-between align-items-center mb-4">
+            <h3 className="mb-0 text-dark fw-bolder">List of Nominee(s)</h3>
+            <button className="btn btn-primary py-2 px-3"
+              style={{ backgroundColor: "#0220e8", border: "none", borderRadius: "8px", fontWeight: 500 }} onClick={() => setIsNomineeOptOut(true)}>Opt Out Nominee</button>
+          </div>
           <form className="bg-white px-5 py-2 rounded form_shadow">
 
             {nomineeList.length > 0 ? nomineeList.map((nominee: nomineeDetailForm, index: number) =>
@@ -140,9 +147,10 @@ const NominationList = () => {
                       <Dropdown.Item onClick={() => handleEdit(index)} className="d-flex align-items-center gap-2">
                         <Pencil size={14} className="text-primary" /> Edit
                       </Dropdown.Item>
-                      <Dropdown.Item onClick={() => handleDelete(index)} className="d-flex align-items-center gap-2 text-danger">
-                        <Trash size={14} /> Delete
-                      </Dropdown.Item>
+                      {nomineeList.length > 1 &&
+                        <Dropdown.Item onClick={() => handleDelete(index)} className="d-flex align-items-center gap-2 text-danger">
+                          <Trash size={14} /> Delete
+                        </Dropdown.Item>}
                     </Dropdown.Menu>
                   </Dropdown>
                 </div>

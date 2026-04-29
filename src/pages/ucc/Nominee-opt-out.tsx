@@ -48,6 +48,8 @@ const NomineeOptOut: React.FC<NomineeOptOutProps> = ({ show, setShow }) => {
         // Then call final submit API
         const res = await postRequest<uccSubmitRes>(endPoints.submit, { reference_id });
         if (res.success) {
+          localStorage.removeItem("isNewUser")
+          localStorage.removeItem("mobile")
           fetchFanilyMembersForUcc(res.data.client_code, pan);
           handleClose();
         }

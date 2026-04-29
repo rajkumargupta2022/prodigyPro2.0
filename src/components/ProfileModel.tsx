@@ -6,17 +6,18 @@ import { ProfileModelProps } from '../pages/data-interfaces/dashboard';
 import { useAdminUser } from "../context/AdminContext"
 import AreYouSure from './Are-You-sure';
 import { useState } from 'react';
+import { renderAdminAvatar } from '../pages/re-used-html/avtar';
 
 
 const ProfileModel: React.FC<ProfileModelProps> = ({ show, setShow }) => {
   const { switchProfile, adminUser, familyMemberList } = useAdminUser()
-  const [openSureModel,setOpenSureModel] = useState<boolean>(false)
+  const [openSureModel, setOpenSureModel] = useState<boolean>(false)
   const handleClose = () => setShow(false);
 
   const logOut = () => {
     setOpenSureModel(true)
     setShow(false)
- 
+
   }
 
 
@@ -36,16 +37,14 @@ const ProfileModel: React.FC<ProfileModelProps> = ({ show, setShow }) => {
           <div className='container'>
             <div className="row">
               <div className="d-flex justify-content-center align-items-center" >
-                {adminUser?.profilePic ? <img src={adminUser?.profilePic} className='circleIMg' alt="Image not found" /> : <div className="nameTitleMain">
-                  {adminUser?.name?.split(" ")?.slice(0, 2).map(word => word[0]).join("").toUpperCase()}
-                </div>}
+                {renderAdminAvatar(adminUser)}
 
               </div>
               <h5 className='text-center'>{adminUser?.name}</h5>
               <Link to="/my-profile" className='text-center logoBlueColor'>My Profile</Link>
               <hr />
 
-              {familyMemberList.length > 0 && familyMemberList.map((item,i) => {
+              {familyMemberList.length > 0 && familyMemberList.map((item, i) => {
                 return <> <div className="d-flex justify-content-around" key={i}>
 
                   {adminUser?.profilePic ? <img src={adminUser?.profilePic} className='circleImg-2' alt="Image not found" /> : <div className="nameTitle">
@@ -57,7 +56,7 @@ const ProfileModel: React.FC<ProfileModelProps> = ({ show, setShow }) => {
                       {item.name}
                     </h6>
                     <span className="text-secondary fs12px">
-                     {item.hold_n_code==="SI" ? "Single Holder" : `AOS ( ${item.jh1_name} ${item.jh2_name && ","+item.jh2_name})` }
+                      {item.hold_n_code === "SI" ? "Single Holder" : `AOS ( ${item.jh1_name} ${item.jh2_name && "," + item.jh2_name})`}
                     </span>
                   </div>
                   <span className="logoBlueColor crPointer" onClick={() => switchProfile(item, setShow)}>Switch Profile</span>
@@ -84,7 +83,7 @@ const ProfileModel: React.FC<ProfileModelProps> = ({ show, setShow }) => {
         </Modal.Body>
 
       </Modal>
-      <AreYouSure show={openSureModel} setShow={setOpenSureModel}/>
+      <AreYouSure show={openSureModel} setShow={setOpenSureModel} />
     </>
   );
 }

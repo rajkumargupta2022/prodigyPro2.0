@@ -49,8 +49,8 @@ const PersonalDetails = () => {
       navigate("/dashboard");
       return;
     }
-    if (pan) {
-      fetchKycData(pan)
+    if (reference_id) {
+      fetchUccData()
       console.log(isSubmitting)
     }
   }, [])
@@ -81,18 +81,16 @@ const PersonalDetails = () => {
             dob: formatUTCToDateOnly(personalDetails.dob || ""),
           });
         }
-      } else {
-        fetchUccData()
       }
     } catch (err) {
-      fetchUccData()
+      console.log(err)
     }
   }
   const fetchUccData = async () => {
     try {
       const response = await postRequest<uccDataRes>(endPoints.initiateUcc, { reference_id });
       const profile = response.data[holder] as userDataObj;
-      if (response.success && profile?.personal_details) {
+      if (response.success && profile?.personal_details?.email && profile?.personal_details?.mobile) {
         const personalDetails = profile.personal_details;
         if (tax_status === taxStatus.ON_BEHALF_OF_MINOR) {
           setForm({
@@ -108,9 +106,11 @@ const PersonalDetails = () => {
             dob: formatUTCToDateOnly(personalDetails.dob || ""),
           });
         }
+      } else {
+        fetchKycData(pan)
       }
     } catch (err) {
-      errorToast(err);
+      fetchKycData(pan)
     }
   }
 

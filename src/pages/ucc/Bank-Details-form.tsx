@@ -194,13 +194,11 @@ const BankDetailForm = () => {
 
   const varifyBank = async () => {
     try {
+      if (!validateForm()) return;
       if (bankDetailForm.is_bank_verified) {
-
         handleSubmit()
         return
       }
-      //   setShowCheckUpload(true)
-      //  return false
       const reqBody = {
         beneficiaryAccount: bankDetailForm?.bank_account_number ?? "",
         beneficiaryIFSC: bankDetailForm?.bank_ifsc ?? "",
