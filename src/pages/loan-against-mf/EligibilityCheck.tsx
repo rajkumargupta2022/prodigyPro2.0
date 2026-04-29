@@ -7,12 +7,8 @@ import "../../assets/css/loanAgainstMf.css";
 import { endPoints } from "../../services/utils/urls";
 import { useAdminUser } from "../../context/AdminContext";
 import { postRequest } from "../../services/Api/HandleApi";
-import { toast } from "react-toastify";
-
-export interface GeoCoordinates {
-    latitude: number;
-    longitude: number;
-}
+import { errorToast } from "../../services/utils/toast";
+import { GeoCoordinates, EligibilityResponse } from "../data-interfaces/loan-against-mf";
 
 const GEO_OPTIONS: PositionOptions = {
     enableHighAccuracy: true,
@@ -28,15 +24,6 @@ const GEO_ERROR_MESSAGES: Record<number, string> = {
     [GeolocationPositionError.TIMEOUT]:
         "Location request timed out. Please try again.",
 };
-
-interface EligibilityResponse {
-    success: boolean;
-    data: {
-        url: string;
-        msg: string;
-    };
-    
-}
 
 export const getGeoLocation = (): Promise<GeoCoordinates> => {
     return new Promise((resolve, reject) => {
@@ -64,7 +51,7 @@ export default function CheckEligibility() {
 
     const { adminUser } = useAdminUser();
     const ucc = adminUser?.ucc;
-const uccStatus = localStorage.getItem("uccStatus");
+    const uccStatus = localStorage.getItem("uccStatus");
 
     const checkEligibility = useCallback(async () => {
         setIsLoading(true);
@@ -143,25 +130,25 @@ const uccStatus = localStorage.getItem("uccStatus");
                         className="btn ce-consent-btn"
                         onClick={() => {
                             if (uccStatus === "INACTIVE") {
-                                toast.error("Your UCC is inactive. Please contact support to activate it before checking eligibility for Loan Against MF.", { position: "bottom-right",toastId: "ucc-inactive-toast" } );
+                                errorToast("Your UCC is inactive. Please contact support to activate it before checking eligibility for Loan Against MF.");
                             }
                             else {
-
-                                checkEligibility
-                            }}}
-                            disabled = { isLoading }
-                                >
-                                { isLoading? "Checking...": "Give Consent" }
+                                checkEligibility();
+                            }
+                        }}
+                        disabled={isLoading}
+                    >
+                        {isLoading ? "Checking..." : "Give Consent"}
                     </button>
 
-                <p className="ce-redirect-note">
-                    Redirecting to{" "}
-                    <span className="ce-redirect-link">kotilabs-dsa.dpiwealth.com</span>{" "}
-                    for checking eligibility?
-                </p>
-            </div>
+                    <p className="ce-redirect-note">
+                        Redirecting to{" "}
+                        <span className="ce-redirect-link">kotilabs-dsa.dpiwealth.com</span>{" "}
+                        for checking eligibility?
+                    </p>
+                </div>
 
-        </div>
+            </div>
         </div >
     );
 }

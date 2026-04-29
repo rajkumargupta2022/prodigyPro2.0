@@ -4,7 +4,7 @@ import background from "../../assets/img/loan-against-mf/backdesign.svg";
 import "../../assets/css/loanAgainstMf.css";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-import { toast } from "react-toastify";
+import { errorToast } from "../../services/utils/toast";
 export default function LoanAgainstMF() {
     const navigate = useNavigate();
     const uccStatus = localStorage.getItem("uccStatus");
@@ -55,9 +55,10 @@ export default function LoanAgainstMF() {
                             <button className="btn btn-light fw-semibold px-4 py-2 eligibility-btn"
                                 onClick={() => {
                                     if(uccStatus === "INACTIVE"){
-                                        toast.error("Your UCC is inactive. Please contact support to activate it before checking eligibility for Loan Against MF.", { position: "bottom-right",toastId: "ucc-inactive-toast" } );
+                                        errorToast("Your UCC is inactive. Please contact support to activate it before checking eligibility for Loan Against MF.");
                                     }
                                     else{
+                                        localStorage.setItem("loanAgainstMFVisited", "true");
                                         navigate("/loan-against-mf/check-eligibility");
                                     }
                                 }}>
