@@ -9,6 +9,7 @@ import { useAdminUser } from "../../context/AdminContext";
 import { postRequest } from "../../services/Api/HandleApi";
 import { errorToast } from "../../services/utils/toast";
 import { GeoCoordinates, EligibilityResponse } from "../data-interfaces/loan-against-mf";
+import { INACTIVE } from "../data/static-data";
 
 const GEO_OPTIONS: PositionOptions = {
     enableHighAccuracy: true,
@@ -129,7 +130,7 @@ export default function CheckEligibility() {
                     <button
                         className="btn ce-consent-btn"
                         onClick={() => {
-                            if (uccStatus === "INACTIVE") {
+                            if (uccStatus === INACTIVE) {
                                 errorToast("Your UCC is inactive. Please contact support to activate it before checking eligibility for Loan Against MF.");
                             }
                             else {
@@ -138,7 +139,7 @@ export default function CheckEligibility() {
                         }}
                         disabled={isLoading}
                     >
-                        {isLoading ? "Checking..." : "Give Consent"}
+                        {isLoading ? "Checking..." : "Check Eligibility"}
                     </button>
 
                     <p className="ce-redirect-note">

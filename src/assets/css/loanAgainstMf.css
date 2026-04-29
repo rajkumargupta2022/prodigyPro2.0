@@ -11,7 +11,7 @@
 }
 
 .bg-img {
-    object-fit: cover;
+    object-fit: fill;
     top: 0;
     left: 0;
     z-index: 1;
@@ -42,7 +42,7 @@
 }
 
 .eligibility-btn {
-    color: #2D41E0;
+    color: #011EFE;
     border: none;
     width: auto;
     min-width: 160px;
@@ -123,7 +123,7 @@
 /* ── Tablet Landscape (768px+) ── */
 @media (min-width: 768px) {
     .loan-card {
-        min-height: 580px;
+        min-height: 530px;
     }
 
     .coin-tree {
@@ -153,7 +153,7 @@
     }
 
     .loan-card {
-        min-height: 630px;
+        min-height: 550px;
     }
 
     .coin-tree {
@@ -174,90 +174,6 @@
         font-size: 15px;
     }
 }
-
-/* ── Large Desktop (1200px+) ── */
-@media (min-width: 1200px) {
-    .loan-wrapper {
-        max-width: 900px;
-    }
-
-    .loan-card {
-        min-height: 650px;
-    }
-
-    .coin-tree {
-        width: 250px;
-    }
-
-    .cardh3 {
-        font-size: 34px;
-    }
-
-    .content-text {
-        font-size: 16px;
-        max-width: 420px;
-    }
-
-    .eligibility-btn {
-        min-width: 300px;
-        max-width: 400px;
-    }
-}
-
-/* ── XL Screens (1400px+) ── */
-@media (min-width: 1400px) {
-    .loan-wrapper {
-        max-width: 1000px;
-    }
-
-    .loan-card {
-        min-height: 680px;
-    }
-
-    .coin-tree {
-        width: 270px;
-    }
-
-    .cardh3 {
-        font-size: 36px;
-    }
-
-    .content-text {
-        font-size: 16px;
-        max-width: 460px;
-    }
-}
-
-/* ── 2K / 4K Screens (1920px+) ── */
-@media (min-width: 1920px) {
-    .loan-wrapper {
-        max-width: 1100px;
-    }
-
-    .loan-card {
-        min-height: 720px;
-    }
-
-    .coin-tree {
-        width: 300px;
-    }
-
-    .cardh3 {
-        font-size: 40px;
-    }
-
-    .content-text {
-        font-size: 17px;
-        max-width: 500px;
-    }
-
-    .eligibility-btn {
-        min-width: 320px;
-        font-size: 16px;
-    }
-}
-
-
 
 
 
