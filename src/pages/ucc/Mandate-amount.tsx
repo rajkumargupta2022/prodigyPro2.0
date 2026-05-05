@@ -85,6 +85,10 @@ const MandateAmount = () => {
       setMandateAmountError("Please enter mandate amount")
       return
     }
+    if (mandateAmount < 5000) {
+      setMandateAmountError("Mandate amount should be atleast ₹5000")
+      return
+    }
 
     try {
       const payload = {
@@ -125,6 +129,8 @@ const MandateAmount = () => {
     try {
       const res = await postRequest<uccSubmitRes>(endPoints.submit, { reference_id });
       if (res.success) {
+        localStorage.removeItem("isNewUser")
+        localStorage.removeItem("mobile")
         fetchFanilyMembersForUcc(res.data.client_code, pan)
       }
     } catch (err) {

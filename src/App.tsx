@@ -17,7 +17,7 @@ import KycStatusCheck from "./pages/ucc/kyc-status-check";
 import "./assets/css/style.css";
 import "./assets/css/media.css";
 import Otp from "./pages/Otp";
-import PanVarification from "./pages/ucc/PanVarification";
+import PanVarification from "./pages/ucc/PanVerification";
 import Dashboard from "./pages/Dashboard";
 import EmergencyFunds from "./pages/EmergencyFund";
 import RecommendedFunds from "./pages/RecommendedFunds";

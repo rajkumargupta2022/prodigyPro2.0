@@ -11,6 +11,7 @@ import { checkNewPanRes } from "../data-interfaces/users";
 import { taxStatus } from "../data/ucc-data";
 import { dateForInputField, formatDateToUTCString } from "../../services/dates/dateFormater";
 import { isMinor } from "../validation/ucc-validation";
+import { ArrowLeft } from "react-bootstrap-icons";
 
 
 
@@ -182,7 +183,7 @@ const PanVarification = () => {
           // setInputs is optional, you can skip it if your workflow doesn't require any inputs
           hyperKycConfig.setInputs({
             'panNumber': userPan,
-            'mobileNumber':  mobile ? mobile : adminUser?.mobile,
+            'mobileNumber': mobile ? mobile : adminUser?.mobile,
             'kraStatus': 'new',
           });
           hyperKycConfig.setUniqueId(response.data.unique_id)
@@ -270,8 +271,17 @@ const PanVarification = () => {
     let pan = e.target.value.toUpperCase();
     if (pan.length < 11) {
       setUserPan(pan.trim());
+      setKySuccessMsg("")
+      setNoKycMsg("")
+      setDescription("")
+      setBtnName("")
+      setIsKycCompliant(false)
     }
   };
+  const logout = () => {
+    localStorage.clear();
+    navigate("/login");
+  }
 
   return (
     <div className="container-fluid">
@@ -279,9 +289,7 @@ const PanVarification = () => {
         <LoginLeftImage />
         <div className="col-12 col-md-6 align-self-center position-relative">
           <div className="mrgin_With20">
-            {/* <Link className="back_absolute_btn text-decoration-none" to="/">
-              <ArrowLeft /> Back
-            </Link> */}
+
             {/* <img src={MobileIcon}  alt="" className="mobileIcon img-fluid" /> */}
             <h6 className="text-dark font-weight-bold">
               Are you investment ready?
@@ -311,6 +319,10 @@ const PanVarification = () => {
             <button type="button" className="customButton col-12 mt-3" onClick={proceedForKyc} disabled={isLoader}>
               {isLoader ? "Processing..." : btnName || "Proceed"}
             </button>
+            {String(tax_status)===taxStatus.RESIDENT_INDIVIDUAL &&  <div className=" text-decoration-none crPointer mt-3 text-center logoBlueColor" onClick={logout}>
+              <ArrowLeft /> Back to Login
+            </div>}
+          
 
           </div>
         </div>

@@ -10,6 +10,7 @@ import { postRequest } from "../../services/Api/HandleApi";
 import { errorToast, successToast } from "../../services/utils/toast";
 import { nomineeDetailForm, pincodeDetailsRes, uccDataRes, uccDataResKeys } from "../data-interfaces/ucc";
 import { formatDateToUTCString, formatUTCToDateOnly } from "../../services/dates/dateFormater";
+import { validateNomineeForm } from "../validation/ucc-validation";
 
 const NominationDetails = () => {
   const navigate = useNavigate();
@@ -141,6 +142,9 @@ const NominationDetails = () => {
     if (name.startsWith("address_")) {
       const fieldName = name.replace("address_", "");
       const newAddressValue = value;
+      if (fieldName === "pincode" && newAddressValue.length > 6) {
+        return
+      }
       setForm((prev) => ({
         ...prev,
         nominee_address: {
@@ -176,55 +180,59 @@ const NominationDetails = () => {
   };
 
   const handleAddNominee = async () => {
-
-    const newErrors: any = {};
-    if (!form.nominee_name?.trim()) newErrors.nominee_name = "Nominee name is required";
-    if (!form.nominee_email?.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.nominee_email)) {
-      newErrors.nominee_email = "Valid email required";
-    }
-    if (!form.nominee_mobile?.trim() || !/^[6-9]\d{9}$/.test(form.nominee_mobile)) {
-      newErrors.nominee_mobile = "Valid mobile required";
-    }
-    if (!form.nominee_dob) newErrors.nominee_dob = "Nominee date of birth is required";
-    if (!form.nominee_relation) newErrors.nominee_relation = "Nominee relation is required";
-    if (!form.nominee_allocation || form.nominee_allocation <= 0) newErrors.nominee_allocation = "Nominee allocation is required";
-
-    if (form.is_nominee_minor) {
-      if (!form.nominee_guardian_name?.trim()) newErrors.nominee_guardian_name = "Gaurdian name is required";
-      if (!form.nominee_guardian_pan?.trim() || !/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(form.nominee_guardian_pan.toUpperCase())) {
-        newErrors.nominee_guardian_pan = "Valid PAN required";
-      }
-      if (form.nominee_guardian_pan === pan) {
-        newErrors.nominee_guardian_pan = "Primary PAN and Nominee gaurdian PAN should not be same";
-      }
-      if (form.nominee_id_type === aadhar || !form.nominee_id_type) {
-        if (!form.nominee_id_number?.trim() || !/^\d{4}$/.test(form.nominee_id_number)) {
-          newErrors.nominee_id_number = "Valid 4-digit Aadhaar required";
-        }
-      } else if (form.nominee_id_type === passport) {
-        if (!form.nominee_id_number?.trim()) {
-          newErrors.nominee_id_number = "Passport number is required";
-        }
-      }
-    } else {
-      if (!form.nominee_id_number?.trim() || !/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(form.nominee_id_number.toUpperCase())) {
-        newErrors.nominee_id_number = "Valid PAN required";
-      }
-      if (form.nominee_id_number === pan) {
-        newErrors.nominee_id_number = "Primary PAN and Nominee PAN should not be same";
-      }
-    }
-
-    if (!form.nominee_address?.pincode?.trim()) newErrors.address_pincode = "Pincode is required";
-    if (!form.nominee_address?.address_1?.trim()) newErrors.address_address_1 = "Address is required";
-    if (!form.nominee_address?.city?.trim()) newErrors.address_city = "City is required";
-    if (!form.nominee_address?.state?.trim()) newErrors.address_state = "State is required";
-    if (!form.nominee_address?.country?.trim()) newErrors.address_country = "Country is required";
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
+    const isFormValid = validateNomineeForm(form, pan, nomineeList, edit_index, aadhar, passport, setErrors);
+    if (!isFormValid) {
       return;
     }
+
+    // const newErrors: any = {};
+    // if (!form.nominee_name?.trim()) newErrors.nominee_name = "Nominee name is required";
+    // if (!form.nominee_email?.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.nominee_email)) {
+    //   newErrors.nominee_email = "Valid email required";
+    // }
+    // if (!form.nominee_mobile?.trim() || !/^[6-9]\d{9}$/.test(form.nominee_mobile)) {
+    //   newErrors.nominee_mobile = "Valid mobile required";
+    // }
+    // if (!form.nominee_dob) newErrors.nominee_dob = "Nominee date of birth is required";
+    // if (!form.nominee_relation) newErrors.nominee_relation = "Nominee relation is required";
+    // if (!form.nominee_allocation || form.nominee_allocation <= 0) newErrors.nominee_allocation = "Nominee allocation is required";
+
+    // if (form.is_nominee_minor) {
+    //   if (!form.nominee_guardian_name?.trim()) newErrors.nominee_guardian_name = "Gaurdian name is required";
+    //   if (!form.nominee_guardian_pan?.trim() || !/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(form.nominee_guardian_pan.toUpperCase())) {
+    //     newErrors.nominee_guardian_pan = "Valid PAN required";
+    //   }
+    //   if (form.nominee_guardian_pan === pan) {
+    //     newErrors.nominee_guardian_pan = "Primary PAN and Nominee gaurdian PAN should not be same";
+    //   }
+    //   if (form.nominee_id_type === aadhar || !form.nominee_id_type) {
+    //     if (!form.nominee_id_number?.trim() || !/^\d{4}$/.test(form.nominee_id_number)) {
+    //       newErrors.nominee_id_number = "Valid 4-digit Aadhaar required";
+    //     }
+    //   } else if (form.nominee_id_type === passport) {
+    //     if (!form.nominee_id_number?.trim()) {
+    //       newErrors.nominee_id_number = "Passport number is required";
+    //     }
+    //   }
+    // } else {
+    //   if (!form.nominee_id_number?.trim() || !/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(form.nominee_id_number.toUpperCase())) {
+    //     newErrors.nominee_id_number = "Valid PAN required";
+    //   }
+    //   if (form.nominee_id_number === pan) {
+    //     newErrors.nominee_id_number = "Primary PAN and Nominee PAN should not be same";
+    //   }
+    // }
+
+    // if (!form.nominee_address?.pincode?.trim()) newErrors.address_pincode = "Pincode is required";
+    // if (!form.nominee_address?.address_1?.trim()) newErrors.address_address_1 = "Address is required";
+    // if (!form.nominee_address?.city?.trim()) newErrors.address_city = "City is required";
+    // if (!form.nominee_address?.state?.trim()) newErrors.address_state = "State is required";
+    // if (!form.nominee_address?.country?.trim()) newErrors.address_country = "Country is required";
+
+    // if (Object.keys(newErrors).length > 0) {
+    //   setErrors(newErrors);
+    //   return;
+    // }
     const totalAllocation = getTotalAllocation();
     if (totalAllocation > 100) {
       errorToast("Total allocation percentage cannot exceed 100%");
@@ -246,6 +254,9 @@ const NominationDetails = () => {
       if (!isNaN(index)) {
         updatedNomineeList[index] = payloadNominee;
       }
+    } else if (nomineeList.length === 3) {
+      errorToast("Maximum 3 nominees are allowed");
+      return;
     } else {
       updatedNomineeList.push(payloadNominee);
     }

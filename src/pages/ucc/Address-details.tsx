@@ -44,7 +44,7 @@ const AddressDetails = () => {
       if (response.success && address_details) {
         setForm({
           ...address_details,
-          address_2: address_details.address_2 ?address_details.address_2: "",
+          address_2: address_details.address_2 ? address_details.address_2 : "",
         });
       }
     } catch (err) {
@@ -56,7 +56,6 @@ const AddressDetails = () => {
       const response = await getRequest<uccDataRes>(endPoints.getKycData + "?pan=" + pan);
       const profile = response.data[holder] as userDataObj;
       const address_details = profile.address_details;
-      console.log("kyc data", address_details);
       if (response.success && address_details?.city && address_details.country && address_details.pincode && address_details.state && address_details.address_1) {
         setIsInputDisabled(true)
         setForm({

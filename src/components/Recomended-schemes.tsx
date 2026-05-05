@@ -63,7 +63,7 @@ const RecomendedSchemes: React.FC<pageProps> = ({ from, url = endPoints.goalPlan
 
   const handleInvestmentConfirmation = () => {
     if (selectedSchemeList.length <= 0) {
-      errorToast("Plaese select schemes..")
+      errorToast("Please select schemes..")
       return
     }
     handleSipIntersection()
