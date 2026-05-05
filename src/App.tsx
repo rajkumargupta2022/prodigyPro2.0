@@ -15,12 +15,15 @@ import E_Sign from "./pages/ucc/e-sign";
 import SuccessPage from "./pages/congratulation";
 import KycStatusCheck from "./pages/ucc/kyc-status-check";
 import "./assets/css/style.css";
+import "./assets/css/loanAgainstMf.css";
 import "./assets/css/media.css";
 import Otp from "./pages/Otp";
 import PanVarification from "./pages/ucc/PanVerification";
 import Dashboard from "./pages/Dashboard";
 import EmergencyFunds from "./pages/EmergencyFund";
 import RecommendedFunds from "./pages/RecommendedFunds";
+import LoanAgainstMF from "./pages/loan-against-mf/LoanAgainstMF";
+import CheckEligibility from "./pages/loan-against-mf/EligibilityCheck";
 import TaxSaving from "./pages/TaxSaving";
 import NFOLive from "./pages/NFOLive";
 import NFOApply from "./pages/NFOApply";
@@ -138,6 +141,8 @@ function App() {
           <Route path="/congratulation" element={<SuccessPage />} />
           <Route path="/emergency-funds" element={<EmergencyFunds />} />
           <Route path="/recommended-funds" element={<RecommendedFunds />} />
+          <Route path="/loan-against-mf" element={<LoanAgainstMF />} />
+          <Route path="/loan-against-mf/check-eligibility" element={<CheckEligibility />} />
           <Route path="/tax-saving" element={<TaxSaving />} />
           <Route path="/nfo-live" element={<NFOLive />} />
           <Route path="/nfo-apply" element={<NFOApply />} />

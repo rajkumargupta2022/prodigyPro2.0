@@ -18,6 +18,7 @@ const AreYouSure: React.FC<AreYouSureProps> = ({ show, setShow }) => {
     localStorage.removeItem("familyList")
     localStorage.removeItem("uccStatus")
     localStorage.removeItem("portfolioType")
+    localStorage.removeItem("loanAgainstMFVisited")
     navigate("/")
   }
   return (
