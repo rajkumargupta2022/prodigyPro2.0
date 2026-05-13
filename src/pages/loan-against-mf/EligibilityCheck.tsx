@@ -16,10 +16,7 @@ const GEO_OPTIONS: PositionOptions = {
     timeout: 10000,       // fail after 10s
     maximumAge: 60000,    // reuse cached position up to 1 min old
 };
-// const DEFAULT_LOCATION = {
-//     latitude: 12.9716,
-//     longitude: 77.5946
-// };
+
 
 const GEO_ERROR_MESSAGES: Record<number, string> = {
     [GeolocationPositionError.PERMISSION_DENIED]:
@@ -32,26 +29,23 @@ const GEO_ERROR_MESSAGES: Record<number, string> = {
 
 export const getGeoLocation = (): Promise<GeoCoordinates> => {
     return new Promise((resolve, reject) => {
-    if (!navigator.geolocation) {
-        reject(new Error("Geolocation is not supported by your browser."));
-        return;
-    }
-    // if (!navigator.geolocation) {
-    //     resolve(DEFAULT_LOCATION);
-    //     return;
-    // }
+        if (!navigator.geolocation) {
+            reject(new Error("Geolocation is not supported by your browser."));
+            return;
+        }
+     
 
-    navigator.geolocation.getCurrentPosition(
-        ({ coords }) => resolve({
-            latitude: coords.latitude,
-            longitude: coords.longitude,
-        }),
-        (error) => reject(
-            new Error(GEO_ERROR_MESSAGES[error.code] ?? "Failed to get location.")
-        ),
-        GEO_OPTIONS
-    );
-});
+        navigator.geolocation.getCurrentPosition(
+            ({ coords }) => resolve({
+                latitude: coords.latitude,
+                longitude: coords.longitude,
+            }),
+            (error) => reject(
+                new Error(GEO_ERROR_MESSAGES[error.code] ?? "Failed to get location.")
+            ),
+            GEO_OPTIONS
+        );
+    });
 };
 
 export default function CheckEligibility() {
@@ -68,7 +62,6 @@ export default function CheckEligibility() {
 
         try {
             const { latitude, longitude } = await getGeoLocation();
-
             if (!ucc) {
                 throw new Error("UCC is not available.");
             }
@@ -80,7 +73,7 @@ export default function CheckEligibility() {
             }) as EligibilityResponse;
 
             if (!response.success || !response.data?.url) {
-                throw new Error(response.data.msg ?? "Failed to fetch eligibility link.");
+                throw new Error(response.msg ?? "Failed to fetch eligibility link.");
             }
 
             window.open(response.data.url, "_blank", "noopener,noreferrer");
@@ -124,7 +117,7 @@ export default function CheckEligibility() {
                         className="ce-money-bag"
                     />
 
-                    <h3 className="ce-proceed-title">Proceed</h3>
+                    {/* <h3 className="ce-proceed-title">Proceed</h3> */}
 
                     <p className="ce-proceed-subtitle">
                         Give your consent to check eligibility, available <br />

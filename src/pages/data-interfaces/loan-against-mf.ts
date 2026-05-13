@@ -7,7 +7,7 @@ export interface EligibilityResponse {
     success: boolean;
     data: {
         url: string;
-        msg: string;
     };
+    msg: string;
     
 }
