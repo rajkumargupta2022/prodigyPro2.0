@@ -73,3 +73,10 @@ export interface revokeBankConsentRes {
   success: boolean;
   data: string;
 }
+export interface graphValueKeys {
+    bankAccount: number,
+    bankAccountReturns: number,
+    mfSavingAccount: number,
+    mfSavingAccountReturns: number
+  
+}
