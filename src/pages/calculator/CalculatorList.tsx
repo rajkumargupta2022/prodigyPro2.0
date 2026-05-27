@@ -144,6 +144,15 @@ const CalculatorList = () => {
               </div>
             </Link>
           </div>
+          <div className="col-lg-3 mb-3">
+            <Link to="/loan-tenure" className="card border-0 shadow rounded-3" >
+              <div className="card-body border-0 card px-3">
+                <img src={emiIcon} className="" alt="..." height={44} width={44} />
+                <p className="fs18pxHeading mb-0 mt-2">Loan Tenure</p>
+                <p className="fs14px mb-21px">Calculate your monthly EMI amount</p>
+              </div>
+            </Link>
+          </div>
 
         </div>
       </div>

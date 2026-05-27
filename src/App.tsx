@@ -52,6 +52,7 @@ import EmiCalculator from "./pages/calculator/EmiCalculator";
 import FDCalculator from "./pages/calculator/FDCalculator";
 import ElssCalculator from "./pages/calculator/ElssCalculator";
 import SWPCalculator from "./pages/calculator/SWPCalculate";
+import LoanTenure from "./pages/calculator/LoanTenure";
 import RecommendedSchemeGoal from "./pages/planning/RecommendedSchemeGoal";
 import RiskProfile from "./components/RiskProfile";
 import { ToastContainer } from "react-toastify";
@@ -310,6 +311,7 @@ function App() {
           <Route path="/sip-with-annual-increase-calculator" element={<SipWithAnnualIncrease />} />
           <Route path="/annual-sip-calculator" element={<AnnualSipCalculator />} />
           <Route path="/cost-of-delay-in-sip-calculator" element={<CostOfDelayInSipCalculator />} />
+          <Route path="/loan-tenure" element={<LoanTenure />} />
           <Route
             path="/recommended-scheme-goal"
             element={<RecommendedSchemeGoal />}
