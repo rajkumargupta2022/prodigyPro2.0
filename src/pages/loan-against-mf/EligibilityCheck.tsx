@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState} from "react";
 import NavBar from "../../components/Navbar";
 import moneybag from "../../assets/img/loan-against-mf/money-bag.svg";
 import { Link } from "react-router-dom";
@@ -56,7 +56,7 @@ export default function CheckEligibility() {
     const ucc = adminUser?.ucc;
     const uccStatus = localStorage.getItem("uccStatus");
 
-    const checkEligibility = useCallback(async () => {
+    const onSubmit = async () => {
         setIsLoading(true);
         setError(null);
 
@@ -84,7 +84,7 @@ export default function CheckEligibility() {
         } finally {
             setIsLoading(false);
         }
-    }, [ucc]);
+    };
 
     return (
         <div className="ce-page-wrapper">
@@ -135,7 +135,7 @@ export default function CheckEligibility() {
                                 errorToast("Your UCC is inactive. Please contact support to activate it before checking eligibility for Loan Against MF.");
                             }
                             else {
-                                checkEligibility();
+                                onSubmit();
                             }
                         }}
                         disabled={isLoading}

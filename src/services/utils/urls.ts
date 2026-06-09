@@ -92,6 +92,7 @@ export enum endPoints {
   searchScheme = "product/search-scheme",
   getActiveSif = "product/get-active-sif",
   startWith100Schemes = "product/get-100-rs-schemes",
+  getTopPerformers = "product/get-top-performers",
 
   /* =========================
      TRANSACTIONS

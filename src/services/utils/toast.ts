@@ -34,7 +34,7 @@ export const errorToast = (msg: any) => {
     });
   }
 
-  toast.error(msg.response?.data?.msg || msg.response?.data?.error || msg.response?.data?.message, {
+  toast.error(msg.response?.data?.msg || msg.response?.data?.error || msg.response?.data?.message||"Something went wrong Please again try after sometime", {
     position: "bottom-right",
     theme: "dark",
     autoClose: 5000,

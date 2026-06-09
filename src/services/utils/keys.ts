@@ -1,9 +1,9 @@
 export enum keys {
-  SIP="SIP",
+  SIP = "SIP",
   sip = "sip",
-  Redemption="Redemption",
-  Purchase="Purchase",
-  SWP="SWP",
+  Redemption = "Redemption",
+  Purchase = "Purchase",
+  SWP = "SWP",
   purchase = "purchase",
   switch = "switch",
   Switch = "Switch",
@@ -15,7 +15,7 @@ export enum keys {
   pending = "Pending",
   active = "Active",
   failed = "Failed",
-  bajaj="bajaj"
+  bajaj = "bajaj",
 }
 export enum riskKey {
   aggressive = 3,
@@ -54,6 +54,7 @@ type yearTypeKeys = {
   tenyearret: number;
   fifteenyearret: number;
 };
+
 export const yearKeys: Record<number, keyof yearTypeKeys> = {
   1: "oneYearCAGR",
   2: "twoyearret",
@@ -65,12 +66,21 @@ export const yearKeys: Record<number, keyof yearTypeKeys> = {
   15: "fifteenyearret",
 };
 
-export const succeessString =[
-  "SUCCESS","APPROVED","AUTHORISED","COMPLETED","VALID"
-]
-export const pendingString =[
-  "PENDING","WAITING","INPROGRESS","PROCESSING"
-]
-export const failedString =[
-  "FAILED","REJECT","ERROR","DECLINED","CANCELLED","INVALID"
-]
+
+
+export const succeessString = [
+  "SUCCESS",
+  "APPROVED",
+  "AUTHORISED",
+  "COMPLETED",
+  "VALID",
+];
+export const pendingString = ["PENDING", "WAITING", "INPROGRESS", "PROCESSING"];
+export const failedString = [
+  "FAILED",
+  "REJECT",
+  "ERROR",
+  "DECLINED",
+  "CANCELLED",
+  "INVALID",
+];

@@ -8,16 +8,16 @@ export interface schemeDeatilDataKeys {
   accordAMCCode: number;
   cnav: number;
   launchDate: string;
-  nfo_close_date?:string
+  nfo_close_date?: string;
   equityType: string;
   minSIPAmt: number;
-  minLumSumAmt: number; 
+  minLumSumAmt: number;
   planOption: string;
   sipAllowed: boolean;
   sipDateList: number[];
   purchaseAllowed: boolean;
   planType: string;
-  nfo_allotment_date?:string|null
+  nfo_allotment_date?: string | null;
   nseProductCode: string;
   nseAMCCode: string;
   stpAllowed?: boolean;
@@ -41,14 +41,22 @@ export interface schemeDeatilDataKeys {
   threeYearCAGR?: number;
   fiveYearCAGR?: number;
   amount?: number;
-  totalAmount?:number;
+  totalAmount?: number;
   folioList?: foliosKeys[];
   selectedFolio?: foliosKeys;
   mandateId?: string;
   start_date?: any;
   from_date?: any;
   to_date?: any;
-  firstSIPToday?:boolean
+  firstSIPToday?: boolean;
+  oneyrret?: number;
+  twoyearret?: number;
+  threeyearret?: number;
+  fouryearret?: number;
+  fiveyearret?: number;
+  sevenyearret?: number;
+  tenyearret?: number;
+  fifteenyearret?: number;
 }
 
 export interface navHistoryResponse {
@@ -130,41 +138,41 @@ export interface swpResponse {
   data: swpKey[];
 }
 export interface cartItemKey {
-  fromAccordProductCode: string|number;
+  fromAccordProductCode: string | number;
   toAccordProductCode: string | number;
   amount: number;
   stpDateList?: number[];
   folioNumber: string;
   installment_units: number;
   stpFrequency?: any;
-  isSwitchAmount?:boolean;
+  isSwitchAmount?: boolean;
   all_units: boolean;
   unit?: number;
-  redemption_units?:number;
+  redemption_units?: number;
   toScheme?: string;
   fromScheme?: string;
-  fromValue?: number,
-  fromUnit?: number,
-  fromAccordAMCCode?: number,
-  toAccordAMCCode?: number
-  id?:any
+  fromValue?: number;
+  fromUnit?: number;
+  fromAccordAMCCode?: number;
+  toAccordAMCCode?: number;
+  id?: any;
 }
 export interface switchResponse {
-  success: boolean,
-  data: switchKeys[]
+  success: boolean;
+  data: switchKeys[];
 }
 export interface switchKeys {
-  folio_no: string,
-  units?: string | number,
-  amount?: string | number
-  reg_status: boolean,
-  reg_id: string,
-  reg_remark: string,
-  schemeName: string
+  folio_no: string;
+  units?: string | number;
+  amount?: string | number;
+  reg_status: boolean;
+  reg_id: string;
+  reg_remark: string;
+  schemeName: string;
 }
 export interface swpResponse {
-  success: boolean,
-  data: swpKey[]
+  success: boolean;
+  data: swpKey[];
 }
 
 export interface HelpandSupport {
@@ -175,21 +183,33 @@ export interface HelpandSupport {
 }
 
 export interface goalSchemeRes {
-  success: boolean,
-  msg: string,
-  length: number,
-  data: goalSchmes[]
+  success: boolean;
+  msg: string;
+  length: number;
+  data: goalSchmes[];
 }
 export interface goalSchmes {
-  accordAMCCode: number,
-  accordSchemeCode: number,
-  equityType: string,
-  scheme: string,
-  nseAMCCode: string,
-  nseProductCode: string,
-  sipDateList: number[],
-  minSIPAmt: string,
-  minLumSumAmt: string,
-  sipAllowed: boolean,
-  purchaseAllowed: boolean
+  accordAMCCode: number;
+  accordSchemeCode: number;
+  equityType: string;
+  scheme: string;
+  nseAMCCode: string;
+  nseProductCode: string;
+  sipDateList: number[];
+  minSIPAmt: string;
+  minLumSumAmt: string;
+  sipAllowed: boolean;
+  purchaseAllowed: boolean;
+}
+
+export interface topPerformersRes {
+  success: boolean;
+  page: number;
+  limit: number;
+  totalRecords: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
+  length: number;
+  data: schemeDeatilDataKeys[];
 }

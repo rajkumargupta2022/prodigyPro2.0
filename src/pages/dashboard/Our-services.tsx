@@ -3,10 +3,10 @@ import recomended from "../../assets/img/icons/Recommended Funds.svg"
 import portfolio from "../../assets/img/icons/portfolio review.svg"
 import nfo from "../../assets/img/icons/nfo.svg"
 import money from "../../assets/img/icons/rupee 1.svg"
-import transact from "../../assets/img/icons/transcat.svg"
 import loan from "../../assets/img/icons/loanAgainstMF.svg"
 import Card from 'react-bootstrap/Card';
 import { Link } from "react-router-dom"
+import calculatorIcon from "../../assets/img/icons/EMI calculator 1.svg"
 
 const OurServices = () => {
   return (
@@ -16,12 +16,16 @@ const OurServices = () => {
           <h6 className="fw-semibold mb-4">Our Services</h6>
           <div className="col-4 col-md-4 col-lg-2 py-1 text-center crPointer"> <Link className=" text-center" to="/emergency-funds"><img src={money} alt="" className="" height={24} /><small className="d-block adjustText ">Emergency Fund </small></Link></div>
           <div className="col-4 col-md-4 col-lg-2 py-1 text-center crPointer"> <Link to="/recommended-funds" className=" text-center " ><img src={recomended} alt="" className="" height={24} /><small className="d-block  adjustText">Recommended Funds</small></Link></div>
+          {/* <div className="col-4 col-md-4 col-lg-2 py-1 text-center crPointer"> <Link to="/sif-funds" className=" text-center " ><img src={Star} alt="" className="" height={24} /><small className="d-block  adjustText">SIF</small></Link></div>
+          <div className="col-4 col-md-4 col-lg-2 py-1 text-center crPointer"> <Link to="/fund-with-100" className=" text-center " ><img src={EquityFund} alt="" className="" height={24} /><small className="d-block  adjustText">Start with ₹100</small></Link></div> */}
+         
+          <div className="col-4 col-md-4 col-lg-2 py-1 text-center crPointer"> <Link to="/portfolio-review" className=" text-center" ><img src={portfolio} alt="" className="" height={24} /><small className="d-block  adjustText">Portfolio Review</small></Link></div>
+          {/* <div className="col-4 col-md-4 col-lg-2 py-1 text-center crPointer"> <Link to="/calculator-list" className=" text-center" ><img src={calculator} alt="" className="" height={24} /><small className="d-block  adjustText">Financial Calculators</small></Link></div> */}
+          <div className="col-4 col-md-4 col-lg-2 py-1 text-center crPointer"> <Link to="/nfo-live" className=" text-center" ><img src={nfo} alt="" className="" height={24} /><small className="d-block  adjustText">NFO Live</small></Link></div>
           <div className="col-4 col-md-4 col-lg-2 py-1 text-center crPointer"> <Link to="/loan-against-mf" className=" text-center " ><img src={loan} alt="" className="" height={24} /><small className="d-block  adjustText">Loan Against
 MF</small></Link></div>
-          {/* <div className="col-4 col-md-4 col-lg-2 py-1 text-center crPointer"> <Link to="/tax-saving" className=" text-center " ><img src={taxSaving} alt="" className="" height={24} /><small className="d-block  adjustText">Tax Saving</small></Link></div> */}
-          <div className="col-4 col-md-4 col-lg-2 py-1 text-center crPointer"> <Link to="/nfo-live" className=" text-center" ><img src={nfo} alt="" className="" height={24} /><small className="d-block  adjustText">NFO Live</small></Link></div>
-          <div className="col-4 col-md-4 col-lg-2 py-1 text-center crPointer"> <Link to="/portfolio-review" className=" text-center" ><img src={portfolio} alt="" className="" height={24} /><small className="d-block  adjustText">Portfolio Review</small></Link></div>
-          <div className="col-4 col-md-4 col-lg-2 py-1 text-center crPointer"> <Link to="/mf-saving-dashboard" className=" text-center"  ><img src={transact} alt="" className="" height={24} /><small className="d-block  adjustText">MF Savings Account</small></Link></div>
+          <div className="col-4 col-md-4 col-lg-2 py-1 text-center crPointer"> <Link to="/calculator-list" className=" text-center " ><img src={calculatorIcon} alt="" className="" height={24} /><small className="d-block  adjustText">Financial Calculators</small></Link></div>
+          {/* <div className="col-4 col-md-4 col-lg-2 py-1 text-center crPointer"> <Link to="/mf-saving-dashboard" className=" text-center"  ><img src={transact} alt="" className="" height={24} /><small className="d-block  adjustText">MF Savings Account</small></Link></div> */}
         </div>
       </Card.Body>
     </Card>

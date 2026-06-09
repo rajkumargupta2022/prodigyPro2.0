@@ -2199,3 +2199,17 @@ margin-bottom: 0px;
 .date-input {
   color: #6c757d;   /* default = grey */
 }
+.fs10px{
+  font-size: 10px;
+  color: #6c757d;
+}
+.serviceItem {
+  flex: 1;
+  min-width: 90px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.serviceItem img {
+  margin-bottom: 6px;
+}

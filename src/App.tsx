@@ -52,6 +52,7 @@ import EmiCalculator from "./pages/calculator/EmiCalculator";
 import FDCalculator from "./pages/calculator/FDCalculator";
 import ElssCalculator from "./pages/calculator/ElssCalculator";
 import SWPCalculator from "./pages/calculator/SWPCalculate";
+import LoanTenure from "./pages/calculator/LoanTenure";
 import RecommendedSchemeGoal from "./pages/planning/RecommendedSchemeGoal";
 import RiskProfile from "./components/RiskProfile";
 import { ToastContainer } from "react-toastify";
@@ -100,6 +101,7 @@ import MinorKycCheck from "./pages/ucc/Minor-kyc-check";
 import AddFamilyMember from "./pages/ucc/Add-family-member";
 import MandateAmount from "./pages/ucc/Mandate-amount";
 import UccSubmit from "./pages/ucc/Ucc-submit";
+import TopPerformers from "./pages/Top-performers";
 
 const LoaderHandler = () => {
   const { showLoader, hideLoader } = useLoader();
@@ -170,6 +172,7 @@ function App() {
 
           <Route path="/explore" element={<Explore />} />
           <Route path="/all-mutual-funds" element={<AllMutualFunds />} />
+          <Route path="/top-performers" element={<TopPerformers />} />
           <Route path="/fund-details" element={<FundDetails />} />
           {/* <Route path="/select-folio" element={<SelectFolio />} /> */}
 
@@ -310,6 +313,7 @@ function App() {
           <Route path="/sip-with-annual-increase-calculator" element={<SipWithAnnualIncrease />} />
           <Route path="/annual-sip-calculator" element={<AnnualSipCalculator />} />
           <Route path="/cost-of-delay-in-sip-calculator" element={<CostOfDelayInSipCalculator />} />
+          <Route path="/loan-tenure" element={<LoanTenure />} />
           <Route
             path="/recommended-scheme-goal"
             element={<RecommendedSchemeGoal />}
