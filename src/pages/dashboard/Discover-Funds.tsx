@@ -7,7 +7,8 @@ import money from "../../assets/img/icons/rupee 1.svg"
 import Star from "../../assets/img/icons/star-1.svg"
 import hybrid from "../../assets/img/icons/award 1.svg"
 import taxSaver from "../../assets/img/icons/tax.svg";
-import Rupee from "../../assets/img/icons/rupee 1.svg"
+import gold from "../../assets/img/icons/debt.svg";
+import TopPerformer from "../../assets/img/icons/equity fund.svg";
 // import equityFund from "../../assets/img/dashboard/equity-fund.png"
 // import debrFund from "../../assets/img/dashboard/debt-fund.png"
 import { useNavigate } from "react-router";
@@ -34,12 +35,12 @@ const DiscoverFUnds = ()=>{
                 <Card.Body>
                   <div className="row crPointer">
                     <h6 className="fw-semibold mb-4">Discover Funds</h6>
-                    <div className="col-4 text-center" onClick={()=>navigate("fund-with-100")}><img src={money} alt="" className="" height={24} /><small className="d-block adjustText">Start with <CurrencyRupee className="mb-1" />100</small></div>
-                    <div className="col-4 text-center" onClick={()=>navigate("sif-funds")}><img src={Star} alt="" className="" height={24} /><small className="adjustText d-block">SIF</small></div>
+                    <div className="col-4 text-center" onClick={()=>navigate("/fund-with-100")}><img src={money} alt="" className="" height={24} /><small className="d-block adjustText">Start with <CurrencyRupee className="mb-1" />100</small></div>
+                    <div className="col-4 text-center" onClick={()=>navigate("/sif-funds")}><img src={Star} alt="" className="" height={24} /><small className="adjustText d-block">SIF</small></div>
                     <div className="col-4 text-center"  onClick={()=>goToFundPage("Tax Saver Funds",[1],[8],content[0])}><img src={taxSaver} alt="" className="" height={24} /><small className="adjustText d-block">Tax Saver Funds</small></div>
                     <div className="col-4 text-center" onClick={()=>goToFundPage("Hybrid Funds",[2],[],content[4])}><img src={hybrid} alt="" className="" height={24} /><small className="adjustText d-block">Hybrid Funds</small></div>
-                    <div className="col-4 text-center" onClick={()=>navigate("/top-performers")}><img src={Rupee} alt="" className="" height={24} /><small className="adjustText d-block">Equity Funds</small></div>
-                    <div className="col-4 text-center" onClick={()=>goToFundPage("Gold & Silver Funds",[4],[53,85],"")}><img src={Star} alt="" className="" height={24} /><small className="adjustText d-block">Gold & Silver Funds</small></div>
+                    <div className="col-4 text-center" onClick={()=>navigate("/top-performers")}><img src={TopPerformer} alt="" className="" height={24} /><small className="adjustText d-block">Top Performer Funds</small></div>
+                    <div className="col-4 text-center" onClick={()=>goToFundPage("Gold & Silver Funds",[4],[53,85],"")}><img src={gold} alt="" className="" height={24} /><small className="adjustText d-block">Gold & Silver Funds</small></div>
 
                   </div>
                 </Card.Body>
@@ -54,8 +55,8 @@ const DiscoverFUnds = ()=>{
                     <Link to="/bank-accounts" className="col-3 adjustText  pb-2 text-dark border-bottom text-end" ><ChevronRight /></Link>
                     <Link to="/statements" className="col-9 adjustText border-bottom pb-2 text-dark borderColor" >Statements</Link>
                     <Link to="/statements" className="col-3 adjustText  pb-2 text-dark border-bottom text-end" ><ChevronRight /></Link>
-                    <Link to="/calculator-list" className="col-9 adjustText  pb-2 text-dark borderColor" >Financial Calculators</Link>
-                    <Link to="/calculator-list" className="col-3 adjustText  pb-2 text-dark  text-end" ><ChevronRight /></Link>
+                    {/* <Link to="/calculator-list" className="col-9 adjustText  pb-2 text-dark borderColor" >Financial Calculators</Link>
+                    <Link to="/calculator-list" className="col-3 adjustText  pb-2 text-dark  text-end" ><ChevronRight /></Link> */}
 
 
                   </div>

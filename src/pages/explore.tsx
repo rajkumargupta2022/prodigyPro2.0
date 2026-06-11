@@ -55,17 +55,17 @@ const Explore = () => {
               <img src={DebtFund} alt="" width={28} height={28} />
               <h6 className="fs14pxBlack">Debt Funds</h6>
             </div>
-            <div className="py-2 text-center"  onClick={()=>goToFundPage("Tax Saver Funds",[1],[8],content[0])}>
-              <img src={Tax} alt="" width={28} height={28} />
-              <h6 className="fs14pxBlack">Tax Saver Funds</h6>
-            </div>
              <div className="py-2 text-center" onClick={()=>goToFundPage("Hybrid Funds",[2],[],content[4])}>
               <img src={Award} alt="" width={28} height={28} />
               <h6 className="fs14pxBlack">Hybrid Funds</h6>
             </div>
+            <div className="py-2 text-center"  onClick={()=>goToFundPage("Tax Saver Funds",[1],[8],content[0])}>
+              <img src={Tax} alt="" width={28} height={28} />
+              <h6 className="fs14pxBlack">Tax Saver Funds</h6>
+            </div>
             <div className="py-2 text-center" onClick={()=>navigate("/top-performers")}>
               <img src={Rupee} alt="" width={28} height={28} />
-              <h6 className="fs14pxBlack">Top Performers</h6>
+              <h6 className="fs14pxBlack">Top Performer Funds</h6>
             </div> 
             <div className="py-2 text-center" onClick={()=>goToFundPage("Gold & Silver Funds",[4],[53,85],"")}>
               <img src={Star} alt="" width={28} height={28} />

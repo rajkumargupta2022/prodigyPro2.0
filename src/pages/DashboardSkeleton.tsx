@@ -30,8 +30,8 @@ export const DashboardSkeleton = ({ kycSection }: { kycSection?: React.ReactNode
               <span className="placeholder col-3 rounded" style={{ height: "22px" }}></span>
             </div>
             <div className="row mt-3 px-2">
-              {[1, 2, 3, 4].map(i => (
-                <div key={i} className="col-3 text-center placeholder-wave">
+              {[1, 2, 3, 4,5,6].map(i => (
+                <div key={i} className="col-2 text-center placeholder-wave">
                   <div className="placeholder rounded-circle" style={{ height: "45px", width: "45px" }}></div>
                   <div className="mt-2 text-center">
                     <span className="placeholder col-8 rounded" style={{ height: "14px" }}></span>
@@ -49,9 +49,9 @@ export const DashboardSkeleton = ({ kycSection }: { kycSection?: React.ReactNode
               <span className="placeholder col-3 rounded" style={{ height: "22px" }}></span>
             </div>
             <div className="row px-2">
-              {[1, 2].map(i => (
-                <div key={i} className="col-6 mb-3 placeholder-wave">
-                  <span className="placeholder col-12 rounded" style={{ height: "90px" }}></span>
+              {[1, 2,3,4,5,6].map(i => (
+                <div key={i} className="col-2 mb-3 placeholder-wave">
+                  <span className="placeholder col-12 rounded" style={{ height: "40px" }}></span>
                 </div>
               ))}
             </div>
@@ -102,7 +102,23 @@ export const DashboardSkeleton = ({ kycSection }: { kycSection?: React.ReactNode
             </div>
           </Card.Body>
         </Card>
+          <Card border="light" className="my-3 cardRadius">
+          <Card.Body>
+            <div className="placeholder-glow mb-4 px-2">
+              <span className="placeholder col-5 rounded" style={{ height: "22px" }}></span>
+            </div>
+            <div className="px-2">
+              {[1, 2, 3].map(i => (
+                <div key={i} className="d-flex justify-content-between mb-3 pb-2 border-bottom placeholder-glow">
+                  <span className="placeholder col-8 rounded" style={{ height: "16px" }}></span>
+                  <span className="placeholder col-1 rounded" style={{ height: "16px" }}></span>
+                </div>
+              ))}
+            </div>
+          </Card.Body>
+        </Card>
       </div>
+       
     </>
   )
 }

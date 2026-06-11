@@ -675,7 +675,7 @@ hr {
 }
 
 .footerRadius {
-  border-radius: 0 0 10px 10px;
+  border-radius: 0 0 7px 7px;
 }
 
 .headerRadius {
@@ -2212,4 +2212,17 @@ margin-bottom: 0px;
 
 .serviceItem img {
   margin-bottom: 6px;
+}
+
+/* Custom Pagination Styles */
+.pagination .page-item.active .page-link {
+  background-color: #011EFE;
+  border-color: #011EFE;
+  color: #fff;
+}
+.pagination .page-link {
+  color: #011EFE;
+}
+.pagination .page-link:hover {
+  color: #011EFE;
 }

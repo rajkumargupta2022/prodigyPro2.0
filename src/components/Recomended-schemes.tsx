@@ -131,7 +131,7 @@ const RecomendedSchemes: React.FC<pageProps> = ({ from, url = endPoints.goalPlan
   }
   const fundDetails = (item: any) => {
 
-    navigate("/fund-details", { state: { accordSchemeCode: item.accordSchemeCode, fromPortfolio: false } })
+    navigate("/fund-details?productcode="+item.accordSchemeCode, { state: { accordSchemeCode: item.accordSchemeCode, fromPortfolio: false } })
   }
 
   return (
@@ -193,3 +193,4 @@ const RecomendedSchemes: React.FC<pageProps> = ({ from, url = endPoints.goalPlan
 };
 
 export default RecomendedSchemes;
+

@@ -204,16 +204,12 @@ function AddFamilyMember() {
         {!accountState && (
           <div className="mt-2">
             <h6>Note:</h6>
-            <p className="fs14px">Please be ready with these documents before creation of
-              Minor's profile to mention the bank account details and upload the
-              bank and birth proof-
+            <p className="fs14px">Please keep the following documents handy while creating an investor account:
             </p>
-            <p className="fs14px">
-              1. Bank Account should be in the name of Minor it can either be
-              Jointly or under the guardianship of the same person as you have
-              selected in profile.
-            </p>
-            <p className="fs14px">2. Guardian name must be there in the birthproof.</p>
+            <span className="fs14px">
+              1. Aadhaar and PAN
+            </span><br />
+            <span className="fs14px">2. Bank proof  (e.g. Cheque)</span>
           </div>
         )}
       </main>

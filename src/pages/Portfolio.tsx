@@ -61,7 +61,7 @@ const Portfolio = () => {
   };
   const fundDetails = (item:detailPortfolioSchemeType)=>{
  
-     navigate("/fund-details",{state:{...item,fromPortfolio:true}}) 
+     navigate("/fund-details?productcode="+item.accordSchemeCode,{state:{...item,fromPortfolio:true}}) 
   }
 
   return (

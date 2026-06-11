@@ -181,8 +181,8 @@ const KycStatusCheck = () => {
       } else {
         updateHolder(index, {
           isKycCompliant: false,
-          kycMsg: "You are not KYC Compliant",
-          description: "We couldn’t find your KYC details. Please complete your KYC to begin your investment journey.",
+          kycMsg: "We couldn't find your KYC details. Please complete your KYC to begin your investment journey.",
+          description: "Your KYC will be processed in a safe environment partnered with HDFC MF & Hyperverge.",
           kycSuccess: false,
           btnName: "Start KYC Verification",
           isLoader: false,

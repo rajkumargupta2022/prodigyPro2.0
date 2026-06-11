@@ -66,7 +66,7 @@ const PanVarification = () => {
       return
     }
     // setIsKycCompliant(false);
-    // setNoKycMsg("Sorry! 😔 You are not KYC Compliant");
+    // setNoKycMsg("We couldn't find your KYC details. Please complete your KYC to begin your investment journey.");
     // setKySuccessMsg("");
     // setDescription("");
     // setBtnName("Start KYC Verification");
@@ -94,9 +94,9 @@ const PanVarification = () => {
           setIsLoader(false)
         } else if (!response.data.kyc_status) {
           setIsKycCompliant(false)
-          setNoKycMsg("Sorry! 😔 You are not KYC Compliant");
+          setNoKycMsg("We couldn't find your KYC details. Please complete your KYC to begin your investment journey.");
           setKySuccessMsg(""); // Clear success message if not compliant
-          setDescription("");
+          setDescription("Your KYC will be processed in a safe environment partnered with HDFC MF & Hyperverge.");
           setBtnName("Start KYC Verification");
           setIsLoader(false)
         }

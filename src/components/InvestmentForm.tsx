@@ -278,7 +278,8 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
 
     <div className="col-md-4 col-12 position-relative">
 
-      <div className="bg-white p-3 rounded">
+      <div className="bg-white rounded overflow-hidden shadow-sm">
+        <div className="p-3">
         <h5>Invest Now</h5>
         <hr />
         <div className="row text-center mt-2 ">
@@ -346,10 +347,11 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
             />
           </div>}
 
-      </div>
-      <div className="text-white logobg_color  py-2 mb-2 mx-3 order  text-center monthly_btn crPointer" onClick={handleFolioSelection}> {isSipTransaction ? "Invest as SIP" : "Invest Now"}</div>
+        </div>
+        <div className="text-white logobg_color py-2 mb-3 mx-3 order text-center monthly_btn crPointer" onClick={handleFolioSelection}> {isSipTransaction ? "Invest as SIP" : "Invest Now"}</div>
 
-      <Card.Header className='scheme-bg footerRadius px-3 py-2 fs12px'>Units allotment is subject to realization of funds in AMC's A/c.</Card.Header>
+        <Card.Header className='scheme-bg footerRadius px-3 py-2 fs12px'>Units allotment is subject to realization of funds in AMC's A/c.</Card.Header>
+      </div>
     </div>
     <SelectFolioPopup show={openSelectFolio} setShow={setOpenSelectFolio} schemeList={schemeList} setSchemeList={setSchemeList} isSipTransaction={isSipTransaction} />
   </>)

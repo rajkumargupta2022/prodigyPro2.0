@@ -129,7 +129,8 @@ function getMaxRedeemableAmount(currentValue:number, maxRedeemableAmount:number)
           <Modal.Title>Insta Redeem Confirmation</Modal.Title>
         </Modal.Header>
         <Modal.Body className='modal-bg'>
-          <div className={`rounded-4 p-4   bg-white overflow-hidden mb-3 shadow-sm`} >
+          <div className={`rounded-4 bg-white overflow-hidden mb-3 shadow-sm`} >
+            <div className="p-4">
 
             <div className="d-flex justify-content-between">
 
@@ -164,13 +165,13 @@ function getMaxRedeemableAmount(currentValue:number, maxRedeemableAmount:number)
 
 
 
+            </div>
+            <Card.Header className='scheme-bg footerRadius px-3 py-2 fs12px'>Redemption orders once placed cannot be cancelled.</Card.Header>
           </div>
-          <Card.Header className='scheme-bg footerRadius px-3 py-2 fs12px'>Redemption orders once placed cannot be cancelled.</Card.Header>
 
 
         </Modal.Body>
-        <small className='px-3 fs12px modal-bg text-center'>Insta Redeem allows you to withdraw money instantly.
-          Through this feature, the money will be redeemed within a few seconds directly from the AMC up to the prescribed limit.</small>
+        <small className='px-3 fs12px modal-bg text-center'>Get instant access to your money, subject to the prescribed limit.</small>
         <Modal.Footer className='modal-bg '>
           <Button className='customButton buttunCenter' onClick={handleFinalRedeem}>Redeem</Button>
         </Modal.Footer>
