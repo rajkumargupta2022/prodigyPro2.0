@@ -6,7 +6,7 @@ import { fetchAdminUser } from "../services/user/adminUser";
 import { postRequest } from "../services/Api/HandleApi";
 import { endPoints, imageUrl } from "../services/utils/urls";
 import { userBankDetailKeys, userMandateRes } from "../pages/data-interfaces/bank-and-mandate";
-import { dateInStringNumber } from "../services/dates/dateFormater";
+import { dateInStringNumberWithoutTimeZone } from "../services/dates/dateFormater";
 import { bankType } from "../services/utils/keys";
 import { maskString } from "../services/utils/services";
 
@@ -111,13 +111,13 @@ function BankAndMandateList() {
             <div className="col-lg-3 col-md-4 col-12 py-lg-0 py-1">
               <span className="text-secondary">FROM</span>
               <br />
-              <span className="value-font2">{dateInStringNumber(item.mandate_start)}</span>
+              <span className="value-font2">{dateInStringNumberWithoutTimeZone(item.mandate_start)}</span>
             </div>
 
             <div className="col-lg-3 col-md-4 col-12 py-lg-0 py-1">
               <span className="text-secondary">To</span>
               <br />
-              <span className="value-font2">{dateInStringNumber(item.mandate_end)}</span>
+              <span className="value-font2">{dateInStringNumberWithoutTimeZone(item.mandate_end)}</span>
             </div>
 
             <div></div>

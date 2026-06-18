@@ -56,7 +56,7 @@ function MyProfile() {
         </div>
 
         <div>
-          <p className="m-0 fs12px">{adminUser?.gPan ? "GUARDIAN" : "PAN NUMBER"}</p>
+          <p className="m-0 fs12px">{adminUser?.gPan ? "GUARDIAN" : "PAN"}</p>
           <p className="fs16px">{adminUser?.pan ?
             adminUser?.pan :
             adminUser?.gPan ?

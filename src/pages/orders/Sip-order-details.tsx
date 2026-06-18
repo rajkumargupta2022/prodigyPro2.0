@@ -126,7 +126,11 @@ function SIPOrderDetails() {
               <span className="value-font2">{dateInStringNumber(location.state?.sip_start_date)}</span>
             </div>
             <div className="d-flex justify-content-between mb-2">
-              <span className="text-secondary">SIP INVESTED</span>
+              <span className="text-secondary">SIP</span>
+              <span className="value-font2">₹{orderDetail?.installment_amount || 0}</span>
+            </div>
+            <div className="d-flex justify-content-between mb-2">
+              <span className="text-secondary">AMOUNT INVESTED</span>
               <span className="value-font2">₹{orderDetail?.total_invested || 0}</span>
             </div>
             <div className="d-flex justify-content-between mb-2">
@@ -134,11 +138,7 @@ function SIPOrderDetails() {
               <span className="value-font2">{orderDetail?.total_units || 0}</span>
             </div>
             <div className="d-flex justify-content-between mb-2">
-              <span className="text-secondary">MONTHLY SIP</span>
-              <span className="value-font2">₹{location.state?.installment_amount}</span>
-            </div>
-            <div className="d-flex justify-content-between mb-2">
-              <span className="text-secondary">NEXT SIP DATE</span>
+              <span className="text-secondary">NEXT SIP</span>
               <span className="value-font2">{dateInStringNumber(location?.state?.next_sip_date)}</span>
             </div>
           </div>
@@ -199,7 +199,7 @@ function SIPOrderDetails() {
               </button>
             </div>
           )}
-        </> : <div className="m-0"><PortfolioEmpty title={"No Orders Yet"} body={"Your order history will appear here once you start investing. Begin your journey today!"} btnName={"Explore Funds"} btnUrl={"all-mutual-funds"} /></div>}
+        </> : <div className="m-0"><PortfolioEmpty title={"No Recent SIP Orders"} body={"Your order history will appear here once you start investing. Begin your journey today!"} btnName={"Explore Funds"} btnUrl={"all-mutual-funds"} /></div>}
     </main>
 
   );

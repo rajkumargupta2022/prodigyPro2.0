@@ -14,6 +14,22 @@ export const amountHandler = (
   }
 };
 
+export const amountForMax = (
+  e: React.ChangeEvent<HTMLInputElement>,
+  maxAmount: number,
+  setter: (value: number) => void
+): void => {
+  let value = Number(e.target.value.trim());
+  
+  // setter(value);
+  if (value <= maxAmount) {
+    setter(value);
+  }
+   else if (value >= maxAmount) {
+    setter(maxAmount);
+  }
+};
+
 export const percentageHandler = (
   e: React.ChangeEvent<HTMLInputElement>,
   maxAmount: number,

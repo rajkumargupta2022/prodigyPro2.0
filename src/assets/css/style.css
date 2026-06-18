@@ -2226,3 +2226,69 @@ margin-bottom: 0px;
 .pagination .page-link:hover {
   color: #011EFE;
 }
+
+.success-gradient {
+  background: linear-gradient(
+    135deg,
+    #2140ff 0%,
+    #3555ff 45%,
+    #4868ff 100%
+  );
+  position: relative;
+  overflow: hidden;
+}
+
+.success-gradient::before {
+  content: "";
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  left: -180px;
+  bottom: -220px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.success-gradient::after {
+  content: "";
+  position: absolute;
+  width: 220px;
+  height: 220px;
+  right: -100px;
+  top: -80px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.error-gradient {
+  background: linear-gradient(
+    135deg,
+    #d92f4c 0%,
+    #c94d72 50%,
+    #9b6b9d 100%
+  );
+  position: relative;
+  overflow: hidden;
+}
+
+.error-gradient::before {
+  content: "";
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  left: -180px;
+  bottom: -220px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.error-gradient::after {
+  content: "";
+  position: absolute;
+  width: 220px;
+  height: 220px;
+  right: -100px;
+  top: -80px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+}

@@ -12,6 +12,7 @@ import targetAmount from "../../assets/img/calculator/target-amount-sip.svg"
 import annualSip from "../../assets/img/calculator/annual-sip.svg"
 import delayInvestment from "../../assets/img/calculator/cost-delay.svg"  
 import sipWithAnnual from "../../assets/img/calculator/sip-with-anual.svg"
+import loanTenure from "../../assets/img/calculator/loan-tenure.svg"
 import { Link } from "react-router-dom";
 
 const CalculatorList = () => {
@@ -147,9 +148,9 @@ const CalculatorList = () => {
           <div className="col-lg-3 mb-3">
             <Link to="/loan-tenure" className="card border-0 shadow rounded-3" >
               <div className="card-body border-0 card px-3">
-                <img src={emiIcon} className="" alt="..." height={44} width={44} />
-                <p className="fs18pxHeading mb-0 mt-2">Loan Tenure</p>
-                <p className="fs14px mb-21px">Calculate your monthly EMI amount</p>
+                <img src={loanTenure} className="" alt="..." height={44} width={44} />
+                <p className="fs18pxHeading mb-0 mt-2">Loan Tenure Calculator</p>
+                <p className="fs14px mb-21px">Review your loan tenure timeline.</p>
               </div>
             </Link>
           </div>

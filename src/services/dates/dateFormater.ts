@@ -31,6 +31,20 @@ export const dateInStringNumber = (data?: string | null): string => {
     timeZone: "UTC",
   });
 };
+export const dateInStringNumberWithoutTimeZone = (data?: string | null): string => {
+  let date: any;
+  if (data) {
+    date = new Date(data);
+  } else {
+    date = new Date();
+  }
+
+  return date.toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+};
 
 export function convertDayToFullDate(dayNumber:number) {
   const today = new Date();

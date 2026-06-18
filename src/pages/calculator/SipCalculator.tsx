@@ -134,7 +134,9 @@ const SipCalculator = () => {
       },
     },
   };
-
+ const annualRateToMonthlyRate = (R: number) => {
+    return Math.pow(1 + R / 100, 1 / 12) - 1;
+  };
   const calculateSip = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -144,7 +146,7 @@ const SipCalculator = () => {
     ].every((value) => value === true);
 
     if (isValidated) {
-      let monthlyRate: number = expectedRateOfReturn / 12 / 100;
+      let monthlyRate: number = annualRateToMonthlyRate(expectedRateOfReturn);
       let months: number = investmentPeriod * 12;
       let futureValue: number = 0;
       futureValue = ((monthlySaving * (Math.pow(1 + monthlyRate, months) - 1)) / monthlyRate) * (1 + monthlyRate);

@@ -10,11 +10,11 @@ import { useNavigate } from "react-router-dom";
 const TargetAmountSIPCalculator = () => {
   const navigate = useNavigate()
   const [investmentPeriod, setInvestmentPeriod] = useState<number>(10);
-  const [targetAmount, setTargetAmount] = useState<number>(2500000);
+  const [targetAmount, setTargetAmount] = useState<number>(1000000);
   const [expectedRateOfReturn, setExpectedRateOfReturn] = useState<number>(12);
   const [monthySip, setMonthySip] = useState<number>(10868);
   const [oneTimeInvestment, setOneTimeInvestment] = useState<number>(804933);
-  const [totalTargetAmount, setTotalTargetAmount] = useState<number>(2500000);
+  const [totalTargetAmount, setTotalTargetAmount] = useState<number>(1000000);
 
   const totalTargetAmountRef = useRef<{
     validate: (value: number) => boolean;
@@ -24,7 +24,9 @@ const TargetAmountSIPCalculator = () => {
     validate: (value: number) => boolean;
   }>(null);
 
-
+ const annualRateToMonthlyRate = (R: number) => {
+    return Math.pow(1 + R / 100, 1 / 12) - 1;
+  };
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -34,7 +36,7 @@ const TargetAmountSIPCalculator = () => {
     ].every((value) => value === true);
 
     if (isValidated) {
-      const monthlyRate = expectedRateOfReturn / 100 / 12;
+      const monthlyRate = annualRateToMonthlyRate(expectedRateOfReturn);
       const totalMonths = investmentPeriod * 12;
 
       // Monthly SIP (PMT equivalent)

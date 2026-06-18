@@ -15,10 +15,10 @@ interface OrderPlaces {
   isRedeem?: boolean
 }
 
-const OrderPlaces: React.FC<OrderPlaces> = ({ show, setShow, successData,isRedeem=false }) => {
+const OrderPlaces: React.FC<OrderPlaces> = ({ show, setShow, successData, isRedeem = false }) => {
   useEffect(() => {
     if (show) {
-     console.log("Success Data:", successData);
+      console.log("Success Data:", successData);
     }
   }, [show]);
 
@@ -37,8 +37,10 @@ const OrderPlaces: React.FC<OrderPlaces> = ({ show, setShow, successData,isRedee
             {successData?.map((item: any, index: number) => (
               <Carousel.Item key={index}>
                 <div className="d-flex justify-content-center align-items-center ">
-                  <div className=" text-white text-center rounded-4 shadow-lg" style={{ backgroundImage: `url(${item.reg_status ? successImg : errorImg})`, backgroundSize: "cover", backgroundPosition: "center" }}>
-                    {/* Image Wrapper */}
+                  <div
+                    className={`text-white text-center rounded-4 shadow-lg ${item.reg_status ? "success-gradient" : "error-gradient"
+                      }`}
+                  >
                     <div className="position-relative d-inline-block">
                       {/* Background Image */}
                       <img src={group} alt="Group" className={`img-fluid ${item.reg_status || "opacity-grpimg-none"}`} height={110} width={250} />
@@ -55,8 +57,8 @@ const OrderPlaces: React.FC<OrderPlaces> = ({ show, setShow, successData,isRedee
                     <h3 className="mb-3">Order {item.reg_status ? "Placed" : "Failed"}</h3>
                     {item.reg_status && <p className="text-white fs18px mb-0">
                       {isRedeem ? "Your redemption request has been submitted successfully. Proceeds will be credited to your registered bank account as per AMC processing timelines." : " Units will be alloted subject to realization of funds in AMC’s account."}
-                      
-                     
+
+
                     </p>}
 
 
@@ -99,17 +101,20 @@ const OrderPlaces: React.FC<OrderPlaces> = ({ show, setShow, successData,isRedee
                     </div>
 
 
+                    {item.reg_status &&
 
+                      <div className="mt-2 px-md-5 px-2" style={{ textAlign: "start" }}>
 
-                    <div className="mt-2 px-md-5 px-2" style={{ textAlign: "start" }}>
-                      <span className="text-white">Note:</span>
-                      <br />
-                      <p className="text-white fs14px" style={{ textAlign: "start" }}>
-                        Authorization link has been sent on your registered mail id
-                        and mobile number.The Link shall remain active for T+3 days.Kindly authorize.
-                      </p>
-                    </div>
+                        <span className="text-white">Note:</span>
 
+                        <br />
+                        <p className={`text-white fs14px`} style={{ textAlign: "start" }}>
+                          Authorization link has been sent on your registered mail id
+                          and mobile number.The Link shall remain active for T+3 days.Kindly authorize.
+                        </p>
+
+                      </div>
+                    }
                     <Link
                       className="btn btn-light my-3 logoBlueColor"
                       to="/dashboard"

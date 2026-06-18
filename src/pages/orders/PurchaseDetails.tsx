@@ -89,7 +89,7 @@ function PurchaseDetails() {
           <span className="value-font2">{installmentDetails?.status}</span>
         </div>
         <div className="d-flex justify-content-between mb-2">
-          <span className="text-secondary">INVESTMENT VALUE</span>
+          <span className="text-secondary">INVESTMENT AMOUNT</span>
           <span className="value-font2">₹{installmentDetails?.order_amount??0}</span>
         </div>
         <div className="d-flex justify-content-between mb-2">
@@ -116,7 +116,7 @@ function PurchaseDetails() {
           <span className="value-font2">{dateInStringNumber(installmentDetails?.order_date)}</span>
         </div>
         <div className="d-flex justify-content-between mb-2">
-          <span className="text-secondary">NAV PRICE</span>
+          <span className="text-secondary">NAV</span>
           <span className="value-font2">₹{installmentDetails?.nav_price}</span>
         </div>
         <div className="d-flex justify-content-between mb-2">
@@ -129,7 +129,7 @@ function PurchaseDetails() {
           <span className="value-font2">{installmentDetails?.folio_number}</span>
         </div>
         
-      </div></>:<div className="m-0"><PortfolioEmpty title={"No Orders Yet"} body={"Your order history will appear here once you start investing. Begin your journey today!"} btnName={"Explore Funds"} btnUrl={"all-mutual-funds"} /></div>}
+      </div></>:<div className="m-0"><PortfolioEmpty title={"No Recent Lumpsum Orders"} body={"Your order history will appear here once you start investing. Begin your journey today!"} btnName={"Explore Funds"} btnUrl={"all-mutual-funds"} /></div>}
     </main>
   );
 }

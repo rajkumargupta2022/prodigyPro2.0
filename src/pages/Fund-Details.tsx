@@ -566,11 +566,11 @@ const FundDetails = () => {
                       </div>
                       <div className="col-6 py-2">
                         <span className="text-secondary text-uppercase fs-7">Total invested</span>
-                        <h4 className="fs-6">₹ {getValueInSort(location.state?.purchase)}</h4>
+                        <h4 className="fs-6">₹ {Number(location.state?.purchase)?.toLocaleString("en-In")}</h4>
                       </div>
                       <div className="col-6 py-2">
                         <span className="text-secondary text-uppercase fs-7">Current Value</span>
-                        <h4 className="fs-6">₹ {getValueInSort(location.state?.currentvalue)}</h4>
+                        <h4 className="fs-6">₹ {Number(location.state?.currentvalue)?.toLocaleString("en-In")}</h4>
                       </div>
                       <div className="col-6 py-2">
                         <span className="text-secondary text-uppercase fs-7">Gain/Loss</span>
