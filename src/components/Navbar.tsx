@@ -9,23 +9,28 @@ import {
   HouseDoorFill,
   GraphUpArrow,
   Person,
+  ChatDots,
 } from "react-bootstrap-icons";
 import ProfileModel from "./ProfileModel";
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { fetchAdminUser } from "../services/user/adminUser";
 import { renderAdminAvatar } from "../pages/re-used-html/avtar";
+import ChatBoatUi from "../AI-boat/Chat-boat-ui";
 
 const MyNavbar = () => {
   const location = useLocation();
   const adminUser = fetchAdminUser()
   const [openProfileModel, setOpenProfileModel] = useState<boolean>(false)
+  const [openAiBoat, setOpenAiBoat] = useState<boolean>(false)
   // console.log('Current path:', location.pathname);
   const handleProfileModel = () => {
     setOpenProfileModel(true)
   }
 
-
+  const handleAiBoat = () => {
+    setOpenAiBoat(true)
+  }
 
   return (
     <Navbar expand="lg" className="bg-white">
@@ -88,9 +93,9 @@ const MyNavbar = () => {
             <Link to="/help-and-support" className="prodgy_menu">
               <QuestionCircle size={24} />
             </Link>
-            {/* <Link to="#" className="prodgy_menu">
-              <Bell size={24} />
-            </Link> */}
+            <Link to="#" className="prodgy_menu" onClick={handleAiBoat}>
+              <ChatDots size={24} />
+            </Link>
 
             <div className="profileNameSize prodgy_menu crPointer">
               <div className="d-flex gap-2" onClick={handleProfileModel}>
@@ -104,6 +109,7 @@ const MyNavbar = () => {
         </Navbar.Collapse>
       </Container>
       <ProfileModel show={openProfileModel} setShow={setOpenProfileModel} />
+      <ChatBoatUi show={openAiBoat} setShow={setOpenAiBoat} />
     </Navbar>
   );
 };

@@ -2,9 +2,7 @@ import Modal from "react-bootstrap/Modal";
 import correct from "../assets/img/correct.png";
 import failed from "../assets/img/icons/failed-icon.png";
 import group from "../assets/img/Group.png";
-import successImg from "../assets/img/bg-image/successImg.png"
-import errorImg from "../assets/img/bg-image/errorBg.png"
-import { Link } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import Carousel from 'react-bootstrap/Carousel';
 import { useEffect } from "react";
 
@@ -16,6 +14,7 @@ interface OrderPlaces {
 }
 
 const OrderPlaces: React.FC<OrderPlaces> = ({ show, setShow, successData, isRedeem = false }) => {
+  const navigate = useNavigate();
   useEffect(() => {
     if (show) {
       console.log("Success Data:", successData);
@@ -24,11 +23,20 @@ const OrderPlaces: React.FC<OrderPlaces> = ({ show, setShow, successData, isRede
 
   return (
     <>
+      <style>
+        {`
+          .custom-carousel .carousel-indicators {
+            bottom: 80px;
+            margin-bottom: 0 !important;
+          }
+        `}
+      </style>
       <Modal
         show={show}
         onHide={() => setShow(false)}
         backdrop={true}
         keyboard={false}
+        contentClassName="bg-transparent border-0"
       >
         <Modal.Body style={{ padding: 0 }}>
           <Carousel className="custom-carousel"
@@ -36,9 +44,9 @@ const OrderPlaces: React.FC<OrderPlaces> = ({ show, setShow, successData, isRede
             indicators={true}>
             {successData?.map((item: any, index: number) => (
               <Carousel.Item key={index}>
-                <div className="d-flex justify-content-center align-items-center ">
+                <div className="d-flex justify-content-center align-items-start ">
                   <div
-                    className={`text-white text-center rounded-4 shadow-lg ${item.reg_status ? "success-gradient" : "error-gradient"
+                    className={`text-center rounded-4 shadow-lg text-white w-100 h-100 ${item.reg_status ? "success-gradient" : "error-gradient"
                       }`}
                   >
                     <div className="position-relative d-inline-block">
@@ -115,12 +123,24 @@ const OrderPlaces: React.FC<OrderPlaces> = ({ show, setShow, successData, isRede
 
                       </div>
                     }
-                    <Link
-                      className="btn btn-light my-3 logoBlueColor"
-                      to="/dashboard"
+                    <div style={{ height: "30px", width: "100%" }}></div>
+                    <div    onClick={() => {
+                        setShow(false);
+                        navigate("/dashboard");
+                      }}>
+
+                    <button
+                      type="button"
+                      className="btn btn-light mb-4 logoBlueColor"
+                      style={{ position: "relative", zIndex: 1050 }}
+                      onClick={() => {
+                        setShow(false);
+                        navigate("/dashboard");
+                      }}
                     >
                       Back to Home
-                    </Link>
+                    </button>
+                    </div>
                   </div>
                 </div>
               </Carousel.Item>

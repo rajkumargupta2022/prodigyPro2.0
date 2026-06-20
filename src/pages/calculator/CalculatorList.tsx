@@ -27,7 +27,7 @@ const CalculatorList = () => {
             <h4>Financial Calculators</h4>
           </div>
           <div className="col-lg-3 mb-3">
-            <Link to="/sip-calculator" className="card border-0 shadow rounded-3" >
+            <Link to="/sip-calculator" className="card border-0 calculator-card shadow rounded-3" >
               <div className="card-body border-0 card px-3">
                 <img src={SipIcon} className="" alt="..." height={44} width={44} />
                 <p className="fs18pxHeading mb-0 mt-2">SIP Calculator</p>
@@ -37,7 +37,7 @@ const CalculatorList = () => {
           </div>
 
           <div className="col-lg-3 mb-3">
-            <Link to="/marriage-calculator" className="card border-0 shadow rounded-3" >
+            <Link to="/marriage-calculator" className="card border-0 calculator-card shadow rounded-3" >
               <div className="card-body border-0 card px-3">
                 <img src={ring} className="" alt="..." height={44} width={44} />
                 <p className="fs18pxHeading mb-0 mt-2">Marriage Planning</p>
@@ -46,7 +46,7 @@ const CalculatorList = () => {
             </Link>
           </div>
           <div className="col-lg-3 mb-3">
-            <Link to="/education-calculator" className="card border-0 shadow rounded-3" >
+            <Link to="/education-calculator" className="card border-0 calculator-card shadow rounded-3" >
               <div className="card-body border-0 card px-3">
                 <img src={education} className="" alt="..." height={44} width={44} />
                 <p className="fs18pxHeading mb-0 mt-2">Education Planning</p>
@@ -55,7 +55,7 @@ const CalculatorList = () => {
             </Link>
           </div>
           <div className="col-lg-3 mb-3">
-            <Link to="/future-value-calculator" className="card border-0 shadow rounded-3" >
+            <Link to="/future-value-calculator" className="card border-0 calculator-card shadow rounded-3" >
               <div className="card-body border-0 card px-3">
                 <img src={wealth} className="" alt="..." height={44} width={44} />
                 <p className="fs18pxHeading mb-0 mt-2">Lump Sum Calculator</p>
@@ -64,7 +64,7 @@ const CalculatorList = () => {
             </Link>
           </div>
           <div className="col-lg-3 mb-3">
-            <Link to="/retirment-calculator" className="card border-0 shadow rounded-3" >
+            <Link to="/retirment-calculator" className="card border-0 calculator-card shadow rounded-3" >
               <div className="card-body border-0 card px-3">
                 <img src={retirment} className="" alt="..." height={44} width={44} />
                 <p className="fs18pxHeading mb-0 mt-2">Retirement Calculator</p>
@@ -73,7 +73,7 @@ const CalculatorList = () => {
             </Link>
           </div>
           <div className="col-lg-3 mb-3">
-            <Link to="/emi-calculator" className="card border-0 shadow rounded-3" >
+            <Link to="/emi-calculator" className="card border-0 calculator-card shadow rounded-3" >
               <div className="card-body border-0 card px-3">
                 <img src={emiIcon} className="" alt="..." height={44} width={44} />
                 <p className="fs18pxHeading mb-0 mt-2">EMI Calculator</p>
@@ -82,7 +82,7 @@ const CalculatorList = () => {
             </Link>
           </div>
           <div className="col-lg-3 mb-3">
-            <Link to="/fd-calculator" className="card border-0 shadow rounded-3" >
+            <Link to="/fd-calculator" className="card border-0 calculator-card shadow rounded-3" >
               <div className="card-body border-0 card px-3">
                 <img src={fdIcon} className="" alt="..." height={44} width={44} />
                 <p className="fs18pxHeading mb-0 mt-2">FD Calculator</p>
@@ -91,7 +91,7 @@ const CalculatorList = () => {
             </Link>
           </div>
           <div className="col-lg-3 mb-3">
-            <Link to="/elss-calculator" className="card border-0 shadow rounded-3" >
+            <Link to="/elss-calculator" className="card border-0 calculator-card shadow rounded-3" >
               <div className="card-body border-0 card px-3">
                 <img src={elssIcon} className="" alt="..." height={44} width={44} />
                 <p className="fs18pxHeading mb-0 mt-2">ELSS Calculator</p>
@@ -100,7 +100,7 @@ const CalculatorList = () => {
             </Link>
           </div>
           <div className="col-lg-3 mb-3">
-            <Link to="/swp-calculator" className="card border-0 shadow rounded-3" >
+            <Link to="/swp-calculator" className="card border-0 calculator-card shadow rounded-3" >
               <div className="card-body border-0 card px-3">
                 <img src={swpIcon} className="" alt="..." height={44} width={44} />
                 <p className="fs18pxHeading mb-0 mt-2">SWP Calculator</p>
@@ -110,7 +110,7 @@ const CalculatorList = () => {
           </div>
          
          <div className="col-lg-3 mb-3">
-            <Link to="/target-amount-sip-calculator" className="card border-0 shadow rounded-3" >
+            <Link to="/target-amount-sip-calculator" className="card border-0 calculator-card shadow rounded-3" >
               <div className="card-body border-0 card px-3">
                 <img src={targetAmount} className="" alt="..." height={44} width={44} />
                 <p className="fs18pxHeading mb-0 mt-2">Target Amount Calculator</p>
@@ -119,7 +119,7 @@ const CalculatorList = () => {
             </Link>
           </div>
           <div className="col-lg-3 mb-3">
-            <Link to="/sip-with-annual-increase-calculator" className="card border-0 shadow rounded-3" >
+            <Link to="/sip-with-annual-increase-calculator" className="card border-0 calculator-card shadow rounded-3" >
               <div className="card-body border-0 card px-3">
                 <img src={sipWithAnnual} className="" alt="..." height={44} width={44} />
                 <p className="fs18pxHeading mb-0 mt-2">Step-UP SIP Calculator</p>
@@ -128,7 +128,7 @@ const CalculatorList = () => {
             </Link>
           </div>
           <div className="col-lg-3 mb-3">
-            <Link to="/annual-sip-calculator" className="card border-0 shadow rounded-3" >
+            <Link to="/annual-sip-calculator" className="card border-0 calculator-card shadow rounded-3" >
               <div className="card-body border-0 card px-3">
                 <img src={annualSip} className="" alt="..." height={44} width={44} />
                 <p className="fs18pxHeading mb-0 mt-2">Annual SIP Calculator</p>
@@ -137,7 +137,7 @@ const CalculatorList = () => {
             </Link>
           </div>
           <div className="col-lg-3 mb-3">
-            <Link to="/cost-of-delay-in-sip-calculator" className="card border-0 shadow rounded-3" >
+            <Link to="/cost-of-delay-in-sip-calculator" className="card border-0 calculator-card shadow rounded-3" >
               <div className="card-body border-0 card px-3">
                 <img src={delayInvestment} className="" alt="..." height={44} width={44} />
                 <p className="fs18pxHeading mb-0 mt-2">Cost of Delay in SIP Calculator</p>
@@ -146,7 +146,7 @@ const CalculatorList = () => {
             </Link>
           </div>
           <div className="col-lg-3 mb-3">
-            <Link to="/loan-tenure" className="card border-0 shadow rounded-3" >
+            <Link to="/loan-tenure" className="card border-0 calculator-card shadow rounded-3" >
               <div className="card-body border-0 card px-3">
                 <img src={loanTenure} className="" alt="..." height={44} width={44} />
                 <p className="fs18pxHeading mb-0 mt-2">Loan Tenure Calculator</p>

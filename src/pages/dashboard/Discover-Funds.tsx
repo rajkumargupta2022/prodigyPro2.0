@@ -49,8 +49,8 @@ const DiscoverFUnds = ()=>{
                 <Card.Body>
                   <div className="row px-2">
                     <h6 className="fw-semibold mb-4">Quick Link</h6>
-                    <Link to="/all-orders" className="col-9 adjustText border-bottom pb-2 text-dark borderColor" >All Orders</Link>
-                    <Link to="/all-orders" className="col-3 adjustText  pb-2 text-dark border-bottom text-end" ><ChevronRight /></Link>
+                    {/* <Link to="/all-orders" className="col-9 adjustText border-bottom pb-2 text-dark borderColor" >All Orders</Link>
+                    <Link to="/all-orders" className="col-3 adjustText  pb-2 text-dark border-bottom text-end" ><ChevronRight /></Link> */}
                     <Link to="/linked-bank-account" className="col-9 adjustText border-bottom pb-2 text-dark borderColor" >Linked Bank Accounts</Link>
                     <Link to="/bank-accounts" className="col-3 adjustText  pb-2 text-dark border-bottom text-end" ><ChevronRight /></Link>
                     <Link to="/statements" className="col-9 adjustText border-bottom pb-2 text-dark borderColor" >Statements</Link>

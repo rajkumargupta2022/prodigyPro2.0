@@ -40,9 +40,12 @@ const TargetAmountSIPCalculator = () => {
       const totalMonths = investmentPeriod * 12;
 
       // Monthly SIP (PMT equivalent)
+     
+
       const monthlySipValue =
         (targetAmount * monthlyRate) /
-        (Math.pow(1 + monthlyRate, totalMonths) - 1);
+        ((Math.pow(1 + monthlyRate, totalMonths) - 1)* (1 + monthlyRate));
+
 
       // One-time Lump Sum
       const lumpSum =

@@ -1,9 +1,7 @@
 import NavBar from "../../components/Navbar";
 import ValidatedInput from "../../services/Validated-inputs/inputs";
-import { useState } from "react";
-import { isNotEmpty } from "../../services/Validated-inputs/validations";
+import { useState, useEffect, useRef } from "react";
 import { amountForMax, amountHandler, percentageHandler } from "../../services/utils/calculatorsFs";
-import { errorToast } from "../../services/utils/toast";
 export default function LoanTenure() {
 
   const [loanAmount, setLoanAmount] = useState<number>(500000);
@@ -13,45 +11,50 @@ export default function LoanTenure() {
   const [years, setYears] = useState<number>(5);
   const [months, setMonths] = useState<number>(9);
 
-  const submit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (emi >= loanAmount) {
-      errorToast("EMI amount should be less than loan amount");
-      return;
-    }
-     if (loanAmount < 200000 || loanAmount > 500000000) {
-      errorToast("Loan amount should be between 2,00,000 and 50,00,00,000");
-      return;
-    }
-     if (emi < 1000 || emi > 10000000) {
-      errorToast("EMI amount should be between 1,000 and 10,000,000");
-      return;
-    }
-     if (rate < 5 || rate > 50) {
-      errorToast("Interest rate should be between 5% and 50%");
-      return;
-    }
-   loanTenureCalculator(loanAmount, rate, emi)
-     
+  const loanAmountRef = useRef<{ validate: (value: number) => boolean }>(null);
+  const emiRef = useRef<{ validate: (value: number) => boolean }>(null);
+  const rateRef = useRef<{ validate: (value: number) => boolean }>(null);
+
+  const validateLoanAmount = (val: number) => {
+    if (val < 200000 || val > 5000000000) return "Loan amount should be between 2,00,000 and 5,00,00,00,000";
+    return null;
   };
 
- function loanTenureCalculator(p:number, rate:number, emi:number) {
-  const r = (rate / 100) / 12;
-  const div = emi - (p * r);
+  const validateEmi = (val: number) => {
+    if (val < 1000 || val > 100000000) return "EMI amount should be between 1,000 and 10,000,000";
+    if (val >= loanAmount && loanAmount > 0) return "EMI amount should be less than loan amount";
+    const r = (rate / 100) / 12;
+    const div = val - (loanAmount * r);
+    if (div <= 0) return `Minimum EMI amount for the given inputs can be ${Math.ceil(loanAmount * r + 1)}`;
+    return null;
+  };
 
-  if (div <= 0) {
-    errorToast(
-      `Minimum EMI amount for the given inputs can be ${Math.ceil(p * r + 1)}`
-    );
-    return
-  }
+  const validateRate = (val: number) => {
+    if (val < 5 || val > 50) return "Interest rate should be between 5% and 50%";
+    return null;
+  };
 
- let allMonths =Math.ceil(
-    Math.log(emi / div) / Math.log(1 + r)
-  )
-  setYears(Math.floor(allMonths / 12));
-  setMonths(allMonths % 12);
-}
+  useEffect(() => {
+    const isLoanValid = loanAmountRef.current?.validate(loanAmount);
+    const isEmiValid = emiRef.current?.validate(emi);
+    const isRateValid = rateRef.current?.validate(rate);
+
+    if (isLoanValid && isEmiValid && isRateValid) {
+      const r = (rate / 100) / 12;
+      const div = emi - (loanAmount * r);
+      let allMonths = Math.ceil(Math.log(emi / div) / Math.log(1 + r));
+      if (!isNaN(allMonths) && isFinite(allMonths) && allMonths >= 0) {
+        setYears(Math.floor(allMonths / 12));
+        setMonths(allMonths % 12);
+      } else {
+        setYears(0);
+        setMonths(0);
+      }
+    } else {
+      setYears(0);
+      setMonths(0);
+    }
+  }, [loanAmount, emi, rate]);
   return (
     <>
       <NavBar />
@@ -68,19 +71,20 @@ export default function LoanTenure() {
             <div className="col-lg-6 co-sm-12 col-md12 ">
               <div className="card border-0 shadow p-2">
                 <div className="card-body">
-                  <form onSubmit={submit}>
+                  <form >
                     <div className="form-group my-2">
                       <label htmlFor="exampleInputEmail1" className="fs12px">
                         LOAN AMOUNT (OUTSTANDING)
                       </label>
                     </div>
                     <ValidatedInput
+                      ref={loanAmountRef}
                       className="form-control"
                       value={loanAmount}
                       onChange={(e) =>
-                        amountHandler(e, 500000000, setLoanAmount)
+                        amountHandler(e, 5000000000, setLoanAmount)
                       }
-                      validate={isNotEmpty}
+                      validate={validateLoanAmount}
                     />
 
 
@@ -91,31 +95,31 @@ export default function LoanTenure() {
 
                     </div>
                     <ValidatedInput
+                      ref={emiRef}
                       className="form-control"
                       value={emi}
                       onChange={(e) =>
-                        amountForMax(e, 10000000, setEmi)
+                        amountForMax(e, 100000000, setEmi)
                       }
-                      validate={isNotEmpty}
+                      validate={validateEmi}
                     />
                     <div className="form-group my-2">
                       <label htmlFor="exampleInputPassword1" className="fs12px">
                         INTEREST RATE (%)
                       </label>
                       <ValidatedInput
+                        ref={rateRef}
                         className="form-control"
                         type="number"
                         value={rate}
                         onChange={(e) =>
                           percentageHandler(e, 50, setRate)
                         }
-                        validate={isNotEmpty}
+                        validate={validateRate}
                       />
                     </div>
 
-                    <button type="submit" className="customButton px-3 mt-3">
-                      Calculate
-                    </button>
+                    
                   </form>
                 </div>
               </div>

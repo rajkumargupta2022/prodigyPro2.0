@@ -151,7 +151,7 @@ const SipCalculator = () => {
       let futureValue: number = 0;
       futureValue = ((monthlySaving * (Math.pow(1 + monthlyRate, months) - 1)) / monthlyRate) * (1 + monthlyRate);
 
-      let mainresults: number = Math.round(futureValue);
+      let mainresults: number = futureValue;
       let totalSaving: number = monthlySaving * months;
       let gain: number = mainresults - monthlySaving * months;
       setTotalYear(investmentPeriod);
@@ -260,7 +260,10 @@ const SipCalculator = () => {
                       ₹{totalMonthlySaving.toLocaleString("en-IN")}{" "}
                     </span>{" "}
                     and your estimated corpus will grow to <span className="fw600">
-                      ₹{totalGains.toLocaleString("en-IN")}{" "}
+                      ₹{totalGains.toLocaleString("en-IN", {
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+})}{" "}
                     </span>
                   </p>
                 </div>

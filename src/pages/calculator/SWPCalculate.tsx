@@ -2,11 +2,6 @@ import NavBar from "../../components/Navbar";
 import { useRef, useState } from "react";
 import RangeBar from "./RangeBar";
 import ValidatedInput from "../../services/Validated-inputs/inputs";
-import {
-  isNotEmpty,
-  maxAmount,
-  minAmount,
-} from "../../services/Validated-inputs/validations";
 import ReactApexChart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
 import { percentageHandler } from "../../services/utils/calculatorsFs";
@@ -69,20 +64,43 @@ const SWPCalculator = () => {
     validate: (value: number) => boolean;
   }>(null);
 
-
-  const submit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    const isValidate = [
-      lumpsumAmountRef.current?.validate(lumpsumAmount),
-      expectedReturnRef.current?.validate(expectedReturn),
-      widthdrawalAmountRef.current?.validate(widthdrawalAmount),
-    ].every((value) => value === true);
-
-    if (isValidate) {
-      alert("form submitted");
-    }
+  const validateLumpsumAmount = (val: number) => {
+    if (!val || val < 10000) return "Lumpsum value is too less";
+    if (val > 5000000000) return "Lumpsum value is too high";
+    return null;
   };
+
+  const validateExpectedReturn = (val: number) => {
+    if (!val || val <= 0) return "Mandatory Field";
+    if (val > 50) return "Maximum return percentage allowed is 50%";
+    return null;
+  };
+
+  const validateWithdrawal = (val: number) => {
+    if (!val || val <= 5000) return "Withdrawal value is too less";
+
+    const r = annualRateToMonthlyRate(expectedReturn);
+    let p = lumpsumAmount;
+    let t = investmentPeriod;
+    if (startSWP > 0) {
+      p = Math.round(p * Math.pow(1 + expectedReturn / 100, startSWP));
+      t = investmentPeriod - startSWP;
+    }
+    const n = t * 12;
+    if (n === 0) return null; 
+
+    const growth = Math.pow(1 + r, n);
+    const annuity = r === 0 ? n : (growth - 1) / r;
+    const wAmount = byPercentage === "activeButton" ? (val / 100) * lumpsumAmount : val;
+    
+    if ((p * growth) - (wAmount * annuity) < 0) {
+      const maxW = (p * growth) / annuity;
+      return `Selected monthly withdrawal is too high for provided inputs. In this case maximum withdrawal can be ₹${Math.round(maxW)}`;
+    }
+    return null;
+  };
+
+
 
   const handleWithdrawalBy = (key: number) => {
     if (key === 1) {
@@ -157,6 +175,16 @@ const SWPCalculator = () => {
 
   const calculateREsult = async (e: React.FormEvent) => {
     e.preventDefault()
+
+    const valWithdrawal = byAmount === "activeButton" ? widthdrawalAmount : widthdrawalAmountInPercentage;
+    const isValidate = [
+      lumpsumAmountRef.current?.validate(lumpsumAmount),
+      expectedReturnRef.current?.validate(expectedReturn),
+      widthdrawalAmountRef.current?.validate(valWithdrawal),
+    ].every((value) => value === true);
+
+    if (!isValidate) return;
+
     if (startSWP > 0) {
       calcualteFv()
     } else {
@@ -231,7 +259,7 @@ const SWPCalculator = () => {
 
     if (fv < 0) {
       const maxWithdrawal = (P * growth) / annuity;
-
+       
       throw new Error(
         `Maximum allowed withdrawal is ${Math.round(maxWithdrawal)}`
       );
@@ -389,7 +417,7 @@ const SWPCalculator = () => {
             <div className="col-lg-6 co-sm-12 col-md12 ">
               <div className="card border-0 shadow p-2">
                 <div className="card-body">
-                  <form onSubmit={submit}>
+                  <form onSubmit={calculateREsult}>
                     <div className="form-group my-2">
                       <label htmlFor="exampleInputEmail1" className="fs12px">
                         LUMPSUM AMOUNT
@@ -405,7 +433,7 @@ const SWPCalculator = () => {
                         onChange={(e) =>
                           lumpsumAmountHandler(e)
                         }
-                        validate={[isNotEmpty, minAmount(500), maxAmount(100000000)]}
+                        validate={validateLumpsumAmount}
                       />
                     </div>
                     <RangeBar
@@ -427,7 +455,7 @@ const SWPCalculator = () => {
                         onChange={(e) =>
                           percentageHandler(e, 50, setExpectedReturn)
                         }
-                        validate={[isNotEmpty, minAmount(1)]}
+                        validate={validateExpectedReturn}
                       />
                     </div>
                     <div className="form-group">
@@ -469,7 +497,7 @@ const SWPCalculator = () => {
                           onChange={(e) =>
                             withdrawalAmountHandler(e)
                           }
-                          validate={[isNotEmpty, minAmount(1)]}
+                          validate={validateWithdrawal}
                         />
                         <small className="fs12px"> Percentage: {widthdrawalAmountInPercentage.toFixed(2)}%</small>
                       </div> : <div className="form-group mt-3">
@@ -486,7 +514,7 @@ const SWPCalculator = () => {
                           onChange={(e) =>
                             withdrawalPercentageHandler(e)
                           }
-                          validate={[isNotEmpty, minAmount(1)]}
+                          validate={validateWithdrawal}
                         />
                         <small className="fs12px"> Amount: {widthdrawalAmount.toLocaleString("en-In", {
                           minimumFractionDigits: 0,

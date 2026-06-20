@@ -116,11 +116,18 @@ const EmergencyInvestments = () => {
                 <div className="row text-start mt-1">
                   <div className="col-4 col-md-4">
                     <small className="fs14px">Invested</small><br />
-                    <small> <CurrencyRupee className="mb-1" />{getValueInSort(Number(item?.purchase))}</small>
+                    <small> <CurrencyRupee className="mb-1" />
+                    {(Number(item?.purchase)?.toLocaleString("en-IN", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }))}</small>
                   </div>
                   <div className="col-4 col-md-4">
                     <small className="fs14px">Current Value</small><br />
-                    <small> <CurrencyRupee className="mb-1" />{getValueInSort(Number(item?.currentvalue))}</small>
+                    <small> <CurrencyRupee className="mb-1" />{(Number(item?.currentvalue)?.toLocaleString("en-IN", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }))}</small>
                   </div>
                   <div className="col-4 col-md-4">
                     <small className="fs14px">Gain/Loss</small><br />

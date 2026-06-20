@@ -360,9 +360,9 @@ const FundDetails = () => {
     }
 
   }
-  const goTransactionHistory = (item: schemeDeatilDataKeys) => {
-    navigate("/transaction-history", { state: { accord_product_code: item.accordSchemeCode, folio_number: location.state?.folio } })
-  }
+  // const goTransactionHistory = (item: schemeDeatilDataKeys) => {
+  //   navigate("/transaction-history", { state: { accord_product_code: item.accordSchemeCode, folio_number: location.state?.folio } })
+  // }
   const handleInstaRedeem = () => {
     const uccStatus = localStorage.getItem("uccStatus")
     if (uccStatus !== UccStatusEnum.ACTIVE) {
@@ -396,7 +396,12 @@ const FundDetails = () => {
                   <p className="fs16px">₹{schemeList[0]?.cnav?.toFixed(2)}</p>
                 </div>
                 <div className="col-6">
-                  <p className="fs12px mb-0">  Last {monthList.find((m) => m.value === duration)?.label} CAGR</p>
+                  <p className="fs12px mb-0">
+                    {duration === -1
+                      ? "CAGR"
+                      : <>{duration > 12 ? "Last " : ""}{monthList.find((m) => m.value === duration)?.label} {duration <= 12 ? "Return" : "CAGR"}</>
+                    }
+                  </p>
                   <h5 className={`  ${cagr > 0 ? "congratesColor" : "errorColor2"}`}>{cagr}%</h5>
                 </div>
               </div>
@@ -532,7 +537,7 @@ const FundDetails = () => {
                       {checkTransactionAllowed(schemeList, keys.redumption) && <li onClick={() => handleRedmptionModel()}>Redeem Fund</li>}
                       {checkTransactionAllowed(schemeList, keys.stp) && <li onClick={() => handleSwitch("STP")}>Systematic Transfer Plan (STP)</li>}
                       {checkTransactionAllowed(schemeList, keys.swp) && <li onClick={() => handleSwp()}>Systematic Withdrawal Plan (SWP)</li>}
-                      <li onClick={() => goTransactionHistory(schemeList[0])}>Transaction History</li>
+                      {/* <li onClick={() => goTransactionHistory(schemeList[0])}>Transaction History</li> */}
 
                     </ul>
                   </div>
@@ -566,11 +571,17 @@ const FundDetails = () => {
                       </div>
                       <div className="col-6 py-2">
                         <span className="text-secondary text-uppercase fs-7">Total invested</span>
-                        <h4 className="fs-6">₹ {Number(location.state?.purchase)?.toLocaleString("en-In")}</h4>
+                        <h4 className="fs-6">₹ {Number(location.state?.purchase)?.toLocaleString("en-IN", {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        })}</h4>
                       </div>
                       <div className="col-6 py-2">
                         <span className="text-secondary text-uppercase fs-7">Current Value</span>
-                        <h4 className="fs-6">₹ {Number(location.state?.currentvalue)?.toLocaleString("en-In")}</h4>
+                        <h4 className="fs-6">₹ {Number(location.state?.currentvalue)?.toLocaleString("en-IN", {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        })}</h4>
                       </div>
                       <div className="col-6 py-2">
                         <span className="text-secondary text-uppercase fs-7">Gain/Loss</span>
