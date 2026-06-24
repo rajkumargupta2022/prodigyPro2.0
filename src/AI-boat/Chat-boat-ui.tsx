@@ -1,138 +1,204 @@
-import React from 'react';
-import { Modal, Card, Form, Button, ListGroup, Badge } from 'react-bootstrap';
 
-interface ChatBoatUiProps {
+import React, { useState, useRef, useEffect } from "react";
+import { Modal, Form, Button, Spinner } from "react-bootstrap";
+import logo from "../assets/img/logo/logo.png";
+import { Send } from "react-bootstrap-icons";
+import { GoogleGenAI } from "@google/genai";
+import { initialPrompt, initialPrompt2 } from "./propts";
+
+const GEMINI_API_KEY = "AIzaSyATElLwb63BcJBuu5hBHkVUUBdx4lU923c";
+
+const ai = new GoogleGenAI({
+  apiKey: GEMINI_API_KEY,
+});
+const assistant = "assistant"
+const user = "user";
+interface Props {
   show: boolean;
   setShow: (show: boolean) => void;
 }
 
-const ChatBoatUi: React.FC<ChatBoatUiProps> = ({ show, setShow }) => {
-  const handleClose = () => setShow(false);
+interface Message {
+  role: typeof user | typeof assistant;
+  text: string;
+}
+
+const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
+  const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      role: assistant,
+      text: initialPrompt,
+    },
+  ]);
+
+  const chatEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({
+      behavior: "smooth",
+    });
+  }, [messages]);
+
+  const sendMessage = async (
+    e?: React.FormEvent | React.MouseEvent
+  ) => {
+    e?.preventDefault();
+
+    if (!input.trim() || loading) return;
+
+    const userText = input;
+
+    const userMessage: Message = {
+      role: user,
+      text: userText,
+    };
+
+    setMessages((prev) => [...prev, userMessage]);
+    setInput("");
+    setLoading(true);
+
+    try {
+      const prompt = `${initialPrompt2}  ${userText} `;
+
+      const response = await ai.models.generateContent({
+        model: "gemini-3.5-flash",
+        contents: prompt,
+      });
+
+      const aiText =
+        response?.candidates?.[0]?.content?.parts?.[0]?.text ||
+        "Sorry, I could not generate a response.";
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: assistant,
+          text: aiText,
+        },
+      ]);
+    } catch (error) {
+      console.error(error);
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: assistant,
+          text: "Something went wrong. Please try again.",
+        },
+      ]);
+    }
+
+    setLoading(false);
+  };
 
   return (
     <Modal
       show={show}
-      onHide={handleClose}
-      backdrop="static"
-      keyboard={false}
+      onHide={() => setShow(false)}
       centered
-      size="lg" // Make modal larger for chat UI
-      contentClassName="modal-bg"
+      size="lg"
+      contentClassName="border-0 rounded-4 overflow-hidden shadow-lg"
     >
-      <Modal.Header closeButton className="border-bottom pb-2">
-        <Modal.Title className="logoBlueColor">AI Assistant</Modal.Title>
+      <Modal.Header closeButton>
+        <div className="d-flex align-items-center">
+          <img
+            src={logo}
+            alt="logo"
+            width={100}
+            className="me-2"
+          />
+
+          <div>
+            {/* <small className="text-success fs12px">Online</small> */}
+            {/* <h5 className="">AI</h5> */}
+          </div>
+        </div>
       </Modal.Header>
+
       <Modal.Body className="p-0">
-        <div className="d-flex flex-column" style={{ height: '65vh' }}>
-          
-          {/* Chat Messages Area */}
-          <div className="overflow-auto d-flex flex-column p-4 bg-light flex-grow-1" style={{ gap: '15px' }}>
-            
-            {/* 1. Basic Bot Message */}
-            <div className="d-flex justify-content-start">
-              <div className="p-2 rounded-3 shadow-sm bg-white text-dark border" style={{ maxWidth: '85%' }}>
-                Hello! I am your AI assistant. How can I help you today?
+        <div
+          className="d-flex flex-column"
+          style={{
+            height: "75vh",
+          }}
+        >
+          {/* Chat Messages */}
+          <div
+            className="flex-grow-1 p-2 overflow-auto bg-light"
+          >
+            {messages.map((msg, index) => (
+              <div
+                key={index}
+                className={`mb-3 ${msg.role === user    
+                  ? "text-end"
+                  : "text-start"
+                  }`}
+              >
+                <div
+                  className={`d-inline-block p-2 rounded-3 ${msg.role === user
+                    ? "logobg_color text-white"
+                    : "bg-white shadow-sm border"
+                    }`}
+                  style={{
+                    maxWidth: "80%",
+                    whiteSpace: "pre-wrap",
+                    lineHeight: "1.4",
+                  }}
+                >
+                  {msg.text}
+                </div>
               </div>
-            </div>
+            ))}
 
-            {/* 2. User Message */}
-            <div className="d-flex justify-content-end">
-              <div className="p-2 rounded-3 shadow-sm logobg_color text-white" style={{ maxWidth: '85%' }}>
-                Can you recommend a scheme for me?
+            {loading && (
+              <div className="text-start mb-3">
+                <div className="bg-white border rounded-4 p-3 d-inline-block">
+                  <Spinner
+                    animation="border"
+                    size="sm"
+                    className="me-2"
+                  />
+                  Thinking...
+                </div>
               </div>
-            </div>
-            
+            )}
 
-            {/* 3. Bot Recommendation Scheme UI */}
-            <div className="d-flex justify-content-start">
-              <div className="p-3 rounded-3 shadow-sm bg-white text-dark border" style={{ maxWidth: '85%' }}>
-                <p className="mb-2">Here is a recommended scheme for you based on market trends:</p>
-                <Card className="shadow-sm border-0 bg-light mt-2">
-                  <Card.Body>
-                    <h6 className="logoBlueColor">Prodigy Growth Fund</h6>
-                    <div className="d-flex justify-content-between fs-14px">
-                      <span>Category: <strong>Equity - Multi Cap</strong></span>
-                      <Badge bg="danger">High Risk</Badge>
-                    </div>
-                    <div className="mt-2 text-success">
-                      <strong>15.2% (1Y)</strong> Returns
-                    </div>
-                    <Button variant="outline-primary" size="sm" className="mt-3 w-100">
-                      Select this Scheme
-                    </Button>
-                  </Card.Body>
-                </Card>
-              </div>
-            </div>
-
-            {/* 4. User Message */}
-            <div className="d-flex justify-content-end">
-              <div className="p-3 rounded-3 shadow-sm bg-primary text-white" style={{ maxWidth: '85%' }}>
-                What other schemes are available?
-              </div>
-            </div>
-
-            {/* 5. Bot Scheme List UI */}
-            <div className="d-flex justify-content-start">
-              <div className="p-3 rounded-3 shadow-sm bg-white text-dark border" style={{ maxWidth: '85%' }}>
-                <p className="mb-2">Here are some available schemes you can choose from:</p>
-                <ListGroup className="mt-2">
-                  <ListGroup.Item className="d-flex justify-content-between align-items-center">
-                    <div>
-                      <div className="fw-bold">Prodigy Bluechip Fund</div>
-                      <small className="text-muted">Equity</small>
-                    </div>
-                    <Button variant="primary" size="sm">Select</Button>
-                  </ListGroup.Item>
-                  <ListGroup.Item className="d-flex justify-content-between align-items-center">
-                    <div>
-                      <div className="fw-bold">Prodigy Secure Debt Fund</div>
-                      <small className="text-muted">Debt</small>
-                    </div>
-                    <Button variant="primary" size="sm">Select</Button>
-                  </ListGroup.Item>
-                </ListGroup>
-              </div>
-            </div>
-
-            {/* 6. Bot Confirm Scheme UI */}
-            <div className="d-flex justify-content-start">
-              <div className="p-3 rounded-3 shadow-sm bg-white text-dark border" style={{ maxWidth: '85%' }}>
-                <p className="mb-2">Please confirm your selected scheme to proceed.</p>
-                <Card className="border-primary shadow-sm mt-2">
-                  <Card.Header className="bg-primary text-white">Confirmation Required</Card.Header>
-                  <Card.Body>
-                    <p className="mb-1"><strong>Scheme:</strong> Prodigy Bluechip Fund</p>
-                    <p className="mb-1"><strong>Investment:</strong> ₹ 5,000 / month</p>
-                    <p className="mb-3"><strong>Type:</strong> SIP</p>
-                    <div className="d-flex gap-2">
-                      <Button variant="success" className="w-50">Confirm</Button>
-                      <Button variant="secondary" className="w-50">Cancel</Button>
-                    </div>
-                  </Card.Body>
-                </Card>
-              </div>
-            </div>
-
+            <div ref={chatEndRef} />
           </div>
 
-          {/* Chat Input Area */}
-          <div className="bg-white border-top p-3">
-            <Form className="d-flex" onSubmit={(e) => e.preventDefault()}>
-              <Form.Control
-                type="text"
-                placeholder="Type your message..."
-                className="rounded-pill px-4"
-              />
-              <Button 
-                variant="primary" 
-                className="rounded-pill ms-2 px-4" 
+          {/* Input Section */}
+          <div className="border-top bg-white p-3">
+            <Form onSubmit={sendMessage}>
+              <div
+                className="d-flex align-items-center bg-light rounded-pill px-2"
+                style={{
+                  height: "60px",
+                }}
               >
-                Send
-              </Button>
+                <Form.Control
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  placeholder="Ask about mutual funds..."
+                  className="border-0 bg-transparent shadow-none"
+                />
+
+                <Button
+                  type="submit"
+                  disabled={loading}
+                  className="rounded-circle logobg_color no-hover"
+                  style={{
+                    width: "45px",
+                    height: "45px",
+                  }}
+                >
+                  <Send />
+                </Button>
+              </div>
             </Form>
           </div>
-
         </div>
       </Modal.Body>
     </Modal>
@@ -140,3 +206,4 @@ const ChatBoatUi: React.FC<ChatBoatUiProps> = ({ show, setShow }) => {
 };
 
 export default ChatBoatUi;
+

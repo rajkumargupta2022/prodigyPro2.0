@@ -20,7 +20,9 @@ body {
   background-color: #011EFE;
   color: #fff !important;
 }
-
+.no-hover:hover {
+  background-color: #011EFE !important;
+}
 .modal-bg {
   background-color: #F6F8FA;
   border: none !important;
