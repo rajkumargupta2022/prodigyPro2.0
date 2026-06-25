@@ -5,6 +5,8 @@ import logo from "../assets/img/logo/logo.png";
 import { Send } from "react-bootstrap-icons";
 import { GoogleGenAI } from "@google/genai";
 import { initialPrompt, initialPrompt2 } from "./propts";
+import { fetchSchemeList } from "./Ai-services";
+import SchemeList from "./Scheme-list";
 
 const GEMINI_API_KEY = "AIzaSyATElLwb63BcJBuu5hBHkVUUBdx4lU923c";
 
@@ -21,6 +23,7 @@ interface Props {
 interface Message {
   role: typeof user | typeof assistant;
   text: string;
+  
 }
 
 const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
@@ -68,17 +71,67 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
         contents: prompt,
       });
 
-      const aiText =
-        response?.candidates?.[0]?.content?.parts?.[0]?.text ||
-        "Sorry, I could not generate a response.";
+      const aiText = response?.candidates?.[0]?.content?.parts?.[0]?.text ||"Sorry, I could not generate a response.";
+
+      let aiResponseText = aiText;
+      let isSchemeSearch = false;
+      let schemeName = "";
+
+      try {
+        const jsonStr = aiText.replace(/```json\n?|```/g, "").trim();
+        const parsedData = JSON.parse(jsonStr);
+
+        aiResponseText = parsedData.message || "Processed your request.";
+
+        if (parsedData.intent === "search_scheme" && parsedData.params?.scheme_name) {
+          isSchemeSearch = true;
+          schemeName = parsedData.params.scheme_name;
+        }
+      } catch (err) {
+        console.log("Response is not JSON format", err);
+      }
 
       setMessages((prev) => [
         ...prev,
         {
           role: assistant,
-          text: aiText,
+          text: aiResponseText,
         },
       ]);
+
+      if (isSchemeSearch) {
+        try {
+          const schemeList = await fetchSchemeList(schemeName);
+          if (schemeList && schemeList.length > 0) {
+            const schemesText = schemeList.map((s: any) => `• ${s.scheme_name}`).join('\n');
+            setMessages((prev) => [
+              ...prev,
+              {
+                role: assistant,
+                text: `Here are the top results for "${schemeName}":\n${schemesText}`,
+              },
+            ]);
+          } else {
+            setMessages((prev) => [
+              ...prev,
+              {
+                role: assistant,
+                text: `I couldn't find any schemes matching "${schemeName}".`,
+              },
+            ]);
+          }
+        } catch (err) {
+          console.error(err);
+          setMessages((prev) => [
+            ...prev,
+            {
+              role: assistant,
+              text: `An error occurred while fetching the scheme list.`,
+            },
+          ]);
+        }
+      }
+
     } catch (error) {
       console.error(error);
 
@@ -129,6 +182,7 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
           <div
             className="flex-grow-1 p-2 overflow-auto bg-light"
           >
+          <SchemeList/>
             {messages.map((msg, index) => (
               <div
                 key={index}

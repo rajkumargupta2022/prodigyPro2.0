@@ -31,8 +31,7 @@ export const aiTask = async (obj:any) => {
 
 
 //apis====================
-const fetchSchemeList = async (name: string) => {
-    
+export const fetchSchemeList = async (name: string) => {
     try {
       const token = localStorage.getItem("token")
       let tokenBody = {
@@ -42,11 +41,12 @@ const fetchSchemeList = async (name: string) => {
       }
       const res = await getRequestSimple<searchRes>(endPoints.searchScheme + "?text=" + name, tokenBody)
       if (res.success) {
-        console.log(res.data);
+        return res.data;
       } 
-     
+      return [];
     } catch (err) {
       console.log(err);
+      return [];
     }
   }
 
