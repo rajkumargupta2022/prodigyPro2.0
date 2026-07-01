@@ -4,15 +4,15 @@ import { Modal, Form, Button, Spinner } from "react-bootstrap";
 import logo from "/title-icon.svg";
 import { ArrowClockwise, Send, X } from "react-bootstrap-icons";
 import { GoogleGenAI } from "@google/genai";
-import { initialPrompt, initialPrompt2 } from "./propts";
+import { initialPrompt, initialPrompt2 } from "./promts";
 import { handleAIIntent } from "./Ai-services";
 import SchemeList from "./Scheme-list";
 import Portfolio from "./Portfolio";
 import TopPerformers from "./Top-performers";
+import NfoLive from "./Nfo-live";
 import { foliosKeys, schemeDeatilDataKeys } from "../pages/data-interfaces/transact";
 import { searchKeys } from "../pages/data-interfaces/explore";
 import { mandateKeys } from "../pages/data-interfaces/bank-and-mandate";
-import { nfoLiveKey } from "../pages/data-interfaces/nfo";
 import axios from "axios";
 import { aiChatResponse } from "../pages/data-interfaces/ai";
 import { endPoints } from "../services/utils/urls";
@@ -35,8 +35,8 @@ interface Message {
   mandateOptions?: mandateKeys[]
   portfolioData?: any
   topPerformersData?: boolean
+  nfoLiveData?: boolean
   profileOptions?: any
-  nfoData?: nfoLiveKey[]
   recommendedSchemes?: schemeDeatilDataKeys[]
   recommendRisk?: number
   showSupportButton?: boolean
@@ -108,6 +108,7 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
           text: aiText,
           ...(intentResult.portfolioData ? { portfolioData: true } : {}),
           ...(intentResult.topPerformersData ? { topPerformersData: true } : {}),
+          ...(intentResult.nfoLiveData ? { nfoLiveData: true } : {}),
         },
       ]);
 
@@ -216,18 +217,18 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
                 <div
                   className={`d-inline-block p-2 rounded-3 ${msg.role === user
                     ? "logobg_color text-white"
-                    : msg.portfolioData || msg.topPerformersData ? "bg-light border-0 shadow-none" : "bg-white shadow-sm border"
+                    : msg.portfolioData || msg.topPerformersData || msg.nfoLiveData ? "bg-light border-0 shadow-none" : "bg-white shadow-sm border"
                     }`}
                   style={{
-                    maxWidth: msg.schemeOptions || msg.portfolioData || msg.topPerformersData ? "95%" : "80%",
+                    maxWidth: msg.schemeOptions || msg.portfolioData || msg.topPerformersData || msg.nfoLiveData ? "95%" : "80%",
                     whiteSpace: "pre-wrap",
                     lineHeight: "1.4",
-                    width: msg.schemeOptions || msg.portfolioData || msg.topPerformersData ? "95%" : undefined,
-                    padding: msg.portfolioData || msg.topPerformersData ? "0" : undefined,
-                    background: msg.portfolioData || msg.topPerformersData ? "transparent" : undefined,
+                    width: msg.schemeOptions || msg.portfolioData || msg.topPerformersData || msg.nfoLiveData ? "95%" : undefined,
+                    padding: msg.portfolioData || msg.topPerformersData || msg.nfoLiveData ? "0" : undefined,
+                    background: msg.portfolioData || msg.topPerformersData || msg.nfoLiveData ? "transparent" : undefined,
                   }}
                 >
-                  {!msg.portfolioData && !msg.topPerformersData && msg.text}
+                  {!msg.portfolioData && !msg.topPerformersData && !msg.nfoLiveData && msg.text}
                   {msg.portfolioData && (
                     <Portfolio />
                   )}
@@ -235,6 +236,12 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
                     <div style={{ width: "100%", textAlign: "left" }}>
                       <p style={{ color: "#374151", margin: "0 0 12px 12px", whiteSpace: "pre-wrap" }}>{msg.text}</p>
                       <TopPerformers />
+                    </div>
+                  )}
+                  {msg.nfoLiveData && (
+                    <div style={{ width: "100%", textAlign: "left" }}>
+                      <p style={{ color: "#374151", margin: "0 0 12px 12px", whiteSpace: "pre-wrap" }}>{msg.text}</p>
+                      <NfoLive />
                     </div>
                   )}
                   {msg.schemeOptions && msg.schemeOptions.length > 0 && (

@@ -2,8 +2,9 @@ import axios from "axios";
 import { endPoints } from "../services/utils/urls";
 import { assetTypeListResponse, categoryListResponse, searchKeys, searchRes } from "../pages/data-interfaces/explore";
 import { getRequestSimple, postRequest, postRequestSimple } from "../services/Api/HandleApi";
-import { topPerformersRes } from "../pages/data-interfaces/transact";
+import { schemeDeatilDataKeys, topPerformersRes } from "../pages/data-interfaces/transact";
 import { investKeys } from "../pages/data-interfaces/ai";
+import { nfoLiveRes } from "../pages/data-interfaces/nfo";
 
 
 //tools***************************************
@@ -17,6 +18,7 @@ export interface IntentFollowUp {
 export interface IntentActionResult {
   portfolioData?: boolean;
   topPerformersData?: boolean;
+  nfoLiveData?: boolean;
   followUp?: IntentFollowUp;
 }
 
@@ -49,6 +51,9 @@ export const handleAIIntent = async (
     case "top_performers":
       return { topPerformersData: true };
 
+    case "nfo_live":
+      return { nfoLiveData: true };
+
     default:
       return {};
   }
@@ -71,6 +76,25 @@ export const fetchSchemeList = async (name: string) => {
         return res.data;
       } 
       return [];
+    } catch (err) {
+      console.log(err);
+      return [];
+    }
+  }
+
+  //nfo live***********************************************
+
+  export const fetchLiveNfoSchemes = async (): Promise<schemeDeatilDataKeys[]> => {
+    try {
+      const res = await getRequestSimple<nfoLiveRes>(endPoints.liveNfo)
+      if (!res.success) return [];
+      const now = new Date();
+      const eligible = res.data.filter((item) =>
+        item.sipAllowed || item.purchaseAllowed || item?.sipDateList?.length > 0
+      );
+      return eligible
+        .filter((item) => new Date(item.nfo_close_date ?? "").getTime() > now.getTime())
+        .sort((a, b) => new Date(a.nfo_close_date ?? "").getTime() - new Date(b.nfo_close_date ?? "").getTime());
     } catch (err) {
       console.log(err);
       return [];
