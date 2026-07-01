@@ -17,6 +17,7 @@ import KycStatusCheck from "./pages/ucc/kyc-status-check";
 import "./assets/css/style.css";
 import "./assets/css/loanAgainstMf.css";
 import "./assets/css/media.css";
+import "./assets/css/ai.css";
 import Otp from "./pages/Otp";
 import PanVarification from "./pages/ucc/PanVerification";
 import Dashboard from "./pages/Dashboard";

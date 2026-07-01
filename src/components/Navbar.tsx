@@ -10,6 +10,7 @@ import {
   GraphUpArrow,
   Person,
   ChatDots,
+  Stars
 } from "react-bootstrap-icons";
 import ProfileModel from "./ProfileModel";
 import { useState } from "react";
@@ -94,7 +95,8 @@ const MyNavbar = () => {
               <QuestionCircle size={24} />
             </Link>
             <Link to="#" className="prodgy_menu" onClick={handleAiBoat}>
-              <ChatDots size={24} />
+              {/* <ChatDots size={24} /> */}
+              <Stars size={20} color="#1A35FE" />
             </Link>
 
             <div className="profileNameSize prodgy_menu crPointer">

@@ -1,18 +1,23 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { Modal, Form, Button, Spinner } from "react-bootstrap";
-import logo from "../assets/img/logo/logo.png";
-import { Send } from "react-bootstrap-icons";
+import logo from "/title-icon.svg";
+import { ArrowClockwise, Send, X } from "react-bootstrap-icons";
 import { GoogleGenAI } from "@google/genai";
 import { initialPrompt, initialPrompt2 } from "./propts";
 import { fetchSchemeList } from "./Ai-services";
 import SchemeList from "./Scheme-list";
+import Portfolio from "./Portfolio";
+import TopPerformers from "./Top-performers";
+import { foliosKeys, schemeDeatilDataKeys } from "../pages/data-interfaces/transact";
+import { searchKeys } from "../pages/data-interfaces/explore";
+import { mandateKeys } from "../pages/data-interfaces/bank-and-mandate";
+import { nfoLiveKey } from "../pages/data-interfaces/nfo";
+import axios from "axios";
+import { aiChatResponse } from "../pages/data-interfaces/ai";
+import { endPoints } from "../services/utils/urls";
 
-const GEMINI_API_KEY = "AIzaSyATElLwb63BcJBuu5hBHkVUUBdx4lU923c";
 
-const ai = new GoogleGenAI({
-  apiKey: GEMINI_API_KEY,
-});
 const assistant = "assistant"
 const user = "user";
 interface Props {
@@ -23,7 +28,18 @@ interface Props {
 interface Message {
   role: typeof user | typeof assistant;
   text: string;
-  
+  schemeOptions?: searchKeys[];
+  schemeDetails?: schemeDeatilDataKeys
+  investmentResult?: any
+  folioOptions?: foliosKeys[]
+  mandateOptions?: mandateKeys[]
+  portfolioData?: any
+  topPerformersData?: boolean
+  profileOptions?: any
+  nfoData?: nfoLiveKey[]
+  recommendedSchemes?: schemeDeatilDataKeys[]
+  recommendRisk?: number
+  showSupportButton?: boolean
 }
 
 const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
@@ -45,6 +61,17 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
     });
   }, [messages]);
 
+  useEffect(() => {
+    if (!show) {
+      setMessages([
+        {
+          role: assistant,
+          text: initialPrompt,
+        },
+      ]);
+    }
+  }, [show])
+
   const sendMessage = async (
     e?: React.FormEvent | React.MouseEvent
   ) => {
@@ -64,28 +91,36 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
     setLoading(true);
 
     try {
-      const prompt = `${initialPrompt2}  ${userText} `;
+      const reqBody = { type: "intent", message: userText }
+      const token = localStorage.getItem("token")
+      const response = await axios.post<aiChatResponse>(import.meta.env.VITE_GEMINI_API_URL + endPoints.aiChat, reqBody, { headers: { Authorization: `Bearer ${token}` } });
 
-      const response = await ai.models.generateContent({
-        model: "gemini-3.5-flash",
-        contents: prompt,
-      });
-
-      const aiText = response?.candidates?.[0]?.content?.parts?.[0]?.text ||"Sorry, I could not generate a response.";
+      const aiText = response.data?.message || "Sorry, I could not generate a response.";
+      const aiParams = response.data?.params;
+      const intent = response.data?.intent;
 
       let aiResponseText = aiText;
       let isSchemeSearch = false;
       let schemeName = "";
+      let isPortfolio = false;
+      let isTopPerformers = false;
 
       try {
-        const jsonStr = aiText.replace(/```json\n?|```/g, "").trim();
-        const parsedData = JSON.parse(jsonStr);
+        const parsedData = aiParams;
 
-        aiResponseText = parsedData.message || "Processed your request.";
+        aiResponseText = aiText || "Processed your request.";
 
-        if (parsedData.intent === "search_scheme" && parsedData.params?.scheme_name) {
+        if (intent === "search_scheme" && parsedData?.scheme_name) {
           isSchemeSearch = true;
-          schemeName = parsedData.params.scheme_name;
+          schemeName = parsedData.scheme_name;
+        }
+
+        if (intent === "portfolio" || intent === "portfolio_review") {
+          isPortfolio = true;
+        }
+
+        if (intent === "top_performers") {
+          isTopPerformers = true;
         }
       } catch (err) {
         console.log("Response is not JSON format", err);
@@ -96,6 +131,8 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
         {
           role: assistant,
           text: aiResponseText,
+          ...(isPortfolio ? { portfolioData: true } : {}),
+          ...(isTopPerformers ? { topPerformersData: true } : {}),
         },
       ]);
 
@@ -103,12 +140,13 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
         try {
           const schemeList = await fetchSchemeList(schemeName);
           if (schemeList && schemeList.length > 0) {
-            const schemesText = schemeList.map((s: any) => `• ${s.scheme_name}`).join('\n');
-            setMessages((prev) => [
+            console.log("schemeList", schemeList);
+            setMessages((prev: any) => [
               ...prev,
               {
                 role: assistant,
-                text: `Here are the top results for "${schemeName}":\n${schemesText}`,
+                text: `Here are the top results for "${schemeName}":`,
+                schemeOptions: schemeList,
               },
             ]);
           } else {
@@ -146,6 +184,14 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
 
     setLoading(false);
   };
+  const handleRefreshChat = () => {
+    setMessages([
+      {
+        role: assistant,
+        text: initialPrompt,
+      },
+    ]);
+  }
 
   return (
     <Modal
@@ -155,18 +201,43 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
       size="lg"
       contentClassName="border-0 rounded-4 overflow-hidden shadow-lg"
     >
-      <Modal.Header closeButton>
-        <div className="d-flex align-items-center">
-          <img
-            src={logo}
-            alt="logo"
-            width={100}
-            className="me-2"
-          />
+      <Modal.Header closeButton={false}>
+        <div className="d-flex justify-content-between align-items-center w-100">
+          {/* Left Side */}
+          <div className="d-flex align-items-center">
+            <img
+              src={logo}
+              alt="logo"
+              width={35}
+              className="me-2"
+            />
 
-          <div>
-            {/* <small className="text-success fs12px">Online</small> */}
-            {/* <h5 className="">AI</h5> */}
+            <div className="d-flex flex-column">
+              <h6 className="text-black mb-0 mt-1">Prodigy AI</h6>
+              {loading ? (
+                <small className="text-warning fs12px">Thinking...</small>
+
+              ) : <small className="text-success fs12px">Online</small>}
+            </div>
+          </div>
+
+          {/* Right Side */}
+          <div className="d-flex align-items-center gap-3">
+            <ArrowClockwise
+              size={22}
+              role="button"
+              className="text-secondary"
+              onClick={handleRefreshChat}
+              title="New Chat"
+            />
+
+            <Button
+              variant="link"
+              className="p-0 border-0 text-dark shadow-none"
+              onClick={() => setShow(false)}
+            >
+              <X size={26} />
+            </Button>
           </div>
         </div>
       </Modal.Header>
@@ -182,11 +253,10 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
           <div
             className="flex-grow-1 p-2 overflow-auto bg-light"
           >
-          <SchemeList/>
             {messages.map((msg, index) => (
               <div
                 key={index}
-                className={`mb-3 ${msg.role === user    
+                className={`mb-3 ${msg.role === user
                   ? "text-end"
                   : "text-start"
                   }`}
@@ -194,15 +264,33 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
                 <div
                   className={`d-inline-block p-2 rounded-3 ${msg.role === user
                     ? "logobg_color text-white"
-                    : "bg-white shadow-sm border"
+                    : msg.portfolioData || msg.topPerformersData ? "bg-light border-0 shadow-none" : "bg-white shadow-sm border"
                     }`}
                   style={{
-                    maxWidth: "80%",
+                    maxWidth: msg.schemeOptions || msg.portfolioData || msg.topPerformersData ? "95%" : "80%",
                     whiteSpace: "pre-wrap",
                     lineHeight: "1.4",
+                    width: msg.schemeOptions || msg.portfolioData || msg.topPerformersData ? "95%" : undefined,
+                    padding: msg.portfolioData || msg.topPerformersData ? "0" : undefined,
+                    background: msg.portfolioData || msg.topPerformersData ? "transparent" : undefined,
                   }}
                 >
-                  {msg.text}
+                  {!msg.portfolioData && !msg.topPerformersData && msg.text}
+                  {msg.portfolioData && (
+                    <Portfolio />
+                  )}
+                  {msg.topPerformersData && (
+                    <div style={{ width: "100%", textAlign: "left" }}>
+                      <p style={{ color: "#374151", margin: "0 0 12px 12px", whiteSpace: "pre-wrap" }}>{msg.text}</p>
+                      <TopPerformers />
+                    </div>
+                  )}
+                  {msg.schemeOptions && msg.schemeOptions.length > 0 && (
+                    <div className="mt-2">
+                      <SchemeList schemes={msg.schemeOptions} />
+                    </div>
+                  )}
+
                 </div>
               </div>
             ))}

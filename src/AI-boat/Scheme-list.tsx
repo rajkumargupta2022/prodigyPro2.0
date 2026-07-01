@@ -1,29 +1,53 @@
+import React from "react";
 import { ChevronRight } from "react-bootstrap-icons";
-import { imageUrl } from "../services/utils/urls";
+import { searchKeys } from "../pages/data-interfaces/explore";
 
-const SchemeList = ({ schemes = [] }) => {
+
+
+interface Props {
+  schemes: searchKeys[];
+  onSelect?: (scheme: searchKeys) => void;
+}
+
+const SchemeList: React.FC<Props> = ({ schemes, onSelect }) => {
+  if (!schemes || schemes.length === 0) return null;
+
   return (
-    <div className="row col-9 bg-white px-4 my-2 rounded form_shadow" key={1}>
-      <div className="row borderColor py-2 crPointer">
-        <div className="round col-11">
+    <div className="wrapper">
+      {schemes.map((scheme, index) => (
+        <div
+          key={index}
 
-          <img
-            src={`${imageUrl + 400015}.png`}
-            className="rounded"
-            height={30}
-            width={30}
-            alt=""
-          />
-          <small className="mx-2">Nippom india small cap fund</small>
+          className="scheme-card scheme-list-card"
+          onClick={() => onSelect?.(scheme)}
+        >
+          {/* Icon badge */}
+          <div className="icon-badge">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="22"
+              height="22"
+              fill="#3B5BDB"
+              viewBox="0 0 16 16"
+            >
+              <path d="M2 10h12v1H2v-1zm1-3h10v1H3V7zm5-5 6 3H2L8 2z" />
+              <path d="M1 11h14v1H1v-1zm0 2h14v1H1v-1z" />
+            </svg>
+          </div>
+
+          {/* Scheme name */}
+          <span className="scheme-name">{scheme.scheme_name}</span>
+
+          {/* Chevron */}
+          <ChevronRight className="" />
         </div>
-        <div className="col-1 adjustText pb-2 crPointer text-end" >
-          <ChevronRight />
-        </div>
-        
-      </div>
-      
+      ))}
+
+
     </div>
   );
 };
+
+
 
 export default SchemeList;

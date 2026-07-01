@@ -6,26 +6,6 @@ import { topPerformersRes } from "../pages/data-interfaces/transact";
 
 
 //tools***************************************
-export const aiTask = async (obj:any) => {
-  switch (obj.action) {
-    case "search":
-     fetchSchemeList(obj.name)
-      break;
-
-    case 2:
-      // fetchCategoryList()
-      fetchAssetTypeList()
-      fetchTopPerformers()
-      break;
-
-    case 3:
-      console.log("Wednesday");
-      break;
-
-    default:
-      console.log("Invalid day");
-  }
-};
 
 
 

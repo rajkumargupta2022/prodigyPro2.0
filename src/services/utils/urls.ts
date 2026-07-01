@@ -187,4 +187,10 @@ export enum endPoints {
    getKycUpdate="ucc/get-kyc-update",
    getUccUpdate="ucc/get-ucc-update",
 
+   /* =========================
+      AI
+   ========================== */
+   aiChat="ai/chat"
+
+
 }
