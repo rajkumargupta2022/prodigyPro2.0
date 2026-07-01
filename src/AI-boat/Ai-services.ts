@@ -1,11 +1,58 @@
 import axios from "axios";
 import { endPoints } from "../services/utils/urls";
-import { assetTypeListResponse, categoryListResponse, searchRes } from "../pages/data-interfaces/explore";
+import { assetTypeListResponse, categoryListResponse, searchKeys, searchRes } from "../pages/data-interfaces/explore";
 import { getRequestSimple, postRequest, postRequestSimple } from "../services/Api/HandleApi";
 import { topPerformersRes } from "../pages/data-interfaces/transact";
+import { investKeys } from "../pages/data-interfaces/ai";
 
 
 //tools***************************************
+
+//intent handling===================
+export interface IntentFollowUp {
+  text: string;
+  schemeOptions?: searchKeys[];
+}
+
+export interface IntentActionResult {
+  portfolioData?: boolean;
+  topPerformersData?: boolean;
+  followUp?: IntentFollowUp;
+}
+
+export const handleAIIntent = async (
+  intent: string,
+  params: investKeys
+): Promise<IntentActionResult> => {
+  switch (intent) {
+    case "search_scheme": {
+      const schemeName = params?.scheme_name;
+      if (!schemeName) {
+        return {};
+      }
+      const schemeList = await fetchSchemeList(schemeName);
+      if (schemeList && schemeList.length > 0) {
+        return {
+          followUp: {
+            text: `Here are the top results for "${schemeName}":`,
+            schemeOptions: schemeList,
+          },
+        };
+      }
+      return { followUp: { text: `I couldn't find any schemes matching "${schemeName}".` } };
+    }
+
+    case "portfolio":
+    case "portfolio_review":
+      return { portfolioData: true };
+
+    case "top_performers":
+      return { topPerformersData: true };
+
+    default:
+      return {};
+  }
+};
 
 
 

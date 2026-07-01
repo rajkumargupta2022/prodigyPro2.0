@@ -5,7 +5,7 @@ import logo from "/title-icon.svg";
 import { ArrowClockwise, Send, X } from "react-bootstrap-icons";
 import { GoogleGenAI } from "@google/genai";
 import { initialPrompt, initialPrompt2 } from "./propts";
-import { fetchSchemeList } from "./Ai-services";
+import { handleAIIntent } from "./Ai-services";
 import SchemeList from "./Scheme-list";
 import Portfolio from "./Portfolio";
 import TopPerformers from "./Top-performers";
@@ -99,75 +99,27 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
       const aiParams = response.data?.params;
       const intent = response.data?.intent;
 
-      let aiResponseText = aiText;
-      let isSchemeSearch = false;
-      let schemeName = "";
-      let isPortfolio = false;
-      let isTopPerformers = false;
-
-      try {
-        const parsedData = aiParams;
-
-        aiResponseText = aiText || "Processed your request.";
-
-        if (intent === "search_scheme" && parsedData?.scheme_name) {
-          isSchemeSearch = true;
-          schemeName = parsedData.scheme_name;
-        }
-
-        if (intent === "portfolio" || intent === "portfolio_review") {
-          isPortfolio = true;
-        }
-
-        if (intent === "top_performers") {
-          isTopPerformers = true;
-        }
-      } catch (err) {
-        console.log("Response is not JSON format", err);
-      }
+      const intentResult = await handleAIIntent(intent, aiParams);
 
       setMessages((prev) => [
         ...prev,
         {
           role: assistant,
-          text: aiResponseText,
-          ...(isPortfolio ? { portfolioData: true } : {}),
-          ...(isTopPerformers ? { topPerformersData: true } : {}),
+          text: aiText,
+          ...(intentResult.portfolioData ? { portfolioData: true } : {}),
+          ...(intentResult.topPerformersData ? { topPerformersData: true } : {}),
         },
       ]);
 
-      if (isSchemeSearch) {
-        try {
-          const schemeList = await fetchSchemeList(schemeName);
-          if (schemeList && schemeList.length > 0) {
-            console.log("schemeList", schemeList);
-            setMessages((prev: any) => [
-              ...prev,
-              {
-                role: assistant,
-                text: `Here are the top results for "${schemeName}":`,
-                schemeOptions: schemeList,
-              },
-            ]);
-          } else {
-            setMessages((prev) => [
-              ...prev,
-              {
-                role: assistant,
-                text: `I couldn't find any schemes matching "${schemeName}".`,
-              },
-            ]);
-          }
-        } catch (err) {
-          console.error(err);
-          setMessages((prev) => [
-            ...prev,
-            {
-              role: assistant,
-              text: `An error occurred while fetching the scheme list.`,
-            },
-          ]);
-        }
+      if (intentResult.followUp) {
+        setMessages((prev) => [
+          ...prev,
+          {
+            role: assistant,
+            text: intentResult.followUp!.text,
+            ...(intentResult.followUp!.schemeOptions ? { schemeOptions: intentResult.followUp!.schemeOptions } : {}),
+          },
+        ]);
       }
 
     } catch (error) {
