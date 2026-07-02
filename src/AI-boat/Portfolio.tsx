@@ -168,8 +168,9 @@ const Portfolio: React.FC = () => {
             <div style={styles.statDivider} />
             <div style={styles.statItem}>
               <span style={styles.statLabel}>CAGR</span>
-              <span style={{ ...styles.statValue, color: "#16a34a", fontWeight: 600 }}>
-                +{cagr}%
+              <span style={{ ...styles.statValue, color: Number(cagr) >= 0 ? "#16a34a" : "#dc2626", fontWeight: 600 }}>
+                {Number(cagr) >= 0 ? "+" : ""}
+                {cagr}%
               </span>
             </div>
           </div>
