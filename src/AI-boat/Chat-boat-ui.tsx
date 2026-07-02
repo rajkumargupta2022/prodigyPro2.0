@@ -246,8 +246,15 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
     const purchaseAllowed = !!detail.purchaseAllowed;
 
     let transactionType = prefill?.transactionType;
-    if (transactionType === "SIP" && !sipAllowed) transactionType = undefined;
-    if (transactionType === "PURCHASE" && !purchaseAllowed) transactionType = undefined;
+    let mismatchNote: string | null = null;
+    if (transactionType === "SIP" && !sipAllowed) {
+      transactionType = undefined;
+      mismatchNote = `Sorry, **${detail.scheme}** doesn't support SIP investments.`;
+    }
+    if (transactionType === "PURCHASE" && !purchaseAllowed) {
+      transactionType = undefined;
+      mismatchNote = `Sorry, **${detail.scheme}** doesn't support one-time (lumpsum) investments.`;
+    }
     if (!transactionType) {
       if (sipAllowed && !purchaseAllowed) transactionType = "SIP";
       else if (purchaseAllowed && !sipAllowed) transactionType = "PURCHASE";
@@ -277,6 +284,18 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
       ]);
       setInvestData(null);
       return;
+    }
+
+    if (mismatchNote) {
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: assistant,
+          text: transactionType
+            ? `${mismatchNote} We'll proceed with ${transactionType === "SIP" ? "a monthly SIP" : "a one-time investment"} instead — let us know if you'd like a different fund.`
+            : `${mismatchNote} Please choose a different investment type below.`,
+        },
+      ]);
     }
 
     if (data.transactionType) {
@@ -425,11 +444,13 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
     const result = await submitInvestTransaction(investData);
     setLoading(false);
 
+    const allPassed = result.success && result.results.length > 0 && result.results.every((r) => r.reg_status);
+
     setMessages((prev) => [
       ...prev,
       {
         role: assistant,
-        text: result.success
+        text: allPassed
           ? "🎉 Your investment has been placed successfully! You can track it in the Orders section."
           : "Something went wrong while placing your investment. Please try again.",
         investResult: { ...result, transactionType },
