@@ -9,8 +9,10 @@ import {
   fetchRiskDurationOptions,
   RiskDurationOptions,
   InvestData,
+  InvestPrefill,
   TransactionTypeChoice,
   fetchSchemeDetails,
+  fetchSchemeList,
   fetchInvestFolios,
   fetchInvestMandates,
   submitInvestTransaction,
@@ -93,6 +95,8 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
 
   const [investData, setInvestData] = useState<InvestData | null>(null);
   const [awaitingAmount, setAwaitingAmount] = useState(false);
+  const [awaitingSchemeQuery, setAwaitingSchemeQuery] = useState(false);
+  const [pendingInvestPrefill, setPendingInvestPrefill] = useState<InvestPrefill | null>(null);
 
   const chatEndRef = useRef<HTMLDivElement>(null);
 
@@ -113,6 +117,8 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
     setPendingRisk(null);
     setInvestData(null);
     setAwaitingAmount(false);
+    setAwaitingSchemeQuery(false);
+    setPendingInvestPrefill(null);
   };
 
   useEffect(() => {
@@ -162,7 +168,7 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
   //invest flow=====================================================
   const startInvestFlow = async (
     scheme: searchKeys,
-    prefill?: { transactionType?: TransactionTypeChoice; amount?: number }
+    prefill?: InvestPrefill | null
   ) => {
     setLoading(true);
     const detail = await fetchSchemeDetails(scheme.accord_scheme_code);
@@ -377,6 +383,39 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
       return;
     }
 
+    if (awaitingSchemeQuery) {
+      setAwaitingSchemeQuery(false);
+      setMessages((prev) => [...prev, { role: user, text: userText }]);
+      setLoading(true);
+      const schemeList = await fetchSchemeList(userText);
+      setLoading(false);
+
+      if (!schemeList || schemeList.length === 0) {
+        setMessages((prev) => [
+          ...prev,
+          { role: assistant, text: `I couldn't find any schemes matching "${userText}". Please try another name.` },
+        ]);
+        setAwaitingSchemeQuery(true);
+        return;
+      }
+
+      if (schemeList.length === 1) {
+        const prefill = pendingInvestPrefill;
+        setPendingInvestPrefill(null);
+        await startInvestFlow(schemeList[0], prefill);
+      } else {
+        setMessages((prev) => [
+          ...prev,
+          {
+            role: assistant,
+            text: `Here are the top results for "${userText}". Select one to proceed with your investment:`,
+            schemeOptions: schemeList,
+          },
+        ]);
+      }
+      return;
+    }
+
     const userMessage: Message = {
       role: user,
       text: userText,
@@ -421,13 +460,21 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
             ...(intentResult.followUp!.schemeOptions ? { schemeOptions: intentResult.followUp!.schemeOptions } : {}),
           },
         ]);
+        setPendingInvestPrefill(intentResult.followUp!.investPrefill ?? null);
       }
 
       if (intentResult.investFlow) {
-        await startInvestFlow(intentResult.investFlow.scheme, {
-          transactionType: intentResult.investFlow.transactionType,
-          amount: intentResult.investFlow.amount,
-        });
+        const { scheme, ...prefill } = intentResult.investFlow;
+        await startInvestFlow(scheme, prefill);
+      }
+
+      if (intentResult.askInvestScheme) {
+        setMessages((prev) => [
+          ...prev,
+          { role: assistant, text: "Sure! Which scheme or AMC would you like to invest in?" },
+        ]);
+        setPendingInvestPrefill(intentResult.askInvestScheme);
+        setAwaitingSchemeQuery(true);
       }
 
     } catch (error) {
@@ -597,7 +644,14 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
                   )}
                   {msg.schemeOptions && msg.schemeOptions.length > 0 && (
                     <div className="mt-2">
-                      <SchemeList schemes={msg.schemeOptions} onSelect={(scheme) => startInvestFlow(scheme)} />
+                      <SchemeList
+                        schemes={msg.schemeOptions}
+                        onSelect={(scheme) => {
+                          const prefill = pendingInvestPrefill;
+                          setPendingInvestPrefill(null);
+                          startInvestFlow(scheme, prefill);
+                        }}
+                      />
                     </div>
                   )}
 

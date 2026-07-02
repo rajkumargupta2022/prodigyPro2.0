@@ -1,7 +1,7 @@
 import { endPoints } from "../services/utils/urls";
 import { durationKeys, riskDurationRes, riskKeys, searchKeys, searchRes } from "../pages/data-interfaces/explore";
 import { getRequestSimple, postRequest, postRequestSimple } from "../services/Api/HandleApi";
-import { bankMandateKeys, bankMandateResponse, foliosKeys, foliosResponse, schemeDeatilDataKeys, schemeDetailType, sipPurchaseRedemptionKey } from "../pages/data-interfaces/transact";
+import { bankMandateKeys, bankMandateResponse, foliosKeys, foliosResponse, schemeDeatilDataKeys, schemeDetailType, sipPurchaseRedemptionKey, sipPurchaseRedemptionResponse } from "../pages/data-interfaces/transact";
 import { investKeys } from "../pages/data-interfaces/ai";
 import { nfoLiveRes } from "../pages/data-interfaces/nfo";
 import { fetchAdminUser } from "../services/user/adminUser";
@@ -13,17 +13,21 @@ import { finalTransaction } from "../services/utils/transactionApi";
 //tools***************************************
 
 //intent handling===================
+export type TransactionTypeChoice = "SIP" | "PURCHASE";
+
+export interface InvestPrefill {
+  transactionType?: TransactionTypeChoice;
+  amount?: number;
+}
+
 export interface IntentFollowUp {
   text: string;
   schemeOptions?: searchKeys[];
+  investPrefill?: InvestPrefill;
 }
 
-export type TransactionTypeChoice = "SIP" | "PURCHASE";
-
-export interface InvestFlowStart {
+export interface InvestFlowStart extends InvestPrefill {
   scheme: searchKeys;
-  transactionType?: TransactionTypeChoice;
-  amount?: number;
 }
 
 export interface IntentActionResult {
@@ -33,6 +37,7 @@ export interface IntentActionResult {
   startRecommendFlow?: boolean;
   followUp?: IntentFollowUp;
   investFlow?: InvestFlowStart;
+  askInvestScheme?: InvestPrefill;
 }
 const hasRecommendedKeyword = (text:string) => {
   const regex = /\b(recomended fund|recommended scheme|nfo(?:'s|s)?)\b/i;
@@ -74,9 +79,10 @@ export const handleAIIntent = async (
             : params?.transaction_type === "SIP" || params?.transaction_type === "PURCHASE"
               ? params.transaction_type
               : undefined;
+      const prefill: InvestPrefill = { transactionType, amount: params?.amount ?? undefined };
 
       if (!schemeName) {
-        return { followUp: { text: "Sure! Which scheme or AMC would you like to invest in?" } };
+        return { askInvestScheme: prefill };
       }
 
       const schemeList = await fetchSchemeList(schemeName);
@@ -85,13 +91,14 @@ export const handleAIIntent = async (
       }
 
       if (schemeList.length === 1) {
-        return { investFlow: { scheme: schemeList[0], transactionType, amount: params?.amount ?? undefined } };
+        return { investFlow: { scheme: schemeList[0], ...prefill } };
       }
 
       return {
         followUp: {
           text: `Here are the top results for "${schemeName}". Select one to proceed with your investment:`,
           schemeOptions: schemeList,
+          investPrefill: prefill,
         },
       };
     }
@@ -292,14 +299,14 @@ export const fetchSchemeList = async (name: string) => {
     };
 
     let capturedData: sipPurchaseRedemptionKey[] = [];
-    const res = await finalTransaction(
+    const res = (await finalTransaction(
       [schemePayload],
       isSip ? keys.sip : keys.purchase,
       (d) => {
         capturedData = d ?? [];
       },
       false
-    );
+    )) as sipPurchaseRedemptionResponse | undefined;
 
     if (res?.success) {
       return { success: true, results: capturedData };
