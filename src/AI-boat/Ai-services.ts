@@ -1,6 +1,6 @@
 import axios from "axios";
 import { endPoints } from "../services/utils/urls";
-import { assetTypeListResponse, categoryListResponse, searchKeys, searchRes } from "../pages/data-interfaces/explore";
+import { assetTypeListResponse, categoryListResponse, durationKeys, riskDurationRes, riskKeys, searchKeys, searchRes } from "../pages/data-interfaces/explore";
 import { getRequestSimple, postRequest, postRequestSimple } from "../services/Api/HandleApi";
 import { schemeDeatilDataKeys, topPerformersRes } from "../pages/data-interfaces/transact";
 import { investKeys } from "../pages/data-interfaces/ai";
@@ -19,6 +19,7 @@ export interface IntentActionResult {
   portfolioData?: boolean;
   topPerformersData?: boolean;
   nfoLiveData?: boolean;
+  startRecommendFlow?: boolean;
   followUp?: IntentFollowUp;
 }
 
@@ -54,6 +55,9 @@ export const handleAIIntent = async (
     case "nfo_live":
       return { nfoLiveData: true };
 
+    case "recommend_funds":
+      return { startRecommendFlow: true };
+
     default:
       return {};
   }
@@ -82,6 +86,53 @@ export const fetchSchemeList = async (name: string) => {
     }
   }
 
+  //recommended funds***********************************************
+
+  export interface RiskDurationOptions {
+    dataRisk: riskKeys[];
+    dataDuration: durationKeys[];
+  }
+
+  const riskDurationFallback: RiskDurationOptions = {
+    dataRisk: [
+      { risk: 1, Constellation: "Conservative" },
+      { risk: 2, Constellation: "Moderate" },
+      { risk: 3, Constellation: "Aggressive" },
+    ],
+    dataDuration: [
+      { duration: "1 Year", durationValues: 1 },
+      { duration: "2 Year", durationValues: 2 },
+      { duration: "3 Year", durationValues: 3 },
+      { duration: "4 Years", durationValues: 4 },
+      { duration: "5 Years", durationValues: 5 },
+    ],
+  };
+
+  export const fetchRiskDurationOptions = async (): Promise<RiskDurationOptions> => {
+    try {
+      const res = await getRequestSimple<riskDurationRes>(endPoints.getRightSchemeDurationRisk)
+      if (res.success && res.dataRisk?.length > 0 && res.dataDuration?.length > 0) {
+        return { dataRisk: res.dataRisk, dataDuration: res.dataDuration };
+      }
+      return riskDurationFallback;
+    } catch (err) {
+      console.log(err);
+      return riskDurationFallback;
+    }
+  }
+
+  export const fetchRecommendedSchemes = async (risk: number, duration: number): Promise<schemeDeatilDataKeys[]> => {
+    try {
+      const reqBody = { risk, duration };
+      const res = await postRequestSimple<any>(endPoints.getRecommendedSchemes, reqBody);
+      const data: schemeDeatilDataKeys[] = res?.data ?? [];
+      return data.filter((item) => item.nseProductCode);
+    } catch (err) {
+      console.log(err);
+      return [];
+    }
+  }
+
   //nfo live***********************************************
 
   export const fetchLiveNfoSchemes = async (): Promise<schemeDeatilDataKeys[]> => {
@@ -101,50 +152,6 @@ export const fetchSchemeList = async (name: string) => {
     }
   }
 
-  //top performers***********************************************
 
-   const fetchCategoryList = async (data: number) => {
-      try {
-        const res = await getRequestSimple<categoryListResponse>(endPoints.getCategoryTypesList + "?asset_code=" + data)
-        if (res.data) {
-          console.log(res.data)
-        }
-      } catch (err) {
-        console.log(err);
-      }
-    }
-  
-    const fetchAssetTypeList = async () => {
-      try {
-        const res = await getRequestSimple<assetTypeListResponse>(endPoints.getAssetTypesList)
-        if (res.data) {
-          console.log(res.data)
-        }
-      } catch (err) {
-      }
-    }
-  const fetchTopPerformers = async () => {
-      try {
-        const requestBody = {
-          filter_by_year: 3,
-          page: 1,
-          amc_code: "amcCode",
-          classcode: "classCode",
-          asset_code: "assetCode",
-          risk_code:  null
-        };
-  
-        const res = await postRequestSimple<topPerformersRes>(endPoints.getTopPerformers, requestBody);
-  
-        if (res.data) {
-         console.log(res.data)
-        }
-      } catch (err) {
-       console.log(err);
-      } 
-    }
-
-
-    //portfoloio performance***********************************************
     
       

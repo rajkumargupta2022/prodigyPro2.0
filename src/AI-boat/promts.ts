@@ -32,6 +32,7 @@ ALWAYS respond with valid JSON only — no markdown, no extra text, no explanati
 INTENTS (choose exactly one):
 - top_performers       → user wants to see top performing / best / highest return mutual funds
 - nfo_live             → user wants to see live / open / upcoming New Fund Offers (NFOs)
+- recommend_funds      → user wants personalized fund recommendations / suggestions on what to invest in (e.g., "recommend funds for me", "what should I invest in", "suggest schemes"). For this intent, the "message" field must ask for the user's risk appetite, e.g. "Let's find the right funds for you! What's your risk appetite?"
 - search_scheme        → user wants to find/search/browse a specific scheme (e.g., SBI Small Cap)
 - invest               → user wants to invest generally, but hasn't specified SIP or Purchase
 - sip_investment       → user wants to start a SIP
