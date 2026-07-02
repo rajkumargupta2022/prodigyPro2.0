@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Spinner } from "react-bootstrap";
 import { ArrowUpCircleFill, ArrowDownCircleFill, Stars } from "react-bootstrap-icons";
 import { useAdminUser } from "../context/AdminContext";
 import { endPoints } from "../services/utils/urls";
@@ -29,6 +30,7 @@ const Portfolio: React.FC = () => {
   const navigate = useNavigate();
   const [summary, setSummary] = useState<portfolioSummaryKeys | null>(null);
   const [aiInsight, setAiInsight] = useState<string | null>(null);
+  const [insightLoading, setInsightLoading] = useState(false);
 
   // Determine which tabs are available
   const myTab = familySnapShotData.find((d) => d.myPortfolio === true);
@@ -61,14 +63,21 @@ const Portfolio: React.FC = () => {
     fetchSummary();
   }, []);
   const getAIInsight = async (data: portfolioSummaryKeys) => {
-    const reqBody = {
-      type: "insight",
-      portfolio_context: `Current Value: ${data.total},Invested: ${familySnapShotData[0]?.Totalpurchase},Gain/Loss: ${familySnapShotData[0]?.Gainloss},CAGR: ${familySnapShotData[0]?.Finalcagr},Portfolio Switch: ${data.performance_summary.find((s) => s.name === "Switch")?.currentValue ?? 0},Satisfactory Performance: ${data.performance_summary.find((s) => s.name === "Satisfactory Performance")?.currentValue ?? 0},Under Watch: ${data.performance_summary.find((s) => s.name === "Under Watch")?.currentValue ?? 0}`,
-    }
-    const token = localStorage.getItem("token")
-    const response = await axios.post<AiInsightResponse>(import.meta.env.VITE_GEMINI_API_URL + endPoints.aiChat, reqBody, { headers: { Authorization: `Bearer ${token}` } });
-    if (response.data.insight) {
-      setAiInsight(response.data.insight);
+    setInsightLoading(true);
+    try {
+      const reqBody = {
+        type: "insight",
+        portfolio_context: `Current Value: ${data.total},Invested: ${familySnapShotData[0]?.Totalpurchase},Gain/Loss: ${familySnapShotData[0]?.Gainloss},CAGR: ${familySnapShotData[0]?.Finalcagr},Portfolio Switch: ${data.performance_summary.find((s) => s.name === "Switch")?.currentValue ?? 0},Satisfactory Performance: ${data.performance_summary.find((s) => s.name === "Satisfactory Performance")?.currentValue ?? 0},Under Watch: ${data.performance_summary.find((s) => s.name === "Under Watch")?.currentValue ?? 0}`,
+      }
+      const token = localStorage.getItem("token")
+      const response = await axios.post<AiInsightResponse>(import.meta.env.VITE_GEMINI_API_URL + endPoints.aiChat, reqBody, { headers: { Authorization: `Bearer ${token}` } });
+      if (response.data.insight) {
+        setAiInsight(response.data.insight);
+      }
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setInsightLoading(false);
     }
   }
 
@@ -235,7 +244,7 @@ const Portfolio: React.FC = () => {
         </div>
 
         {/* ── AI Insight ── */}
-        {aiInsight && (
+        {(insightLoading || aiInsight) && (
           <div style={styles.insightSection}>
             <div style={styles.insightHeader}>
               <div style={styles.insightIcon}>
@@ -243,7 +252,14 @@ const Portfolio: React.FC = () => {
               </div>
               <span style={styles.insightTitle}>AI Insight</span>
             </div>
-            <p style={styles.insightText}>{aiInsight}</p>
+            {insightLoading ? (
+              <div style={styles.insightLoadingRow}>
+                <Spinner animation="border" size="sm" style={{ color: "#3B5BDB" }} />
+                <span style={styles.insightLoadingText}>Generating insight...</span>
+              </div>
+            ) : (
+              <p style={styles.insightText}>{aiInsight}</p>
+            )}
           </div>
         )}
 
@@ -449,6 +465,15 @@ const styles: Record<string, React.CSSProperties> = {
     color: "#374151",
     lineHeight: 1.6,
     margin: 0,
+  },
+  insightLoadingRow: {
+    display: "flex",
+    alignItems: "center",
+    gap: 8,
+  },
+  insightLoadingText: {
+    fontSize: 13,
+    color: "#374151",
   },
   linkBtn: {
     background: "none",
