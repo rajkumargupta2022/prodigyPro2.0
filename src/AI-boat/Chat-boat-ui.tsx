@@ -23,6 +23,7 @@ import SchemeDetail from "./Scheme-detail";
 import InvestFolioList from "./Invest-folio-list";
 import InvestMandateList from "./Invest-mandate-list";
 import InvestSummary from "./Invest-summary";
+import InvestResult from "./Invest-result";
 import Portfolio from "./Portfolio";
 import TopPerformers from "./Top-performers";
 import NfoLive from "./Nfo-live";
@@ -49,7 +50,7 @@ interface Message {
   folioOptions?: foliosKeys[]
   mandateOptions?: bankMandateKeys[]
   investSummary?: InvestData
-  investResult?: { success: boolean; results: sipPurchaseRedemptionKey[] }
+  investResult?: { success: boolean; results: sipPurchaseRedemptionKey[]; transactionType?: TransactionTypeChoice }
   portfolioData?: any
   topPerformersData?: boolean
   nfoLiveData?: boolean
@@ -330,7 +331,8 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
 
   const handleConfirmInvest = async () => {
     if (!investData) return;
-    setMessages((prev) => [...prev, { role: user, text: "Confirm" }]);
+    const transactionType = investData.transactionType;
+    setMessages((prev) => [...prev, { role: user, text: "Yes, confirm" }]);
     setLoading(true);
     const result = await submitInvestTransaction(investData);
     setLoading(false);
@@ -340,9 +342,9 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
       {
         role: assistant,
         text: result.success
-          ? "Your investment has been placed successfully!"
+          ? "🎉 Your investment has been placed successfully! You can track it in the Orders section."
           : "Something went wrong while placing your investment. Please try again.",
-        investResult: result,
+        investResult: { ...result, transactionType },
       },
     ]);
     setInvestData(null);
@@ -634,12 +636,11 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
                   {msg.investResult && (
                     <div style={{ width: "100%", textAlign: "left" }}>
                       <p style={{ color: "#374151", margin: "0 0 12px 12px", whiteSpace: "pre-wrap" }}>{renderMessageText(msg.text)}</p>
-                      {msg.investResult.results.map((r, i) => (
-                        <div key={i} className="bg-white rounded-3 shadow-sm border p-2 mb-1 fs14px">
-                          {r.reg_status ? "✅" : "❌"} <strong>{r.schemeName}</strong> — ₹{r.amount}{" "}
-                          {r.reg_status ? `(Ref: ${r.reg_id})` : `(${r.reg_remark})`}
-                        </div>
-                      ))}
+                      <InvestResult
+                        success={msg.investResult.success}
+                        results={msg.investResult.results}
+                        transactionType={msg.investResult.transactionType}
+                      />
                     </div>
                   )}
                   {msg.schemeOptions && msg.schemeOptions.length > 0 && (
