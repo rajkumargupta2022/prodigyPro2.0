@@ -1,10 +1,13 @@
-import axios from "axios";
 import { endPoints } from "../services/utils/urls";
-import { assetTypeListResponse, categoryListResponse, durationKeys, riskDurationRes, riskKeys, searchKeys, searchRes } from "../pages/data-interfaces/explore";
+import { durationKeys, riskDurationRes, riskKeys, searchKeys, searchRes } from "../pages/data-interfaces/explore";
 import { getRequestSimple, postRequest, postRequestSimple } from "../services/Api/HandleApi";
-import { schemeDeatilDataKeys, topPerformersRes } from "../pages/data-interfaces/transact";
+import { bankMandateKeys, bankMandateResponse, foliosKeys, foliosResponse, schemeDeatilDataKeys, schemeDetailType, sipPurchaseRedemptionKey } from "../pages/data-interfaces/transact";
 import { investKeys } from "../pages/data-interfaces/ai";
 import { nfoLiveRes } from "../pages/data-interfaces/nfo";
+import { fetchAdminUser } from "../services/user/adminUser";
+import { keys } from "../services/utils/keys";
+import { daysAdded } from "../services/dates/dateFormater";
+import { finalTransaction } from "../services/utils/transactionApi";
 
 
 //tools***************************************
@@ -15,17 +18,22 @@ export interface IntentFollowUp {
   schemeOptions?: searchKeys[];
 }
 
+export type TransactionTypeChoice = "SIP" | "PURCHASE";
+
+export interface InvestFlowStart {
+  scheme: searchKeys;
+  transactionType?: TransactionTypeChoice;
+  amount?: number;
+}
+
 export interface IntentActionResult {
   portfolioData?: boolean;
   topPerformersData?: boolean;
   nfoLiveData?: boolean;
   startRecommendFlow?: boolean;
   followUp?: IntentFollowUp;
+  investFlow?: InvestFlowStart;
 }
-const hasNFOKeyword = (text:string) => {
-  const regex = /\b(new fund|new scheme|nfo(?:'s|s)?)\b/i;
-  return regex.test(text);
-};
 const hasRecommendedKeyword = (text:string) => {
   const regex = /\b(recomended fund|recommended scheme|nfo(?:'s|s)?)\b/i;
   return regex.test(text);
@@ -52,6 +60,40 @@ export const handleAIIntent = async (
         };
       }
       return { followUp: { text: `I couldn't find any schemes matching "${schemeName}".` } };
+    }
+
+    case "invest":
+    case "sip_investment":
+    case "purchase_investment": {
+      const schemeName = params?.scheme_name;
+      const transactionType: TransactionTypeChoice | undefined =
+        intent === "sip_investment"
+          ? "SIP"
+          : intent === "purchase_investment"
+            ? "PURCHASE"
+            : params?.transaction_type === "SIP" || params?.transaction_type === "PURCHASE"
+              ? params.transaction_type
+              : undefined;
+
+      if (!schemeName) {
+        return { followUp: { text: "Sure! Which scheme or AMC would you like to invest in?" } };
+      }
+
+      const schemeList = await fetchSchemeList(schemeName);
+      if (!schemeList || schemeList.length === 0) {
+        return { followUp: { text: `I couldn't find any schemes matching "${schemeName}".` } };
+      }
+
+      if (schemeList.length === 1) {
+        return { investFlow: { scheme: schemeList[0], transactionType, amount: params?.amount ?? undefined } };
+      }
+
+      return {
+        followUp: {
+          text: `Here are the top results for "${schemeName}". Select one to proceed with your investment:`,
+          schemeOptions: schemeList,
+        },
+      };
     }
 
     case "portfolio":
@@ -164,6 +206,103 @@ export const fetchSchemeList = async (name: string) => {
     }
   }
 
+  //invest flow***********************************************
 
-    
-      
+  export const ordinalSuffix = (n: number): string => {
+    const rem100 = n % 100;
+    if (rem100 >= 11 && rem100 <= 13) return `${n}th`;
+    switch (n % 10) {
+      case 1: return `${n}st`;
+      case 2: return `${n}nd`;
+      case 3: return `${n}rd`;
+      default: return `${n}th`;
+    }
+  }
+
+  export interface InvestData {
+    scheme: schemeDeatilDataKeys;
+    transactionType?: TransactionTypeChoice;
+    amount?: number;
+    sipDate?: number;
+    folio?: foliosKeys;
+    isNewFolio?: boolean;
+    mandate?: bankMandateKeys;
+  }
+
+  export const fetchSchemeDetails = async (accordSchemeCode: number): Promise<schemeDeatilDataKeys | null> => {
+    try {
+      const res = await postRequest<schemeDetailType>(endPoints.getSchemeDetails, { productcode: accordSchemeCode });
+      return res?.data?.[0] ?? null;
+    } catch (err) {
+      console.log(err);
+      return null;
+    }
+  }
+
+  export const fetchInvestFolios = async (accordSchemeCode: number): Promise<foliosKeys[]> => {
+    try {
+      const adminUser = fetchAdminUser();
+      if (!adminUser?.ucc) return [];
+      const res = await postRequest<foliosResponse>(endPoints.getSchemeFolios, {
+        ucc: adminUser.ucc,
+        product_code: accordSchemeCode,
+      });
+      return res?.data ?? [];
+    } catch (err) {
+      console.log(err);
+      return [];
+    }
+  }
+
+  export const fetchInvestMandates = async (requiredAmount: number): Promise<bankMandateKeys[]> => {
+    try {
+      const adminUser = fetchAdminUser();
+      if (!adminUser?.ucc) return [];
+      const res = await postRequest<bankMandateResponse>(endPoints.getMandateList, { ucc: adminUser.ucc });
+      const today = new Date();
+      return (res?.mandates ?? []).filter(
+        (mandate) => Number(mandate.amount) >= requiredAmount && new Date(mandate.to_date) >= today
+      );
+    } catch (err) {
+      console.log(err);
+      return [];
+    }
+  }
+
+  export const submitInvestTransaction = async (
+    data: InvestData
+  ): Promise<{ success: boolean; results: sipPurchaseRedemptionKey[] }> => {
+    const adminUser = fetchAdminUser();
+    if (!adminUser?.ucc) return { success: false, results: [] };
+
+    const isSip = data.transactionType === "SIP";
+    const schemePayload: schemeDeatilDataKeys = {
+      ...data.scheme,
+      amount: data.amount,
+      selectedFolio: data.folio ?? ({} as foliosKeys),
+      ...(isSip
+        ? {
+            start_date: daysAdded(7, data.sipDate ? [data.sipDate] : []),
+            from_date: data.mandate?.from_date?.replace("T", " ").replace("Z", ""),
+            to_date: data.mandate?.to_date?.replace("T", " ").replace("Z", ""),
+            mandateId: data.mandate?.umrn_no,
+            firstSIPToday: true,
+          }
+        : {}),
+    };
+
+    let capturedData: sipPurchaseRedemptionKey[] = [];
+    const res = await finalTransaction(
+      [schemePayload],
+      isSip ? keys.sip : keys.purchase,
+      (d) => {
+        capturedData = d ?? [];
+      },
+      false
+    );
+
+    if (res?.success) {
+      return { success: true, results: capturedData };
+    }
+    return { success: false, results: [] };
+  }

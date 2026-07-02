@@ -3,17 +3,30 @@ import React, { useState, useRef, useEffect } from "react";
 import { Modal, Form, Button, Spinner } from "react-bootstrap";
 import logo from "/title-icon.svg";
 import { ArrowClockwise, Send, X } from "react-bootstrap-icons";
-import { GoogleGenAI } from "@google/genai";
-import { initialPrompt, initialPrompt2 } from "./promts";
-import { handleAIIntent, fetchRiskDurationOptions, RiskDurationOptions } from "./Ai-services";
+import { initialPrompt } from "./promts";
+import {
+  handleAIIntent,
+  fetchRiskDurationOptions,
+  RiskDurationOptions,
+  InvestData,
+  TransactionTypeChoice,
+  fetchSchemeDetails,
+  fetchInvestFolios,
+  fetchInvestMandates,
+  submitInvestTransaction,
+  ordinalSuffix,
+} from "./Ai-services";
 import SchemeList from "./Scheme-list";
+import SchemeDetail from "./Scheme-detail";
+import InvestFolioList from "./Invest-folio-list";
+import InvestMandateList from "./Invest-mandate-list";
+import InvestSummary from "./Invest-summary";
 import Portfolio from "./Portfolio";
 import TopPerformers from "./Top-performers";
 import NfoLive from "./Nfo-live";
 import RecommendedFunds from "./Recommended-funds";
-import { foliosKeys, schemeDeatilDataKeys } from "../pages/data-interfaces/transact";
+import { foliosKeys, bankMandateKeys, schemeDeatilDataKeys, sipPurchaseRedemptionKey } from "../pages/data-interfaces/transact";
 import { searchKeys, durationKeys, riskKeys } from "../pages/data-interfaces/explore";
-import { mandateKeys } from "../pages/data-interfaces/bank-and-mandate";
 import axios from "axios";
 import { aiChatResponse } from "../pages/data-interfaces/ai";
 import { endPoints } from "../services/utils/urls";
@@ -31,21 +44,19 @@ interface Message {
   text: string;
   schemeOptions?: searchKeys[];
   schemeDetails?: schemeDeatilDataKeys
-  investmentResult?: any
   folioOptions?: foliosKeys[]
-  mandateOptions?: mandateKeys[]
+  mandateOptions?: bankMandateKeys[]
+  investSummary?: InvestData
+  investResult?: { success: boolean; results: sipPurchaseRedemptionKey[] }
   portfolioData?: any
   topPerformersData?: boolean
   nfoLiveData?: boolean
   recommendedFundsData?: boolean
   recommendRisk?: number
   recommendDuration?: number
-  profileOptions?: any
-  recommendedSchemes?: schemeDeatilDataKeys[]
-  showSupportButton?: boolean
 }
 
-type QuickReplyStage = "risk" | "horizon" | null;
+type QuickReplyStage = "risk" | "horizon" | "transactionType" | "sipDate" | null;
 
 const riskEmoji = (risk: number): string => (risk === 1 ? "🛡️" : risk === 3 ? "🚀" : "⚖️");
 
@@ -80,6 +91,9 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
   const [riskDurationOptions, setRiskDurationOptions] = useState<RiskDurationOptions | null>(null);
   const [pendingRisk, setPendingRisk] = useState<number | null>(null);
 
+  const [investData, setInvestData] = useState<InvestData | null>(null);
+  const [awaitingAmount, setAwaitingAmount] = useState(false);
+
   const chatEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -88,16 +102,22 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
     });
   }, [messages]);
 
+  const resetChat = () => {
+    setMessages([
+      {
+        role: assistant,
+        text: initialPrompt,
+      },
+    ]);
+    setQuickReplyStage(null);
+    setPendingRisk(null);
+    setInvestData(null);
+    setAwaitingAmount(false);
+  };
+
   useEffect(() => {
     if (!show) {
-      setMessages([
-        {
-          role: assistant,
-          text: initialPrompt,
-        },
-      ]);
-      setQuickReplyStage(null);
-      setPendingRisk(null);
+      resetChat();
     }
   }, [show])
 
@@ -139,6 +159,189 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
     setPendingRisk(null);
   };
 
+  //invest flow=====================================================
+  const startInvestFlow = async (
+    scheme: searchKeys,
+    prefill?: { transactionType?: TransactionTypeChoice; amount?: number }
+  ) => {
+    setLoading(true);
+    const detail = await fetchSchemeDetails(scheme.accord_scheme_code);
+    setLoading(false);
+
+    if (!detail) {
+      setMessages((prev) => [
+        ...prev,
+        { role: assistant, text: "Sorry, I couldn't fetch the details for this scheme." },
+      ]);
+      return;
+    }
+
+    const data: InvestData = { scheme: detail, transactionType: prefill?.transactionType, amount: prefill?.amount };
+    setInvestData(data);
+
+    setMessages((prev) => [
+      ...prev,
+      {
+        role: assistant,
+        text: `Here are the details for ${detail.scheme}. Let me know if you'd like to invest or have any questions!`,
+        schemeDetails: detail,
+      },
+    ]);
+
+    if (data.transactionType) {
+      await proceedAfterTransactionType(data);
+    } else {
+      setMessages((prev) => [
+        ...prev,
+        { role: assistant, text: "Would you prefer a one-time investment or a monthly SIP?" },
+      ]);
+      setQuickReplyStage("transactionType");
+    }
+  };
+
+  const proceedAfterTransactionType = async (data: InvestData) => {
+    setInvestData(data);
+    if (!data.amount) {
+      const minRequired = data.transactionType === "SIP" ? data.scheme.minSIPAmt : data.scheme.minLumSumAmt;
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: assistant,
+          text: `What amount would you like to invest? (Minimum ₹${minRequired ?? 0})`,
+        },
+      ]);
+      setAwaitingAmount(true);
+      return;
+    }
+    await proceedAfterAmount(data);
+  };
+
+  const handleTransactionTypeSelect = async (type: TransactionTypeChoice) => {
+    setQuickReplyStage(null);
+    const label = type === "SIP" ? "Monthly SIP" : "One-time (Lumpsum)";
+    setMessages((prev) => [...prev, { role: user, text: label }]);
+    if (!investData) return;
+    await proceedAfterTransactionType({ ...investData, transactionType: type });
+  };
+
+  const proceedAfterAmount = async (data: InvestData) => {
+    setInvestData(data);
+    if (data.transactionType === "SIP" && data.scheme.sipDateList && data.scheme.sipDateList.length > 0) {
+      setMessages((prev) => [
+        ...prev,
+        { role: assistant, text: "Which date of the month would you like for your SIP installments?" },
+      ]);
+      setQuickReplyStage("sipDate");
+      return;
+    }
+    await proceedToFolioSelection(data);
+  };
+
+  const handleSipDateSelect = async (day: number) => {
+    setQuickReplyStage(null);
+    setMessages((prev) => [...prev, { role: user, text: ordinalSuffix(day) }]);
+    if (!investData) return;
+    const data: InvestData = { ...investData, sipDate: day };
+    await proceedToFolioSelection(data);
+  };
+
+  const proceedToFolioSelection = async (data: InvestData) => {
+    setInvestData(data);
+    setLoading(true);
+    const folios = await fetchInvestFolios(data.scheme.accordSchemeCode);
+    setLoading(false);
+
+    setMessages((prev) => [
+      ...prev,
+      {
+        role: assistant,
+        text: folios.length > 0
+          ? "I found existing folios for this fund. Would you like to add to an existing one or start a new folio?"
+          : "You don't have an existing folio for this fund yet. Let's create a new one.",
+        folioOptions: folios,
+      },
+    ]);
+  };
+
+  const handleFolioSelect = async (folio: foliosKeys | null) => {
+    setMessages((prev) => [
+      ...prev,
+      { role: user, text: folio ? `Folio ${folio.folio_number}` : "Create New Folio" },
+    ]);
+    if (!investData) return;
+    const data: InvestData = { ...investData, folio: folio ?? undefined, isNewFolio: !folio };
+
+    if (data.transactionType === "SIP") {
+      await proceedToMandateSelection(data);
+    } else {
+      showInvestSummary(data);
+    }
+  };
+
+  const proceedToMandateSelection = async (data: InvestData) => {
+    setInvestData(data);
+    setLoading(true);
+    const mandates = await fetchInvestMandates(data.amount ?? 0);
+    setLoading(false);
+
+    if (mandates.length === 0) {
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: assistant,
+          text: "You don't have an active bank mandate that covers this amount. Please create a mandate to continue with the SIP.",
+        },
+      ]);
+      setInvestData(null);
+      return;
+    }
+
+    setMessages((prev) => [
+      ...prev,
+      { role: assistant, text: "Please choose a bank mandate for your SIP:", mandateOptions: mandates },
+    ]);
+  };
+
+  const handleMandateSelect = (mandate: bankMandateKeys) => {
+    setMessages((prev) => [...prev, { role: user, text: `${mandate.bank_name} (${mandate.umrn_no})` }]);
+    if (!investData) return;
+    showInvestSummary({ ...investData, mandate });
+  };
+
+  const showInvestSummary = (data: InvestData) => {
+    setInvestData(data);
+    setMessages((prev) => [...prev, { role: assistant, text: "", investSummary: data }]);
+  };
+
+  const handleCancelInvest = () => {
+    setInvestData(null);
+    setMessages((prev) => [
+      ...prev,
+      { role: user, text: "Cancel" },
+      { role: assistant, text: "No problem! Let me know if you'd like to explore other investment options." },
+    ]);
+  };
+
+  const handleConfirmInvest = async () => {
+    if (!investData) return;
+    setMessages((prev) => [...prev, { role: user, text: "Confirm" }]);
+    setLoading(true);
+    const result = await submitInvestTransaction(investData);
+    setLoading(false);
+
+    setMessages((prev) => [
+      ...prev,
+      {
+        role: assistant,
+        text: result.success
+          ? "Your investment has been placed successfully!"
+          : "Something went wrong while placing your investment. Please try again.",
+        investResult: result,
+      },
+    ]);
+    setInvestData(null);
+  };
+
   const sendMessage = async (
     e?: React.FormEvent | React.MouseEvent
   ) => {
@@ -147,6 +350,32 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
     if (!input.trim() || loading) return;
 
     const userText = input;
+    setInput("");
+
+    if (awaitingAmount && investData) {
+      setAwaitingAmount(false);
+      setMessages((prev) => [...prev, { role: user, text: userText }]);
+
+      const parsedAmount = Number(userText.replace(/[^0-9.]/g, ""));
+      const minRequired = investData.transactionType === "SIP" ? investData.scheme.minSIPAmt : investData.scheme.minLumSumAmt;
+
+      if (!parsedAmount || parsedAmount <= 0) {
+        setMessages((prev) => [...prev, { role: assistant, text: "Please enter a valid amount." }]);
+        setAwaitingAmount(true);
+        return;
+      }
+      if (minRequired && parsedAmount < minRequired) {
+        setMessages((prev) => [
+          ...prev,
+          { role: assistant, text: `Minimum investment amount is ₹${minRequired}. Please enter a valid amount.` },
+        ]);
+        setAwaitingAmount(true);
+        return;
+      }
+
+      await proceedAfterAmount({ ...investData, amount: parsedAmount });
+      return;
+    }
 
     const userMessage: Message = {
       role: user,
@@ -154,7 +383,6 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
     };
 
     setMessages((prev) => [...prev, userMessage]);
-    setInput("");
     setLoading(true);
     setQuickReplyStage(null);
 
@@ -195,6 +423,13 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
         ]);
       }
 
+      if (intentResult.investFlow) {
+        await startInvestFlow(intentResult.investFlow.scheme, {
+          transactionType: intentResult.investFlow.transactionType,
+          amount: intentResult.investFlow.amount,
+        });
+      }
+
     } catch (error) {
       console.error(error);
 
@@ -210,14 +445,7 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
     setLoading(false);
   };
   const handleRefreshChat = () => {
-    setMessages([
-      {
-        role: assistant,
-        text: initialPrompt,
-      },
-    ]);
-    setQuickReplyStage(null);
-    setPendingRisk(null);
+    resetChat();
   }
 
   return (
@@ -280,7 +508,13 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
           <div
             className="flex-grow-1 p-2 overflow-auto bg-light"
           >
-            {messages.map((msg, index) => (
+            {messages.map((msg, index) => {
+              const isCardMessage = !!(
+                msg.portfolioData || msg.topPerformersData || msg.nfoLiveData || msg.recommendedFundsData ||
+                msg.schemeDetails || msg.folioOptions || msg.mandateOptions || msg.investSummary || msg.investResult
+              );
+
+              return (
               <div
                 key={index}
                 className={`mb-3 ${msg.role === user
@@ -291,18 +525,18 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
                 <div
                   className={`d-inline-block p-2 rounded-3 ${msg.role === user
                     ? "logobg_color text-white"
-                    : msg.portfolioData || msg.topPerformersData || msg.nfoLiveData || msg.recommendedFundsData ? "bg-light border-0 shadow-none" : "bg-white shadow-sm border"
+                    : isCardMessage ? "bg-light border-0 shadow-none" : "bg-white shadow-sm border"
                     }`}
                   style={{
-                    maxWidth: msg.schemeOptions || msg.portfolioData || msg.topPerformersData || msg.nfoLiveData || msg.recommendedFundsData ? "95%" : "80%",
+                    maxWidth: msg.schemeOptions || isCardMessage ? "95%" : "80%",
                     whiteSpace: "pre-wrap",
                     lineHeight: "1.4",
-                    width: msg.schemeOptions || msg.portfolioData || msg.topPerformersData || msg.nfoLiveData || msg.recommendedFundsData ? "95%" : undefined,
-                    padding: msg.portfolioData || msg.topPerformersData || msg.nfoLiveData || msg.recommendedFundsData ? "0" : undefined,
-                    background: msg.portfolioData || msg.topPerformersData || msg.nfoLiveData || msg.recommendedFundsData ? "transparent" : undefined,
+                    width: msg.schemeOptions || isCardMessage ? "95%" : undefined,
+                    padding: isCardMessage ? "0" : undefined,
+                    background: isCardMessage ? "transparent" : undefined,
                   }}
                 >
-                  {!msg.portfolioData && !msg.topPerformersData && !msg.nfoLiveData && !msg.recommendedFundsData && renderMessageText(msg.text)}
+                  {!isCardMessage && renderMessageText(msg.text)}
                   {msg.portfolioData && (
                     <Portfolio />
                   )}
@@ -324,15 +558,53 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
                       <RecommendedFunds risk={msg.recommendRisk} duration={msg.recommendDuration} />
                     </div>
                   )}
+                  {msg.schemeDetails && (
+                    <div style={{ width: "100%", textAlign: "left" }}>
+                      <p style={{ color: "#374151", margin: "0 0 12px 12px", whiteSpace: "pre-wrap" }}>{renderMessageText(msg.text)}</p>
+                      <SchemeDetail scheme={msg.schemeDetails} />
+                    </div>
+                  )}
+                  {msg.folioOptions && (
+                    <div style={{ width: "100%", textAlign: "left" }}>
+                      <p style={{ color: "#374151", margin: "0 0 12px 12px", whiteSpace: "pre-wrap" }}>{renderMessageText(msg.text)}</p>
+                      <InvestFolioList folios={msg.folioOptions} onSelect={handleFolioSelect} />
+                    </div>
+                  )}
+                  {msg.mandateOptions && (
+                    <div style={{ width: "100%", textAlign: "left" }}>
+                      <p style={{ color: "#374151", margin: "0 0 12px 12px", whiteSpace: "pre-wrap" }}>{renderMessageText(msg.text)}</p>
+                      <InvestMandateList mandates={msg.mandateOptions} onSelect={handleMandateSelect} />
+                    </div>
+                  )}
+                  {msg.investSummary && (
+                    <InvestSummary
+                      data={msg.investSummary}
+                      onCancel={handleCancelInvest}
+                      onConfirm={handleConfirmInvest}
+                      disabled={loading}
+                    />
+                  )}
+                  {msg.investResult && (
+                    <div style={{ width: "100%", textAlign: "left" }}>
+                      <p style={{ color: "#374151", margin: "0 0 12px 12px", whiteSpace: "pre-wrap" }}>{renderMessageText(msg.text)}</p>
+                      {msg.investResult.results.map((r, i) => (
+                        <div key={i} className="bg-white rounded-3 shadow-sm border p-2 mb-1 fs14px">
+                          {r.reg_status ? "✅" : "❌"} <strong>{r.schemeName}</strong> — ₹{r.amount}{" "}
+                          {r.reg_status ? `(Ref: ${r.reg_id})` : `(${r.reg_remark})`}
+                        </div>
+                      ))}
+                    </div>
+                  )}
                   {msg.schemeOptions && msg.schemeOptions.length > 0 && (
                     <div className="mt-2">
-                      <SchemeList schemes={msg.schemeOptions} />
+                      <SchemeList schemes={msg.schemeOptions} onSelect={(scheme) => startInvestFlow(scheme)} />
                     </div>
                   )}
 
                 </div>
               </div>
-            ))}
+              );
+            })}
 
             {loading && (
               <div className="text-start mb-3">
@@ -371,6 +643,34 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
                   onClick={() => handleHorizonSelect(item)}
                 >
                   {item.duration}
+                </button>
+              ))}
+              {quickReplyStage === "transactionType" && (
+                <>
+                  <button
+                    type="button"
+                    style={styles.quickReplyPill}
+                    onClick={() => handleTransactionTypeSelect("PURCHASE")}
+                  >
+                    One-time (Lumpsum)
+                  </button>
+                  <button
+                    type="button"
+                    style={styles.quickReplyPill}
+                    onClick={() => handleTransactionTypeSelect("SIP")}
+                  >
+                    Monthly SIP
+                  </button>
+                </>
+              )}
+              {quickReplyStage === "sipDate" && (investData?.scheme.sipDateList ?? []).map((day, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  style={styles.quickReplyPill}
+                  onClick={() => handleSipDateSelect(day)}
+                >
+                  {ordinalSuffix(day)}
                 </button>
               ))}
             </div>
@@ -427,4 +727,3 @@ const styles: Record<string, React.CSSProperties> = {
 };
 
 export default ChatBoatUi;
-
