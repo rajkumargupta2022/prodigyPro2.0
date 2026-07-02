@@ -242,9 +242,20 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
       return;
     }
 
+    const sipAllowed = !!detail.sipAllowed;
+    const purchaseAllowed = !!detail.purchaseAllowed;
+
+    let transactionType = prefill?.transactionType;
+    if (transactionType === "SIP" && !sipAllowed) transactionType = undefined;
+    if (transactionType === "PURCHASE" && !purchaseAllowed) transactionType = undefined;
+    if (!transactionType) {
+      if (sipAllowed && !purchaseAllowed) transactionType = "SIP";
+      else if (purchaseAllowed && !sipAllowed) transactionType = "PURCHASE";
+    }
+
     const data: InvestData = {
       scheme: detail,
-      transactionType: prefill?.transactionType,
+      transactionType,
       amount: prefill?.amount,
       sipDate: prefill?.sipDate,
     };
@@ -258,6 +269,15 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
         schemeDetails: detail,
       },
     ]);
+
+    if (!sipAllowed && !purchaseAllowed) {
+      setMessages((prev) => [
+        ...prev,
+        { role: assistant, text: "Sorry, this scheme currently doesn't support SIP or one-time investments." },
+      ]);
+      setInvestData(null);
+      return;
+    }
 
     if (data.transactionType) {
       await proceedAfterTransactionType(data);
@@ -786,20 +806,24 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
               ))}
               {quickReplyStage === "transactionType" && (
                 <>
-                  <button
-                    type="button"
-                    style={styles.quickReplyPill}
-                    onClick={() => handleTransactionTypeSelect("PURCHASE")}
-                  >
-                    One-time (Lumpsum)
-                  </button>
-                  <button
-                    type="button"
-                    style={styles.quickReplyPill}
-                    onClick={() => handleTransactionTypeSelect("SIP")}
-                  >
-                    Monthly SIP
-                  </button>
+                  {investData?.scheme.purchaseAllowed && (
+                    <button
+                      type="button"
+                      style={styles.quickReplyPill}
+                      onClick={() => handleTransactionTypeSelect("PURCHASE")}
+                    >
+                      One-time (Lumpsum)
+                    </button>
+                  )}
+                  {investData?.scheme.sipAllowed && (
+                    <button
+                      type="button"
+                      style={styles.quickReplyPill}
+                      onClick={() => handleTransactionTypeSelect("SIP")}
+                    >
+                      Monthly SIP
+                    </button>
+                  )}
                 </>
               )}
               {quickReplyStage === "sipDate" && (investData?.scheme.sipDateList ?? []).map((day, i) => (
