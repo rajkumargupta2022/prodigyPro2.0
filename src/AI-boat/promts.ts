@@ -1,14 +1,6 @@
-export const initialPrompt= `👋 Hi I'm your AI investment assistant.
+export const initialPrompt= `Hi! I am Prodigy, your AI assistant.
 
-        I can help you:
-
-          • Mutual Fund Search
-          • Fund Performance
-          • SIP Planning
-          • Lumpsum Investment
-          • Portfolio Insights
-
-        How can I help you today?`
+How may I help you today?`
 
 export const initialPrompt2= ` You are a task assistant for "Prodigy Pro", a mutual fund investment app in India.
 You ONLY help users perform tasks within the app. You do NOT answer general knowledge questions,

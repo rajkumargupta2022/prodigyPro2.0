@@ -2,7 +2,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Modal, Form, Button, Spinner } from "react-bootstrap";
 import logo from "/title-icon.svg";
-import { ArrowClockwise, Send, X } from "react-bootstrap-icons";
+import { ArrowClockwise, Send, X, Search, ArrowRepeat, GraphUpArrow, PieChartFill, StarFill, PatchCheckFill } from "react-bootstrap-icons";
 import { initialPrompt } from "./promts";
 import {
   handleAIIntent,
@@ -78,6 +78,17 @@ const renderMessageText = (text: string) => {
       : <React.Fragment key={i}>{part}</React.Fragment>
   );
 };
+
+type QuickAction = "search" | "sip" | "top_performers" | "portfolio" | "nfo" | "recommended";
+
+const quickActions: { action: QuickAction; label: string; icon: React.ReactNode }[] = [
+  { action: "search", label: "Search a fund", icon: <Search size={15} /> },
+  { action: "sip", label: "Invest in SIP", icon: <ArrowRepeat size={15} /> },
+  { action: "top_performers", label: "Top performers", icon: <GraphUpArrow size={15} /> },
+  { action: "portfolio", label: "My portfolio", icon: <PieChartFill size={15} /> },
+  { action: "nfo", label: "Live NFOs", icon: <StarFill size={15} /> },
+  { action: "recommended", label: "Recommended Funds", icon: <PatchCheckFill size={15} /> },
+];
 
 const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
   const [input, setInput] = useState("");
@@ -166,6 +177,54 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
     setPendingRisk(null);
   };
 
+  const handleQuickAction = async (action: QuickAction, label: string) => {
+    setMessages((prev) => [...prev, { role: user, text: label }]);
+
+    switch (action) {
+      case "search":
+        setPendingInvestPrefill(null);
+        setAwaitingSchemeQuery(true);
+        setMessages((prev) => [
+          ...prev,
+          { role: assistant, text: "Sure! Which scheme or AMC would you like to search for?" },
+        ]);
+        break;
+      case "sip":
+        setPendingInvestPrefill({ transactionType: "SIP" });
+        setAwaitingSchemeQuery(true);
+        setMessages((prev) => [
+          ...prev,
+          { role: assistant, text: "Sure! Which scheme or AMC would you like to invest in?" },
+        ]);
+        break;
+      case "top_performers":
+        setMessages((prev) => [
+          ...prev,
+          { role: assistant, text: "Here are today's top performing funds:", topPerformersData: true },
+        ]);
+        break;
+      case "portfolio":
+        setMessages((prev) => [
+          ...prev,
+          { role: assistant, text: "Here's an overview of your portfolio:", portfolioData: true },
+        ]);
+        break;
+      case "nfo":
+        setMessages((prev) => [
+          ...prev,
+          { role: assistant, text: "Here are the live NFOs you can apply for:", nfoLiveData: true },
+        ]);
+        break;
+      case "recommended":
+        setMessages((prev) => [
+          ...prev,
+          { role: assistant, text: "Let's find the right funds for you! What's your risk appetite?" },
+        ]);
+        await startRecommendFundsFlow();
+        break;
+    }
+  };
+
   //invest flow=====================================================
   const startInvestFlow = async (
     scheme: searchKeys,
@@ -183,7 +242,12 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
       return;
     }
 
-    const data: InvestData = { scheme: detail, transactionType: prefill?.transactionType, amount: prefill?.amount };
+    const data: InvestData = {
+      scheme: detail,
+      transactionType: prefill?.transactionType,
+      amount: prefill?.amount,
+      sipDate: prefill?.sipDate,
+    };
     setInvestData(data);
 
     setMessages((prev) => [
@@ -234,6 +298,10 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
   const proceedAfterAmount = async (data: InvestData) => {
     setInvestData(data);
     if (data.transactionType === "SIP" && data.scheme.sipDateList && data.scheme.sipDateList.length > 0) {
+      if (data.sipDate && data.scheme.sipDateList.includes(data.sipDate)) {
+        await proceedToFolioSelection(data);
+        return;
+      }
       setMessages((prev) => [
         ...prev,
         { role: assistant, text: "Which date of the month would you like for your SIP installments?" },
@@ -661,6 +729,22 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
               );
             })}
 
+            {messages.length === 1 && !loading && (
+              <div style={styles.quickActionGrid}>
+                {quickActions.map((qa) => (
+                  <button
+                    key={qa.action}
+                    type="button"
+                    style={styles.quickActionBtn}
+                    onClick={() => handleQuickAction(qa.action, qa.label)}
+                  >
+                    <span style={styles.quickActionIcon}>{qa.icon}</span>
+                    {qa.label}
+                  </button>
+                ))}
+              </div>
+            )}
+
             {loading && (
               <div className="text-start mb-3">
                 <div className="bg-white border rounded-4 p-3 d-inline-block">
@@ -781,6 +865,34 @@ const styles: Record<string, React.CSSProperties> = {
     lineHeight: "normal",
     marginTop: 2,
     marginBottom: 2,
+  },
+  quickActionGrid: {
+    display: "flex",
+    flexWrap: "wrap",
+    gap: 10,
+    marginTop: 4,
+    marginBottom: 12,
+  },
+  quickActionBtn: {
+    display: "flex",
+    alignItems: "center",
+    gap: 8,
+    background: "#ffffff",
+    color: "#1f2937",
+    border: "1px solid #e5e7eb",
+    borderRadius: 24,
+    padding: "10px 16px",
+    fontSize: 13,
+    fontWeight: 600,
+    whiteSpace: "nowrap",
+    cursor: "pointer",
+    boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
+  },
+  quickActionIcon: {
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    color: "#3B5BDB",
   },
 };
 

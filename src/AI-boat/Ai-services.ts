@@ -18,6 +18,7 @@ export type TransactionTypeChoice = "SIP" | "PURCHASE";
 export interface InvestPrefill {
   transactionType?: TransactionTypeChoice;
   amount?: number;
+  sipDate?: number;
 }
 
 export interface IntentFollowUp {
@@ -79,7 +80,10 @@ export const handleAIIntent = async (
             : params?.transaction_type === "SIP" || params?.transaction_type === "PURCHASE"
               ? params.transaction_type
               : undefined;
-      const prefill: InvestPrefill = { transactionType, amount: params?.amount ?? undefined };
+      const sipDate = typeof params?.sip_date === "number" && params.sip_date >= 1 && params.sip_date <= 31
+        ? params.sip_date
+        : undefined;
+      const prefill: InvestPrefill = { transactionType, amount: params?.amount ?? undefined, sipDate };
 
       if (!schemeName) {
         return { askInvestScheme: prefill };
