@@ -52,7 +52,7 @@ const Portfolio: React.FC = () => {
         const res = await postRequestSimple<portfolioSummaryRes>(endPoints.getSchemePerformanceSummary, reqBody)
         if (res.success) {
           setSummary(res.data);
-          // getAIPrompt()
+          getAIInsight(res.data)
         }
       } catch (e) { }
     };
@@ -60,10 +60,10 @@ const Portfolio: React.FC = () => {
 
     fetchSummary();
   }, []);
-  const getAIPrompt = async (data: familyDataType) => {
+  const getAIInsight = async (data: portfolioSummaryKeys) => {
     const reqBody = {
       type: "insight",
-      portfolio_context: `Current Value: ${data.Totalmarketvalue},Invested: ${data.Totalpurchase},Gain/Loss: ${data.Gainloss},CAGR: ${data.Finalcagr},Day Change: ${data.Totaldayschange},Equity: ${data.equityPercentFinal},Debt: ${data.debtPercentFinal},Gold: ${data.goldPercentFinal}`
+      portfolio_context: `Current Value: ${data.total},Invested: ${familySnapShotData[0]?.Totalpurchase},Gain/Loss: ${familySnapShotData[0]?.Gainloss},CAGR: ${familySnapShotData[0]?.Finalcagr},Portfolio Switch: ${data.performance_summary.find((s) => s.name === "Switch")?.currentValue ?? 0},Satisfactory Performance: ${data.performance_summary.find((s) => s.name === "Satisfactory Performance")?.currentValue ?? 0},Under Watch: ${data.performance_summary.find((s) => s.name === "Under Watch")?.currentValue ?? 0}`,
     }
     const token = localStorage.getItem("token")
     const response = await axios.post<AiInsightResponse>(import.meta.env.VITE_GEMINI_API_URL + endPoints.aiChat, reqBody, { headers: { Authorization: `Bearer ${token}` } });
@@ -87,9 +87,7 @@ const Portfolio: React.FC = () => {
     return `₹${val.toLocaleString("en-IN")}`;
   };
 
-  const maxSummaryValue = summary?.performance_summary
-    ? Math.max(...summary.performance_summary.map((s) => s.currentValue), 1)
-    : 1;
+
 
   return (
     <div style={styles.outerWrap}>
@@ -177,12 +175,12 @@ const Portfolio: React.FC = () => {
           </div>
 
           {/* Asset Allocation */}
-          {(equity + debt + gold) > 0 && (
+          {/* {(equity + debt + gold) > 0 && (
             <>
               <div style={styles.divider} />
               <p style={{ ...styles.label, marginBottom: 8 }}>Asset Allocation</p>
 
-              {/* Segmented bar */}
+            
               <div style={styles.allocBar}>
                 {equity > 0 && <div style={{ ...styles.allocSegment, width: `${equity}%`, background: "#3B5BDB" }} />}
                 {debt > 0 && <div style={{ ...styles.allocSegment, width: `${debt}%`, background: "#F59E0B" }} />}
@@ -207,7 +205,7 @@ const Portfolio: React.FC = () => {
                 )}
               </div>
             </>
-          )}
+          )} */}
 
           {/* ── Fund Performance Summary (only for My Portfolio) ── */}
           {activeTab === "my" && summary && summary.performance_summary?.length > 0 && (
