@@ -22,13 +22,22 @@ export interface IntentActionResult {
   startRecommendFlow?: boolean;
   followUp?: IntentFollowUp;
 }
-
+const hasNFOKeyword = (text:string) => {
+  const regex = /\b(new fund|new scheme|nfo(?:'s|s)?)\b/i;
+  return regex.test(text);
+};
+const hasRecommendedKeyword = (text:string) => {
+  const regex = /\b(recomended fund|recommended scheme|nfo(?:'s|s)?)\b/i;
+  return regex.test(text);
+};
 export const handleAIIntent = async (
   intent: string,
-  params: investKeys
+  params: investKeys,
+  userText: string
 ): Promise<IntentActionResult> => {
   switch (intent) {
     case "search_scheme": {
+      
       const schemeName = params?.scheme_name;
       if (!schemeName) {
         return {};
@@ -50,6 +59,9 @@ export const handleAIIntent = async (
       return { portfolioData: true };
 
     case "top_performers":
+        if (hasRecommendedKeyword(userText)) {
+           return { startRecommendFlow: true };
+        }
       return { topPerformersData: true };
 
     case "nfo_live":

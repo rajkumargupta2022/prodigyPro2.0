@@ -167,7 +167,7 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
       const aiParams = response.data?.params;
       const intent = response.data?.intent;
 
-      const intentResult = await handleAIIntent(intent, aiParams);
+      const intentResult = await handleAIIntent(intent, aiParams,userText);
 
       setMessages((prev) => [
         ...prev,
