@@ -678,7 +678,7 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
 
           {/* Quick Reply Pills */}
           {quickReplyStage && (
-            <div className="d-flex overflow-auto bg-white px-3 pt-2" style={{ gap: 8 }}>
+            <div className="d-flex overflow-auto bg-white px-3 py-3" style={{ gap: 8, flexShrink: 0 }}>
               {quickReplyStage === "risk" && (riskDurationOptions?.dataRisk ?? []).map((item, i) => (
                 <button
                   key={i}
@@ -772,11 +772,14 @@ const styles: Record<string, React.CSSProperties> = {
     color: "#3B5BDB",
     border: "1px solid #c7d2fe",
     borderRadius: 20,
-    padding: "8px 18px",
+    padding: "10px 18px",
     fontSize: 14,
     fontWeight: 600,
     whiteSpace: "nowrap",
     flexShrink: 0,
+    lineHeight: "normal",
+    marginTop: 2,
+    marginBottom: 2,
   },
 };
 
