@@ -614,23 +614,24 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
       size="lg"
       contentClassName="border-0 rounded-4 overflow-hidden shadow-lg"
     >
-      <Modal.Header closeButton={false}>
+      <Modal.Header closeButton={false} className="chat-header">
         <div className="d-flex justify-content-between align-items-center w-100">
           {/* Left Side */}
           <div className="d-flex align-items-center">
-            <img
-              src={logo}
-              alt="logo"
-              width={35}
-              className="me-2"
-            />
+            <div className="chat-header-avatar me-2">
+              <img
+                src={logo}
+                alt="logo"
+                width={22}
+              />
+            </div>
 
             <div className="d-flex flex-column">
-              <h6 className="text-black mb-0 mt-1">Prodigy AI</h6>
-              {loading ? (
-                <small className="text-warning fs12px">Thinking...</small>
-
-              ) : <small className="text-success fs12px">Online</small>}
+              <h6 className="text-black mb-0">Prodigy AI</h6>
+              <small className={`chat-status-row ${loading ? "thinking" : "online"}`}>
+                <span className="chat-status-dot" />
+                {loading ? "Thinking..." : "Online"}
+              </small>
             </div>
           </div>
 
@@ -639,7 +640,7 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
             <ArrowClockwise
               size={22}
               role="button"
-              className="text-secondary"
+              className="text-secondary chat-header-icon-btn"
               onClick={handleRefreshChat}
               title="New Chat"
             />
@@ -663,7 +664,30 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
           <div
             className="flex-grow-1 p-2 overflow-auto bg-light"
           >
-            {messages.map((msg, index) => {
+            {messages.length === 1 && !loading && (
+              <div className="chat-empty-state">
+                <div className="chat-empty-avatar">
+                  <img src={logo} alt="Prodigy AI" width={30} />
+                </div>
+                <p className="chat-empty-greeting">{renderMessageText(messages[0].text)}</p>
+
+                <div className="chat-quick-action-grid">
+                  {quickActions.map((qa) => (
+                    <button
+                      key={qa.action}
+                      type="button"
+                      className="chat-quick-action-btn"
+                      onClick={() => handleQuickAction(qa.action, qa.label)}
+                    >
+                      <span className="chat-quick-action-icon">{qa.icon}</span>
+                      <span className="chat-quick-action-label">{qa.label}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {!(messages.length === 1 && !loading) && messages.map((msg, index) => {
               const isCardMessage = !!(
                 msg.portfolioData || msg.topPerformersData || msg.nfoLiveData || msg.recommendedFundsData ||
                 msg.schemeDetails || msg.folioOptions || msg.mandateOptions || msg.investSummary || msg.investResult
@@ -758,22 +782,6 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
               </div>
               );
             })}
-
-            {messages.length === 1 && !loading && (
-              <div className="chat-quick-action-grid">
-                {quickActions.map((qa) => (
-                  <button
-                    key={qa.action}
-                    type="button"
-                    className="chat-quick-action-btn"
-                    onClick={() => handleQuickAction(qa.action, qa.label)}
-                  >
-                    <span className="chat-quick-action-icon">{qa.icon}</span>
-                    {qa.label}
-                  </button>
-                ))}
-              </div>
-            )}
 
             {loading && (
               <div className="text-start mb-3">
