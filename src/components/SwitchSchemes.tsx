@@ -68,6 +68,7 @@ const SwitchSchemes: React.FC<SchemesProps> = ({
   const [previousDataLength, setPreviousDataLength] = useState(0);
   const [searchValue, setSearchValue] = useState<string>("")
   const [searchedList, setSearchedList] = useState<OptionType[]>([])
+  const [openMobilePanel, setOpenMobilePanel] = useState<"category" | "filter" | "return" | null>(null);
 
 
   // Calculate pagination values (client-side, across all fetched data)
@@ -402,36 +403,54 @@ const SwitchSchemes: React.FC<SchemesProps> = ({
             <div className="row prody_position_relative">
               {!from &&
                 <div className="col-4">
-                  <div className="Prodgymobile_filtering_dataa category_show_data">
+                  <div
+                    className={`Prodgymobile_filtering_dataa category_show_data ${openMobilePanel === "category" ? "active" : ""}`}
+                    onClick={() => setOpenMobilePanel((prev) => (prev === "category" ? null : "category"))}
+                  >
                     <span>
-                      Category <span><ChevronRight className="" size={18} /></span>
+                      Category <span><ChevronRight className={openMobilePanel === "category" ? "rotate-90" : ""} size={18} /></span>
                     </span>
-                    <div className="category_on_mobile">
-                      <Category handleFilter={handleFilter} isAvailable={isAvailable} categoryList={categoryList} assetTypeListData={assetTypeListData} />
-                    </div>
+                    {openMobilePanel === "category" && (
+                      <div className="category_on_mobile" onClick={(e) => e.stopPropagation()}>
+                        <Category handleFilter={handleFilter} isAvailable={isAvailable} categoryList={categoryList} assetTypeListData={assetTypeListData} />
+                      </div>
+                    )}
                   </div>
                 </div>}
               <div className="col-4">
-                <div className="Prodgymobile_filtering_dataa filters_show_mobile">
+                <div
+                  className={`Prodgymobile_filtering_dataa filters_show_mobile ${openMobilePanel === "filter" ? "active" : ""}`}
+                  onClick={() => setOpenMobilePanel((prev) => (prev === "filter" ? null : "filter"))}
+                >
                   <span>
-                    Filter <span><ChevronRight className="" size={18} /></span>
+                    Filter <span><ChevronRight className={openMobilePanel === "filter" ? "rotate-90" : ""} size={18} /></span>
                   </span>
-                  <div className="filters_on_mobile">
-                    <Filter handleFilter={handleFilter} isAvailable={isAvailable} riskValue={riskValue} setRiskValue={setRiskValue} />
-                  </div>
+                  {openMobilePanel === "filter" && (
+                    <div className="filters_on_mobile" onClick={(e) => e.stopPropagation()}>
+                      <Filter handleFilter={handleFilter} isAvailable={isAvailable} riskValue={riskValue} setRiskValue={setRiskValue} />
+                    </div>
+                  )}
                 </div>
               </div>
               <div className="col-4">
-                <div className="Prodgymobile_filtering_dataa float_right_set">
+                <div
+                  className={`Prodgymobile_filtering_dataa float_right_set ${openMobilePanel === "return" ? "active" : ""}`}
+                  onClick={() => setOpenMobilePanel((prev) => (prev === "return" ? null : "return"))}
+                >
                   <span className="">
-                    Return <span><ChevronRight className="" size={18} /></span>
+                    Return <span><ChevronRight className={openMobilePanel === "return" ? "rotate-90" : ""} size={18} /></span>
                   </span>
-                  <div className="return_on_mobile">
-                    <Returns shortByHandler={shortByHandler} shortValue={shortValue}/>
-                  </div>
+                  {openMobilePanel === "return" && (
+                    <div className="return_on_mobile" onClick={(e) => e.stopPropagation()}>
+                      <Returns shortByHandler={shortByHandler} shortValue={shortValue}/>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
+            {openMobilePanel && (
+              <div className="mobile-filter-backdrop" onClick={() => setOpenMobilePanel(null)} />
+            )}
           </div>
         </Row>
 
