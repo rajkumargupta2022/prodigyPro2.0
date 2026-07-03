@@ -657,10 +657,7 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
 
       <Modal.Body className="p-0">
         <div
-          className="d-flex flex-column"
-          style={{
-            height: "75vh",
-          }}
+          className="d-flex flex-column chat-modal-body-wrap"
         >
           {/* Chat Messages */}
           <div
@@ -681,56 +678,48 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
                   }`}
               >
                 <div
-                  className={`d-inline-block p-2 rounded-3 ${msg.role === user
+                  className={`chat-message-bubble d-inline-block p-2 rounded-3 ${msg.role === user
                     ? "logobg_color text-white"
                     : isCardMessage ? "bg-light border-0 shadow-none" : "bg-white shadow-sm border"
-                    }`}
-                  style={{
-                    maxWidth: msg.schemeOptions || isCardMessage ? "95%" : "80%",
-                    whiteSpace: "pre-wrap",
-                    lineHeight: "1.4",
-                    width: msg.schemeOptions || isCardMessage ? "95%" : undefined,
-                    padding: isCardMessage ? "0" : undefined,
-                    background: isCardMessage ? "transparent" : undefined,
-                  }}
+                    } ${msg.schemeOptions || isCardMessage ? "wide" : ""} ${isCardMessage ? "card" : ""}`}
                 >
                   {!isCardMessage && renderMessageText(msg.text)}
                   {msg.portfolioData && (
                     <Portfolio />
                   )}
                   {msg.topPerformersData && (
-                    <div style={{ width: "100%", textAlign: "left" }}>
-                      <p style={{ color: "#374151", margin: "0 0 12px 12px", whiteSpace: "pre-wrap" }}>{renderMessageText(msg.text)}</p>
+                    <div className="chat-card-wrapper">
+                      <p className="chat-card-message-text">{renderMessageText(msg.text)}</p>
                       <TopPerformers />
                     </div>
                   )}
                   {msg.nfoLiveData && (
-                    <div style={{ width: "100%", textAlign: "left" }}>
-                      <p style={{ color: "#374151", margin: "0 0 12px 12px", whiteSpace: "pre-wrap" }}>{renderMessageText(msg.text)}</p>
+                    <div className="chat-card-wrapper">
+                      <p className="chat-card-message-text">{renderMessageText(msg.text)}</p>
                       <NfoLive />
                     </div>
                   )}
                   {msg.recommendedFundsData && msg.recommendRisk !== undefined && msg.recommendDuration !== undefined && (
-                    <div style={{ width: "100%", textAlign: "left" }}>
-                      <p style={{ color: "#374151", margin: "0 0 12px 12px", whiteSpace: "pre-wrap" }}>{renderMessageText(msg.text)}</p>
+                    <div className="chat-card-wrapper">
+                      <p className="chat-card-message-text">{renderMessageText(msg.text)}</p>
                       <RecommendedFunds risk={msg.recommendRisk} duration={msg.recommendDuration} />
                     </div>
                   )}
                   {msg.schemeDetails && (
-                    <div style={{ width: "100%", textAlign: "left" }}>
-                      <p style={{ color: "#374151", margin: "0 0 12px 12px", whiteSpace: "pre-wrap" }}>{renderMessageText(msg.text)}</p>
+                    <div className="chat-card-wrapper">
+                      <p className="chat-card-message-text">{renderMessageText(msg.text)}</p>
                       <SchemeDetail scheme={msg.schemeDetails} />
                     </div>
                   )}
                   {msg.folioOptions && (
-                    <div style={{ width: "100%", textAlign: "left" }}>
-                      <p style={{ color: "#374151", margin: "0 0 12px 12px", whiteSpace: "pre-wrap" }}>{renderMessageText(msg.text)}</p>
+                    <div className="chat-card-wrapper">
+                      <p className="chat-card-message-text">{renderMessageText(msg.text)}</p>
                       <InvestFolioList folios={msg.folioOptions} onSelect={handleFolioSelect} />
                     </div>
                   )}
                   {msg.mandateOptions && (
-                    <div style={{ width: "100%", textAlign: "left" }}>
-                      <p style={{ color: "#374151", margin: "0 0 12px 12px", whiteSpace: "pre-wrap" }}>{renderMessageText(msg.text)}</p>
+                    <div className="chat-card-wrapper">
+                      <p className="chat-card-message-text">{renderMessageText(msg.text)}</p>
                       <InvestMandateList mandates={msg.mandateOptions} onSelect={handleMandateSelect} />
                     </div>
                   )}
@@ -743,8 +732,8 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
                     />
                   )}
                   {msg.investResult && (
-                    <div style={{ width: "100%", textAlign: "left" }}>
-                      <p style={{ color: "#374151", margin: "0 0 12px 12px", whiteSpace: "pre-wrap" }}>{renderMessageText(msg.text)}</p>
+                    <div className="chat-card-wrapper">
+                      <p className="chat-card-message-text">{renderMessageText(msg.text)}</p>
                       <InvestResult
                         success={msg.investResult.success}
                         results={msg.investResult.results}
@@ -771,15 +760,15 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
             })}
 
             {messages.length === 1 && !loading && (
-              <div style={styles.quickActionGrid}>
+              <div className="chat-quick-action-grid">
                 {quickActions.map((qa) => (
                   <button
                     key={qa.action}
                     type="button"
-                    style={styles.quickActionBtn}
+                    className="chat-quick-action-btn"
                     onClick={() => handleQuickAction(qa.action, qa.label)}
                   >
-                    <span style={styles.quickActionIcon}>{qa.icon}</span>
+                    <span className="chat-quick-action-icon">{qa.icon}</span>
                     {qa.label}
                   </button>
                 ))}
@@ -804,12 +793,12 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
 
           {/* Quick Reply Pills */}
           {quickReplyStage && (
-            <div className="d-flex overflow-auto bg-white px-3 py-3" style={{ gap: 8, flexShrink: 0 }}>
+            <div className="d-flex overflow-auto bg-white px-3 py-3 chat-quick-reply-row">
               {quickReplyStage === "risk" && (riskDurationOptions?.dataRisk ?? []).map((item, i) => (
                 <button
                   key={i}
                   type="button"
-                  style={styles.quickReplyPill}
+                  className="chat-quick-reply-pill"
                   onClick={() => handleRiskSelect(item)}
                 >
                   {item.Constellation} {riskEmoji(item.risk)}
@@ -819,7 +808,7 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
                 <button
                   key={i}
                   type="button"
-                  style={styles.quickReplyPill}
+                  className="chat-quick-reply-pill"
                   onClick={() => handleHorizonSelect(item)}
                 >
                   {item.duration}
@@ -830,7 +819,7 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
                   {investData?.scheme.purchaseAllowed && (
                     <button
                       type="button"
-                      style={styles.quickReplyPill}
+                      className="chat-quick-reply-pill"
                       onClick={() => handleTransactionTypeSelect("PURCHASE")}
                     >
                       One-time (Lumpsum)
@@ -839,7 +828,7 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
                   {investData?.scheme.sipAllowed && (
                     <button
                       type="button"
-                      style={styles.quickReplyPill}
+                      className="chat-quick-reply-pill"
                       onClick={() => handleTransactionTypeSelect("SIP")}
                     >
                       Monthly SIP
@@ -851,7 +840,7 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
                 <button
                   key={i}
                   type="button"
-                  style={styles.quickReplyPill}
+                  className="chat-quick-reply-pill"
                   onClick={() => handleSipDateSelect(day)}
                 >
                   {ordinalSuffix(day)}
@@ -864,10 +853,7 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
           <div className="border-top bg-white p-3">
             <Form onSubmit={sendMessage}>
               <div
-                className="d-flex align-items-center bg-light rounded-pill px-2"
-                style={{
-                  height: "60px",
-                }}
+                className="d-flex align-items-center bg-light rounded-pill px-2 chat-input-row"
               >
                 <Form.Control
                   value={input}
@@ -879,11 +865,7 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
                 <Button
                   type="submit"
                   disabled={loading}
-                  className="rounded-circle logobg_color no-hover"
-                  style={{
-                    width: "45px",
-                    height: "45px",
-                  }}
+                  className="rounded-circle logobg_color no-hover chat-send-btn"
                 >
                   <Send />
                 </Button>
@@ -894,51 +876,6 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
       </Modal.Body>
     </Modal>
   );
-};
-
-const styles: Record<string, React.CSSProperties> = {
-  quickReplyPill: {
-    background: "#e8ecff",
-    color: "#3B5BDB",
-    border: "1px solid #c7d2fe",
-    borderRadius: 20,
-    padding: "10px 18px",
-    fontSize: 14,
-    fontWeight: 600,
-    whiteSpace: "nowrap",
-    flexShrink: 0,
-    lineHeight: "normal",
-    marginTop: 2,
-    marginBottom: 2,
-  },
-  quickActionGrid: {
-    display: "flex",
-    flexWrap: "wrap",
-    gap: 10,
-    marginTop: 4,
-    marginBottom: 12,
-  },
-  quickActionBtn: {
-    display: "flex",
-    alignItems: "center",
-    gap: 8,
-    background: "#ffffff",
-    color: "#1f2937",
-    border: "1px solid #e5e7eb",
-    borderRadius: 24,
-    padding: "10px 16px",
-    fontSize: 13,
-    fontWeight: 600,
-    whiteSpace: "nowrap",
-    cursor: "pointer",
-    boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
-  },
-  quickActionIcon: {
-    display: "inline-flex",
-    alignItems: "center",
-    justifyContent: "center",
-    color: "#3B5BDB",
-  },
 };
 
 export default ChatBoatUi;

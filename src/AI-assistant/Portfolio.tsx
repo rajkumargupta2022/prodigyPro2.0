@@ -13,10 +13,10 @@ import { AiInsightResponse } from "../pages/data-interfaces/ai";
 
 
 
-const performanceColors: Record<string, string> = {
-  switch: "#EF4444",
-  satisfactory_performance: "#22C55E",
-  under_watch: "#F59E0B",
+const performanceClassMap: Record<string, string> = {
+  switch: "switch",
+  satisfactory_performance: "satisfactory",
+  under_watch: "watch",
 };
 
 const performanceLabelMap: Record<string, string> = {
@@ -86,9 +86,6 @@ const Portfolio: React.FC = () => {
   const gainLoss = activeSnapshot?.Gainloss ?? 0;
   const cagr = activeSnapshot?.Finalcagr ?? "0";
   const dayChange = activeSnapshot?.Totaldayschange ?? 0;
-  const equity = parseFloat(activeSnapshot?.equityPercentFinal ?? "0");
-  const debt = parseFloat(activeSnapshot?.debtPercentFinal ?? "0");
-  const gold = parseFloat(activeSnapshot?.goldPercentFinal ?? "0");
 
   const formatAmount = (val: number) => {
     if (val >= 100000) return `₹${(val / 100000).toFixed(2)}L`;
@@ -99,29 +96,19 @@ const Portfolio: React.FC = () => {
 
 
   return (
-    <div style={styles.outerWrap}>
+    <div className="portfolio-outer-wrap">
 
       {/* ── Tab Switcher ── */}
       {hasFamily && (
-        <div style={styles.tabBar}>
+        <div className="portfolio-tab-bar">
           <button
-            style={{
-              ...styles.tabBtn,
-              color: activeTab === "my" ? "#3B5BDB" : "#6b7280",
-              borderBottom: activeTab === "my" ? "2px solid #3B5BDB" : "2px solid transparent",
-              fontWeight: activeTab === "my" ? 700 : 500,
-            }}
+            className={`portfolio-tab-btn ${activeTab === "my" ? "active" : ""}`}
             onClick={() => setActiveTab("my")}
           >
             My Portfolio
           </button>
           <button
-            style={{
-              ...styles.tabBtn,
-              color: activeTab === "family" ? "#3B5BDB" : "#6b7280",
-              borderBottom: activeTab === "family" ? "2px solid #3B5BDB" : "2px solid transparent",
-              fontWeight: activeTab === "family" ? 700 : 500,
-            }}
+            className={`portfolio-tab-btn ${activeTab === "family" ? "active" : ""}`}
             onClick={() => setActiveTab("family")}
           >
             Family
@@ -130,111 +117,75 @@ const Portfolio: React.FC = () => {
       )}
 
       {/* ── Main Unified Card ── */}
-      <div style={styles.mainCard}>
+      <div className="portfolio-main-card">
 
         {/* Top White Section */}
-        <div style={styles.cardSection}>
+        <div className="portfolio-card-section">
           {/* Current Value */}
-          <p style={styles.label}>Current Value</p>
-          <h2 style={styles.bigAmount}>
+          <p className="portfolio-label">Current Value</p>
+          <h2 className="portfolio-big-amount">
             ₹{currentValue.toLocaleString("en-IN")}
           </h2>
 
           {/* Day change pill */}
-          <div style={{
-            ...styles.dayPill,
-            color: dayChange >= 0 ? "#16a34a" : "#dc2626",
-          }}>
+          <div className={`portfolio-day-pill ${dayChange >= 0 ? "positive" : "negative"}`}>
             {dayChange >= 0
               ? <ArrowUpCircleFill size={12} />
               : <ArrowDownCircleFill size={12} />}
-            <span style={{ marginLeft: 4 }}>
+            <span className="portfolio-day-pill-text">
               ₹{Math.abs(dayChange).toLocaleString("en-IN")} today
             </span>
           </div>
 
           {/* Divider */}
-          <div style={styles.divider} />
+          <div className="portfolio-divider" />
 
           {/* Stats row */}
-          <div style={styles.statsRow}>
-            <div style={styles.statItem}>
-              <span style={styles.statLabel}>Invested</span>
-              <span style={styles.statValue}>
+          <div className="portfolio-stats-row">
+            <div className="portfolio-stat-item">
+              <span className="portfolio-stat-label">Invested</span>
+              <span className="portfolio-stat-value">
                 ₹{invested >= 100000
                   ? `${(invested / 100000).toFixed(2)}L`
                   : invested.toLocaleString("en-IN")}
               </span>
             </div>
-            <div style={styles.statDivider} />
-            <div style={styles.statItem}>
-              <span style={styles.statLabel}>Gain / Loss</span>
-              <span style={{ ...styles.statValue, color: gainLoss >= 0 ? "#16a34a" : "#dc2626", fontWeight: 600 }}>
+            <div className="portfolio-stat-divider" />
+            <div className="portfolio-stat-item">
+              <span className="portfolio-stat-label">Gain / Loss</span>
+              <span className={`portfolio-stat-value emphasis ${gainLoss >= 0 ? "positive" : "negative"}`}>
                 {gainLoss >= 0 ? "+" : ""}
                 {formatAmount(gainLoss)}
               </span>
             </div>
-            <div style={styles.statDivider} />
-            <div style={styles.statItem}>
-              <span style={styles.statLabel}>CAGR</span>
-              <span style={{ ...styles.statValue, color: Number(cagr) >= 0 ? "#16a34a" : "#dc2626", fontWeight: 600 }}>
+            <div className="portfolio-stat-divider" />
+            <div className="portfolio-stat-item">
+              <span className="portfolio-stat-label">CAGR</span>
+              <span className={`portfolio-stat-value emphasis ${Number(cagr) >= 0 ? "positive" : "negative"}`}>
                 {Number(cagr) >= 0 ? "+" : ""}
                 {cagr}%
               </span>
             </div>
           </div>
 
-          {/* Asset Allocation */}
-          {/* {(equity + debt + gold) > 0 && (
-            <>
-              <div style={styles.divider} />
-              <p style={{ ...styles.label, marginBottom: 8 }}>Asset Allocation</p>
-
-            
-              <div style={styles.allocBar}>
-                {equity > 0 && <div style={{ ...styles.allocSegment, width: `${equity}%`, background: "#3B5BDB" }} />}
-                {debt > 0 && <div style={{ ...styles.allocSegment, width: `${debt}%`, background: "#F59E0B" }} />}
-                {gold > 0 && <div style={{ ...styles.allocSegment, width: `${gold}%`, background: "#EAB308" }} />}
-              </div>
-
-              <div style={styles.allocLegendRow}>
-                {equity > 0 && (
-                  <span style={styles.legendItem}>
-                    <span style={{ ...styles.dot, background: "#3B5BDB" }} /> Equity {equity.toFixed(1)}%
-                  </span>
-                )}
-                {debt > 0 && (
-                  <span style={styles.legendItem}>
-                    <span style={{ ...styles.dot, background: "#F59E0B" }} /> Debt {debt.toFixed(1)}%
-                  </span>
-                )}
-                {gold > 0 && (
-                  <span style={styles.legendItem}>
-                    <span style={{ ...styles.dot, background: "#EAB308" }} /> Gold {gold.toFixed(1)}%
-                  </span>
-                )}
-              </div>
-            </>
-          )} */}
-
           {/* ── Fund Performance Summary (only for My Portfolio) ── */}
           {activeTab === "my" && summary && summary.performance_summary?.length > 0 && (
             <>
-              <div style={styles.divider} />
-              <p style={styles.sectionTitle}>Fund Performance Summary</p>
+              <div className="portfolio-divider" />
+              <p className="portfolio-section-title">Fund Performance Summary</p>
               {summary.performance_summary.map((item: summaryInsideKeys, i: number) => {
                 const key = item.name?.toLowerCase().replace(/ /g, "_");
-                const barColor = performanceColors[key] ?? "#3B5BDB";
+                const barClass = performanceClassMap[key] ?? "default";
                 const label = performanceLabelMap[key] ?? item.name;
                 const fillPct = Math.min(100, (item.currentValue / summary?.total) * 100);
                 return (
-                  <div key={i} style={{ marginBottom: i < summary.performance_summary.length - 1 ? 18 : 0 }}>
-                    <div style={styles.perfRow}>
-                      <span style={styles.perfLabel}>{label} ({item.scheme_count})</span>
-                      <span style={styles.perfAmount}>{formatAmount(item.currentValue)}</span>
+                  <div key={i} className={`portfolio-perf-item ${i < summary.performance_summary.length - 1 ? "with-margin" : ""}`}>
+                    <div className="portfolio-perf-row">
+                      <span className="portfolio-perf-label">{label} ({item.scheme_count})</span>
+                      <span className="portfolio-perf-amount">{formatAmount(item.currentValue)}</span>
                     </div>
-                    <div style={styles.perfBarBg}>
-                      <div style={{ ...styles.perfBarFill, width: `${fillPct}%`, background: barColor }} />
+                    <div className="portfolio-perf-bar-bg">
+                      <div className={`portfolio-perf-bar-fill ${barClass}`} style={{ width: `${fillPct}%` }} />
                     </div>
                   </div>
                 );
@@ -245,28 +196,28 @@ const Portfolio: React.FC = () => {
 
         {/* ── AI Insight ── */}
         {(insightLoading || aiInsight) && (
-          <div style={styles.insightSection}>
-            <div style={styles.insightHeader}>
-              <div style={styles.insightIcon}>
+          <div className="portfolio-insight-section">
+            <div className="portfolio-insight-header">
+              <div className="portfolio-insight-icon">
                 <Stars size={16} color="#3B5BDB" />
               </div>
-              <span style={styles.insightTitle}>AI Insight</span>
+              <span className="portfolio-insight-title">AI Insight</span>
             </div>
             {insightLoading ? (
-              <div style={styles.insightLoadingRow}>
-                <Spinner animation="border" size="sm" style={{ color: "#3B5BDB" }} />
-                <span style={styles.insightLoadingText}>Generating insight...</span>
+              <div className="portfolio-insight-loading-row">
+                <Spinner animation="border" size="sm" className="portfolio-insight-spinner" />
+                <span className="portfolio-insight-loading-text">Generating insight...</span>
               </div>
             ) : (
-              <p style={styles.insightText}>{aiInsight}</p>
+              <p className="portfolio-insight-text">{aiInsight}</p>
             )}
           </div>
         )}
 
         {/* ── View Portfolio Link ── */}
-        <div style={styles.linkSection}>
+        <div className="portfolio-link-section">
           <button
-            style={styles.linkBtn}
+            className="portfolio-link-btn"
             onClick={() => navigate("/portfolio-review")}
           >
             View detailed portfolio review →
@@ -276,216 +227,6 @@ const Portfolio: React.FC = () => {
       </div>
     </div>
   );
-};
-
-const styles: Record<string, React.CSSProperties> = {
-  outerWrap: {
-    display: "flex",
-    flexDirection: "column",
-    gap: 12,
-    width: "100%",
-  },
-  /* Tab bar */
-  tabBar: {
-    display: "flex",
-    background: "#ffffff",
-    borderRadius: 16,
-    boxShadow: "0 2px 10px rgba(0,0,0,0.07)",
-    border: "1px solid #eef0f6",
-    overflow: "hidden",
-  },
-  tabBtn: {
-    flex: 1,
-    background: "none",
-    border: "none",
-    padding: "12px 0",
-    fontSize: 14,
-    cursor: "pointer",
-    transition: "color 0.2s, border-bottom 0.2s",
-    outline: "none",
-  },
-  /* Unified Main Card */
-  mainCard: {
-    background: "#ffffff",
-    borderRadius: 16,
-    boxShadow: "0 2px 10px rgba(0,0,0,0.07)",
-    border: "1px solid #eef0f6",
-    overflow: "hidden",
-    display: "flex",
-    flexDirection: "column",
-  },
-  cardSection: {
-    padding: "16px 18px",
-    background: "#ffffff",
-  },
-  insightSection: {
-    background: "#eef1ff",
-    padding: "16px 18px",
-    borderTop: "1px solid #eef0f6",
-  },
-  linkSection: {
-    background: "#ffffff",
-    padding: "12px 18px",
-    borderTop: "1px solid #eef0f6",
-  },
-  label: {
-    fontSize: 12,
-    color: "#6b7280",
-    margin: 0,
-    marginBottom: 4,
-  },
-  bigAmount: {
-    fontSize: 28,
-    fontWeight: 700,
-    color: "#111827",
-    margin: "2px 0 6px",
-    letterSpacing: "-0.5px",
-  },
-  dayPill: {
-    display: "inline-flex",
-    alignItems: "center",
-    fontSize: 12,
-    fontWeight: 500,
-    marginBottom: 12,
-  },
-  divider: {
-    height: 1,
-    background: "#f3f4f6",
-    margin: "16px 0",
-  },
-  statsRow: {
-    display: "flex",
-    alignItems: "center",
-  },
-  statItem: {
-    flex: 1,
-    display: "flex",
-    flexDirection: "column",
-    gap: 2,
-  },
-  statLabel: {
-    fontSize: 11,
-    color: "#9ca3af",
-  },
-  statValue: {
-    fontSize: 13,
-    fontWeight: 500,
-    color: "#111827",
-  },
-  statDivider: {
-    width: 1,
-    height: 32,
-    background: "#e5e7eb",
-    margin: "0 12px",
-  },
-  allocBar: {
-    display: "flex",
-    height: 8,
-    borderRadius: 4,
-    overflow: "hidden",
-    background: "#f3f4f6",
-    marginBottom: 8,
-  },
-  allocSegment: {
-    height: "100%",
-    transition: "width 0.3s ease",
-  },
-  allocLegendRow: {
-    display: "flex",
-    gap: 12,
-    flexWrap: "wrap",
-  },
-  legendItem: {
-    display: "flex",
-    alignItems: "center",
-    fontSize: 12,
-    color: "#374151",
-    gap: 4,
-  },
-  dot: {
-    width: 8,
-    height: 8,
-    borderRadius: "50%",
-    display: "inline-block",
-  },
-  sectionTitle: {
-    fontSize: 14,
-    fontWeight: 600,
-    color: "#111827",
-    margin: "0 0 14px",
-  },
-  perfRow: {
-    display: "flex",
-    justifyContent: "space-between",
-    marginBottom: 6,
-  },
-  perfLabel: {
-    fontSize: 13,
-    color: "#374151",
-    fontWeight: 500,
-  },
-  perfAmount: {
-    fontSize: 13,
-    color: "#111827",
-    fontWeight: 500,
-  },
-  perfBarBg: {
-    height: 8,
-    background: "#f3f4f6",
-    borderRadius: 4,
-    overflow: "hidden",
-  },
-  perfBarFill: {
-    height: "100%",
-    borderRadius: 4,
-    transition: "width 0.4s ease",
-  },
-  insightHeader: {
-    display: "flex",
-    alignItems: "center",
-    gap: 8,
-    marginBottom: 8,
-  },
-  insightIcon: {
-    width: 28,
-    height: 28,
-    borderRadius: 8,
-    background: "#c7d2fe",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  insightTitle: {
-    fontSize: 14,
-    fontWeight: 600,
-    color: "#3730a3",
-  },
-  insightText: {
-    fontSize: 13,
-    color: "#374151",
-    lineHeight: 1.6,
-    margin: 0,
-  },
-  insightLoadingRow: {
-    display: "flex",
-    alignItems: "center",
-    gap: 8,
-  },
-  insightLoadingText: {
-    fontSize: 13,
-    color: "#374151",
-  },
-  linkBtn: {
-    background: "none",
-    border: "none",
-    color: "#3B5BDB",
-    fontWeight: 600,
-    fontSize: 14,
-    cursor: "pointer",
-    textAlign: "center",
-    width: "100%",
-    letterSpacing: "0.01em",
-  },
 };
 
 export default Portfolio;

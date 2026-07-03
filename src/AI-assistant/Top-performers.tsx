@@ -108,18 +108,15 @@ const TopPerformers: React.FC = () => {
   };
 
   return (
-    <div style={styles.container}>
+    <div className="top-perf-container">
       {/* ── Tab Row (Asset Types) ── */}
-      <div style={styles.tabRow}>
+      <div className="top-perf-tab-row">
         {assetTypes.map((asset) => {
           const isActive = selectedAsset === asset.asset_code;
           return (
             <button
               key={asset.asset_code}
-              style={{
-                ...styles.tabButton,
-                ...(isActive ? styles.activeTabButton : {}),
-              }}
+              className={`top-perf-tab-button ${isActive ? "active" : ""}`}
               onClick={() => setSelectedAsset(asset.asset_code)}
             >
               {asset.asset_type}
@@ -129,12 +126,9 @@ const TopPerformers: React.FC = () => {
       </div>
 
       {/* ── Sub-category Filter Pills ── */}
-      <div style={styles.pillRow}>
+      <div className="top-perf-pill-row">
         <button
-          style={{
-            ...styles.pillButton,
-            ...(selectedClass === null ? styles.activePillButton : {}),
-          }}
+          className={`top-perf-pill-button ${selectedClass === null ? "active" : ""}`}
           onClick={() => setSelectedClass(null)}
         >
           All
@@ -144,10 +138,7 @@ const TopPerformers: React.FC = () => {
           return (
             <button
               key={cat.classcode}
-              style={{
-                ...styles.pillButton,
-                ...(isActive ? styles.activePillButton : {}),
-              }}
+              className={`top-perf-pill-button ${isActive ? "active" : ""}`}
               onClick={() => setSelectedClass(cat.classcode)}
             >
               {cat.category}
@@ -157,11 +148,11 @@ const TopPerformers: React.FC = () => {
       </div>
 
       {/* ── Schemes List ── */}
-      <div style={styles.list}>
+      <div className="top-perf-list">
         {loading ? (
-          <div style={styles.centerWrap}>
+          <div className="top-perf-center-wrap">
             <Spinner animation="border" size="sm" variant="primary" />
-            <span style={{ marginLeft: 8, fontSize: 13, color: "#6b7280" }}>Fetching funds...</span>
+            <span className="top-perf-fetching-text">Fetching funds...</span>
           </div>
         ) : schemes.length > 0 ? (
           schemes.map((item, idx) => {
@@ -172,56 +163,53 @@ const TopPerformers: React.FC = () => {
             return (
               <div
                 key={idx}
-                style={{
-                  ...styles.itemRow,
-                  borderBottom: idx === schemes.length - 1 ? "none" : "1px solid #f3f4f6",
-                }}
+                className={`top-perf-item-row ${idx === schemes.length - 1 ? "last" : ""}`}
                 onClick={() => handleRowClick(item)}
               >
                 {/* AMC Logo */}
                 <img
                   src={`${imageUrl + item.accordAMCCode}.png`}
                   alt="AMC Logo"
-                  style={styles.logo}
+                  className="top-perf-logo"
                   onError={(e) => {
                     (e.target as HTMLImageElement).src = "https://bankamcimagesv2.s3.ap-southeast-1.amazonaws.com/default-amc.png";
                   }}
                 />
 
                 {/* Middle Info */}
-                <div style={styles.middleSection}>
-                  <h6 style={styles.fundName}>{item.scheme}</h6>
-                  <div style={styles.tagRow}>
+                <div className="top-perf-middle-section">
+                  <h6 className="top-perf-fund-name">{item.scheme}</h6>
+                  <div className="top-perf-tag-row">
                     {item.oneYearCAGR !== undefined && (
-                      <span style={styles.greenTag}>1Y {return1Y}</span>
+                      <span className="top-perf-green-tag">1Y {return1Y}</span>
                     )}
                     {item.threeYearCAGR !== undefined && (
-                      <span style={styles.greenTag}>3Y {return3Y}</span>
+                      <span className="top-perf-green-tag">3Y {return3Y}</span>
                     )}
                     {minSipText && (
-                      <span style={styles.grayTag}>{minSipText}</span>
+                      <span className="top-perf-gray-tag">{minSipText}</span>
                     )}
                   </div>
                 </div>
 
                 {/* Right Info (Bold Returns) */}
-                <div style={styles.rightSection}>
-                  <span style={styles.percentage}>{return3Y}</span>
+                <div className="top-perf-right-section">
+                  <span className="top-perf-percentage">{return3Y}</span>
                 </div>
               </div>
             );
           })
         ) : (
-          <div style={styles.centerWrap}>
-            <span style={{ fontSize: 13, color: "#6b7280" }}>No top performers found.</span>
+          <div className="top-perf-center-wrap">
+            <span className="top-perf-empty-text">No top performers found.</span>
           </div>
         )}
       </div>
 
       {/* ── View All Footer ── */}
-      <div style={styles.viewAllSection}>
+      <div className="top-perf-view-all-section">
         <button
-          style={styles.viewAllBtn}
+          className="top-perf-view-all-btn"
           onClick={() => navigate("/top-performers")}
         >
           View all →
@@ -229,149 +217,6 @@ const TopPerformers: React.FC = () => {
       </div>
     </div>
   );
-};
-
-const styles: Record<string, React.CSSProperties> = {
-  container: {
-    background: "#ffffff",
-    borderRadius: "16px",
-    border: "1px solid #eef0f6",
-    boxShadow: "0 2px 10px rgba(0,0,0,0.07)",
-    overflow: "hidden",
-    width: "100%",
-  },
-  tabRow: {
-    display: "flex",
-    borderBottom: "1px solid #f3f4f6",
-    overflowX: "auto",
-    scrollbarWidth: "thin",
-    WebkitOverflowScrolling: "touch",
-  },
-  tabButton: {
-    flex: "1 0 auto",
-    background: "none",
-    border: "none",
-    padding: "12px 16px",
-    fontSize: "13px",
-    color: "#6b7280",
-    fontWeight: 500,
-    cursor: "pointer",
-    borderBottom: "2px solid transparent",
-    textAlign: "center",
-    transition: "all 0.2s",
-  },
-  activeTabButton: {
-    color: "#0047FF",
-    borderBottom: "2px solid #0047FF",
-    fontWeight: 600,
-  },
-  pillRow: {
-    display: "flex",
-    overflowX: "auto",
-    gap: "8px",
-    padding: "12px 16px 16px 16px", // extra bottom padding to look nice with the thin scrollbar
-    borderBottom: "1px solid #f3f4f6",
-    scrollbarWidth: "thin",
-    WebkitOverflowScrolling: "touch",
-  },
-  pillButton: {
-    background: "#ffffff",
-    border: "1px solid #e5e7eb",
-    borderRadius: "20px",
-    padding: "6px 14px",
-    fontSize: "12px",
-    color: "#4b5563",
-    fontWeight: 500,
-    cursor: "pointer",
-    whiteSpace: "nowrap",
-    transition: "all 0.2s",
-  },
-  activePillButton: {
-    background: "#0047FF",
-    color: "#ffffff",
-    borderColor: "#0047FF",
-  },
-  list: {
-    display: "flex",
-    flexDirection: "column",
-  },
-  itemRow: {
-    display: "flex",
-    alignItems: "center",
-    padding: "14px 16px",
-    cursor: "pointer",
-    transition: "background 0.2s",
-  },
-  logo: {
-    width: "40px",
-    height: "40px",
-    borderRadius: "8px",
-    objectFit: "contain",
-  },
-  middleSection: {
-    flex: 1,
-    marginLeft: "12px",
-    display: "flex",
-    flexDirection: "column",
-    gap: "4px",
-    textAlign: "left",
-  },
-  fundName: {
-    fontSize: "13px",
-    fontWeight: 600,
-    color: "#111827",
-    margin: 0,
-    lineHeight: "1.4",
-  },
-  tagRow: {
-    display: "flex",
-    alignItems: "center",
-    flexWrap: "wrap",
-    gap: "6px",
-  },
-  greenTag: {
-    background: "#e6f9f0",
-    color: "#16a34a",
-    padding: "2px 6px",
-    borderRadius: "4px",
-    fontSize: "10px",
-    fontWeight: 500,
-  },
-  grayTag: {
-    color: "#9ca3af",
-    fontSize: "11px",
-  },
-  rightSection: {
-    textAlign: "right",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-  },
-  percentage: {
-    fontSize: "15px",
-    fontWeight: 700,
-    color: "#16a34a",
-  },
-  viewAllSection: {
-    padding: "12px",
-    textAlign: "center",
-    background: "#ffffff",
-    borderTop: "1px solid #f3f4f6",
-  },
-  viewAllBtn: {
-    background: "none",
-    border: "none",
-    color: "#0047FF",
-    fontWeight: 600,
-    fontSize: "13px",
-    cursor: "pointer",
-  },
-  centerWrap: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    padding: "32px 16px",
-  },
 };
 
 export default TopPerformers;

@@ -56,17 +56,17 @@ const RecommendedFunds: React.FC<Props> = ({ risk, duration }) => {
   };
 
   return (
-    <div style={styles.outerWrap}>
+    <div className="rec-funds-outer-wrap">
       {loading ? (
-        <div style={styles.centerWrap}>
+        <div className="rec-funds-center-wrap">
           <Spinner animation="border" size="sm" variant="primary" />
-          <span style={{ marginLeft: 8, fontSize: 13, color: "#6b7280" }}>Finding funds for you...</span>
+          <span className="rec-funds-loading-text">Finding funds for you...</span>
         </div>
       ) : schemeList.length > 0 ? (
-        <div style={styles.card}>
-          <div style={styles.headerRow}>
-            <span style={styles.headerTitle}>{schemeList.length} Funds</span>
-            <span style={styles.headerCount}>{selectedSchemeList.length} selected</span>
+        <div className="rec-funds-card">
+          <div className="rec-funds-header-row">
+            <span className="rec-funds-header-title">{schemeList.length} Funds</span>
+            <span className="rec-funds-header-count">{selectedSchemeList.length} selected</span>
           </div>
 
           {schemeList.map((item, idx) => {
@@ -74,7 +74,7 @@ const RecommendedFunds: React.FC<Props> = ({ risk, duration }) => {
             return (
               <div
                 key={idx}
-                style={{ ...styles.itemRow, borderBottom: idx === schemeList.length - 1 ? "none" : "1px solid #f3f4f6" }}
+                className={`rec-funds-item-row ${idx === schemeList.length - 1 ? "last" : ""}`}
                 onClick={() => toggleScheme(item)}
               >
                 {isChecked ? (
@@ -85,12 +85,12 @@ const RecommendedFunds: React.FC<Props> = ({ risk, duration }) => {
                 <img
                   src={`${imageUrl + item.accordAMCCode}.png`}
                   alt="AMC Logo"
-                  style={styles.logo}
+                  className="rec-funds-logo"
                   onError={(e) => {
                     (e.target as HTMLImageElement).src = "https://bankamcimagesv2.s3.ap-southeast-1.amazonaws.com/default-amc.png";
                   }}
                 />
-                <span style={styles.fundName}>{item.scheme}</span>
+                <span className="rec-funds-fund-name">{item.scheme}</span>
                 <ChevronRight size={16} color="#9ca3af" onClick={(e) => handleFundDetails(item, e)} />
               </div>
             );
@@ -98,7 +98,7 @@ const RecommendedFunds: React.FC<Props> = ({ risk, duration }) => {
 
           <button
             type="button"
-            style={{ ...styles.continueBtn, opacity: selectedSchemeList.length === 0 ? 0.5 : 1 }}
+            className="rec-funds-continue-btn"
             disabled={selectedSchemeList.length === 0}
             onClick={handleContinue}
           >
@@ -106,8 +106,8 @@ const RecommendedFunds: React.FC<Props> = ({ risk, duration }) => {
           </button>
         </div>
       ) : (
-        <div style={styles.centerWrap}>
-          <span style={{ fontSize: 13, color: "#6b7280" }}>No recommended funds found for this selection.</span>
+        <div className="rec-funds-center-wrap">
+          <span className="rec-funds-empty-text">No recommended funds found for this selection.</span>
         </div>
       )}
 
@@ -121,70 +121,6 @@ const RecommendedFunds: React.FC<Props> = ({ risk, duration }) => {
       />
     </div>
   );
-};
-
-const styles: Record<string, React.CSSProperties> = {
-  outerWrap: {
-    width: "100%",
-  },
-  centerWrap: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    padding: "24px 16px",
-  },
-  card: {
-    background: "#ffffff",
-    borderRadius: 16,
-    border: "1px solid #eef0f6",
-    boxShadow: "0 2px 10px rgba(0,0,0,0.07)",
-    overflow: "hidden",
-  },
-  headerRow: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: "14px 16px",
-    borderBottom: "1px solid #f3f4f6",
-  },
-  headerTitle: {
-    fontSize: 14,
-    fontWeight: 700,
-    color: "#111827",
-  },
-  headerCount: {
-    fontSize: 12,
-    color: "#9ca3af",
-  },
-  itemRow: {
-    display: "flex",
-    alignItems: "center",
-    gap: 10,
-    padding: "12px 16px",
-    cursor: "pointer",
-  },
-  logo: {
-    width: 32,
-    height: 32,
-    borderRadius: 8,
-    objectFit: "contain",
-  },
-  fundName: {
-    flex: 1,
-    fontSize: 13,
-    fontWeight: 600,
-    color: "#111827",
-  },
-  continueBtn: {
-    width: "100%",
-    background: "#0047FF",
-    color: "#ffffff",
-    border: "none",
-    padding: "14px",
-    fontSize: 15,
-    fontWeight: 700,
-    cursor: "pointer",
-  },
 };
 
 export default RecommendedFunds;
