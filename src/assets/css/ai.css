@@ -840,17 +840,16 @@
 }
 .portfolio-member-select {
   position: relative;
+  border-bottom: 1px solid #f3f4f6;
 }
 .portfolio-member-select-btn {
   display: flex;
   align-items: center;
   gap: 8px;
   width: 100%;
-  background: #ffffff;
-  border-radius: 14px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07);
-  border: 1px solid #eef0f6;
-  padding: 10px 14px;
+  background: none;
+  border: none;
+  padding: 12px 14px;
   cursor: pointer;
   text-align: left;
 }
@@ -936,10 +935,7 @@
 .portfolio-tab-bar {
   display: flex;
   background: #ffffff;
-  border-radius: 16px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07);
-  border: 1px solid #eef0f6;
-  overflow: hidden;
+  border-bottom: 1px solid #f3f4f6;
 }
 .portfolio-tab-btn {
   flex: 1;
@@ -960,13 +956,21 @@
   font-weight: 700;
 }
 .portfolio-main-card {
+  position: relative;
   background: #ffffff;
   border-radius: 16px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07);
   border: 1px solid #eef0f6;
-  overflow: hidden;
   display: flex;
   flex-direction: column;
+}
+.portfolio-main-card > *:first-child {
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+}
+.portfolio-main-card > *:last-child {
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
 }
 .portfolio-card-section {
   padding: 16px 18px;

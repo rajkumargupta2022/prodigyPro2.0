@@ -147,64 +147,64 @@ const Portfolio: React.FC = () => {
   return (
     <div className="portfolio-outer-wrap">
 
-      {/* ── Family Member Selector ── */}
-      {peopleList.length > 1 && (
-        <div className="portfolio-member-select">
-          <button
-            type="button"
-            className="portfolio-member-select-btn"
-            onClick={() => setMemberDropdownOpen((open) => !open)}
-          >
-            <span className="portfolio-member-select-icon">
-              <PersonFill size={12} />
-            </span>
-            <span className="portfolio-member-select-name">{activePersonLabel}</span>
-            <ChevronDown size={12} className={`portfolio-member-select-chevron ${memberDropdownOpen ? "open" : ""}`} />
-          </button>
-
-          {memberDropdownOpen && (
-            <>
-              <div className="portfolio-member-backdrop" onClick={() => setMemberDropdownOpen(false)} />
-              <div className="portfolio-member-dropdown">
-                {peopleList.map((person) => {
-                  const isActive = (selectedMember?.ucc ?? adminUser?.ucc) === person.ucc;
-                  return (
-                    <button
-                      type="button"
-                      key={person.ucc}
-                      className={`portfolio-member-item ${isActive ? "active" : ""}`}
-                      onClick={() => handleMemberSelect(person)}
-                    >
-                      {person.name} ({person.hold_n_code === "SI" ? "Single" : "Joint"})
-                    </button>
-                  );
-                })}
-              </div>
-            </>
-          )}
-        </div>
-      )}
-
-      {/* ── Tab Switcher ── */}
-      {hasFamily && (
-        <div className="portfolio-tab-bar">
-          <button
-            className={`portfolio-tab-btn ${activeTab === "my" ? "active" : ""}`}
-            onClick={() => setActiveTab("my")}
-          >
-            My Portfolio
-          </button>
-          <button
-            className={`portfolio-tab-btn ${activeTab === "family" ? "active" : ""}`}
-            onClick={() => setActiveTab("family")}
-          >
-            Family
-          </button>
-        </div>
-      )}
-
       {/* ── Main Unified Card ── */}
       <div className="portfolio-main-card">
+
+        {/* Family Member Selector */}
+        {peopleList.length > 1 && (
+          <div className="portfolio-member-select">
+            <button
+              type="button"
+              className="portfolio-member-select-btn"
+              onClick={() => setMemberDropdownOpen((open) => !open)}
+            >
+              <span className="portfolio-member-select-icon">
+                <PersonFill size={12} />
+              </span>
+              <span className="portfolio-member-select-name">{activePersonLabel}</span>
+              <ChevronDown size={12} className={`portfolio-member-select-chevron ${memberDropdownOpen ? "open" : ""}`} />
+            </button>
+
+            {memberDropdownOpen && (
+              <>
+                <div className="portfolio-member-backdrop" onClick={() => setMemberDropdownOpen(false)} />
+                <div className="portfolio-member-dropdown">
+                  {peopleList.map((person) => {
+                    const isActive = (selectedMember?.ucc ?? adminUser?.ucc) === person.ucc;
+                    return (
+                      <button
+                        type="button"
+                        key={person.ucc}
+                        className={`portfolio-member-item ${isActive ? "active" : ""}`}
+                        onClick={() => handleMemberSelect(person)}
+                      >
+                        {person.name} ({person.hold_n_code === "SI" ? "Single" : "Joint"})
+                      </button>
+                    );
+                  })}
+                </div>
+              </>
+            )}
+          </div>
+        )}
+
+        {/* Tab Switcher */}
+        {hasFamily && (
+          <div className="portfolio-tab-bar">
+            <button
+              className={`portfolio-tab-btn ${activeTab === "my" ? "active" : ""}`}
+              onClick={() => setActiveTab("my")}
+            >
+              My Portfolio
+            </button>
+            <button
+              className={`portfolio-tab-btn ${activeTab === "family" ? "active" : ""}`}
+              onClick={() => setActiveTab("family")}
+            >
+              Family
+            </button>
+          </div>
+        )}
 
         {/* Top White Section */}
         <div className="portfolio-card-section">
