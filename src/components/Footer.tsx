@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 const Footer = () => {
     return (
-        <div className='container-xxl py-md-2 py-1'>
+        <div className='container-xxl py-md-2 py-1 mt-auto'>
             <footer className="footer row px-md-5 py-2">
                 <div className="col-md-6 py-1 text-md-start text-center">
                     Copyright © {new Date().getFullYear()} BFC Capital. All Rights Reserved

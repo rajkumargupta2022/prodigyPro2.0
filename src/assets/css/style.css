@@ -5,6 +5,10 @@
   --light-white-color: #F6F8FA;
 }
 
+html, body, #root {
+  height: 100%;
+}
+
 body {
   margin: 0px;
   padding: 0px;
@@ -13,6 +17,14 @@ body {
   font-style: normal;
   background-color: #F6F8FA;
   /* background-color: #0b0b0b; */
+}
+
+/* Keeps the footer pinned to the bottom of the viewport on pages with
+   little content, instead of it riding up under short content. */
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 
