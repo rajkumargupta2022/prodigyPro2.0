@@ -8,6 +8,7 @@ import { fetchAdminUser } from "../services/user/adminUser";
 import { keys } from "../services/utils/keys";
 import { daysAdded } from "../services/dates/dateFormater";
 import { finalTransaction } from "../services/utils/transactionApi";
+import { familyDataType, familySnapshotResponseType } from "../pages/data-interfaces/dashboard";
 
 
 //tools***************************************
@@ -316,4 +317,16 @@ export const fetchSchemeList = async (name: string) => {
       return { success: true, results: capturedData };
     }
     return { success: false, results: [] };
+  }
+
+  //family member portfolio***********************************************
+
+  export const fetchMemberPortfolio = async (ucc: string): Promise<familyDataType | null> => {
+    try {
+      const res = await postRequestSimple<familySnapshotResponseType>(endPoints.getFamilySnapshot, { ucc });
+      return res?.finalArray?.find((item) => item.myPortfolio === true) ?? null;
+    } catch (err) {
+      console.log(err);
+      return null;
+    }
   }

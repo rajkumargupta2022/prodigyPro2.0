@@ -838,6 +838,101 @@
   gap: 12px;
   width: 100%;
 }
+.portfolio-member-select {
+  position: relative;
+}
+.portfolio-member-select-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07);
+  border: 1px solid #eef0f6;
+  padding: 10px 14px;
+  cursor: pointer;
+  text-align: left;
+}
+.portfolio-member-select-icon {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #e8ecff;
+  color: #3B5BDB;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.portfolio-member-select-name {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 600;
+  color: #111827;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.portfolio-member-select-chevron {
+  color: #9ca3af;
+  flex-shrink: 0;
+  transition: transform 0.15s ease;
+}
+.portfolio-member-select-chevron.open {
+  transform: rotate(180deg);
+}
+.portfolio-member-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+}
+.portfolio-member-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  z-index: 11;
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  border: 1px solid #eef0f6;
+  overflow: hidden;
+  max-height: 260px;
+  overflow-y: auto;
+}
+.portfolio-member-item {
+  display: block;
+  width: 100%;
+  background: none;
+  border: none;
+  border-bottom: 1px solid #f3f4f6;
+  padding: 12px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #374151;
+  text-align: left;
+  cursor: pointer;
+}
+.portfolio-member-item:last-child {
+  border-bottom: none;
+}
+.portfolio-member-item:hover {
+  background: #f7f8ff;
+}
+.portfolio-member-item.active {
+  color: #3B5BDB;
+  font-weight: 700;
+  background: #f0f3ff;
+}
+.portfolio-member-loading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 20px 0;
+  color: #6b7280;
+  font-size: 13px;
+}
 .portfolio-tab-bar {
   display: flex;
   background: #ffffff;

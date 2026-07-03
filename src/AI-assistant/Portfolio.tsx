@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Spinner } from "react-bootstrap";
-import { ArrowUpCircleFill, ArrowDownCircleFill, Stars } from "react-bootstrap-icons";
+import { ArrowUpCircleFill, ArrowDownCircleFill, Stars, ChevronDown, PersonFill } from "react-bootstrap-icons";
 import { useAdminUser } from "../context/AdminContext";
 import { endPoints } from "../services/utils/urls";
 import { postRequestSimple } from "../services/Api/HandleApi";
 import { portfolioSummaryKeys, portfolioSummaryRes, summaryInsideKeys } from "../pages/data-interfaces/portfolio";
-import { familyDataType } from "../pages/data-interfaces/dashboard";
+import { allFamilyListKeys, familyDataType } from "../pages/data-interfaces/dashboard";
 import { useNavigate } from "react-router-dom";
-import { fetchAdminUser } from "../services/user/adminUser";
 import axios from "axios";
 import { AiInsightResponse } from "../pages/data-interfaces/ai";
+import { fetchMemberPortfolio } from "./Ai-services";
 
 
 
@@ -26,7 +26,7 @@ const performanceLabelMap: Record<string, string> = {
 };
 
 const Portfolio: React.FC = () => {
-  const { familySnapShotData } = useAdminUser();
+  const { familySnapShotData, familyMemberList, adminUser } = useAdminUser();
   const navigate = useNavigate();
   const [summary, setSummary] = useState<portfolioSummaryKeys | null>(null);
   const [aiInsight, setAiInsight] = useState<string | null>(null);
@@ -40,34 +40,78 @@ const Portfolio: React.FC = () => {
   // Active tab: "my" | "family"
   const [activeTab, setActiveTab] = useState<"my" | "family">("my");
 
+  // ── Family member selector (preview another member's own portfolio) ──
+  const peopleList: allFamilyListKeys[] = adminUser ? [adminUser, ...familyMemberList] : familyMemberList;
+  const [selectedMember, setSelectedMember] = useState<allFamilyListKeys | null>(null);
+  const [memberSnapshot, setMemberSnapshot] = useState<familyDataType | null>(null);
+  const [memberLoading, setMemberLoading] = useState(false);
+  const [memberDropdownOpen, setMemberDropdownOpen] = useState(false);
+
+  // Performance summary / AI insight stay scoped to "my" perspective — the
+  // selected member only when actively viewing the My Portfolio tab.
+  const activeUcc = activeTab === "family" ? adminUser?.ucc : selectedMember?.ucc ?? adminUser?.ucc;
+
+  const handleMemberSelect = (member: allFamilyListKeys) => {
+    setMemberDropdownOpen(false);
+    setActiveTab("my");
+    setSelectedMember(member.ucc === adminUser?.ucc ? null : member);
+  };
+
   // Derive active snapshot
   const activeSnapshot: familyDataType | undefined =
-    activeTab === "family" && hasFamily ? familyTab : myTab ?? familySnapShotData[0];
+    activeTab === "family" && hasFamily
+      ? familyTab
+      : selectedMember
+        ? memberSnapshot ?? undefined
+        : myTab ?? familySnapShotData[0];
 
   useEffect(() => {
-    const adminUser = fetchAdminUser()
-    const fetchSummary = async () => {
+    let cancelled = false;
+    setSummary(null);
+    setAiInsight(null);
+
+    const run = async () => {
+      // Resolve the snapshot to describe in the AI insight prompt — fetched
+      // fresh here (rather than read off state) so it can't race the
+      // performance-summary call below.
+      let snapshotForInsight: familyDataType | undefined;
+      if (activeTab === "family" && hasFamily) {
+        setMemberSnapshot(null);
+        snapshotForInsight = familyTab;
+      } else if (selectedMember && selectedMember.ucc !== adminUser?.ucc) {
+        setMemberLoading(true);
+        const data = await fetchMemberPortfolio(selectedMember.ucc);
+        if (cancelled) return;
+        setMemberSnapshot(data);
+        setMemberLoading(false);
+        snapshotForInsight = data ?? undefined;
+      } else {
+        setMemberSnapshot(null);
+        snapshotForInsight = myTab ?? familySnapShotData[0];
+      }
+
       try {
-        const reqBody = {
-          ucc: adminUser?.ucc
-        }
-        const res = await postRequestSimple<portfolioSummaryRes>(endPoints.getSchemePerformanceSummary, reqBody)
-        if (res.success) {
+        const res = await postRequestSimple<portfolioSummaryRes>(endPoints.getSchemePerformanceSummary, { ucc: activeUcc });
+        if (!cancelled && res.success) {
           setSummary(res.data);
-          getAIInsight(res.data)
+          getAIInsight(res.data, snapshotForInsight);
         }
       } catch (e) { }
     };
 
+    run();
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeUcc, activeTab]);
 
-    fetchSummary();
-  }, []);
-  const getAIInsight = async (data: portfolioSummaryKeys) => {
+  const getAIInsight = async (data: portfolioSummaryKeys, snapshot?: familyDataType) => {
     setInsightLoading(true);
     try {
       const reqBody = {
         type: "insight",
-        portfolio_context: `Current Value: ${data.total},Invested: ${familySnapShotData[0]?.Totalpurchase},Gain/Loss: ${familySnapShotData[0]?.Gainloss},CAGR: ${familySnapShotData[0]?.Finalcagr},Portfolio Switch: ${data.performance_summary.find((s) => s.name === "Switch")?.currentValue ?? 0},Satisfactory Performance: ${data.performance_summary.find((s) => s.name === "Satisfactory Performance")?.currentValue ?? 0},Under Watch: ${data.performance_summary.find((s) => s.name === "Under Watch")?.currentValue ?? 0}`,
+        portfolio_context: `Current Value: ${data.total},Invested: ${snapshot?.Totalpurchase},Gain/Loss: ${snapshot?.Gainloss},CAGR: ${snapshot?.Finalcagr},Portfolio Switch: ${data.performance_summary.find((s) => s.name === "Switch")?.currentValue ?? 0},Satisfactory Performance: ${data.performance_summary.find((s) => s.name === "Satisfactory Performance")?.currentValue ?? 0},Under Watch: ${data.performance_summary.find((s) => s.name === "Under Watch")?.currentValue ?? 0}`,
       }
       const token = localStorage.getItem("token")
       const response = await axios.post<AiInsightResponse>(import.meta.env.VITE_GEMINI_API_URL + endPoints.aiChat, reqBody, { headers: { Authorization: `Bearer ${token}` } });
@@ -95,8 +139,51 @@ const Portfolio: React.FC = () => {
 
 
 
+  const activePerson = selectedMember ?? adminUser;
+  const activePersonLabel = activePerson
+    ? `${activePerson.name} (${activePerson.hold_n_code === "SI" ? "Single" : "Joint"})`
+    : "Select member";
+
   return (
     <div className="portfolio-outer-wrap">
+
+      {/* ── Family Member Selector ── */}
+      {peopleList.length > 1 && (
+        <div className="portfolio-member-select">
+          <button
+            type="button"
+            className="portfolio-member-select-btn"
+            onClick={() => setMemberDropdownOpen((open) => !open)}
+          >
+            <span className="portfolio-member-select-icon">
+              <PersonFill size={12} />
+            </span>
+            <span className="portfolio-member-select-name">{activePersonLabel}</span>
+            <ChevronDown size={12} className={`portfolio-member-select-chevron ${memberDropdownOpen ? "open" : ""}`} />
+          </button>
+
+          {memberDropdownOpen && (
+            <>
+              <div className="portfolio-member-backdrop" onClick={() => setMemberDropdownOpen(false)} />
+              <div className="portfolio-member-dropdown">
+                {peopleList.map((person) => {
+                  const isActive = (selectedMember?.ucc ?? adminUser?.ucc) === person.ucc;
+                  return (
+                    <button
+                      type="button"
+                      key={person.ucc}
+                      className={`portfolio-member-item ${isActive ? "active" : ""}`}
+                      onClick={() => handleMemberSelect(person)}
+                    >
+                      {person.name} ({person.hold_n_code === "SI" ? "Single" : "Joint"})
+                    </button>
+                  );
+                })}
+              </div>
+            </>
+          )}
+        </div>
+      )}
 
       {/* ── Tab Switcher ── */}
       {hasFamily && (
@@ -121,6 +208,13 @@ const Portfolio: React.FC = () => {
 
         {/* Top White Section */}
         <div className="portfolio-card-section">
+          {memberLoading ? (
+            <div className="portfolio-member-loading">
+              <Spinner animation="border" size="sm" />
+              <span className="portfolio-member-loading-text">Loading {selectedMember?.name}'s portfolio...</span>
+            </div>
+          ) : (
+            <>
           {/* Current Value */}
           <p className="portfolio-label">Current Value</p>
           <h2 className="portfolio-big-amount">
@@ -167,9 +261,11 @@ const Portfolio: React.FC = () => {
               </span>
             </div>
           </div>
+            </>
+          )}
 
           {/* ── Fund Performance Summary (only for My Portfolio) ── */}
-          {activeTab === "my" && summary && summary.performance_summary?.length > 0 && (
+          {!memberLoading && activeTab === "my" && summary && summary.performance_summary?.length > 0 && (
             <>
               <div className="portfolio-divider" />
               <p className="portfolio-section-title">Fund Performance Summary</p>
