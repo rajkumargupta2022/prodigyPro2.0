@@ -1244,18 +1244,20 @@
   padding: 32px 12px 16px;
 }
 .chat-empty-avatar {
-  width: 56px;
-  height: 56px;
+  width: 64px;
+  height: 64px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #3B5BDB 0%, #6d8bff 100%);
-  box-shadow: 0 8px 20px rgba(59, 91, 219, 0.25);
+  background: linear-gradient(135deg, #e8ecff 0%, #e3f7ec 100%);
+  border: 1px solid #d6ddff;
+  box-shadow: 0 8px 20px rgba(1, 30, 254, 0.12);
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 16px;
 }
 .chat-empty-avatar img {
-  filter: brightness(0) invert(1);
+  width: 32px;
+  height: auto;
 }
 .chat-empty-greeting {
   color: #1f2937;
