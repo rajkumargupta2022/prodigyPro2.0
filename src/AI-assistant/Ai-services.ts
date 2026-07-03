@@ -40,6 +40,7 @@ export interface IntentActionResult {
   followUp?: IntentFollowUp;
   investFlow?: InvestFlowStart;
   askInvestScheme?: InvestPrefill;
+  helpRedirect?: boolean;
 }
 const hasRecommendedKeyword = (text:string) => {
   const regex = /\b(recomended fund|recommended scheme|nfo(?:'s|s)?)\b/i;
@@ -123,6 +124,9 @@ export const handleAIIntent = async (
 
     case "recommend_funds":
       return { startRecommendFlow: true };
+
+    case "help":
+      return { helpRedirect: true };
 
     default:
       return {};

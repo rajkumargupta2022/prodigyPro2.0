@@ -84,6 +84,7 @@ interface Message {
   recommendRisk?: number
   recommendDuration?: number
   noMandateAvailable?: boolean
+  helpRedirect?: boolean
 }
 
 type QuickReplyStage = "risk" | "horizon" | "transactionType" | "sipDate" | null;
@@ -646,6 +647,7 @@ const ChatWithAI: React.FC<Props> = ({ show, setShow }) => {
           ...(intentResult.portfolioData ? { portfolioData: true } : {}),
           ...(intentResult.topPerformersData ? { topPerformersData: true } : {}),
           ...(intentResult.nfoLiveData ? { nfoLiveData: true } : {}),
+          ...(intentResult.helpRedirect ? { helpRedirect: true } : {}),
         },
       ]);
 
@@ -700,6 +702,11 @@ const ChatWithAI: React.FC<Props> = ({ show, setShow }) => {
   const handleCreateMandate = () => {
     setShow(false);
     navigate("/linked-bank-account");
+  };
+
+  const handleGoToHelpAndSupport = () => {
+    setShow(false);
+    navigate("/help-and-support");
   };
 
   return (
@@ -812,6 +819,17 @@ const ChatWithAI: React.FC<Props> = ({ show, setShow }) => {
                         onClick={handleCreateMandate}
                       >
                         Create Mandate
+                      </button>
+                    </div>
+                  )}
+                  {msg.helpRedirect && (
+                    <div className="mt-2">
+                      <button
+                        type="button"
+                        className="chat-help-btn"
+                        onClick={handleGoToHelpAndSupport}
+                      >
+                        Help & Support
                       </button>
                     </div>
                   )}
