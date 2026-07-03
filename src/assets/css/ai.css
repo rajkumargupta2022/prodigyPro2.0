@@ -1266,3 +1266,17 @@
   width: 45px;
   height: 45px;
 }
+.chat-create-mandate-btn {
+  background: #3B5BDB;
+  color: #ffffff;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.chat-create-mandate-btn:hover {
+  background: #2d47b0;
+}

@@ -1,6 +1,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { Modal, Form, Button, Spinner } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 import logo from "/title-icon.svg";
 import { ArrowClockwise, Send, X, Search, ArrowRepeat, GraphUpArrow, PieChartFill, StarFill, PatchCheckFill } from "react-bootstrap-icons";
 import { initialPrompt } from "./promts";
@@ -57,6 +58,7 @@ interface Message {
   recommendedFundsData?: boolean
   recommendRisk?: number
   recommendDuration?: number
+  noMandateAvailable?: boolean
 }
 
 type QuickReplyStage = "risk" | "horizon" | "transactionType" | "sipDate" | null;
@@ -91,6 +93,7 @@ const quickActions: { action: QuickAction; label: string; icon: React.ReactNode 
 ];
 
 const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
+  const navigate = useNavigate();
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -404,6 +407,7 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
         {
           role: assistant,
           text: "You don't have an active bank mandate that covers this amount. Please create a mandate to continue with the SIP.",
+          noMandateAvailable: true,
         },
       ]);
       setInvestData(null);
@@ -606,6 +610,11 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
     resetChat();
   }
 
+  const handleCreateMandate = () => {
+    setShow(false);
+    navigate("/linked-bank-account");
+  };
+
   return (
     <Modal
       show={show}
@@ -708,6 +717,17 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
                     } ${msg.schemeOptions || isCardMessage ? "wide" : ""} ${isCardMessage ? "card" : ""}`}
                 >
                   {!isCardMessage && renderMessageText(msg.text)}
+                  {msg.noMandateAvailable && (
+                    <div className="mt-2">
+                      <button
+                        type="button"
+                        className="chat-create-mandate-btn"
+                        onClick={handleCreateMandate}
+                      >
+                        Create Mandate
+                      </button>
+                    </div>
+                  )}
                   {msg.portfolioData && (
                     <Portfolio />
                   )}
