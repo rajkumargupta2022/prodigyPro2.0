@@ -3,7 +3,8 @@ import React, { useState, useRef, useEffect } from "react";
 import { Modal, Form, Button, Spinner } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import logo from "/title-icon.svg";
-import { ArrowClockwise, Send, X, Search, ArrowRepeat, GraphUpArrow, PieChartFill, StarFill, PatchCheckFill } from "react-bootstrap-icons";
+import { ArrowClockwise, Send, X, Search, ArrowRepeat, GraphUpArrow, PieChartFill, StarFill, PatchCheckFill, MicFill } from "react-bootstrap-icons";
+import { errorToast } from "../services/utils/toast";
 import { initialPrompt } from "./promts";
 import {
   handleAIIntent,
@@ -42,6 +43,30 @@ interface Props {
   show: boolean;
   setShow: (show: boolean) => void;
 }
+
+// Minimal typings for the (non-standard) Web Speech API — not part of lib.dom.
+interface SpeechRecognitionResultLike {
+  [index: number]: { transcript: string };
+}
+interface SpeechRecognitionEventLike {
+  resultIndex: number;
+  results: { [index: number]: SpeechRecognitionResultLike; length: number };
+}
+interface SpeechRecognitionErrorEventLike {
+  error: string;
+}
+interface SpeechRecognitionInstance {
+  continuous: boolean;
+  interimResults: boolean;
+  lang: string;
+  onresult: ((event: SpeechRecognitionEventLike) => void) | null;
+  onerror: ((event: SpeechRecognitionErrorEventLike) => void) | null;
+  onend: (() => void) | null;
+  start: () => void;
+  stop: () => void;
+  abort: () => void;
+}
+type SpeechRecognitionConstructor = new () => SpeechRecognitionInstance;
 
 interface Message {
   role: typeof user | typeof assistant;
@@ -121,6 +146,66 @@ const ChatWithAI: React.FC<Props> = ({ show, setShow }) => {
     });
   }, [messages]);
 
+  // ── Voice input (Web Speech API) ─────────────────────────────
+  const [isListening, setIsListening] = useState(false);
+  const [speechSupported, setSpeechSupported] = useState(false);
+  const recognitionRef = useRef<SpeechRecognitionInstance | null>(null);
+
+  useEffect(() => {
+    const SpeechRecognitionCtor: SpeechRecognitionConstructor | undefined =
+      (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SpeechRecognitionCtor) return;
+
+    const recognition = new SpeechRecognitionCtor();
+    recognition.continuous = false;
+    recognition.interimResults = true;
+    recognition.lang = "en-IN";
+
+    recognition.onresult = (event) => {
+      let transcript = "";
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        transcript += event.results[i][0].transcript;
+      }
+      setInput(transcript);
+    };
+
+    recognition.onerror = (event) => {
+      setIsListening(false);
+      if (event.error === "not-allowed" || event.error === "service-not-allowed") {
+        errorToast("Microphone access was denied. Please allow microphone permission to use voice input.");
+      } else if (event.error !== "no-speech" && event.error !== "aborted") {
+        errorToast("Couldn't hear you clearly. Please try again.");
+      }
+    };
+
+    recognition.onend = () => {
+      setIsListening(false);
+    };
+
+    recognitionRef.current = recognition;
+    setSpeechSupported(true);
+
+    return () => {
+      recognition.onresult = null;
+      recognition.onerror = null;
+      recognition.onend = null;
+      recognition.abort();
+    };
+  }, []);
+
+  const toggleListening = () => {
+    const recognition = recognitionRef.current;
+    if (!recognition) return;
+    if (isListening) {
+      recognition.stop();
+      setIsListening(false);
+    } else {
+      setInput("");
+      recognition.start();
+      setIsListening(true);
+    }
+  };
+
   const resetChat = () => {
     setMessages([
       {
@@ -139,6 +224,8 @@ const ChatWithAI: React.FC<Props> = ({ show, setShow }) => {
   useEffect(() => {
     if (!show) {
       resetChat();
+      recognitionRef.current?.stop();
+      setIsListening(false);
     }
   }, [show])
 
@@ -883,10 +970,22 @@ const ChatWithAI: React.FC<Props> = ({ show, setShow }) => {
               <div
                 className="d-flex align-items-center bg-light rounded-pill px-2 chat-input-row"
               >
+                {speechSupported && (
+                  <Button
+                    type="button"
+                    onClick={toggleListening}
+                    disabled={loading}
+                    title={isListening ? "Stop listening" : "Speak to type"}
+                    className={`rounded-circle no-hover chat-mic-btn ${isListening ? "listening" : ""}`}
+                  >
+                    <MicFill />
+                  </Button>
+                )}
+
                 <Form.Control
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
-                  placeholder="Ask about mutual funds..."
+                  placeholder={isListening ? "Listening..." : "Ask about mutual funds..."}
                   className="border-0 bg-transparent shadow-none"
                 />
 
