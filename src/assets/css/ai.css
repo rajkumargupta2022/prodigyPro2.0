@@ -490,7 +490,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 14px 16px;
-  border-bottom: 1px solid #f3f4f6;
+  border-bottom: 1px solid #c2d1ec;
 }
 .rec-funds-header-title {
   font-size: 14px;
@@ -507,7 +507,8 @@
   gap: 10px;
   padding: 12px 16px;
   cursor: pointer;
-  border-bottom: 1px solid #f3f4f6;
+  border-bottom: 1px solid #c2d1ec;
+  
 }
 .rec-funds-item-row.last {
   border-bottom: none;
@@ -618,7 +619,7 @@
 }
 .scheme-detail-section {
   padding: 12px 16px;
-  border-top: 1px solid #f3f4f6;
+  border-top: 1px solid #c2d1ec;
   text-align: left;
 }
 .scheme-detail-section-title {
@@ -664,7 +665,7 @@
 .scheme-detail-footer {
   padding: 12px;
   text-align: center;
-  border-top: 1px solid #f3f4f6;
+  border-top: 1px solid #c2d1ec;
   background: #ffffff;
 }
 .scheme-detail-view-full-btn {
@@ -687,7 +688,7 @@
 }
 .top-perf-tab-row {
   display: flex;
-  border-bottom: 1px solid #f3f4f6;
+  border-bottom: 1px solid #c2d1ec;
   overflow-x: auto;
   scrollbar-width: thin;
   -webkit-overflow-scrolling: touch;
@@ -715,7 +716,7 @@
   overflow-x: auto;
   gap: 8px;
   padding: 12px 16px 16px 16px;
-  border-bottom: 1px solid #f3f4f6;
+  border-bottom: 1px solid #c2d1ec;
   scrollbar-width: thin;
   -webkit-overflow-scrolling: touch;
 }
@@ -746,7 +747,7 @@
   padding: 14px 16px;
   cursor: pointer;
   transition: background 0.2s;
-  border-bottom: 1px solid #f3f4f6;
+  border-bottom: 1px solid #c2d1ec;
 }
 .top-perf-item-row.last {
   border-bottom: none;
@@ -805,7 +806,7 @@
   padding: 12px;
   text-align: center;
   background: #ffffff;
-  border-top: 1px solid #f3f4f6;
+  border-top: 1px solid #c2d1ec;
 }
 .top-perf-view-all-btn {
   background: none;
@@ -840,7 +841,7 @@
 }
 .portfolio-member-select {
   position: relative;
-  border-bottom: 1px solid #f3f4f6;
+  border-bottom: 1px solid #c2d1ec;
 }
 .portfolio-member-select-btn {
   display: flex;
@@ -905,7 +906,7 @@
   width: 100%;
   background: none;
   border: none;
-  border-bottom: 1px solid #f3f4f6;
+  border-bottom: 1px solid #c2d1ec;
   padding: 12px 14px;
   font-size: 13px;
   font-weight: 500;
@@ -935,7 +936,7 @@
 .portfolio-tab-bar {
   display: flex;
   background: #ffffff;
-  border-bottom: 1px solid #f3f4f6;
+  border-bottom: 1px solid #c2d1ec;
 }
 .portfolio-tab-btn {
   flex: 1;
@@ -960,7 +961,7 @@
   background: #ffffff;
   border-radius: 16px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07);
-  border: 1px solid #a8afbd;
+  border: 1px solid #c3d5f7;
   display: flex;
   flex-direction: column;
 }
@@ -1017,7 +1018,7 @@
 }
 .portfolio-divider {
   height: 1px;
-  background: #f3f4f6;
+  background: #c2d1ec;
   margin: 16px 0;
 }
 .portfolio-stats-row {

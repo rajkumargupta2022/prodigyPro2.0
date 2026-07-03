@@ -92,7 +92,7 @@ const quickActions: { action: QuickAction; label: string; icon: React.ReactNode 
   { action: "recommended", label: "Recommended Funds", icon: <PatchCheckFill size={15} /> },
 ];
 
-const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
+const ChatWithAI: React.FC<Props> = ({ show, setShow }) => {
   const navigate = useNavigate();
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -906,4 +906,4 @@ const ChatBoatUi: React.FC<Props> = ({ show, setShow }) => {
   );
 };
 
-export default ChatBoatUi;
+export default ChatWithAI;

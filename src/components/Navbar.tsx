@@ -17,7 +17,7 @@ import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { fetchAdminUser } from "../services/user/adminUser";
 import { renderAdminAvatar } from "../pages/re-used-html/avtar";
-import ChatBoatUi from "../AI-assistant/Chat-boat-ui";
+import ChatBoatUi from "../AI-assistant/Chat-with-ai";
 
 const MyNavbar = () => {
   const location = useLocation();
