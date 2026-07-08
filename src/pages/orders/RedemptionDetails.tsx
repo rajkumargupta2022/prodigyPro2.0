@@ -102,9 +102,9 @@ function RedemptionDetails() {
         <div className="d-flex justify-content-between mb-2">
           <span className="text-secondary">BANK NAME</span>
           <span className="value-font2">{installmentDetails?.bank_name?.toLowerCase()
-                      .split(" ")
-                      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-                      .join(" ")} ****{installmentDetails?.bank_account_number.slice(-4)}</span>
+                      ?.split(" ")
+                      ?.map(word => word?.charAt(0)?.toUpperCase() + word?.slice(1))
+                      ?.join(" ")} ****{installmentDetails?.bank_account_number?.slice(-4)}</span>
         </div>
         {/* <div className="d-flex justify-content-between mb-2">
           <span className="text-secondary">PAYMENT MODE</span>

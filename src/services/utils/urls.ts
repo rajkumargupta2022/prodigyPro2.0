@@ -128,7 +128,7 @@ export enum endPoints {
   cancelXsipOrder = "orders/cancel-xsip-order",
   cancelSwpOrder = "orders/cancel-swp-order",
   getTransactionHistory = "orders/get-transaction-history",
-  getPurchaseOrders = "orders/get-purchase-orders",
+  getPurchaseOrders = "orders/purchase-orders",
 
   /* =========================
      REPORTS

@@ -94,10 +94,10 @@ const MyNavbar = () => {
             <Link to="/help-and-support" className="prodgy_menu">
               <QuestionCircle size={24} />
             </Link>
-            <Link to="#" className="prodgy_menu" onClick={handleAiBoat}>
+            <div className="prodgy_menu crPointer" onClick={handleAiBoat}>
               {/* <ChatDots size={24} /> */}
               <Stars size={20} color="#1A35FE" />
-            </Link>
+            </div>
 
             <div className="profileNameSize prodgy_menu crPointer">
               <div className="d-flex gap-2" onClick={handleProfileModel}>
