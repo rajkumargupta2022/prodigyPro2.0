@@ -128,7 +128,9 @@ function getRemainingDays(closeDate: Date | string): string {
               <div className="d-flex justify-content-between">
                 <div className="d-flex">
                   <div className="prod_icon_img">
-                    <img src={`${imageUrl + item.accordAMCCode}.png`} height={35} width={35} alt="" className="rounded" />
+                    <img src={`${imageUrl + item.accordAMCCode}.png`} height={35} width={35} alt="" className="rounded"   onError={(e) => {
+                    (e.target as HTMLImageElement).src = import.meta.env.VITE_NO_IMG || "https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg";
+                  }}/>
                   </div>
                   <div className="ms-2 prod_icon_heading">
                     <h4>{item.scheme}</h4>

@@ -74,7 +74,7 @@ const NfoLive: React.FC = () => {
                   alt="AMC Logo"
                   className="nfo-logo"
                   onError={(e) => {
-                    (e.target as HTMLImageElement).src = "https://bankamcimagesv2.s3.ap-southeast-1.amazonaws.com/default-amc.png";
+                    (e.target as HTMLImageElement).src = import.meta.env.VITE_NO_IMG || "https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg";
                   }}
                 />
 

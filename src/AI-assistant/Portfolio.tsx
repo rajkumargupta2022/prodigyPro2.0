@@ -75,10 +75,12 @@ const Portfolio: React.FC = () => {
       // fresh here (rather than read off state) so it can't race the
       // performance-summary call below.
       let snapshotForInsight: familyDataType | undefined;
-      if (activeTab === "family" && hasFamily) {
-        setMemberSnapshot(null);
-        snapshotForInsight = familyTab;
-      } else if (selectedMember && selectedMember.ucc !== adminUser?.ucc) {
+      // if (activeTab === "family" && hasFamily) {
+      //   setMemberSnapshot(null);
+      //   snapshotForInsight = familyTab;
+      // } 
+      // else 
+        if (selectedMember && selectedMember.ucc !== adminUser?.ucc) {
         setMemberLoading(true);
         const data = await fetchMemberPortfolio(selectedMember.ucc);
         if (cancelled) return;
@@ -104,7 +106,7 @@ const Portfolio: React.FC = () => {
       cancelled = true;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeUcc, activeTab]);
+  }, [activeUcc]);
 
   const getAIInsight = async (data: portfolioSummaryKeys, snapshot?: familyDataType) => {
     setInsightLoading(true);
@@ -291,7 +293,7 @@ const Portfolio: React.FC = () => {
         </div>
 
         {/* ── AI Insight ── */}
-        {(insightLoading || aiInsight) && (
+        {((insightLoading || aiInsight)&&activeTab === "my") && (
           <div className="portfolio-insight-section">
             <div className="portfolio-insight-header">
               <div className="portfolio-insight-icon">
