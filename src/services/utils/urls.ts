@@ -127,8 +127,13 @@ export enum endPoints {
   getRedemptionOrderDetails = "orders/get-redemption-order-details",
   cancelXsipOrder = "orders/cancel-xsip-order",
   cancelSwpOrder = "orders/cancel-swp-order",
+  cancelStpOrder = "orders/cancel-stp-order",
   getTransactionHistory = "orders/get-transaction-history",
   getPurchaseOrders = "orders/purchase-orders",
+  getSwitchOrders = "orders/get-switch-orders",
+  getStpOrders = "orders/get-stp-orders",
+  getStpOrdersDetails="orders/get-stp-orders-details",
+  getSwitchOrdersDetails="orders/get-switch-orders-details",
 
   /* =========================
      REPORTS

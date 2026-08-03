@@ -46,11 +46,18 @@ body {
 }
 
 .lightTrxBtn {
+  width: 73px;
   color: #4D62FE;
   background-color: #E6E8FF;
   padding: 8px;
   font-size: 10px;
-
+}
+.lightTrxBtnSTP{
+width: 50px;
+  color: #4D62FE;
+  background-color: #E6E8FF;
+  padding: 8px;
+  font-size: 10px;
 }
 
 link {
@@ -828,8 +835,8 @@ hr {
 }
 
 .paddingLeftRight {
-  padding-left: 50px;
-  padding-right: 50px;
+  padding-left: 25px;
+  padding-right: 25px;
 }
 
 
@@ -2352,4 +2359,35 @@ margin-bottom: 0px;
   width: 50%;
   border-radius: 4px;
   margin: 0 auto 6px;
-}
+}
+
+/* ─── Transaction History Skeleton ─── */
+.skeleton-badge {
+  height: 24px;
+  width: 72px;
+  border-radius: 20px;
+}
+
+.skeleton-divider {
+  height: 1px;
+  border-radius: 2px;
+  margin: 12px 0;
+  background: linear-gradient(90deg, #e8eaf0 25%, #f5f6fa 50%, #e8eaf0 75%);
+  background-size: 1200px 100%;
+  animation: shimmer 1.4s infinite linear;
+}
+
+.skeleton-info-label {
+  height: 11px;
+  width: 55px;
+  border-radius: 4px;
+  margin-bottom: 6px;
+}
+
+.skeleton-info-value {
+  height: 15px;
+  width: 80px;
+  border-radius: 4px;
+}
+
+

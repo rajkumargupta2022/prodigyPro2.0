@@ -1,4 +1,4 @@
-import { ArrowLeft } from "react-bootstrap-icons";
+import { ArrowDown, ArrowLeft } from "react-bootstrap-icons";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { fetchAdminUser } from "../../services/user/adminUser";
@@ -11,18 +11,15 @@ import { getValueInSort } from "../../services/calculation/percentageCalculate";
 import { errorToast, successToast } from "../../services/utils/toast";
 
 
-function SIPOrderDetails() {
+function STPOrderDetails() {
   const location = useLocation()
   const navigate = useNavigate()
   const [page, setPage] = useState<number>(1)
   const [limit, setLimit] = useState<number>(50)
-  const [orderDetail, setOrderDetail] = useState<sipOrderDetailKey | null>(null);
-  const [detailData, setDetailData] = useState<any>(null)
+  const [orderDetail, setOrderDetail] = useState<any | null>(null);
   useEffect(() => {
     setLimit(50)
-    if (location.state?.accord_amc_code) {
-      // const detailData = location.state
-      setDetailData(location.state)
+    if (location.state?.source_scheme?.accord_product_code || location.state?.accord_product_code) {
       fetchOrderDetails()
     } else {
       navigate("/dashboard")
@@ -36,17 +33,23 @@ function SIPOrderDetails() {
       try {
         const reqBody = {
           ucc: adminUser?.ucc,
-          folio_number: data?.folio_number || "",
-          accord_product_code: data?.accord_product_code,
+          folio_number: data?.folio_number || location.state?.folio_number,
+          accord_product_code: data?.accord_product_code || location.state?.accord_product_code,
           page: pageNumber,
           limit
         }
-        const res = await postRequest<sipOrderDetailRes>(endPoints.getSipOrdersDetails, reqBody)
+        const res = await postRequest<sipOrderDetailRes>(endPoints.getStpOrdersDetails, reqBody)
         if (res.success) {
           setOrderDetail(res.data)
+        } else {
+          setOrderDetail(location.state)
         }
       } catch (err) {
+        console.log("err", location.state)
+        setOrderDetail(location.state)
         setOrderDetail(null)
+      } finally {
+        setOrderDetail(location.state)
       }
     }
 
@@ -62,7 +65,7 @@ function SIPOrderDetails() {
   };
 
   const orderTimeLine = (installment_id: string) => {
-    navigate("/sip-installment-details", { state: { installment_id, folio_number: orderDetail?.folio_number, accord_product_code: orderDetail?.accord_product_code , from: detailData?.from||"" } })
+    navigate("/order-timeline", { state: { installment_id, folio_number: orderDetail?.folio_number, accord_product_code: orderDetail?.accord_product_code } })
   }
   function getOrdinal(num: number) {
     const suffixes = ["th", "st", "nd", "rd"];
@@ -70,15 +73,14 @@ function SIPOrderDetails() {
     return num + (suffixes[(v - 20) % 10] || suffixes[v] || suffixes[0]);
   }
 
-  const cancelSIP = async () => {
+  const cancelSTP = async () => {
     try {
       const adminUser = fetchAdminUser()
       const reqBody = {
         ucc: adminUser?.ucc,
-        items: [location.state?.sip_registration_no]
-        // items: ["20889509"]
+        items: [location.state?.transaction_id]
       }
-      const res = await postRequest<cancelSIPRes>(endPoints.cancelXsipOrder, reqBody)
+      const res = await postRequest<cancelSIPRes>(endPoints.cancelStpOrder, reqBody)
       if (res.success) {
         successToast(res.message)
       } else {
@@ -93,29 +95,35 @@ function SIPOrderDetails() {
     <main className="col-md-9 ms-sm-auto col-lg-9 px-md-4 py-4">
       <h4>
         <ArrowLeft className="crPointer" size={20} onClick={() => navigate(-1)} />
-        {location.state?.from === "orders" ? "SIP Order Details" : "SIP Transaction Details"}
+        {location.state?.from === "orders" ? "STP Order Details" : "STP Transaction Details"}
       </h4>
       <hr className="fw-light text-secondary " />
-      
 
-          <div className="d-flex mb-3 align-items-center justify-content-between">
-            <div className="d-flex align-items-center">
-              <img
-                src={imageUrl + location?.state?.accord_amc_code + ".png"}
-                alt="image not found"
-                height={40}
-                width={40}
-                className="rounded"
-                />
-              <span className="fw-bold ms-2">{location.state.scheme_name}</span>
-            </div>
-{ detailData?.from !== "orders" && <button className="btn btn-danger" onClick={cancelSIP}>Cancel SIP</button>}
-          </div>
-                {(orderDetail?.installments?.length ?? 0) > 0 ?
+      {/* <div className="d-flex mb-3 align-items-center justify-content-between"> */}
+        <div className="d-flex mb-1 align-items-center">
+          <img src={imageUrl + orderDetail?.source_scheme?.accord_amc_code + ".png"} height={40} width={40} className="rounded" alt="image not found" />
+          <span className="fw-bold ms-2">{orderDetail?.source_scheme?.scheme_name}</span>
+        </div>
+        <div className=" align-items-center mb-1">
+          <div className='rounded-4 lightTrxBtnSTP p-1'><ArrowDown /> STP </div>
+        </div>
+        <div className="d-flex  mb-3 align-items-center">
+          <img src={imageUrl + orderDetail?.target_scheme?.accord_amc_code + ".png"} height={40} width={40} className="rounded" alt="image not found" />
+          <span className="fw-bold ms-2">{orderDetail?.target_scheme?.scheme_name}</span>
+        </div>
 
-  <>
+        {location.state?.from !== "orders" && location.state?.status === "ACTIVE" && (
+          <button className="btn btn-danger" onClick={cancelSTP}>
+            Cancel STP
+          </button>
+        )}
+      {/* </div> */}
+      {(orderDetail?.installments?.length ?? 0) > 0 ?
+        <>
+
+
           <div className="p-4 shadow-sm bg-white border-0 rounded-4 mb-2">
-            <span className="fw-bold">SIP {detailData?.from === "orders" ? "Orders Detail" : "Trnsaction History"}</span>
+            <span className="fw-bold">{location.state?.from === "orders" ? "STP Details" : "Transaction Details"}</span>
             <div className="d-flex justify-content-between mb-2 mt-3">
               <span className="text-secondary">STATUS</span>
               <span className="value-font2">{location.state?.status || "Active"}</span>
@@ -145,14 +153,14 @@ function SIPOrderDetails() {
               <span className="value-font2">{dateInStringNumber(location?.state?.next_sip_date)}</span>
             </div> */}
           </div>
-          {(orderDetail?.installments?.length ?? 0) > 0 ? orderDetail?.installments.map((item, i) => {
+          {(orderDetail?.installments?.length ?? 0) > 0 ? orderDetail?.installments.map((item: any, i: number) => {
             return <div
               className="p-4 shadow-sm bg-white border-0 rounded-4 mb-2 crPointer" key={i}
               onClick={() => orderTimeLine(item.installment_id)}
             >
               <div className="d-flex justify-content-between align-items-center">
                 <div>
-                  <h6 style={{ margin: 0 }}>{getOrdinal(item.installment)} SIP Instalment</h6>
+                  <h6 style={{ margin: 0 }}>{getOrdinal(item.installment)} STP Instalment</h6>
                 </div>
                 {/* <span className="success-badge">Sucessful</span> */}
               </div>
@@ -160,7 +168,7 @@ function SIPOrderDetails() {
 
               <div className="d-flex justify-content-between">
                 <div>
-                  <span className="text-secondary">SIP Date</span>
+                  <span className="text-secondary">STP Date</span>
                   <br />
                   <span className="value-font2">{dateInStringNumber(item.installment_date)}</span>
                 </div>
@@ -203,29 +211,28 @@ function SIPOrderDetails() {
             </div>
           )}
         </> : <div className="m-0"><div className="p-4 shadow-sm bg-white border-0 rounded-4 mb-2">
-            <span className="fw-bold">{location.state?.from === "orders" ? "SIP Details" : "SIP Transaction Details"}</span>
-            <div className="d-flex justify-content-between mb-2 mt-3">
-              <span className="text-secondary">STATUS</span>
-              <span className="value-font2">{location.state?.status || "Active"}</span>
-            </div>
-            
-            <div className="d-flex justify-content-between mb-2">
-              <span className="text-secondary">FOLIO NUMBER</span>
-              <span className="value-font2">{location.state?.folio_number || "N/A"}</span>
-            </div>
-            <div className="d-flex justify-content-between mb-2">
-              <span className="text-secondary">{location.state?.from === "orders" ? "ORDER DATE" : "TRANSACTION DATE"}</span>
-              <span className="value-font2">{dateInStringNumber(location.state?.order_date)}</span>
-            </div>
-              <div className="d-flex justify-content-between mb-2">
-              <span className="text-secondary">{location.state?.from === "orders" ? "INSTALLMENT VALUE" : "TRANSACTION VALUE"}</span>
-              <span className="value-font2">₹{getValueInSort(Number(location.state?.installment_amount))}</span>
-            </div>
-          
-          </div></div>}
+          <span className="fw-bold">{location.state?.from === "orders" ? "STP Details" : "Transaction Details"}</span>
+          <div className="d-flex justify-content-between mb-2 mt-3">
+            <span className="text-secondary">STATUS</span>
+            <span className="value-font2">{location.state?.status}</span>
+          </div>
+          <div className="d-flex justify-content-between mb-2">
+            <span className="text-secondary">FOLIO NUMBER</span>
+            <span className="value-font2">{location.state?.folio_number || "N/A"}</span>
+          </div>
+          <div className="d-flex justify-content-between mb-2">
+            <span className="text-secondary">{location.state?.from === "orders" ? "ORDER DATE" : "TRANSACTION DATE"}</span>
+            <span className="value-font2">{dateInStringNumber(location.state?.order_date)}</span>
+          </div>
+          <div className="d-flex justify-content-between mb-2">
+            <span className="text-secondary">{location.state?.from === "orders" ? "INSTALLMENT VALUE" : "TRANSACTION VALUE"}</span>
+            <span className="value-font2">₹{getValueInSort(Number(location.state?.installment_amount))}</span>
+          </div>
+
+        </div></div>}
     </main>
 
   );
 }
 
-export default SIPOrderDetails;
+export default STPOrderDetails;

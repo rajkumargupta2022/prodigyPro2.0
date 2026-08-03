@@ -164,6 +164,7 @@ const SwitchFund: React.FC<SwitchFundProp> = ({
   };
 
   const handleSwitchTransaction = () => {
+    
     const hasDirect = selectedSchemeList.some((item) =>
       item?.fromScheme?.toLowerCase()?.includes('direct')
     );

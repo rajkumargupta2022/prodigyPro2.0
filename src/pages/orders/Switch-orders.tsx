@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { postRequest } from "../../services/Api/HandleApi";
-import { oneTimeKeys, OneTimeRes, } from "../data-interfaces/orders";
+import { switchOrderKeys, switchOrderRes, } from "../data-interfaces/orders";
 import { endPoints, imageUrl } from "../../services/utils/urls";
 import { fetchAdminUser } from "../../services/user/adminUser";
 import { getValueInSort } from "../../services/calculation/percentageCalculate";
@@ -11,11 +11,11 @@ import Paginations from "../../components/Pagination";
 import PortfolioEmpty from "../PortfolioEmpty";
 
 
-function OneTimeOrders() {
+function SwitchOrders() {
   const navigate = useNavigate();
   const [limit, setLimit] = useState<number>(20);
   const [page, setPage] = useState<number>(1);
-  const [purchaseList, setPurchaseList] = useState<oneTimeKeys[]>([]);
+  const [switchList, setSwitchList] = useState<switchOrderKeys[]>([]);
   const [totalRecords, setTotalRecords] = useState<number>(0);
 
   useEffect(() => {
@@ -27,31 +27,33 @@ function OneTimeOrders() {
     if (adminUser?.ucc) {
       const reqBody = { ucc: adminUser?.ucc, page, limit };
       try {
-        const res = await postRequest<OneTimeRes>(endPoints.getPurchaseOrders, reqBody);
+        const res = await postRequest<switchOrderRes>(endPoints.getSwitchOrders, reqBody);
         if (res.success) {
-          setPurchaseList(res.data);
+          setSwitchList(res.data);
           setTotalRecords(res.totalRecords || 0);
         }
       } catch {
-        setPurchaseList([]);
+        setSwitchList([]);
       }
     }
   };
 
 
 
- const orderTimeLine = (item: oneTimeKeys) => {
-    navigate("/purchase-details", { state: {...item, from: "orders"} })
+  const orderTimeLine = (item: switchOrderKeys) => {
+  
+    navigate("/switch-orders-details", { state: {...item,from:"orders"} })
   }
   return (
     <>
       {/* ✅ Pagination Header Above */}
 
-      {purchaseList?.length > 0 ? (
-        purchaseList?.map((item) => (
-          
+      {/* ✅ SIP Data List */}
+      {switchList?.length > 0 ? (
+        switchList?.map((item) => (
+
           <div
-            key={item.folio_number + item.scheme_name}
+            key={item.folio_number + item.source_scheme?.scheme_name}
             className="p-4 shadow-sm bg-white border-0 rounded-4 mb-3 crPointer"
             onClick={() => orderTimeLine(item)}
           >
@@ -59,16 +61,17 @@ function OneTimeOrders() {
               <div className="col-lg-8 col-md-8 col-12 py-2">
                 <div className="d-flex">
                   <img
-                    src={imageUrl + item?.accord_amc_code + ".png"}
+                    src={imageUrl + item?.source_scheme?.accord_amc_code + ".png"}
                     alt="img"
                     className="rounded me-2"
                     style={{ width: 40, height: 40 }}
                   />
                   <div className="ms-2" style={{ flex: 4 }}>
-                    <h6 className="mb-0">{item.scheme_name?.toLowerCase()
+                    <h6 className="mb-0">{item.source_scheme?.scheme_name?.toLowerCase()
                       .split(" ")
                       .map(word => word.charAt(0).toUpperCase() + word.slice(1))
                       .join(" ")}</h6>
+
                     <span className="text-secondary small">
                       Folio: <span className="fw-semibold">{item.folio_number || "N/A"}</span>
                     </span>
@@ -76,7 +79,7 @@ function OneTimeOrders() {
                 </div>
               </div>
               <div className="col-lg-4 col-md-4 col-12 py-2 text-md-end text-start">
-               {failedString.includes(item.status)?<span className="failed-badge">{item.status?.charAt(0).toUpperCase() + item?.status.slice(1).toLowerCase()}</span>:pendingString.includes(item.status)?<span className="pending-badge">{item.status}</span>:<span className="success-badge">{item.status?.charAt(0).toUpperCase() + item?.status.slice(1).toLowerCase()}</span>}
+                {failedString.includes(item.status) ? <span className="failed-badge">{item.status?.charAt(0).toUpperCase() + item?.status.slice(1).toLowerCase()}</span> : pendingString.includes(item.status) ? <span className="pending-badge">{item.status}</span> : <span className="success-badge">{item.status?.charAt(0).toUpperCase() + item?.status.slice(1).toLowerCase()}</span>}
               </div>
 
             </div>
@@ -101,14 +104,14 @@ function OneTimeOrders() {
           </div>
         ))
       ) : (
-       <div className="m-0"><PortfolioEmpty title={"No Recent Lumpsum Orders"} body={"Your order history will appear here once you start investing. Begin your journey today!"} btnName={"Explore Funds"} btnUrl={"/all-mutual-funds"} /></div>
+        <div className="m-0"><PortfolioEmpty title={"No Recent Switch Orders"} body={"Your order history will appear here once you start investing. Begin your journey today!"} btnName={"Explore Funds"} btnUrl={"/all-mutual-funds"} /></div>
       )}
-     {totalRecords>9?
-    <Paginations totalRecords={totalRecords}  page={page} setPage={setPage}  limit={limit} setLimit={setLimit}/>
-:""}
+      {totalRecords > 9 ?
+        <Paginations totalRecords={totalRecords} page={page} setPage={setPage} limit={limit} setLimit={setLimit} />
+        : ""}
 
     </>
   );
 }
 
-export default OneTimeOrders;
+export default SwitchOrders;

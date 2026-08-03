@@ -182,7 +182,7 @@ const PortfolioReview = () => {
   }
   const handleBulkSwitch = () => {
     setSwitchListForProps(switchList)
-
+   
     const products = new Set<number>();
     switchList.forEach(element => {
       products.add(element.accordSchemeCode)

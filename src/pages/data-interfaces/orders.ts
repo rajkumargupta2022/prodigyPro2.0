@@ -100,6 +100,8 @@ export interface RedemptionKeys {
   folio_number: string;
   order_date: string;
   redemption_amount: string;
+  redemption_units?: string | string;
+  all_units?: boolean;
   transaction_id: string;
   status: string;
 }
@@ -142,6 +144,8 @@ export interface purchaseDetailsKeys {
   bank_account_number: string;
   nav_date: string;
   nav_price: number;
+  all_units?: boolean;
+  redemption_units?: number;
 }
 export interface swpOrderDetailsRes {
   success: boolean;
@@ -158,6 +162,7 @@ export interface swpOrderDetailsKeys {
   swp_start_date: string;
   folio_number: string;
   installments: swpInstallmentKeys[];
+  transaction_id?: string;
 }
 export interface swpInstallmentKeys {
   installment: number;
@@ -211,4 +216,41 @@ export interface transactionHistoryKeys {
   order_date: string;
   redemption_amount?: number
   order_amount?: number;
+}
+export interface switchOrderRes {
+  success: boolean;
+  page: number;
+  limit: number;
+  totalRecords: number;
+  totalPages: number;
+  data: switchOrderKeys[];
+}
+export interface switchOrderDetailsRes {
+  success: boolean;
+  page: number;
+  limit: number;
+  totalRecords: number;
+  totalPages: number;
+  data: switchOrderKeys;
+}
+export interface switchOrderKeys {
+  source_scheme: schemeKeys;
+  target_scheme: schemeKeys;
+  folio_number: string;
+  order_date: string;
+  order_amount: string;
+  transaction_id: string;
+  status: string;
+  from?: string;
+  investment_type?: string;
+  bank_name?: string;
+  bank_account_number?: string;
+  nav_date?: string;
+  nav_price?: number;
+  installment_amount?: number;
+}
+export interface schemeKeys {
+  scheme_name: string;
+  accord_product_code: number;
+  accord_amc_code: number;
 }

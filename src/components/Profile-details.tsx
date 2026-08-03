@@ -35,7 +35,7 @@ function MyProfile() {
           <p className="fs16px">{adminUser?.jh1_name}</p>
         </div>}
         {adminUser?.jh2_name && <div className="mt-4">
-          <p className="m-0 fs12px">SECOND HOLDER NAME</p>
+          <p className="m-0 fs12px">THIRD HOLDER NAME</p>
           <p className="fs16px">{adminUser?.jh2_name}</p>
         </div>}
 

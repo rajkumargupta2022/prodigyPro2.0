@@ -360,9 +360,9 @@ const FundDetails = () => {
     }
 
   }
-  // const goTransactionHistory = (item: schemeDeatilDataKeys) => {
-  //   navigate("/transaction-history", { state: { accord_product_code: item.accordSchemeCode, folio_number: location.state?.folio } })
-  // }
+  const goTransactionHistory = (item: schemeDeatilDataKeys) => {
+    navigate("/transaction-history", { state: { accord_product_code: item.accordSchemeCode, folio_number: location.state?.folio } })
+  }
   const handleInstaRedeem = () => {
     const uccStatus = localStorage.getItem("uccStatus")
     if (uccStatus !== UccStatusEnum.ACTIVE) {
@@ -537,7 +537,7 @@ const FundDetails = () => {
                       {checkTransactionAllowed(schemeList, keys.redumption) && <li onClick={() => handleRedmptionModel()}>Redeem Fund</li>}
                       {checkTransactionAllowed(schemeList, keys.stp) && <li onClick={() => handleSwitch("STP")}>Systematic Transfer Plan (STP)</li>}
                       {checkTransactionAllowed(schemeList, keys.swp) && <li onClick={() => handleSwp()}>Systematic Withdrawal Plan (SWP)</li>}
-                      {/* <li onClick={() => goTransactionHistory(schemeList[0])}>Transaction History</li> */}
+                      <li onClick={() => goTransactionHistory(schemeList[0])}>Transaction History</li>
 
                     </ul>
                   </div>

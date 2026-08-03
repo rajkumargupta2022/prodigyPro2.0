@@ -15,6 +15,7 @@ const Account = ({ Component }: { Component: any }) => {
   const navBar = [
     { name: "My Profile", url: "/my-profile" },
     { name: "All Orders", url: "/all-orders" },
+    { name: "Transaction History", url: "/transaction-list" },
     { name: "Linked Bank Accounts", url: "/linked-bank-account" },
     { name: "Risk Profile ", url: "/risk-profile" },
     { name: "Financial Calculators", url: "/calculator-list" },
@@ -31,7 +32,7 @@ const Account = ({ Component }: { Component: any }) => {
   ];
 
   const [isActive, setIsActive] = useState(false);
-  
+
 
   const handleToggle = () => {
     setIsActive(!isActive);
@@ -67,7 +68,7 @@ const Account = ({ Component }: { Component: any }) => {
                         }}
                       >
                         <li
-                          className={`nav-item  d-flex justify-content-between align-items-center ${i !== 6 && "border-bottom"} ${pathname === el.url ? "active" : ""} ${isDisabled ? "text-muted" : ""}`}
+                          className={`nav-item  d-flex justify-content-between align-items-center ${i !== 7 && "border-bottom"} ${pathname === el.url ? "active" : ""} ${isDisabled ? "text-muted" : ""}`}
                         >
 
                           {el.name}

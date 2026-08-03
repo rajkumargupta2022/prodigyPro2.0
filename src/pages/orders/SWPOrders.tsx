@@ -38,7 +38,7 @@ function SWPOrders() {
   };
 
   const detailPage = (item: swpOrderKeys) => {
-    navigate("/swp-order", { state: item })
+    navigate("/swp-order", { state: {...item,from:"orders"} })
   }
 
   return (
@@ -79,11 +79,11 @@ function SWPOrders() {
                 <br />
                 <span className="value-font2">{dateInStringNumber(item.order_date)}</span>
               </div>
-              <div>
+              {/* <div>
                 <span className="text-secondary">Next SWP Date</span>
                 <br />
                 <span className="value-font2">{dateInStringNumber(item.next_swp_date)}</span>
-              </div>
+              </div> */}
               <div>
                 <span className="text-secondary">Amount</span>
                 <br />
@@ -95,7 +95,7 @@ function SWPOrders() {
           </div>
         ))
       ) : (
-        <PortfolioEmpty title={"No Orders Yet"} body={"Your order history will appear here once you start investing. Begin your journey today!"} btnName={"Explore Funds"} btnUrl={"/all-mutual-funds"} />
+        <PortfolioEmpty title={"No Recent SWP Orders"} body={"Your order history will appear here once you start investing. Begin your journey today!"} btnName={"Explore Funds"} btnUrl={"/all-mutual-funds"} />
       )}
       {totalRecords > 9 ?
         <Paginations totalRecords={totalRecords} page={page} setPage={setPage} limit={limit} setLimit={setLimit} />

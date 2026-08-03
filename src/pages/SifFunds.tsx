@@ -2,7 +2,7 @@ import NavBar from "../components/Navbar";
 import { ChevronRight, CurrencyRupee } from "react-bootstrap-icons";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
-import { getRequest, getRequestSimple } from "../services/Api/HandleApi";
+import { getRequestSimple } from "../services/Api/HandleApi";
 import { endPoints, imageUrl } from "../services/utils/urls";
 import { sifFundsKeys, sifFundsRes } from "./data-interfaces/sif-funds";
 import { getValueInSort } from "../services/calculation/percentageCalculate";

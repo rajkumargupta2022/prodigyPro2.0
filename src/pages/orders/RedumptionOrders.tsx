@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { postRequest } from "../../services/Api/HandleApi";
-import {  RedemptionKeys, RedemptionRes, } from "../data-interfaces/orders";
+import { RedemptionKeys, RedemptionRes, } from "../data-interfaces/orders";
 import { endPoints, imageUrl } from "../../services/utils/urls";
 import { fetchAdminUser } from "../../services/user/adminUser";
 import { getValueInSort } from "../../services/calculation/percentageCalculate";
@@ -41,7 +41,7 @@ function OneTimeOrders() {
 
 
   const detailPage = (item: RedemptionKeys) => {
-    navigate("/redemption-details", { state: item })
+    navigate("/redemption-details", { state: {...item,from:"orders"} })
   }
 
   return (
@@ -77,7 +77,7 @@ function OneTimeOrders() {
                 </div>
               </div>
               <div className="col-lg-4 col-md-4 col-12 py-2 text-md-end text-start">
-               {failedString.includes(item.status)?<span className="failed-badge">{item.status?.charAt(0).toUpperCase() + item?.status.slice(1).toLowerCase()}</span>:pendingString.includes(item.status)?<span className="pending-badge">{item.status}</span>:<span className="success-badge">{item.status?.charAt(0).toUpperCase() + item?.status.slice(1).toLowerCase()}</span>}
+                {failedString.includes(item.status) ? <span className="failed-badge">{item.status?.charAt(0).toUpperCase() + item?.status.slice(1).toLowerCase()}</span> : pendingString.includes(item.status) ? <span className="pending-badge">{item.status}</span> : <span className="success-badge">{item.status?.charAt(0).toUpperCase() + item?.status.slice(1).toLowerCase()}</span>}
               </div>
 
             </div>
@@ -94,19 +94,34 @@ function OneTimeOrders() {
                 <span className="fw-semibold">{dateInStringNumber(item.next_sip_date)}</span>
               </div> */}
               <div>
-                <span className="text-secondary small">Amount</span>
+                <span className="text-secondary small">
+                  {Number(item.redemption_amount) > 0
+                    ? "Amount"
+                    : item.all_units || Number(item.redemption_units) > 0
+                      ? "Units"
+                      : "-"}
+                </span>
                 <br />
-                <span className="fw-semibold">₹{getValueInSort(Number(item.redemption_amount))}</span>
+
+                <span className="fw-semibold">
+                  {Number(item.redemption_amount) > 0
+                    ? `₹${getValueInSort(Number(item.redemption_amount))}`
+                    : item.all_units
+                      ? "All Units"
+                      : Number(item.redemption_units) > 0
+                        ? getValueInSort(Number(item.redemption_units))
+                        : "-"}
+                </span>
               </div>
             </div>
           </div>
         ))
       ) : (
-       <PortfolioEmpty title={"No Orders Yet"} body={"Your order history will appear here once you start investing. Begin your journey today!"} btnName={"Explore Funds"} btnUrl={"/all-mutual-funds"} />
+        <PortfolioEmpty title={"No Orders Yet"} body={"Your order history will appear here once you start investing. Begin your journey today!"} btnName={"Explore Funds"} btnUrl={"/all-mutual-funds"} />
       )}
-    {totalRecords>9?
-    <Paginations totalRecords={totalRecords}  page={page} setPage={setPage}  limit={limit} setLimit={setLimit}/>
-:""}
+      {totalRecords > 9 ?
+        <Paginations totalRecords={totalRecords} page={page} setPage={setPage} limit={limit} setLimit={setLimit} />
+        : ""}
 
     </>
   );

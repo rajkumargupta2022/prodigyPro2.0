@@ -56,9 +56,12 @@ const SipCalculator = () => {
 
     return xAxisArray;
   };
+   const annualRateToMonthlyRate = (R: number) => {
+    return Math.pow(1 + R / 100, 1 / 12) - 1;
+  };
   const valueForGraph = (type: "market" | "invested"): number[] => {
     let graphValue: number[] = [];
-    let monthlyRate: number = resultRateOfReturn / 12 / 100;
+    let monthlyRate: number = annualRateToMonthlyRate(expectedRateOfReturn);
 
     const calcValue = (years: number) => {
       let months = years * 12;
@@ -134,9 +137,7 @@ const SipCalculator = () => {
       },
     },
   };
- const annualRateToMonthlyRate = (R: number) => {
-    return Math.pow(1 + R / 100, 1 / 12) - 1;
-  };
+
   const calculateSip = (e: React.FormEvent) => {
     e.preventDefault();
 

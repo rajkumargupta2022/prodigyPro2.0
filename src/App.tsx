@@ -63,7 +63,7 @@ import LocateUs from "./components/Locate-us";
 import AboutUs from "./components/About-Us";
 import PrivacyPolicyComponent from "./components/privacyPolicy";
 import AllOrders from "./components/All-orders";
-import OrderDetails from "./pages/orders/SipInstallmentDetails";
+import SipInstallmentDetails from "./pages/orders/SipInstallmentDetails";
 import SIPOrderDetails from "./pages/orders/Sip-order-details";
 // import STPOrderDetails from "./pages/orders/Stp-order-details";
 import SWPOrderDetails from "./pages/orders/SwpOrderDetails";
@@ -103,6 +103,10 @@ import AddFamilyMember from "./pages/ucc/Add-family-member";
 import MandateAmount from "./pages/ucc/Mandate-amount";
 import UccSubmit from "./pages/ucc/Ucc-submit";
 import TopPerformers from "./pages/Top-performers";
+import StpOrders from "./pages/orders/StpOrders";
+import TransactionList from "./pages/orders/Transaction-list";
+import SwitchDetails from "./pages/orders/Switch-orders-details";
+import STPOrderDetails from "./pages/orders/Stp-orders-details";
 
 const LoaderHandler = () => {
   const { showLoader, hideLoader } = useLoader();
@@ -159,6 +163,7 @@ function App() {
             element={<BankDetailsVarification />}
           />
           <Route path="/nomination-list" element={<NominationList />} />
+          <Route path="/transaction-list" element={<TransactionList />} />
 
           <Route path="/portfolio-import" element={<PortfolioImport />} />
           <Route
@@ -196,8 +201,8 @@ function App() {
           />
 
           <Route
-            path="/order-timeline"
-            element={<Account Component={OrderDetails} />}
+            path="/sip-installment-details"
+            element={<Account Component={SipInstallmentDetails} />}
           />
           <Route
             path="/swp-installmet-details"
@@ -216,7 +221,15 @@ function App() {
             path="/sip-order"
             element={<Account Component={SIPOrderDetails} />}
           />
+          <Route
+            path="/stp-orders-details"
+            element={<Account Component={STPOrderDetails} />}
+          />
 
+          <Route
+            path="/switch-orders-details"
+            element={<Account Component={SwitchDetails} />}
+          />
           {/* <Route
             path="/stp-order"
             element={<Account Component={STPOrderDetails} />}
@@ -225,6 +238,10 @@ function App() {
           <Route
             path="/swp-order"
             element={<Account Component={SWPOrderDetails} />}
+          />
+          <Route
+            path="/stp-order"
+            element={<Account Component={StpOrders} />}
           />
 
           <Route

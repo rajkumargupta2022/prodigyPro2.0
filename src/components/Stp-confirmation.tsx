@@ -33,7 +33,11 @@ const StpConfiramtion: React.FC<investmetProps> = ({ show, setShow, cartItem, se
 
   const finalSwitch = async () => {
     
-    if (!cartItem[0]?.amount && cartItem[0]?.installment_units) {
+    if (!cartItem[0]?.amount && cartItem[0]?.isSwitchAmount) {
+      errorToast("Plaese enter amount or units...")
+      return
+    }
+      if (!cartItem[0]?.redemption_units && !cartItem[0]?.isSwitchAmount) {
       errorToast("Plaese enter amount or units...")
       return
     }
@@ -78,7 +82,7 @@ const StpConfiramtion: React.FC<investmetProps> = ({ show, setShow, cartItem, se
       return {
         schemeName: item.toScheme,
         fromAccordProductCode: item.fromAccordProductCode,
-        toAccordProductCode: item.toAccordProductCode,
+        toAccordProductCode: String(item.toAccordProductCode),
         amount: item.amount || 0,
         folioNumber: item.folioNumber,
         installment_units: item.installment_units || 0,
@@ -183,7 +187,7 @@ const StpConfiramtion: React.FC<investmetProps> = ({ show, setShow, cartItem, se
                     <img src={imageUrl + item.fromAccordAMCCode + ".png"} height={35} width={35} className='rounded' alt="" />
                   </div>
                   <div className="ms-2 prod_icon_heading">
-                    <h4>{item.toScheme}</h4>
+                    <h4>{item.fromScheme}</h4>
                     <p>Selected fund 1</p>
                   </div>
                 </div>
@@ -200,7 +204,7 @@ const StpConfiramtion: React.FC<investmetProps> = ({ show, setShow, cartItem, se
                     <img src={imageUrl + item.toAccordAMCCode + ".png"} height={35} width={35} className='rounded' alt="" />
                   </div>
                   <div className="ms-2 prod_icon_heading">
-                    <h4>{item.fromScheme}</h4>
+                    <h4>{item.toScheme}</h4>
                     <p>Selected fund 1</p>
                   </div>
                 </div>
