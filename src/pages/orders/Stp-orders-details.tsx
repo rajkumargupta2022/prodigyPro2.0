@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { fetchAdminUser } from "../../services/user/adminUser";
 import { postRequest } from "../../services/Api/HandleApi";
 import { endPoints, imageUrl } from "../../services/utils/urls";
-import { cancelSIPRes, sipOrderDetailKey, sipOrderDetailRes } from "../data-interfaces/orders";
+import { cancelSIPRes,  sipOrderDetailRes } from "../data-interfaces/orders";
 import { dateInStringNumber } from "../../services/dates/dateFormater";
 import { getValueInSort } from "../../services/calculation/percentageCalculate";
 // import PortfolioEmpty from "../PortfolioEmpty";

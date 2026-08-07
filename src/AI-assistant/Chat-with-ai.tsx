@@ -3,7 +3,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { Modal, Form, Button, Spinner } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import logo from "/title-icon.svg";
-import { ArrowClockwise, Send, X, Search, ArrowRepeat, GraphUpArrow, PieChartFill, StarFill, PatchCheckFill, MicFill } from "react-bootstrap-icons";
+import { ArrowClockwise, Send, X, Search, ArrowRepeat, GraphUpArrow, PieChartFill, StarFill, PatchCheckFill, MicFill, ChevronDown } from "react-bootstrap-icons";
 import { errorToast } from "../services/utils/toast";
 import { initialPrompt } from "./promts";
 import {
@@ -35,6 +35,7 @@ import { searchKeys, durationKeys, riskKeys } from "../pages/data-interfaces/exp
 import axios from "axios";
 import { aiChatResponse } from "../pages/data-interfaces/ai";
 import { endPoints } from "../services/utils/urls";
+import { playAIVoice } from "../services/utils/soundFs";
 
 
 const assistant = "assistant"
@@ -85,6 +86,7 @@ interface Message {
   recommendDuration?: number
   noMandateAvailable?: boolean
   helpRedirect?: boolean
+  schemeDetailShow?: boolean
 }
 
 type QuickReplyStage = "risk" | "horizon" | "transactionType" | "sipDate" | null;
@@ -140,12 +142,26 @@ const ChatWithAI: React.FC<Props> = ({ show, setShow }) => {
   const [pendingInvestPrefill, setPendingInvestPrefill] = useState<InvestPrefill | null>(null);
 
   const chatEndRef = useRef<HTMLDivElement>(null);
+  const chatScrollRef = useRef<HTMLDivElement>(null);
+  const [showScrollBtn, setShowScrollBtn] = useState(false);
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({
       behavior: "smooth",
     });
   }, [messages]);
+
+  const handleChatScroll = () => {
+    const el = chatScrollRef.current;
+    if (!el) return;
+    const distanceFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
+    setShowScrollBtn(distanceFromBottom > 80);
+  };
+
+  const scrollToBottom = () => {
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    setShowScrollBtn(false);
+  };
 
   // ── Voice input (Web Speech API) ─────────────────────────────
   const [isListening, setIsListening] = useState(false);
@@ -227,6 +243,9 @@ const ChatWithAI: React.FC<Props> = ({ show, setShow }) => {
       resetChat();
       recognitionRef.current?.stop();
       setIsListening(false);
+    }
+    if (show) {
+      playAIVoice()
     }
   }, [show])
 
@@ -637,7 +656,7 @@ const ChatWithAI: React.FC<Props> = ({ show, setShow }) => {
       const aiParams = response.data?.params;
       const intent = response.data?.intent;
 
-      const intentResult = await handleAIIntent(intent, aiParams,userText);
+      const intentResult = await handleAIIntent(intent, aiParams, userText);
 
       setMessages((prev) => [
         ...prev,
@@ -650,6 +669,7 @@ const ChatWithAI: React.FC<Props> = ({ show, setShow }) => {
           ...(intentResult.helpRedirect ? { helpRedirect: true } : {}),
         },
       ]);
+
 
       if (intentResult.startRecommendFlow) {
         await startRecommendFundsFlow();
@@ -765,7 +785,9 @@ const ChatWithAI: React.FC<Props> = ({ show, setShow }) => {
         >
           {/* Chat Messages */}
           <div
-            className="flex-grow-1 p-2 overflow-auto bg-light"
+            className="flex-grow-1 p-2 overflow-auto bg-light position-relative"
+            ref={chatScrollRef}
+            onScroll={handleChatScroll}
           >
             {messages.length === 1 && !loading && (
               <div className="chat-empty-state">
@@ -797,114 +819,114 @@ const ChatWithAI: React.FC<Props> = ({ show, setShow }) => {
               );
 
               return (
-              <div
-                key={index}
-                className={`mb-3 ${msg.role === user
-                  ? "text-end"
-                  : "text-start"
-                  }`}
-              >
                 <div
-                  className={`chat-message-bubble d-inline-block p-2 rounded-3 ${msg.role === user
-                    ? "logobg_color text-white"
-                    : isCardMessage ? "bg-light border-0 shadow-none" : "bg-white shadow-sm border"
-                    } ${msg.schemeOptions || isCardMessage ? "wide" : ""} ${isCardMessage ? "card" : ""}`}
+                  key={index}
+                  className={`mb-3 ${msg.role === user
+                    ? "text-end"
+                    : "text-start"
+                    }`}
                 >
-                  {!isCardMessage && renderMessageText(msg.text)}
-                  {msg.noMandateAvailable && (
-                    <div className="mt-2">
-                      <button
-                        type="button"
-                        className="chat-create-mandate-btn"
-                        onClick={handleCreateMandate}
-                      >
-                        Create Mandate
-                      </button>
-                    </div>
-                  )}
-                  {msg.helpRedirect && (
-                    <div className="mt-2">
-                      <button
-                        type="button"
-                        className="chat-help-btn"
-                        onClick={handleGoToHelpAndSupport}
-                      >
-                        Help & Support
-                      </button>
-                    </div>
-                  )}
-                  {msg.portfolioData && (
-                    <Portfolio />
-                  )}
-                  {msg.topPerformersData && (
-                    <div className="chat-card-wrapper">
-                      <p className="chat-card-message-text">{renderMessageText(msg.text)}</p>
-                      <TopPerformers />
-                    </div>
-                  )}
-                  {msg.nfoLiveData && (
-                    <div className="chat-card-wrapper">
-                      <p className="chat-card-message-text">{renderMessageText(msg.text)}</p>
-                      <NfoLive />
-                    </div>
-                  )}
-                  {msg.recommendedFundsData && msg.recommendRisk !== undefined && msg.recommendDuration !== undefined && (
-                    <div className="chat-card-wrapper">
-                      <p className="chat-card-message-text">{renderMessageText(msg.text)}</p>
-                      <RecommendedFunds risk={msg.recommendRisk} duration={msg.recommendDuration} />
-                    </div>
-                  )}
-                  {msg.schemeDetails && (
-                    <div className="chat-card-wrapper">
-                      <p className="chat-card-message-text">{renderMessageText(msg.text)}</p>
-                      <SchemeDetail scheme={msg.schemeDetails} />
-                    </div>
-                  )}
-                  {msg.folioOptions && (
-                    <div className="chat-card-wrapper">
-                      <p className="chat-card-message-text">{renderMessageText(msg.text)}</p>
-                      <InvestFolioList folios={msg.folioOptions} onSelect={handleFolioSelect} />
-                    </div>
-                  )}
-                  {msg.mandateOptions && (
-                    <div className="chat-card-wrapper">
-                      <p className="chat-card-message-text">{renderMessageText(msg.text)}</p>
-                      <InvestMandateList mandates={msg.mandateOptions} onSelect={handleMandateSelect} />
-                    </div>
-                  )}
-                  {msg.investSummary && (
-                    <InvestSummary
-                      data={msg.investSummary}
-                      onCancel={handleCancelInvest}
-                      onConfirm={handleConfirmInvest}
-                      disabled={loading}
-                    />
-                  )}
-                  {msg.investResult && (
-                    <div className="chat-card-wrapper">
-                      <p className="chat-card-message-text">{renderMessageText(msg.text)}</p>
-                      <InvestResult
-                        success={msg.investResult.success}
-                        results={msg.investResult.results}
-                        transactionType={msg.investResult.transactionType}
+                  <div
+                    className={`chat-message-bubble d-inline-block p-2 rounded-3 ${msg.role === user
+                      ? "logobg_color text-white"
+                      : isCardMessage ? "bg-light border-0 shadow-none" : "bg-white shadow-sm border"
+                      } ${msg.schemeOptions || isCardMessage ? "wide" : ""} ${isCardMessage ? "card" : ""}`}
+                  >
+                    {!isCardMessage && renderMessageText(msg.text)}
+                    {msg.noMandateAvailable && (
+                      <div className="mt-2">
+                        <button
+                          type="button"
+                          className="chat-create-mandate-btn"
+                          onClick={handleCreateMandate}
+                        >
+                          Create Mandate
+                        </button>
+                      </div>
+                    )}
+                    {msg.helpRedirect && (
+                      <div className="mt-2">
+                        <button
+                          type="button"
+                          className="chat-help-btn"
+                          onClick={handleGoToHelpAndSupport}
+                        >
+                          Help & Support
+                        </button>
+                      </div>
+                    )}
+                    {msg.portfolioData && (
+                      <Portfolio />
+                    )}
+                    {msg.topPerformersData && (
+                      <div className="chat-card-wrapper">
+                        <p className="chat-card-message-text">{renderMessageText(msg.text)}</p>
+                        <TopPerformers />
+                      </div>
+                    )}
+                    {msg.nfoLiveData && (
+                      <div className="chat-card-wrapper">
+                        <p className="chat-card-message-text">{renderMessageText(msg.text)}</p>
+                        <NfoLive />
+                      </div>
+                    )}
+                    {msg.recommendedFundsData && msg.recommendRisk !== undefined && msg.recommendDuration !== undefined && (
+                      <div className="chat-card-wrapper">
+                        <p className="chat-card-message-text">{renderMessageText(msg.text)}</p>
+                        <RecommendedFunds risk={msg.recommendRisk} duration={msg.recommendDuration} />
+                      </div>
+                    )}
+                    {msg.schemeDetails && (
+                      <div className="chat-card-wrapper">
+                        <p className="chat-card-message-text">{renderMessageText(msg.text)}</p>
+                        <SchemeDetail scheme={msg.schemeDetails} />
+                      </div>
+                    )}
+                    {msg.folioOptions && (
+                      <div className="chat-card-wrapper">
+                        <p className="chat-card-message-text">{renderMessageText(msg.text)}</p>
+                        <InvestFolioList folios={msg.folioOptions} onSelect={handleFolioSelect} />
+                      </div>
+                    )}
+                    {msg.mandateOptions && (
+                      <div className="chat-card-wrapper">
+                        <p className="chat-card-message-text">{renderMessageText(msg.text)}</p>
+                        <InvestMandateList mandates={msg.mandateOptions} onSelect={handleMandateSelect} />
+                      </div>
+                    )}
+                    {msg.investSummary && (
+                      <InvestSummary
+                        data={msg.investSummary}
+                        onCancel={handleCancelInvest}
+                        onConfirm={handleConfirmInvest}
+                        disabled={loading}
                       />
-                    </div>
-                  )}
-                  {msg.schemeOptions && msg.schemeOptions.length > 0 && (
-                    <div className="mt-2">
-                      <SchemeList
-                        schemes={msg.schemeOptions}
-                        onSelect={(scheme) => {
-                          const prefill = pendingInvestPrefill;
-                          setPendingInvestPrefill(null);
-                          startInvestFlow(scheme, prefill);
-                        }}
-                      />
-                    </div>
-                  )}
+                    )}
+                    {msg.investResult && (
+                      <div className="chat-card-wrapper">
+                        <p className="chat-card-message-text">{renderMessageText(msg.text)}</p>
+                        <InvestResult
+                          success={msg.investResult.success}
+                          results={msg.investResult.results}
+                          transactionType={msg.investResult.transactionType}
+                        />
+                      </div>
+                    )}
+                    {msg.schemeOptions && msg.schemeOptions.length > 0 && (
+                      <div className="mt-2">
+                        <SchemeList
+                          schemes={msg.schemeOptions}
+                          onSelect={(scheme) => {
+                            const prefill = pendingInvestPrefill;
+                            setPendingInvestPrefill(null);
+                            startInvestFlow(scheme, prefill);
+                          }}
+                        />
+                      </div>
+                    )}
 
+                  </div>
                 </div>
-              </div>
               );
             })}
 
@@ -922,6 +944,18 @@ const ChatWithAI: React.FC<Props> = ({ show, setShow }) => {
             )}
 
             <div ref={chatEndRef} />
+
+            {/* Scroll to bottom button */}
+            {showScrollBtn && (
+              <button
+                type="button"
+                className="chat-scroll-to-bottom-btn"
+                onClick={scrollToBottom}
+                title="Scroll to bottom"
+              >
+                <ChevronDown size={18} />
+              </button>
+            )}
           </div>
 
           {/* Quick Reply Pills */}

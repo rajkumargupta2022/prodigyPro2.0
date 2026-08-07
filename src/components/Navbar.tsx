@@ -12,17 +12,39 @@ import {
   Stars
 } from "react-bootstrap-icons";
 import ProfileModel from "./ProfileModel";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { fetchAdminUser } from "../services/user/adminUser";
 import { renderAdminAvatar } from "../pages/re-used-html/avtar";
 import ChatBoatUi from "../AI-assistant/Chat-with-ai";
+import { playAIVoice } from "../services/utils/soundFs";
 
-const MyNavbar = () => {
+interface NavbarProps {
+  autoOpenAi?: boolean;
+}
+
+const MyNavbar = ({ autoOpenAi }: NavbarProps = {}) => {
   const location = useLocation();
   const adminUser = fetchAdminUser()
   const [openProfileModel, setOpenProfileModel] = useState<boolean>(false)
   const [openAiBoat, setOpenAiBoat] = useState<boolean>(false)
+  const hasAutoOpened = useRef(false);
+
+  useEffect(() => {
+    if (!autoOpenAi) return;
+    // Only auto-open once per browser session
+    if (localStorage.getItem("ai_greeted")) return;
+    if (hasAutoOpened.current) return;
+    hasAutoOpened.current = true;
+
+    const timer = setTimeout(() => {
+      setOpenAiBoat(true);
+      localStorage.setItem("ai_greeted", "1");
+      playAIVoice()
+    }, 1200);
+
+    return () => clearTimeout(timer);
+  }, [autoOpenAi]);
   // console.log('Current path:', location.pathname);
   const handleProfileModel = () => {
     setOpenProfileModel(true)

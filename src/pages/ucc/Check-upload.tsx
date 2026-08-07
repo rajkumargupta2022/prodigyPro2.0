@@ -35,40 +35,47 @@ const CheckUpload: React.FC<CheckUploadProps> = ({ show, setShow, handleSubmit }
     setPreviewUrl("");
   };
 
-  // ✅ Convert to PDF + Base64
-  const upload = async () => {
-    if (!image) return;
+  const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
 
-    const pdf = new jsPDF();
+const upload = async () => {
+  if (!image) return;
 
-    const imgData = await convertImageToJpegDataUrl(image);
+  // Validate file size
+  if (image.size > MAX_FILE_SIZE) {
+    errorToast("Image size should not be greater than 5 MB");
+    return;
+  }
 
-    pdf.addImage(imgData as string, "JPEG", 10, 10, 180, 160);
+  const pdf = new jsPDF();
 
-    const pdfBlob = pdf.output("blob");
+  const imgData = await convertImageToJpegDataUrl(image);
 
-    const base64 = await blobToBase64(pdfBlob);
-    setPdfBase64(base64 as string);
-    try {
-      const res = await postRequest<checkUploadRes>(
-        endPoints.saveBankProof,
-        {
-          image: base64,
-          file_name: `${image.name}.pdf`,
-        }
-      );
+  pdf.addImage(imgData as string, "JPEG", 10, 10, 180, 160);
 
-      if (res.success) {
-        successToast("File uploaded successfully");
-        handleClose();
-        handleSubmit && handleSubmit();
+  const pdfBlob = pdf.output("blob");
+
+  const base64 = await blobToBase64(pdfBlob);
+  setPdfBase64(base64 as string);
+
+  try {
+    const res = await postRequest<checkUploadRes>(
+      endPoints.saveBankProof,
+      {
+        image: base64,
+        file_name: `${image.name}.pdf`,
       }
-    } catch (error) {
-      console.error(error);
-      errorToast("Upload failed");
-    }
+    );
 
-  };
+    if (res.success) {
+      successToast("File uploaded successfully");
+      handleClose();
+      handleSubmit && handleSubmit();
+    }
+  } catch (error) {
+    console.error(error);
+    errorToast("Upload failed");
+  }
+};
 
   // ✅ Helpers
   const convertImageToJpegDataUrl = (file: File): Promise<string> => {
@@ -113,10 +120,13 @@ const CheckUpload: React.FC<CheckUploadProps> = ({ show, setShow, handleSubmit }
       centered
     >
       <Modal.Header closeButton>
-        <Modal.Title>Upload & Preview</Modal.Title>
+        <Modal.Title>Upload Bank Cheque</Modal.Title>
       </Modal.Header>
 
+
       <Modal.Body>
+        <p className="fs14px">There appears to be a mismatch between the Primary Holder/Guardian name and the bank account holder name.
+To help us verify your bank details and proceed, please upload a clear image of a cheque.</p>
         {/* Upload */}
         <input
           type="file"

@@ -19,6 +19,7 @@ import KycMsg from "./dashboard/Kyc-msg";
 import DashboardSkeleton from "./DashboardSkeleton";
 import { useNavigate } from "react-router";
 import { holdingNature, isnewUser, taxStatus } from "./data/ucc-data";
+import {  playAIVoice} from "../services/utils/soundFs";
 
 
 
@@ -57,16 +58,31 @@ const Dashboard = () => {
         await familyPortfolio(adminUser);
       } finally {
         setIsDashboardLoading(false);
+        // greetingAiModel()
       }
     };
     loadDashboardData();
   }, [adminUser?.ucc])
 
 
+  // const greetingAiModel = () => {
+  //   if (localStorage.getItem("ai_greeted")) return;
+  //   const timer = setTimeout(() => {
+  //     localStorage.setItem("ai_greeted", "1");
+  //     playAIVoice()
+  //   }, 1200);
+
+  //   return () => clearTimeout(timer);
+  // }
+
+
+
+
+
 
   return (
     <>
-      <MyNavbar />
+      <MyNavbar autoOpenAi={!isDashboardLoading} />
       <section className="closeModel">
         <div className="container-fluid">
           <div className="row mt-3 justify-content-md-center">

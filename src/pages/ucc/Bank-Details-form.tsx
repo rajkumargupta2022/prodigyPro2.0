@@ -154,7 +154,7 @@ const BankDetailForm = () => {
     } else if (!/^[A-Z]{4}0[A-Z0-9]{6}$/.test(bankDetailForm.bank_ifsc)) {
       newErrors.bank_ifsc = "Enter a valid 11-character IFSC code (e.g. KKBK0005197)";
     } else if (!bankDetailForm.bank_name) {
-      newErrors.bank_ifsc = "Bank details not fetched yet. Please wait or re-enter IFSC";
+      newErrors.bank_ifsc = "Bank not found. Check your IFSC code";
     }
 
     // Bank name (auto-filled by IFSC API)
@@ -176,10 +176,10 @@ const BankDetailForm = () => {
         setBankDetailForm((prev) => ({
           ...prev,
           bank_name: response.bank_name,
-          bank_branch: response.branch_name,
-          is_bank_verified: true,
+          bank_branch: response.branch_name
         }));
       } else {
+        errorToast("Bank not found. Please check your IFSC code.");
         setBankDetailForm((prev) => ({
           ...prev,
           bank_name: "",
@@ -188,6 +188,7 @@ const BankDetailForm = () => {
         }));
       }
     } catch (error) {
+      errorToast("Error fetching bank name.");
       console.error("Error fetching bank name:", error);
     }
   };
@@ -195,6 +196,7 @@ const BankDetailForm = () => {
   const varifyBank = async () => {
     try {
       if (!validateForm()) return;
+     
       if (bankDetailForm.is_bank_verified) {
         handleSubmit()
         return
@@ -222,7 +224,7 @@ const BankDetailForm = () => {
 
   const handleSubmit = async () => {
     if (!validateForm()) return;
-
+   
     try {
       const payload = {
         reference_id,
@@ -384,6 +386,12 @@ const BankDetailForm = () => {
                   onChange={handleChange}
                   disabled={isInputDisabled}
                 />
+                {bankDetailForm.bank_branch && bankDetailForm.bank_name && (
+                     <small className="text-muted fs12px">
+                  {`${bankDetailForm.bank_branch} , ${bankDetailForm.bank_name}`}
+                </small>
+                )}
+             
 
                 {errors.bank_ifsc && (
                   <small className="text-danger">
@@ -394,46 +402,7 @@ const BankDetailForm = () => {
               </div>
             </div>
 
-            <div className="row mb-3">
-
-              <div className="col-md-6">
-
-                <label className="form-label fs12px">
-                  BANK
-                </label>
-
-                <input
-                  type="text"
-                  className="form-control"
-                  value={bankDetailForm.bank_name}
-                  readOnly
-                  disabled={isInputDisabled}
-
-                />
-
-                {errors.bank_name && (
-                  <small className="text-danger">{errors.bank_name}</small>
-                )}
-
-              </div>
-
-              <div className="col-md-6">
-
-                <label className="form-label fs12px">
-                  BRANCH
-                </label>
-
-                <input
-                  type="text"
-                  className="form-control"
-                  value={bankDetailForm.bank_branch}
-                  readOnly
-                  disabled={isInputDisabled}
-                />
-
-              </div>
-
-            </div>
+          
 
           </form>
         </div>
