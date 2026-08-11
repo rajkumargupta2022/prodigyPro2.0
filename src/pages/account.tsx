@@ -9,13 +9,15 @@ import {
 import Footer from "../components/Footer";
 import { UccStatusEnum, uccMsg } from "./data/ucc-data";
 import { errorToast } from "../services/utils/toast";
+import AreYouSure from "../components/Are-You-sure";
+
 const Account = ({ Component }: { Component: any }) => {
   const { pathname } = useLocation();
 
   const navBar = [
     { name: "My Profile", url: "/my-profile" },
-    { name: "All Orders", url: "/all-orders" },
-    { name: "Transaction History", url: "/transaction-list" },
+    // { name: "All Orders", url: "/all-orders" },
+    // { name: "Transaction History", url: "/transaction-list" },
     { name: "Linked Bank Accounts", url: "/linked-bank-account" },
     { name: "Risk Profile ", url: "/risk-profile" },
     { name: "Financial Calculators", url: "/calculator-list" },
@@ -28,10 +30,12 @@ const Account = ({ Component }: { Component: any }) => {
     { name: "Help & Support", url: "/help-and-support" },
     { name: "About Us", url: "/about-us" },
     { name: "Locate Us", url: "/locate-us" },
-    { name: "Privacy Policy", url: "/privacyPolicy " },
+    { name: "Privacy Policy", url: "/privacyPolicy" },
+    { name: "Terms & Conditions", url: "/terms-and-conditions" },
   ];
 
   const [isActive, setIsActive] = useState(false);
+  const [openSureModel, setOpenSureModel] = useState<boolean>(false);
 
 
   const handleToggle = () => {
@@ -65,10 +69,11 @@ const Account = ({ Component }: { Component: any }) => {
                             e.preventDefault();
                             errorToast(uccMsg.uccUpdateMsg);
                           }
+
                         }}
                       >
                         <li
-                          className={`nav-item  d-flex justify-content-between align-items-center ${i !== 7 && "border-bottom"} ${pathname === el.url ? "active" : ""} ${isDisabled ? "text-muted" : ""}`}
+                          className={`nav-item  d-flex justify-content-between align-items-center ${i !== navBar.length - 1 && "border-bottom"} ${pathname === el.url ? "active" : ""} ${isDisabled ? "text-muted" : ""}`}
                         >
 
                           {el.name}
@@ -84,11 +89,11 @@ const Account = ({ Component }: { Component: any }) => {
             <nav className="shadow-sm mt-4  rounded-4 bgNavbar">
               <div className="position-sticky">
                 <ul className="nav flex-column">
-                  {navBar2.map((el, i) => {
+                  {navBar2.map((el) => {
                     return (
                       <Link className="nav-link" to={el.url} key={el.url}>
                         <li
-                          className={`nav-item  d-flex justify-content-between  align-items-center ${i !== 3 && "border-bottom"} ${pathname === el.url ? "active" : ""
+                          className={`nav-item  d-flex justify-content-between  align-items-center border-bottom ${pathname === el.url ? "active" : ""
                             }`}
                         >
                           {el.name}
@@ -97,6 +102,15 @@ const Account = ({ Component }: { Component: any }) => {
                       </Link>
                     );
                   })}
+                  <div
+                    className="nav-link crPointer"
+                    onClick={() => setOpenSureModel(true)}
+                  >
+                    <li className="nav-item d-flex justify-content-between align-items-center">
+                      <span className="text-danger fw-semibold">Logout</span>
+                      <ChevronRight size={15} className="text-danger me-3" />
+                    </li>
+                  </div>
                 </ul>
               </div>
             </nav>
@@ -105,6 +119,7 @@ const Account = ({ Component }: { Component: any }) => {
           <Component />
         </div>
       </div>
+      <AreYouSure show={openSureModel} setShow={setOpenSureModel} />
       <Footer />
     </>
   );

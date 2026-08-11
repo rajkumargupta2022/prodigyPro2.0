@@ -340,6 +340,11 @@ const ChatWithAI: React.FC<Props> = ({ show, setShow }) => {
     scheme: searchKeys,
     prefill?: InvestPrefill | null
   ) => {
+    // Validate: check for "long-short" or "long short" scheme types (used after detail fetch below)
+    const schemeName = (scheme.scheme_name || "").toLowerCase();
+    const isLongShort = schemeName.includes("long-short") || schemeName.includes("long short");
+
+
     setLoading(true);
     const detail = await fetchSchemeDetails(scheme.accord_scheme_code);
     setLoading(false);
@@ -378,14 +383,30 @@ const ChatWithAI: React.FC<Props> = ({ show, setShow }) => {
     };
     setInvestData(data);
 
+    // Show scheme details card in chat
     setMessages((prev) => [
       ...prev,
       {
         role: assistant,
-        text: `Here are the details for ${detail.scheme}. Let me know if you'd like to invest or have any questions!`,
+        text: isLongShort
+          ? `Here are the details for **${detail.scheme}**.`
+          : `Here are the details for ${detail.scheme}. Let me know if you'd like to invest or have any questions!`,
         schemeDetails: detail,
       },
     ]);
+
+    // Long-Short funds: show details only, no transaction options
+    if (isLongShort) {
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: assistant,
+          text: `**${scheme.scheme_name}** is a Specialized Investment Fund (SIF). SIF investments can't be placed through chat, so I've opened the fund's page — you can review the details and invest from there.`,
+        },
+      ]);
+      setInvestData(null);
+      return;
+    }
 
     if (!sipAllowed && !purchaseAllowed) {
       setMessages((prev) => [

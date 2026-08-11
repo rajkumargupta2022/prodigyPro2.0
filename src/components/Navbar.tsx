@@ -40,6 +40,7 @@ const MyNavbar = ({ autoOpenAi }: NavbarProps = {}) => {
     const timer = setTimeout(() => {
       setOpenAiBoat(true);
       localStorage.setItem("ai_greeted", "1");
+
       playAIVoice()
     }, 1200);
 

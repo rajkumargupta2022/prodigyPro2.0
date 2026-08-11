@@ -62,7 +62,14 @@ const TopPerformers: React.FC = () => {
           endPoints.getCategoryTypesList + "?asset_code=" + selectedAsset
         );
         if (res.data) {
-          setCategories(res.data);
+
+          const updatedData = res.data.map((item: any) => ({
+            ...item,
+            sub_category:
+              item.category === item.sub_category ? "" : item.sub_category,
+          }));
+
+          setCategories(updatedData);
         } else {
           setCategories([]);
         }
@@ -141,7 +148,7 @@ const TopPerformers: React.FC = () => {
               className={`top-perf-pill-button ${isActive ? "active" : ""}`}
               onClick={() => setSelectedClass(cat.classcode)}
             >
-              {cat.category}
+              {cat.category} {cat.sub_category ? `(${cat.sub_category})` : ""}
             </button>
           );
         })}

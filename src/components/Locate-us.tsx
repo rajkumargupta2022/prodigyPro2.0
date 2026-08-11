@@ -1,4 +1,4 @@
-import {  BookFill } from "react-bootstrap-icons";
+import { BookFill } from "react-bootstrap-icons";
 import Map from "../assets/img/map.svg";
 
 function LocateUs() {
@@ -19,8 +19,8 @@ function LocateUs() {
       </h2>
       <hr className="fw-light text-secondary" />
 
-      <img src={Map} alt="image not found" className="mb-2 img-fluid" height={211}/>
-      
+      <img src={Map} alt="image not found" className="mb-2 img-fluid" height={211} />
+
 
       <div className="p-4 shadow-sm bg-white border-0 rounded-4 mt-4">
         <h6>BFC Capital Pvt Ltd.</h6>
@@ -48,7 +48,7 @@ function LocateUs() {
 
         <div className="d-flex border-bottom mt-2">
           <h6 className="me-1 fs16px"> Hours: </h6>
-          <p className="m-0 fs14px"> Mon - Sat 9:30am-6:00pm</p>
+          <p className="m-0 fs14px"> 9:30 AM – 6:30 PM (Weekdays).</p>
         </div>
 
         <div className="d-flex mt-2">
@@ -63,7 +63,7 @@ function LocateUs() {
 
         <div className="d-flex ">
           <h6 className="me-1"> Mobile:</h6>
-          <p  className="crPointer logoBlueColor" onClick={() =>
+          <p className="crPointer logoBlueColor" onClick={() =>
             window.open(
               `tel:7347700888`,
               "_blank"

@@ -39,7 +39,14 @@ const AllMutualFunds = () => {
     try {
       const res = await getRequestSimple<categoryListResponse>(endPoints.getCategoryTypesList + "?asset_code=" + data)
       if (res.data) {
-        setCategoryList(res.data)
+        const updatedData = res.data.map((item: any) => ({
+          ...item,
+          sub_category:
+            item.category === item.sub_category ? "" : item.sub_category,
+        }));
+
+        setCategoryList(updatedData);
+
       }
     } catch (err) {
     }

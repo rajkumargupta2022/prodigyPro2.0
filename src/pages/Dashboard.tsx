@@ -19,7 +19,6 @@ import KycMsg from "./dashboard/Kyc-msg";
 import DashboardSkeleton from "./DashboardSkeleton";
 import { useNavigate } from "react-router";
 import { holdingNature, isnewUser, taxStatus } from "./data/ucc-data";
-import {  playAIVoice} from "../services/utils/soundFs";
 
 
 
