@@ -38,7 +38,7 @@ function SWPOrders() {
   };
 
   const detailPage = (item: swpOrderKeys) => {
-    navigate("/swp-order", { state: {...item,from:"orders"} })
+    navigate("/order-details", { state: {...item} })
   }
 
   return (
@@ -88,7 +88,7 @@ function SWPOrders() {
                 <span className="text-secondary">Amount</span>
                 <br />
                 <span className="value-font2">
-                  ₹{getValueInSort(Number(item.installment_amount))}
+                  ₹{getValueInSort(Number(item?.order_amount))}
                 </span>
               </div>
             </div>

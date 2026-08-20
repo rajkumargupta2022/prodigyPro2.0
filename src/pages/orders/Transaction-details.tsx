@@ -11,7 +11,7 @@ import { getValueInSort } from "../../services/calculation/percentageCalculate";
 import { errorToast, successToast } from "../../services/utils/toast";
 
 
-function SIPOrderDetails() {
+function TransactionDetails() {
   const location = useLocation()
   const navigate = useNavigate()
   const [page, setPage] = useState<number>(1)
@@ -228,4 +228,4 @@ function SIPOrderDetails() {
   );
 }
 
-export default SIPOrderDetails;
+export default TransactionDetails;

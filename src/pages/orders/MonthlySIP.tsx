@@ -91,7 +91,7 @@ function MonthlySIP() {
   }, []); // mount once only
 
   const detailPage = (item: sipOrderKeys) => {
-    navigate("/sip-order", { state: { ...item, from: "orders" } });
+    navigate("/order-details", { state: { ...item } });
   };
 
   /* ─── Skeleton card matching the real SIP card layout ─── */
@@ -178,7 +178,7 @@ function MonthlySIP() {
                 <div>
                   <span className="text-secondary small">Amount</span>
                   <br />
-                  <span className="fw-semibold">₹{getValueInSort(Number(item.installment_amount))}</span>
+                  <span className="fw-semibold">₹{getValueInSort(Number(item?.order_amount))}</span>
                 </div>
               </div>
             </div>

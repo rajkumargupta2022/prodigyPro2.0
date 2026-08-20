@@ -26,6 +26,7 @@ import MsgModel from "../components/MsgModel";
 import InstaRedeem from "./mfSavings/InstaRedeem";
 import { errorToast } from "../services/utils/toast";
 import { uccMsg, UccStatusEnum } from "./data/ucc-data";
+import { ChevronRight } from "react-bootstrap-icons";
 
 interface ChartState {
   options: ApexOptions;
@@ -360,9 +361,11 @@ const FundDetails = () => {
     }
 
   }
-  // const goTransactionHistory = (item: schemeDeatilDataKeys) => {
-  //   navigate("/transaction-history", { state: { accord_product_code: item.accordSchemeCode, folio_number: location.state?.folio } })
-  // }
+  const goTransactionHistory = (item: schemeDeatilDataKeys) => {
+    navigate("/transaction-history", { state: { accord_product_code: item.accordSchemeCode, folio_number: location.state?.folio } })
+     navigate("/transaction-history?accord_product_code=" + item?.accordSchemeCode + "&folio_number=" + location.state?.folio, { state: { accord_product_code: item.accordSchemeCode, folio_number: location.state?.folio} })
+  }
+  
   const handleInstaRedeem = () => {
     const uccStatus = localStorage.getItem("uccStatus")
     if (uccStatus !== UccStatusEnum.ACTIVE) {
@@ -592,6 +595,15 @@ const FundDetails = () => {
                           <span className="text-secondary text-uppercase fs-7">Avg. Days</span>
                           <h4 className="fs-6">{location.state?.days}</h4>
                         </div>}
+                        <hr />
+                      
+                           <div className="col-10 crPointer" onClick={() => goTransactionHistory(schemeList[0])}>
+                          <span className="text-secondary  fw-semibold text-dark">View Transaction History</span>
+                        </div>
+                        <div className="col-2 d-flex justify-content-end crPointer" onClick={() => goTransactionHistory(schemeList[0])}>
+                          <span className="text-secondary  fw-semibold text-dark"><ChevronRight /></span>
+                        </div>
+
                     </div>
                   </div>
                 </div>

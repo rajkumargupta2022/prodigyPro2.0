@@ -41,7 +41,7 @@ function OneTimeOrders() {
 
 
   const detailPage = (item: RedemptionKeys) => {
-    navigate("/redemption-details", { state: {...item,from:"orders"} })
+      navigate("/order-details", { state: { ...item } });
   }
 
   return (
@@ -95,21 +95,21 @@ function OneTimeOrders() {
               </div> */}
               <div>
                 <span className="text-secondary small">
-                  {Number(item.redemption_amount) > 0
+                  {Number(item?.order_amount) > 0
                     ? "Amount"
-                    : item.all_units || Number(item.redemption_units) > 0
+                    : item.all_units || Number(item?.units) > 0
                       ? "Units"
                       : "-"}
                 </span>
                 <br />
 
                 <span className="fw-semibold">
-                  {Number(item.redemption_amount) > 0
-                    ? `₹${getValueInSort(Number(item.redemption_amount))}`
+                  {Number(item?.order_amount) > 0
+                    ? `₹${getValueInSort(Number(item?.order_amount))}`
                     : item.all_units
                       ? "All Units"
-                      : Number(item.redemption_units) > 0
-                        ? getValueInSort(Number(item.redemption_units))
+                      : Number(item.units) > 0
+                        ? getValueInSort(Number(item.units))
                         : "-"}
                 </span>
               </div>

@@ -41,8 +41,7 @@ function StpOrders() {
 
 
   const orderTimeLine = (item: switchOrderKeys) => {
-   
-    navigate("/stp-orders-details", { state: {...item,from: "orders"} })
+    navigate("/order-details", { state: {...item} })
   }
   return (
     <>
@@ -98,7 +97,7 @@ function StpOrders() {
               <div>
                 <span className="text-secondary small">Amount</span>
                 <br />
-                <span className="fw-semibold">₹{getValueInSort(Number(item?.installment_amount))}</span>
+                <span className="fw-semibold">₹{getValueInSort(Number(item?.order_amount))}</span>
               </div>
             </div>
           </div>

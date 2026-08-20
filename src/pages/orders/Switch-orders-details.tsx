@@ -55,7 +55,7 @@ function SwitchDetails() {
   return (
     <main className="col-md-9 ms-sm-auto col-lg-9 px-md-4 py-4">
       <h4>
-        <ArrowLeft className="crPointer" size={20} onClick={() => navigate(-1)} /> {installmentDetails?.from === "orders" ? "Order Details" : "Transaction Details"}
+        <ArrowLeft className="crPointer" size={20} onClick={() => navigate(-1)} /> Order Details
       </h4>
       <hr className="fw-light text-secondary " />
       {installmentDetails?.transaction_id ? <>

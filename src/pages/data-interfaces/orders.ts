@@ -13,7 +13,9 @@ export interface sipOrderKeys {
   folio_number: string;
   next_sip_date: string;
   sip_start_date: string;
-  installment_amount: string;
+  installment_amount?: string;
+  order_amount?: string;
+  all_units?: boolean;
   transaction_id: string;
   status: string;
   order_date: string;
@@ -35,7 +37,9 @@ export interface swpOrderKeys {
   folio_number: string;
   swp_start_date: string;
   next_swp_date: string;
-  installment_amount: string;
+  order_amount: string;
+  units?: string;
+  all_units?: boolean;
   transaction_id: string;
   status: string;
   order_date: string;
@@ -99,8 +103,8 @@ export interface RedemptionKeys {
   accord_amc_code: number;
   folio_number: string;
   order_date: string;
-  redemption_amount: string;
-  redemption_units?: string | string;
+  order_amount: string;
+  units?: string | number;
   all_units?: boolean;
   transaction_id: string;
   status: string;
@@ -238,11 +242,12 @@ export interface switchOrderKeys {
   target_scheme: schemeKeys;
   folio_number: string;
   order_date: string;
-  order_amount: string;
+  order_amount: number;
   transaction_id: string;
   status: string;
-  from?: string;
   investment_type?: string;
+  units?: number;
+  all_units?: boolean;
   bank_name?: string;
   bank_account_number?: string;
   nav_date?: string;
@@ -253,4 +258,20 @@ export interface schemeKeys {
   scheme_name: string;
   accord_product_code: number;
   accord_amc_code: number;
+}
+
+export interface orderDetailsKeys {
+  source_scheme?: schemeKeys;
+  target_scheme?: schemeKeys;
+  folio_number: string;
+  order_date: string;
+  order_amount: string;
+  transaction_id: string;
+  status: string;
+  investment_type?: string;
+  bank_name?: string;
+  bank_account_number?: string;
+  nav_date?: string;
+  nav_price?: number;
+  installment_amount?: number;
 }

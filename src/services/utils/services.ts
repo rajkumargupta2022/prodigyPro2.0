@@ -79,6 +79,10 @@ export const filterDirectSchemeForInvest = (data:any)=>{
 }
 
 export const inTitleCase = (str: string): string => {
+  const noChangeWords = ['NFO', 'ETF', 'SIP', 'STP', 'SWP', 'AMC', 'NAV', 'ISIN', 'CAGR', 'AUM'];
+ if(noChangeWords.includes(str)) {
+    return str;
+ }
   return str.replace(/\w\S*/g, (txt) => {
     return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
   }); 

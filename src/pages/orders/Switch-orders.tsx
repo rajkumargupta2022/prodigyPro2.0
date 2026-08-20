@@ -41,8 +41,7 @@ function SwitchOrders() {
 
 
   const orderTimeLine = (item: switchOrderKeys) => {
-  
-    navigate("/switch-orders-details", { state: {...item,from:"orders"} })
+    navigate("/order-details", { state: {...item} })
   }
   return (
     <>
@@ -95,13 +94,30 @@ function SwitchOrders() {
                 <br />
                 <span className="fw-semibold">{dateInStringNumber(item.next_sip_date)}</span>
               </div> */}
-              <div>
-                <span className="text-secondary small">Amount</span>
+             
+               <div>
+                <span className="text-secondary small">
+                  {Number(item?.order_amount) > 0
+                    ? "Amount"
+                    : item.all_units || Number(item?.units) > 0
+                      ? "Units"
+                      : "-"}
+                </span>
                 <br />
-                <span className="fw-semibold">₹{getValueInSort(Number(item.order_amount))}</span>
+
+                <span className="fw-semibold">
+                  {Number(item?.order_amount) > 0
+                    ? `₹${getValueInSort(Number(item?.order_amount))}`
+                    : item.all_units
+                      ? "All Units"
+                      : Number(item.units) > 0
+                        ? getValueInSort(Number(item.units))
+                        : "-"}
+                </span>
+              </div>
               </div>
             </div>
-          </div>
+       
         ))
       ) : (
         <div className="m-0"><PortfolioEmpty title={"No Recent Switch Orders"} body={"Your order history will appear here once you start investing. Begin your journey today!"} btnName={"Explore Funds"} btnUrl={"/all-mutual-funds"} /></div>

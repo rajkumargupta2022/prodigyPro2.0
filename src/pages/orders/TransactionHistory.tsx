@@ -78,7 +78,7 @@ const TransactionHistory = () => {
 
   const detailPage = (item: transactionHistoryKeys) => {
     if (item.transaction_type === "SIP") {
-      navigate("/sip-order", {
+      navigate("/transaction-details", {
         state: item,
       });
     } else if (item.transaction_type === "PURCHASE") {

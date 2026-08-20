@@ -41,7 +41,7 @@ function OneTimeOrders() {
 
 
  const orderTimeLine = (item: oneTimeKeys) => {
-    navigate("/purchase-details", { state: {...item, from: "orders"} })
+      navigate("/order-details", { state: { ...item } });
   }
   return (
     <>

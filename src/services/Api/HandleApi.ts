@@ -38,11 +38,40 @@ export const getRequest = async <T>(endPoint: string, options: RequestOptions = 
     }
   }
 };
+// export const encodeBase64 = (data: any): string => {
+//   const jsonString = JSON.stringify(data);
+
+//   const bytes = new TextEncoder().encode(jsonString);
+
+//   let binary = "";
+//   bytes.forEach((byte) => {
+//     binary += String.fromCharCode(byte);
+//   });
+
+//   return btoa(binary);
+// };
 
 export const postRequest = async <T>(endPoint: string, body: any, options: RequestOptions = {}): Promise<T> => {
   const response: AxiosResponse<T> = await AxiosInstance.post(endPoint, body, options);
   return response.data;
 };
+// export const postRequest = async <T>(
+//   endPoint: string,
+//   body: any,
+//   options: RequestOptions = {}
+// ): Promise<T> => {
+//   const encodedData = encodeBase64(body);
+
+//   const response: AxiosResponse<T> = await AxiosInstance.post(
+//     endPoint,
+//     {
+//       data: encodedData,
+//     },
+//     options
+//   );
+
+//   return response.data;
+// };
 
 export const putRequest = async <T>(endPoint: string, body: any, options: RequestOptions = {}): Promise<T> => {
   const response: AxiosResponse<T> = await AxiosInstance.put(endPoint, body, options);

@@ -64,7 +64,7 @@ import AboutUs from "./components/About-Us";
 import PrivacyPolicyComponent from "./components/privacyPolicy";
 import AllOrders from "./components/All-orders";
 import SipInstallmentDetails from "./pages/orders/SipInstallmentDetails";
-import SIPOrderDetails from "./pages/orders/Sip-order-details";
+import OrderDetails from "./pages/orders/OrderDetails";
 // import STPOrderDetails from "./pages/orders/Stp-order-details";
 import SWPOrderDetails from "./pages/orders/SwpOrderDetails";
 import LinkedBankAccount from "./components/Linked-BankAccount";
@@ -104,9 +104,9 @@ import MandateAmount from "./pages/ucc/Mandate-amount";
 import UccSubmit from "./pages/ucc/Ucc-submit";
 import TopPerformers from "./pages/Top-performers";
 import StpOrders from "./pages/orders/StpOrders";
-import TransactionList from "./pages/orders/Transaction-list";
 import SwitchDetails from "./pages/orders/Switch-orders-details";
 import STPOrderDetails from "./pages/orders/Stp-orders-details";
+import TransactionDetails from "./pages/orders/Transaction-details";
 
 const LoaderHandler = () => {
   const { showLoader, hideLoader } = useLoader();
@@ -163,7 +163,6 @@ function App() {
             element={<BankDetailsVarification />}
           />
           <Route path="/nomination-list" element={<NominationList />} />
-          <Route path="/transaction-list" element={<TransactionList />} />
 
           <Route path="/portfolio-import" element={<PortfolioImport />} />
           <Route
@@ -204,6 +203,10 @@ function App() {
             path="/sip-installment-details"
             element={<Account Component={SipInstallmentDetails} />}
           />
+           <Route
+            path="/transaction-details"
+            element={<Account Component={TransactionDetails} />}
+          />
           <Route
             path="/swp-installmet-details"
             element={<Account Component={SwpInstallmentDetails} />}
@@ -218,8 +221,8 @@ function App() {
           />
 
           <Route
-            path="/sip-order"
-            element={<Account Component={SIPOrderDetails} />}
+            path="/order-details"
+            element={<Account Component={OrderDetails} />}
           />
           <Route
             path="/stp-orders-details"
