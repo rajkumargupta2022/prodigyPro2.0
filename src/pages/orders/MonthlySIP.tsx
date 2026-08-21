@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState, useRef } from "react";
+import { useCallback } from "react";
 import { postRequest } from "../../services/Api/HandleApi";
 import { sipOrderKeys, sipOrderRes } from "../data-interfaces/orders";
 import { endPoints, imageUrl } from "../../services/utils/urls";
@@ -8,87 +8,41 @@ import { getValueInSort } from "../../services/calculation/percentageCalculate";
 import { failedString, pendingString } from "../../services/utils/keys";
 import { dateInStringNumber } from "../../services/dates/dateFormater";
 import PortfolioEmpty from "../PortfolioEmpty";
+import useInfinitePagination from "../../hooks/useInfinitePagination";
+import InfiniteScrollFooter from "../../components/InfiniteScrollFooter";
 
 
 function MonthlySIP() {
   const navigate = useNavigate();
-  const [page, setPage] = useState<number>(1);
-  const [sipListData, setSipListData] = useState<sipOrderKeys[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [initialLoading, setInitialLoading] = useState<boolean>(true);
-  const [hasMore, setHasMore] = useState<boolean>(true);
 
-  // sentinel div at bottom — when visible, load next page
-  const loaderRef = useRef<HTMLDivElement | null>(null);
-  // use refs so the observer callback always sees latest values
-  const loadingRef = useRef<boolean>(false);
-  const hasMoreRef = useRef<boolean>(true);
-
-  /* ─── fetch one page and APPEND to list ─── */
-  const fetchPage = async (pageNum: number) => {
-    if (loadingRef.current || !hasMoreRef.current) return;
-
+  const fetchSipOrders = useCallback(async (pageNum: number) => {
     const adminUser = fetchAdminUser();
-    if (!adminUser?.ucc) return;
-
-    loadingRef.current = true;
-    setLoading(true);
-    if (pageNum === 1) setInitialLoading(true);
+    if (!adminUser?.ucc) return { data: [], hasMore: false };
 
     const reqBody = { ucc: adminUser.ucc, page: pageNum, limit: 20 };
-    try {
-      const res = await postRequest<sipOrderRes>(endPoints.getSipOrders, reqBody);
-      if (res.success && res.data && res.data.length > 0) {
-        setSipListData(prev =>
-          pageNum === 1 ? res.data : [...prev, ...res.data]
-        );
-        // If we got fewer records than a full page, or we've reached totalPages → no more
-        if (pageNum >= (res.totalPages ?? 1)) {
-          hasMoreRef.current = false;
-          setHasMore(false);
-        }
-      } else {
-        hasMoreRef.current = false;
-        setHasMore(false);
-      }
-    } catch {
-      hasMoreRef.current = false;
-      setHasMore(false);
-    } finally {
-      loadingRef.current = false;
-      setLoading(false);
-      setInitialLoading(false);
+    const res = await postRequest<sipOrderRes>(endPoints.getSipOrders, reqBody);
+
+    if (res.success && res.data && res.data.length > 0) {
+      const totalPages = res.totalPages ?? 1;
+      const isMoreAvailable = pageNum < totalPages;
+      return {
+        data: res.data,
+        hasMore: isMoreAvailable,
+        totalPages,
+      };
     }
-  };
+    return { data: [], hasMore: false };
+  }, []);
 
-  /* ─── fetch whenever page number increments ─── */
-  useEffect(() => {
-    fetchPage(page);
-  }, [page]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  /* ─── IntersectionObserver — mounted once, uses refs ─── */
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (
-          entries[0].isIntersecting &&
-          hasMoreRef.current &&
-          !loadingRef.current
-        ) {
-          setPage(prev => prev + 1); // triggers the useEffect above
-        }
-      },
-      { rootMargin: "200px" } // start loading 200px before user hits bottom
-    );
-
-    const target = loaderRef.current;
-    if (target) observer.observe(target);
-
-    return () => {
-      if (target) observer.unobserve(target);
-      observer.disconnect();
-    };
-  }, []); // mount once only
+  const {
+    data: sipListData,
+    loading,
+    initialLoading,
+    hasMore,
+    loaderRef,
+  } = useInfinitePagination<sipOrderKeys>({
+    fetchData: fetchSipOrders,
+  });
 
   const detailPage = (item: sipOrderKeys) => {
     navigate("/order-details", { state: { ...item } });
@@ -106,7 +60,7 @@ function MonthlySIP() {
       </div>
       <hr className="text-secondary mt-2 mb-2" />
       <div className="d-flex justify-content-between">
-        {[0, 1, 2].map(j => (
+        {[0, 1, 2].map((j) => (
           <div key={j}>
             <div className="skeleton-box skeleton-stat-label d-block mb-1" />
             <div className="skeleton-box skeleton-stat d-block" />
@@ -193,30 +147,17 @@ function MonthlySIP() {
         )
       )}
 
-      {/* ── small spinner at bottom for scroll-triggered pages ── */}
-      {loading && !initialLoading && (
-        <div className="text-center py-4">
-          <div
-            className="spinner-border text-primary"
-            role="status"
-            style={{ width: "1.6rem", height: "1.6rem" }}
-          >
-            <span className="visually-hidden">Loading…</span>
-          </div>
-        </div>
-      )}
-
-      {/* ── end-of-list message ── */}
-      {!hasMore && !loading && sipListData.length > 0 && (
-        <div className="text-center py-3">
-          <small className="text-secondary">You've reached the end of the list.</small>
-        </div>
-      )}
-
-      {/* ── invisible sentinel — IntersectionObserver watches this ── */}
-      <div ref={loaderRef} style={{ height: "1px" }} />
+      {/* ── Reusable Infinite Scroll Footer ── */}
+      <InfiniteScrollFooter
+        loading={loading}
+        initialLoading={initialLoading}
+        hasMore={hasMore}
+        itemCount={sipListData.length}
+        loaderRef={loaderRef}
+      />
     </>
   );
 }
 
 export default MonthlySIP;
+

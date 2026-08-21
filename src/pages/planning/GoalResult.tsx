@@ -4,24 +4,32 @@ import NavBar from "../../components/Navbar";
 import ReactApexChart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 interface ChartState {
   options: ApexOptions;
   series: { name: string; data: number[] }[];
 }
 
+
 const GoalResult = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const sip = location.state?.newsipamt || 0;
   const investmentPeriod = location.state?.investmentPeriod || 10;
-  const ir = location.state?.ir || 0;
+  const ir =(investmentPeriod>10? 18: location.state?.ir ) || 0;
 
   // Arrays for chart
   const currentValue: number[] = [];
   const sipData: number[] = [];
   const gainData: number[] = [];
   const categories: string[] = [];
+
+  useEffect(() => {
+    if (!location.state) {
+      navigate("/dashboard");
+    }
+  }, []);
 
   const rate = ir / 100;
   const monthlyRate = rate / 12;

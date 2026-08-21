@@ -58,7 +58,7 @@ const MyNavbar = ({ autoOpenAi }: NavbarProps = {}) => {
   return (
     <Navbar expand="lg" className="bg-white">
       <Container>
-        <Navbar.Brand href="#">
+        <Navbar.Brand href="/dashboard">
           <Link to="/dashboard">
             <img
               src={logo} // Replace with your logo URL
