@@ -1449,3 +1449,22 @@
   from { opacity: 0; transform: translateX(-150%) translateY(8px); }
   to   { opacity: 1; transform: translateX(-150%) translateY(0); }
 }
+/* ==================== STP Category Pills ==================== */
+.stp-category-pill {
+  background: #ffffff;
+  border: 1px solid #c2d1ec;
+  border-radius: 15px;
+  padding: 3px 12px;
+  font-size: 14px;
+  color: #011EFE ;
+  font-weight: 400;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+  margin-right: 8px;
+}
+.stp-category-pill.active {
+  background: #011EFE ;
+  color: #ffffff;
+  border-color: #011EFE ;
+}

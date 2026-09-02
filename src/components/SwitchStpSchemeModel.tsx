@@ -13,6 +13,8 @@ import { detailPortfolioSchemeType } from '../pages/data-interfaces/portfolio';
 import { keys } from '../services/utils/keys';
 import StpConfiramtion from './Stp-confirmation';
 import { errorToast } from '../services/utils/toast';
+import { assetTypeListKeys, assetTypeListResponse } from "../pages/data-interfaces/explore";
+import { getRequestSimple } from "../services/Api/HandleApi";
 interface investmetProps {
   show: boolean;
   setShow: (show: boolean) => void;
@@ -28,11 +30,43 @@ const SwitchSchemeModel: React.FC<investmetProps> = ({ show, setShow, selectedAm
   const [selectedSchemes, setSelectedSchemes] = useState<schemeDeatilDataKeys[]>([])
   const [cartItem, setCartItem] = useState<cartItemKey[]>([])
   const [filteredSchemes, setFilteredSchemes] = useState<filteredSchemesKeys[]>([])
+  const [selectedAsset, setSelectedAsset] = useState<number>(1);
+  const [assetTypes, setAssetTypes] = useState<assetTypeListKeys[]>([]);
 
   useEffect(() => {
-    fetchFilteredScheme(1, 3)
+    const fetchAssets = async () => {
+      try {
+        const res = await getRequestSimple<assetTypeListResponse>(endPoints.getAssetTypesList);
+        if (res.data && res.data.length > 0) {
+          const orderMap: Record<string, number> = {
+            commodity: 1,
+            debt: 2,
+            equity: 3,
+            hybrid: 4,
+          };
+          const sorted = [...res.data].sort((a, b) => {
+            const orderA = orderMap[a.asset_type.toLowerCase()] ?? 99;
+            const orderB = orderMap[b.asset_type.toLowerCase()] ?? 99;
+            return orderA - orderB;
+          });
+          setAssetTypes(sorted);
+        } else {
+          setAssetTypes([]);
+        }
+      } catch (err) {
+        setAssetTypes([]);
+      }
+    };
+    if (show) {
+      fetchAssets();
+    }
+  }, [show]);
 
-  }, [show])
+  useEffect(() => {
+    if (show) {
+      fetchFilteredScheme(1, 3)
+    }
+  }, [show, selectedAsset])
 
   const handleSwitch = () => {
     if (selectedSchemes.length > 0) {
@@ -52,8 +86,6 @@ const SwitchSchemeModel: React.FC<investmetProps> = ({ show, setShow, selectedAm
 
   }
   const mergeSchemes = () => {
-console.log("selectedSchemes",selectedSchemes)
-
     let cartData = [
       {
         fromScheme: schemeList.scheme,
@@ -80,7 +112,7 @@ console.log("selectedSchemes",selectedSchemes)
   const fetchFilteredScheme = async (page: number, retunrs: number) => {
     const reBody = {
       amc_code: selectedAmcCode,
-      asset_code: [],
+      asset_code: [selectedAsset],
       classcode: []
     }
     try {
@@ -126,6 +158,23 @@ console.log("selectedSchemes",selectedSchemes)
           <Modal.Title >Select a New Fund to {transactionType}</Modal.Title>
         </Modal.Header>
         <Modal.Body className='modal-bg'>
+          <div className="px-3 pt-2">
+            <p className="fs14px text-muted mb-2">Select a category to find the right target scheme.</p>
+            <div className="d-flex overflow-auto mb-3 pb-2" style={{ gap: "8px" }}>
+              {assetTypes.map((asset) => {
+                const isActive = selectedAsset === asset.asset_code;
+                return (
+                  <button
+                    key={asset.asset_code}
+                    className={`stp-category-pill ${isActive ? "active" : ""}`}
+                    onClick={() => setSelectedAsset(asset.asset_code)}
+                  >
+                    {asset.asset_type}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
           <SwitchSelectionScheme filteredSchemes={filteredSchemes} handleSchemeSelection={handleSchemeSelection} checkIsSelected={checkIsSelected} />
           <Card.Header className='scheme-bg footerRadius px-3 py-2 fs12px'>{transactionType} orders once placed cannot be cancelled.</Card.Header>
 

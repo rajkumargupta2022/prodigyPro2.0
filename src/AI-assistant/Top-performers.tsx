@@ -35,20 +35,10 @@ const TopPerformers: React.FC = () => {
           });
           setAssetTypes(sorted);
         } else {
-          setAssetTypes([
-            { asset_code: 4, asset_type: "Commodity" },
-            { asset_code: 2, asset_type: "Debt" },
-            { asset_code: 1, asset_type: "Equity" },
-            { asset_code: 3, asset_type: "Hybrid" },
-          ]);
+          setAssetTypes([]);
         }
       } catch (err) {
-        setAssetTypes([
-          { asset_code: 4, asset_type: "Commodity" },
-          { asset_code: 2, asset_type: "Debt" },
-          { asset_code: 1, asset_type: "Equity" },
-          { asset_code: 3, asset_type: "Hybrid" },
-        ]);
+        setAssetTypes([]);
       }
     };
     fetchAssets();

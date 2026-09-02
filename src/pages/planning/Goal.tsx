@@ -46,7 +46,7 @@ if (goalContent.customizeGoal?.title===location.state?.title && goalName.trim() 
 
   const interestRates: { [key: number]: number } = {
     1: 6.50,
-    2: 9,
+    2: 8,
     3: 10,
     4: 11,
     5: 13,

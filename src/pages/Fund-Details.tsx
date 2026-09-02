@@ -597,12 +597,12 @@ const FundDetails = () => {
                         </div>}
                         <hr />
                       
-                           <div className="col-10 crPointer" onClick={() => goTransactionHistory(schemeList[0])}>
+                            <div className="col-10 crPointer" onClick={() => goTransactionHistory(schemeList[0])}>
                           <span className="text-secondary  fw-semibold text-dark">View Transaction History</span>
                         </div>
                         <div className="col-2 d-flex justify-content-end crPointer" onClick={() => goTransactionHistory(schemeList[0])}>
                           <span className="text-secondary  fw-semibold text-dark"><ChevronRight /></span>
-                        </div>
+                        </div> 
 
                     </div>
                   </div>
