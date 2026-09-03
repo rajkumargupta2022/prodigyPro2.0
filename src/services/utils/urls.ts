@@ -128,13 +128,16 @@ export enum endPoints {
   cancelXsipOrder = "orders/cancel-xsip-order",
   cancelSwpOrder = "orders/cancel-swp-order",
   cancelStpOrder = "orders/cancel-stp-order",
-  getTransactionHistory = "orders/get-transaction-history",
   getPurchaseOrders = "orders/purchase-orders",
   getSwitchOrders = "orders/get-switch-orders",
   getStpOrders = "orders/get-stp-orders",
   getStpOrdersDetails="orders/get-stp-orders-details",
   getSwitchOrdersDetails="orders/get-switch-orders-details",
-
+  
+  getTransactionHistory = "history/get-transaction-history",
+  getTransactionDetails = "history/get-transaction-details",
+  getInstallments = "history/get-installments",
+  getInstallmentDetails="history/get-installment-details",
   /* =========================
      REPORTS
   ========================== */

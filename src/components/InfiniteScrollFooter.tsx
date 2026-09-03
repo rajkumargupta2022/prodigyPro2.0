@@ -21,7 +21,7 @@ const InfiniteScrollFooter: React.FC<InfiniteScrollFooterProps> = ({
   hasMore,
   itemCount,
   loaderRef,
-  endMessage = "You've reached the end of the list.",
+  endMessage = "",
 }) => {
   return (
     <>

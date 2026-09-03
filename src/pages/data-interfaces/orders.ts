@@ -201,25 +201,95 @@ export interface cancelSIPRes {
   message: string;
 }
 
+
+//transaction parts=====================
 export interface transactionHistoryRes {
   success: boolean;
+  page: number;
+  limit: number;
+  totalRecords: number;
+  totalPages: number;
   data: transactionHistoryKeys[];
 }
 
 export interface transactionHistoryKeys {
-  transaction_type: string;
-  scheme_name: string;
-  accord_product_code: number;
-  accord_amc_code: number;
-  folio_number: string;
-  sip_start_date?: string;
-  next_sip_date?: string;
-  installment_amount?: number;
-  transaction_id: string;
-  sip_registration_no?: string;
-  order_date: string;
-  redemption_amount?: number
-  order_amount?: number;
+  scheme_name: string,
+  accord_product_code: number,
+  accord_amc_code: number,
+  folio_number: string,
+  transaction_id: string,
+  transaction_amount: number,
+  transaction_units: number | null,
+  transaction_type: string,
+  last_transaction_date: string,
+  next_installment_date: string | null,
+}
+
+export interface transactionDetailsRes {
+  success: boolean;
+  data: transactionDetailsKeys;
+}
+export interface transactionDetailsKeys {
+ scheme_name: string ,
+    accord_product_code: number,
+    accord_amc_code: number,
+    folio_number: string,
+    transaction_id: string,
+    transaction_amount: number,
+    transaction_units: number|null, // if we get units from RTA, otherwise null
+    transaction_type: string,
+    last_transaction_date: string,
+    next_installment_date: string|null, // only in case of SIP/STP/SWP transactions
+    bank_name: string,
+    bank_acc_no: string,
+    transaction_nav_price: number,
+    transaction_nav_date: string,
+    start_date: string|null, // only in case of SIP/STP/SWP transactions
+    end_date: string|null, // only in case of SIP/STP/SWP transactions
+    has_installment: boolean, // true for only SIP transactions 
+    NATURE:string,
+    DESC:string
+}
+
+export interface installmentHistoryRes {
+  success: boolean;
+  page: number;
+  limit: number;
+  totalRecords: number;
+  totalPages: number;
+  data: installmentHistoryKeys[];
+}
+export interface installmentHistoryKeys {
+ scheme_name: string,
+      accord_product_code: number,
+      accord_amc_code: number,
+      folio_number: string,
+      installment_id: string,
+      installment_no: string,
+      installment_amount: number,
+      installment_units: number,
+      installment_date: string
+}
+
+export interface installmentDetailsRes{
+  success: boolean;
+  data: installmentDetailsKeys;
+}
+export interface installmentDetailsKeys{
+   scheme_name:string,
+    accord_product_code:number,
+    accord_amc_code:number,
+    folio_number:string,
+    transaction_type:string,
+    installment_id:string,
+    installment_no:string,
+    installment_amount:number,
+    installment_units:number,
+    installment_date:string,
+    bank_name:string,
+    bank_acc_no: string,
+    transaction_nav_price: number,
+    transaction_nav_date: string
 }
 export interface switchOrderRes {
   success: boolean;
