@@ -223,6 +223,8 @@ export interface transactionHistoryKeys {
   transaction_type: string,
   last_transaction_date: string,
   next_installment_date: string | null,
+  NATURE: string,
+  DESC: string
 }
 
 export interface transactionDetailsRes {

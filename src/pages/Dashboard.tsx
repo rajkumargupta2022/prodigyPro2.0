@@ -97,7 +97,7 @@ const Dashboard = () => {
                         <div className="col d-flex align-items-center">
                           <h6 className="fw-semibold mb-0">PORTFOLIO SUMMARY</h6> <span className="fs12px ms-2" > As on {currentDateInStringNumber()}</span>
                         </div>
-                        <h3 className="fw-bold"><CurrencyRupee className="mb-1" />{snapshotData?.Totalmarketvalue.toLocaleString("en-In")}{familySnapShotData.length > 1 && <small className="fs-6 crPointer" onClick={handleClick}>  <ChevronDown className="mx-1" /></small>}</h3>
+                        <h3 className="fw-bold"><CurrencyRupee className="mb-1" />{snapshotData?.Totalmarketvalue.toLocaleString("en-In")}{familySnapShotData?.length > 1 && <small className="fs-6 crPointer" onClick={handleClick}>  <ChevronDown className="mx-1" /></small>}</h3>
                       </div>
                       <div className="mt-2 textColor" >
                         1 Day change{" "}

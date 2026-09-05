@@ -9,6 +9,7 @@ import {
   transactionDetailsKeys,
   installmentHistoryRes,
   installmentHistoryKeys,
+  transactionHistoryKeys,
 } from "../data-interfaces/orders";
 import { dateInStringNumber } from "../../services/dates/dateFormater";
 import { getValueInSort } from "../../services/calculation/percentageCalculate";
@@ -32,7 +33,7 @@ function TransactionDetails() {
 
   // ── Fetch transaction detail on mount ──
   useEffect(() => {
-    const state = location.state;
+    const state = location.state as transactionHistoryKeys;
     if (state?.accord_product_code && state?.folio_number) {
       fetchOrderDetails();
     } else {
@@ -43,7 +44,7 @@ function TransactionDetails() {
   const fetchOrderDetails = async () => {
     const adminUser = fetchAdminUser();
     if (!adminUser?.ucc) return;
-    const data = location.state;
+    const data = location.state as transactionHistoryKeys;
     try {
       setDetailLoading(true);
       const reqBody = {
@@ -51,6 +52,11 @@ function TransactionDetails() {
         transaction_id: data?.transaction_id || "",
         accord_product_code: data?.accord_product_code,
         transaction_type: data?.transaction_type || "",
+        last_transaction_date: data?.last_transaction_date || "",
+        transaction_units: data?.transaction_units || 0,
+        NATURE: data?.NATURE || "",
+        DESC: data?.DESC || "",
+        folio: data?.folio_number || "",
       };
       const res = await postRequest<transactionDetailsRes>(
         endPoints.getTransactionDetails,
@@ -92,8 +98,8 @@ function TransactionDetails() {
         transaction_type: data?.transaction_type || "",
         page: pageNumber,
         limit: INSTALLMENT_LIMIT,
-        NATURE: detail?.NATURE || "",
-        DESC: detail?.DESC || "",
+        NATURE: data?.NATURE || "",
+        DESC: data?.DESC || "",
         folio: data?.folio_number || "",
       };
       const res = await postRequest<installmentHistoryRes>(
