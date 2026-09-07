@@ -107,6 +107,7 @@ import StpOrders from "./pages/orders/StpOrders";
 import SwitchDetails from "./pages/orders/Switch-orders-details";
 import STPOrderDetails from "./pages/orders/Stp-orders-details";
 import TransactionDetails from "./pages/orders/Transaction-details";
+import InstallmentDetails from "./pages/orders/Installment-details";
 
 const LoaderHandler = () => {
   const { showLoader, hideLoader } = useLoader();
@@ -206,6 +207,10 @@ function App() {
            <Route
             path="/transaction-details"
             element={<Account Component={TransactionDetails} />}
+          />
+            <Route
+            path="/installment-details"
+            element={<Account Component={InstallmentDetails} />}
           />
           <Route
             path="/swp-installmet-details"

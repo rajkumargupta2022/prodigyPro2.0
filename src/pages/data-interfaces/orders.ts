@@ -129,6 +129,28 @@ export interface installmentKeys {
   nav_price: number;
 }
 
+export interface installmentDetailRes {
+  success: boolean;
+  data: installmentDetailKeys;
+}
+export interface installmentDetailKeys {
+  scheme_name: string;
+  accord_product_code: number;
+  accord_amc_code: number;
+  folio_number: string;
+  transaction_type: string;
+  installment_id: string;
+  installment_no: string;
+  installment_amount: number;
+  installment_units: number;
+  installment_date: string;
+  bank_name: string;
+  bank_acc_no: string;
+  transaction_nav_price: number;
+  transaction_nav_date: string;
+}
+
+
 export interface purchaseDetailsRes {
   success: boolean;
   data: purchaseDetailsKeys;
@@ -270,7 +292,8 @@ export interface installmentHistoryKeys {
       installment_no: string,
       installment_amount: number,
       installment_units: number,
-      installment_date: string
+      installment_date: string,
+      installment_unique_no: string,
 }
 
 export interface installmentDetailsRes{
