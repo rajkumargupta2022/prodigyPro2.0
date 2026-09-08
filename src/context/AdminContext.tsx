@@ -42,6 +42,19 @@ const AdminUserContext = createContext<AdminUserContextType | undefined>(undefin
 
 
 export const AdminUserProvider = ({ children }: { children: ReactNode }) => {
+  const initialSnapshotData: familyDataType = {
+    Totalpurchase: 0,
+    Totalmarketvalue: 0,
+    Finaldays: 0,
+    Finalcagr: "",
+    Totaldayschange: 0,
+    Gainloss: 0,
+    Dividend: 0,
+    debtPercentFinal: "",
+    goldPercentFinal: "",
+    equityPercentFinal: "",
+    myPortfolio: false,
+  }
   const navigate = useNavigate()
   const [familyMemberList, setFamilyMemberList] = useState<allFamilyListKeys[]>([])
   const [adminUser, setAdminUser] = useState<allFamilyListKeys>()
@@ -54,19 +67,7 @@ export const AdminUserProvider = ({ children }: { children: ReactNode }) => {
     uccStatusData: null
   });
 
-  const [snapshotData, setSnapshotData] = useState<familyDataType>({
-    Totalpurchase: 0,
-    Totalmarketvalue: 0,
-    Finaldays: 0,
-    Finalcagr: "",
-    Totaldayschange: 0,
-    Gainloss: 0,
-    Dividend: 0,
-    debtPercentFinal: "",
-    goldPercentFinal: "",
-    equityPercentFinal: "",
-    myPortfolio: false,
-  })
+  const [snapshotData, setSnapshotData] = useState<familyDataType>(initialSnapshotData)
 
   useEffect(() => {
     fetchFamilyPortfoloData()
@@ -254,80 +255,56 @@ export const AdminUserProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const familyPortfolio = async (adminUser: any, fromPortfolio: boolean = false) => {
-        try{
- if (adminUser?.ucc) {
-  
-      const res = await postRequestSimple<familySnapshotResponseType>(endPoints.getFamilySnapshot, {
-        ucc: adminUser?.ucc
-      });
-      if (res) {
-        console.log("Family snapshot response:", res);
-        setFamilySnapShotData(res.finalArray)
-        if (res?.finalArray?.length > 1) {
-          const portfolioType = localStorage.getItem("portfolioType")
-          if (res.finalArray[0]?.myPortfolio && portfolioType === "my") {
-            setSnapshotData(res.finalArray[0])
+    try {
+      if (adminUser?.ucc) {
+
+        const res = await postRequestSimple<familySnapshotResponseType>(endPoints.getFamilySnapshot, {
+          ucc: adminUser?.ucc
+        });
+        if (res) {
+          setFamilySnapShotData(res.finalArray)
+          const finalArray = res.finalArray || [];
+          const myPortfolioData = finalArray.find(
+            (item) => item?.myPortfolio === true
+          );
+          if (res?.finalArray?.length > 1) {
+            const portfolioType = localStorage.getItem("portfolioType");
+
+
+
+            const familyPortfolioData = finalArray.find(
+              (item) => item !== myPortfolioData
+            );
+
+            if (portfolioType === "my" && myPortfolioData) {
+              setSnapshotData(myPortfolioData);
+            } else if (
+              portfolioType === "family" &&
+              !fromPortfolio &&
+              familyPortfolioData
+            ) {
+              console.log("Setting family portfolio data", familyPortfolioData);
+              setSnapshotData(familyPortfolioData);
+            } else {
+              setSnapshotData(myPortfolioData || initialSnapshotData);
+            }
+          } else if (res?.finalArray?.length === 1) {
+            localStorage.setItem("portfolioType", "my")
+            setSnapshotData(myPortfolioData || initialSnapshotData);
+          } else {
+            setSnapshotData(initialSnapshotData)
           }
-          else if (!res.finalArray[1]?.myPortfolio && portfolioType === "family" && (!fromPortfolio)) {
-            setSnapshotData(res.finalArray[1])
-          }
-          else {
-            // Default to first available portfolio if portfolioType doesn't match
-            setSnapshotData(res.finalArray[0])
-          }
-        } else if (res?.finalArray?.length === 1) {
-          localStorage.setItem("portfolioType", "my")
-          setSnapshotData(res.finalArray[0])
-        } else {
-          setSnapshotData({
-            Totalpurchase: 0,
-            Totalmarketvalue: 0,
-            Finaldays: 0,
-            Finalcagr: "",
-            Totaldayschange: 0,
-            Gainloss: 0,
-            Dividend: 0,
-            debtPercentFinal: "",
-            goldPercentFinal: "",
-            equityPercentFinal: "",
-            myPortfolio: false,
-          })
         }
-      }
-    } else {
-      // fetchFamilyPortfoloData();
-      setFamilySnapShotData([])
-      setSnapshotData({
-        Totalpurchase: 0,
-        Totalmarketvalue: 0,
-        Finaldays: 0,
-        Finalcagr: "",
-        Totaldayschange: 0,
-        Gainloss: 0,
-        Dividend: 0,
-        debtPercentFinal: "",
-        goldPercentFinal: "",
-        equityPercentFinal: "",
-        myPortfolio: false,
-      })
-    }
-      }catch(err){
+      } else {
+        // fetchFamilyPortfoloData();
         setFamilySnapShotData([])
-      setSnapshotData({
-        Totalpurchase: 0,
-        Totalmarketvalue: 0,
-        Finaldays: 0,
-        Finalcagr: "",
-        Totaldayschange: 0,
-        Gainloss: 0,
-        Dividend: 0,
-        debtPercentFinal: "",
-        goldPercentFinal: "",
-        equityPercentFinal: "",
-        myPortfolio: false,
-      })
+        setSnapshotData(initialSnapshotData)
       }
-   
+    } catch (err) {
+      setFamilySnapShotData([])
+      setSnapshotData(initialSnapshotData)
+    }
+
   }
 
   const fetchDetailedPortfolio = async (ucc: string) => {

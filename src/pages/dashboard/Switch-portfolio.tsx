@@ -32,17 +32,19 @@ const SwitchPortfolio: React.FC<investmetProps> = ({ show, setShow, target, refD
   }, [])
 
   const handleCheckboxChange = (type: "my" | "family") => {
-    if (type === "my") {
-      localStorage.setItem("portfolioType", type)
-      let family = familySnapShotData?.filter((item) => item?.myPortfolio === true)
-      setSnapshotData(family[0])
-    } else {
-      localStorage.setItem("portfolioType", type)
-      let family = familySnapShotData?.filter((item) => item?.myPortfolio !== true)
-      setSnapshotData(family[0])
-    }
+    localStorage.setItem("portfolioType", type);
+
+    const portfolioData = familySnapShotData?.find((item) => {
+      if (type === "my") {
+        return item?.myPortfolio === true;
+      }
+
+      return item?.myPortfolio !== true;
+    });
+
+    setSnapshotData(portfolioData);
     setSelected(type);
-    setShow(false)
+    setShow(false);
   };
 
 
@@ -78,7 +80,10 @@ const SwitchPortfolio: React.FC<investmetProps> = ({ show, setShow, target, refD
               </div>
               <div className="amount-area25 ">
                 <p>
-                  <CurrencyRupee className="mb-1" />{familySnapShotData[0]?.Totalmarketvalue?.toLocaleString("en-In")}
+                  <CurrencyRupee className="mb-1" />
+                  {familySnapShotData
+                    ?.find((item) => item?.myPortfolio === true)
+                    ?.Totalmarketvalue?.toLocaleString("en-IN")}
                 </p>
               </div>
             </div>
@@ -102,7 +107,9 @@ const SwitchPortfolio: React.FC<investmetProps> = ({ show, setShow, target, refD
               </div>
               <div className="amount-area25">
                 <p>
-                  <CurrencyRupee className="mb-1" />{familySnapShotData[1]?.Totalmarketvalue?.toLocaleString("en-In")}
+                  <CurrencyRupee className="mb-1" />{familySnapShotData
+                    ?.find((item) => item?.myPortfolio !== true)
+                    ?.Totalmarketvalue?.toLocaleString("en-IN")}
                 </p>
               </div>
             </div>
