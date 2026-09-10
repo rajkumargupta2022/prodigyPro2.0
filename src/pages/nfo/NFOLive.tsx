@@ -1,13 +1,13 @@
-import NavBar from "../components/Navbar";
+import NavBar from "../../components/Navbar";
 import { ChevronRight, CurrencyRupee } from "react-bootstrap-icons";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Card } from "react-bootstrap";
-import { getRequest } from "../services/Api/HandleApi";
-import { endPoints, imageUrl } from "../services/utils/urls";
-import { nfoLiveRes } from "./data-interfaces/nfo";
-import { dateInStringNumber } from "../services/dates/dateFormater";
-import { schemeDeatilDataKeys } from "./data-interfaces/transact";
+import { getRequest } from "../../services/Api/HandleApi";
+import { endPoints, imageUrl } from "../../services/utils/urls";
+import { nfoLiveRes } from "../data-interfaces/nfo";
+import { dateInStringNumber } from "../../services/dates/dateFormater";
+import { schemeDeatilDataKeys } from "../data-interfaces/transact";
 
 const NFOLive = () => {
   const navigate = useNavigate()

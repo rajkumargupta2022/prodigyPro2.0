@@ -1,14 +1,14 @@
-import NavBar from "../components/Navbar";
+import NavBar from "../../components/Navbar";
 import {  ChevronRight, CurrencyRupee } from "react-bootstrap-icons";
 import { useState } from "react";
 // import BankMandate from "../components/BankMandate";
 // import InvestmentForm from "../components/InvestmentForm";
 // import { nfoLiveKey } from "./data-interfaces/nfo";
 import { useLocation } from "react-router-dom";
-import { dateInStringNumber } from "../services/dates/dateFormater";
-import InvestmentForm from "../components/InvestmentForm";
-import { schemeDeatilDataKeys } from "./data-interfaces/transact";
-import { imageUrl } from "../services/utils/urls";
+import { dateInStringNumber } from "../../services/dates/dateFormater";
+import InvestmentForm from "../../components/InvestmentForm";
+import { schemeDeatilDataKeys } from "../data-interfaces/transact";
+import { imageUrl } from "../../services/utils/urls";
 
 const NFOApply = () => {
   const location = useLocation()

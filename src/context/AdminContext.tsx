@@ -269,9 +269,6 @@ export const AdminUserProvider = ({ children }: { children: ReactNode }) => {
           );
           if (res?.finalArray?.length > 1) {
             const portfolioType = localStorage.getItem("portfolioType");
-
-
-
             const familyPortfolioData = finalArray.find(
               (item) => item !== myPortfolioData
             );
@@ -283,7 +280,6 @@ export const AdminUserProvider = ({ children }: { children: ReactNode }) => {
               !fromPortfolio &&
               familyPortfolioData
             ) {
-              console.log("Setting family portfolio data", familyPortfolioData);
               setSnapshotData(familyPortfolioData);
             } else {
               setSnapshotData(myPortfolioData || initialSnapshotData);

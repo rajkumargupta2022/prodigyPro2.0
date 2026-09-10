@@ -1,18 +1,18 @@
-import NavBar from "../components/Navbar";
+import NavBar from "../../components/Navbar";
 import { ChevronRight, Envelope, Telephone } from "react-bootstrap-icons";
 import { useEffect, useState } from "react";
-import SwitchFund from "../components/SwitchFund";
-import { fetchAdminUser } from "../services/user/adminUser";
-import { getRequestSimple, postRequestSimple } from "../services/Api/HandleApi";
-import { endPoints, imageUrl } from "../services/utils/urls";
-import { portfolioReviewKeys, portfolioReviewRes, summaryInsideKeys, portfolioSummaryRes, portfolioExpertRes, portfolioExpertKeys } from "./data-interfaces/portfolio";
-import { getPercentageValue, getValueInSort } from "../services/calculation/percentageCalculate";
-import InvestMoreScheme from "../components/Invest-more-scheme";
-import UnderWatchPerformance from "../components/Underwatch-performance";
-import RedemptionPerformance from "../components/Redemption-performance";
-import PortfolioEmpty from "./PortfolioEmpty";
-import emptyImg from "../assets/img/empty-img.svg"
-import { useAdminUser } from "../context/AdminContext";
+import SwitchFund from "../../components/SwitchFund";
+import { fetchAdminUser } from "../../services/user/adminUser";
+import { getRequestSimple, postRequestSimple } from "../../services/Api/HandleApi";
+import { endPoints, imageUrl } from "../../services/utils/urls";
+import { portfolioReviewKeys, portfolioReviewRes, summaryInsideKeys, portfolioSummaryRes, portfolioExpertRes, portfolioExpertKeys } from "../data-interfaces/portfolio";
+import { getPercentageValue, getValueInSort } from "../../services/calculation/percentageCalculate";
+import InvestMoreScheme from "../../components/Invest-more-scheme";
+import UnderWatchPerformance from "../../components/Underwatch-performance";
+import RedemptionPerformance from "../../components/Redemption-performance";
+import PortfolioEmpty from "../PortfolioEmpty";
+import emptyImg from "../../assets/img/empty-img.svg"
+import { useAdminUser } from "../../context/AdminContext";
 import { PortfolioReviewSkeleton } from "./PortfolioReviewSkeleton";
 
 

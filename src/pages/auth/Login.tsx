@@ -1,12 +1,12 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Logo from "../assets/img/logo/logo.png";
-import LoginLeftImage from "../components/LoginLeftImage";
-import { errorToast, successToast } from "../services/utils/toast";
+import Logo from "../../assets/img/logo/logo.png";
+import LoginLeftImage from "../../components/LoginLeftImage";
+import { errorToast, successToast } from "../../services/utils/toast";
 import { useState } from "react";
-import { handleNumbers } from "../services/utils/states";
-import { postRequest } from "../services/Api/HandleApi";
-import { endPoints } from "../services/utils/urls"
+import { handleNumbers } from "../../services/utils/states";
+import { postRequest } from "../../services/Api/HandleApi";
+import { endPoints } from "../../services/utils/urls"
 
 
 interface responseType {

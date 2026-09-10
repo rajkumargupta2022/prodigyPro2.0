@@ -1,24 +1,24 @@
-import MyNavbar from "../components/Navbar"
+import MyNavbar from "../../components/Navbar"
 import Card from 'react-bootstrap/Card';
 import { CurrencyRupee, ArrowUpCircleFill, ArrowDownCircleFill, ChevronDown } from "react-bootstrap-icons";
 import { useEffect, useRef, useState } from "react";
 
 // import OurServices from "./dashboard/Our-services";
-import GoalPlanning from "./dashboard/Goal-planning";
-import PopularFunds from "./dashboard/Popular-funds";
-import DiscoverFUnds from "./dashboard/Discover-Funds";
-import { currentDateInStringNumber } from "../services/dates/dateFormater";
-import { getPercentageValue } from "../services/calculation/percentageCalculate";
-import { fetchAdminUser } from "../services/user/adminUser";
-import { useAdminUser } from "../context/AdminContext";
-import SwitchPortfolio from "./dashboard/Switch-portfolio";
-import Footer from "../components/Footer";
-import OurServices from "./dashboard/Our-services";
-import KycMsg from "./dashboard/Kyc-msg";
+import GoalPlanning from "./Goal-planning";
+import PopularFunds from "./Popular-funds";
+import DiscoverFUnds from "./Discover-Funds";
+import { currentDateInStringNumber } from "../../services/dates/dateFormater";
+import { getPercentageValue } from "../../services/calculation/percentageCalculate";
+import { fetchAdminUser } from "../../services/user/adminUser";
+import { useAdminUser } from "../../context/AdminContext";
+import SwitchPortfolio from "./Switch-portfolio";
+import Footer from "../../components/Footer";
+import OurServices from "./Our-services";
+import KycMsg from "./Kyc-msg";
 
 import DashboardSkeleton from "./DashboardSkeleton";
 import { useNavigate } from "react-router";
-import { holdingNature, isnewUser, taxStatus } from "./data/ucc-data";
+import { holdingNature, isnewUser, taxStatus } from "../data/ucc-data";
 
 
 

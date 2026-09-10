@@ -1,14 +1,14 @@
-import LoginLeftImage from "../components/LoginLeftImage";
-import leftImage from "../assets/img/rich.svg";
-import MobileIcon from "../assets/img/login/mobile_icon.png";
+import LoginLeftImage from "../../components/LoginLeftImage";
+import leftImage from "../../assets/img/rich.svg";
+import MobileIcon from "../../assets/img/login/mobile_icon.png";
 import OtpInput from "react-otp-input";
 import { useState, useEffect } from "react";
 import { ArrowLeft } from "react-bootstrap-icons";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { errorToast, successToast } from "../services/utils/toast";
-import { endPoints } from "../services/utils/urls";
-import { postRequest } from "../services/Api/HandleApi";
-import { isnewUser } from "./data/ucc-data";
+import { errorToast, successToast } from "../../services/utils/toast";
+import { endPoints } from "../../services/utils/urls";
+import { postRequest } from "../../services/Api/HandleApi";
+import { isnewUser } from "../data/ucc-data";
 interface responseType {
   msg: string;
   success: boolean;
