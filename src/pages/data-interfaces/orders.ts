@@ -243,7 +243,8 @@ export interface transactionHistoryKeys {
   transaction_amount: number,
   transaction_units: number | null,
   transaction_type: string,
-  last_transaction_date: string,
+  transaction_date?: string,
+  last_transaction_date?: string,
   next_installment_date: string | null,
   NATURE: string,
   DESC: string

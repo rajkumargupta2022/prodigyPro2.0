@@ -1,35 +1,26 @@
 import { ArrowLeft } from "react-bootstrap-icons";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { fetchAdminUser } from "../../services/user/adminUser";
 import { postRequest } from "../../services/Api/HandleApi";
 import { endPoints, imageUrl } from "../../services/utils/urls";
 import {
   transactionDetailsRes,
   transactionDetailsKeys,
-  installmentHistoryRes,
-  installmentHistoryKeys,
   transactionHistoryKeys,
 } from "../data-interfaces/orders";
 import { dateInStringNumber } from "../../services/dates/dateFormater";
-import { getValueInSort } from "../../services/calculation/percentageCalculate";
-import InfiniteScrollFooter from "../../components/InfiniteScrollFooter";
 
-const INSTALLMENT_LIMIT = 10;
+
 
 function TransactionDetails() {
   const location = useLocation();
   const navigate = useNavigate();
 
   const [orderDetail, setOrderDetail] = useState<transactionDetailsKeys | null>(null);
-  const [installments, setInstallments] = useState<installmentHistoryKeys[]>([]);
   const [detailLoading, setDetailLoading] = useState<boolean>(false);
-  const [installmentLoading, setInstallmentLoading] = useState<boolean>(false);
-  const [installmentPage, setInstallmentPage] = useState<number>(1);
-  const [hasMore, setHasMore] = useState<boolean>(true);
 
-  const loaderRef = useRef<HTMLDivElement | null>(null);
-  const isFetching = useRef<boolean>(false);
+
 
   // ── Fetch transaction detail on mount ──
   useEffect(() => {
@@ -51,11 +42,9 @@ function TransactionDetails() {
         ucc: adminUser.ucc,
         transaction_id: data?.transaction_id || "",
         accord_product_code: data?.accord_product_code,
-        transaction_type: data?.transaction_type || "",
-        last_transaction_date: data?.last_transaction_date || "",
+        // transaction_type: data?.transaction_type || "",
+        last_transaction_date: data?.transaction_date || "",
         transaction_units: data?.transaction_units || 0,
-        NATURE: data?.NATURE || "SIP",
-        DESC: data?.DESC || "SIP",
         folio: data?.folio_number || "",
       };
       const res = await postRequest<transactionDetailsRes>(
@@ -64,10 +53,6 @@ function TransactionDetails() {
       );
       if (res.success) {
         setOrderDetail(res.data);
-        // If has_installment, kick off first installment page
-        if (res.data?.has_installment) {
-          fetchInstallments(1, res.data);
-        }
       }
     } catch {
       setOrderDetail(null);
@@ -76,96 +61,16 @@ function TransactionDetails() {
     }
   };
 
-  const fetchInstallments = async (
-    pageNumber: number,
-    detail: transactionDetailsKeys | null = orderDetail
-  ) => {
-    if (isFetching.current) return;
-    isFetching.current = true;
-    const adminUser = fetchAdminUser();
-    const data = location.state;
-    const src = detail ?? orderDetail;
-    if (!adminUser?.ucc || !src) {
-      isFetching.current = false;
-      return;
-    }
-    try {
-      if (pageNumber > 1) setInstallmentLoading(true);
-      const reqBody = {
-        ucc: adminUser.ucc,
-        installment_id: data?.transaction_id || "",
-        accord_product_code: data?.accord_product_code,
-        transaction_type: data?.transaction_type || "",
-        page: pageNumber,
-        limit: INSTALLMENT_LIMIT,
-        NATURE: data?.NATURE || "",
-        DESC: data?.DESC || "",
-        folio: data?.folio_number || "",
-      };
-      const res = await postRequest<installmentHistoryRes>(
-        endPoints.getInstallments,
-        reqBody
-      );
-      console.log("Installments fetched:", res.data);
-      if (res?.success) {
-        const incoming = res.data ?? [];
-        setInstallments((prev) =>
-          pageNumber === 1 ? incoming : [...prev, ...incoming]
-        );
-        setHasMore(incoming.length === INSTALLMENT_LIMIT);
-      } else {
-        setHasMore(false);
-      }
-    } catch {
-      setHasMore(false);
-    } finally {
-      setInstallmentLoading(false);
-      isFetching.current = false;
-    }
-  };
 
-  // IntersectionObserver for installment infinite scroll
-  useEffect(() => {
-    const sentinel = loaderRef.current;
-    if (!sentinel || !orderDetail?.has_installment) return;
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && hasMore && !isFetching.current) {
-          const nextPage = installmentPage + 1;
-          setInstallmentPage(nextPage);
-          fetchInstallments(nextPage);
-        }
-      },
-      { threshold: 0.1 }
-    );
 
-    observer.observe(sentinel);
-    return () => observer.disconnect();
-  }, [hasMore, installmentPage, orderDetail]);
 
-  const goToInstallmentDetail = (data: installmentHistoryKeys) => {
-   navigate("/installment-details", {
-  state: {
-    ...data,
-    DESC: location.state?.DESC,
-    NATURE: location.state?.NATURE,
-  },
-});
-  };
-
-  function getOrdinal(num: number | string) {
-    const n = Number(num);
-    const suffixes = ["th", "st", "nd", "rd"];
-    const v = n % 100;
-    return n + (suffixes[(v - 20) % 10] || suffixes[v] || suffixes[0]);
-  }
 
   const state = location.state;
 
-  const fundDetails = (item:transactionHistoryKeys)=>{
-       navigate("/fund-details?productcode="+item?.accord_product_code,{state:{...item,fromPortfolio:false}}) 
-    }
+  const fundDetails = (item: transactionDetailsKeys) => {
+    navigate("/fund-details?productcode=" + item?.accord_product_code, { state: { ...item, fromPortfolio: false } })
+  }
 
   return (
     <main className="col-md-9 ms-sm-auto col-lg-9 px-md-4 py-4">
@@ -176,7 +81,7 @@ function TransactionDetails() {
       <hr className="fw-light text-secondary" />
 
       {/* ── Scheme header ── */}
-      <div className="d-flex mb-3 align-items-center crPointer" onClick={()=>fundDetails(orderDetail as transactionHistoryKeys)}>
+      <div className="d-flex mb-3 align-items-center crPointer" onClick={() => fundDetails(orderDetail as transactionDetailsKeys)}>
         <img
           src={imageUrl + (state?.accord_amc_code || orderDetail?.accord_amc_code) + ".png"}
           alt="scheme logo"
@@ -201,168 +106,115 @@ function TransactionDetails() {
       )}
 
       {/* ── Transaction Summary Card ── */}
-   {!detailLoading && orderDetail && (
-  <div className="p-4 shadow-sm bg-white border-0 rounded-4 mb-3">
-    <span className="fw-bold">Order Summary</span>
+      {!detailLoading && orderDetail && (
+        <div className="p-4 shadow-sm bg-white border-0 rounded-4 mb-3">
+          <span className="fw-bold">Order Summary</span>
 
-    {orderDetail?.transaction_amount && (
-      <div className="d-flex justify-content-between mb-2 mt-3">
-        <span className="text-secondary">TRANSACTION VALUE</span>
-        <span className="value-font2">
-          {orderDetail.transaction_amount}
-        </span>
-      </div>
-    )}
-
-    {orderDetail?.transaction_type && (
-      <div className="d-flex justify-content-between mb-2">
-        <span className="text-secondary">TRANSACTION TYPE</span>
-        <span className="value-font2">
-          {orderDetail.transaction_type}
-        </span>
-      </div>
-    )}
-
-    {orderDetail?.transaction_id && (
-      <div className="d-flex justify-content-between mb-2">
-        <span className="text-secondary">TRANSACTION ID</span>
-        <span className="value-font2">
-          {orderDetail.transaction_id}
-        </span>
-      </div>
-    )}
-
-    {orderDetail?.last_transaction_date && (
-      <div className="d-flex justify-content-between mb-2">
-        <span className="text-secondary">TRANSACTION DATE</span>
-        <span className="value-font2">
-          {dateInStringNumber(orderDetail.last_transaction_date)}
-        </span>
-      </div>
-    )}
-
-    {orderDetail?.bank_name && (
-      <div className="d-flex justify-content-between mb-2">
-        <span className="text-secondary">BANK NAME</span>
-        <span className="value-font2">
-          {orderDetail.bank_name
-            ?.toLowerCase()
-            ?.split(" ")
-            ?.map(
-              (word) =>
-                word.charAt(0).toUpperCase() + word.slice(1)
-            )
-            ?.join(" ")}
-          {orderDetail?.bank_acc_no &&
-            ` ****${orderDetail.bank_acc_no.slice(-4)}`}
-        </span>
-      </div>
-    )}
-
-    {orderDetail?.start_date && (
-      <div className="d-flex justify-content-between mb-2">
-        <span className="text-secondary">START DATE</span>
-        <span className="value-font2">
-          {dateInStringNumber(orderDetail.start_date)}
-        </span>
-      </div>
-    )}
-
-    {orderDetail?.end_date && (
-      <div className="d-flex justify-content-between mb-2">
-        <span className="text-secondary">END DATE</span>
-        <span className="value-font2">
-          {dateInStringNumber(orderDetail.end_date)}
-        </span>
-      </div>
-    )}
-
-    {orderDetail?.next_installment_date && (
-      <div className="d-flex justify-content-between mb-2">
-        <span className="text-secondary">
-          NEXT INSTALLMENT DATE
-        </span>
-        <span className="value-font2">
-          {dateInStringNumber(orderDetail.next_installment_date)}
-        </span>
-      </div>
-    )}
-
-    {orderDetail?.transaction_nav_price > 0 && (
-      <div className="d-flex justify-content-between mb-2">
-        <span className="text-secondary">NAV PRICE</span>
-        <span className="value-font2">
-          ₹{orderDetail.transaction_nav_price}
-        </span>
-      </div>
-    )}
-
-    {orderDetail?.transaction_nav_date && (
-      <div className="d-flex justify-content-between mb-2">
-        <span className="text-secondary">NAV DATE</span>
-        <span className="value-font2">
-          {dateInStringNumber(orderDetail.transaction_nav_date)}
-        </span>
-      </div>
-    )}
-  </div>
-)}
-      
-
-      {/* ── Installments Section (only if has_installment) ── */}
-      {!detailLoading && orderDetail?.has_installment && (
-        <>
-          <h6 className="fw-bold mt-3 mb-2">Installments</h6>
-
-          {installments.map((item: installmentHistoryKeys, i: number) => (
-            <div
-              key={`${item.installment_id}-${i}`}
-              className="p-4 shadow-sm bg-white border-0 rounded-4 mb-2 crPointer"
-              onClick={() => goToInstallmentDetail(item)}
-            >
-              <div className="d-flex justify-content-between align-items-center">
-                <h6 style={{ margin: 0 }}>
-                  {getOrdinal(item.installment_no)} Installment
-                </h6>
-              </div>
-              <hr className="fw-light text-secondary" />
-
-              <div className="d-flex justify-content-between">
-                <div>
-                  <span className="text-secondary">Date</span>
-                  <br />
-                  <span className="value-font2">
-                    {dateInStringNumber(item.installment_date)}
-                  </span>
-                </div>
-
-                <div>
-                  <span className="text-secondary">Units</span>
-                  <br />
-                  <span className="value-font2">{item.installment_units ?? "—"}</span>
-                </div>
-
-                <div>
-                  <span className="text-secondary">Amount</span>
-                  <br />
-                  <span className="value-font2">
-                    ₹{getValueInSort(Number(item.installment_amount))}
-                  </span>
-                </div>
-              </div>
+          {orderDetail?.transaction_amount && (
+            <div className="d-flex justify-content-between mb-2 mt-3">
+              <span className="text-secondary">TRANSACTION VALUE</span>
+              <span className="value-font2">
+                {orderDetail.transaction_amount}
+              </span>
             </div>
-          ))}
+          )}
 
-          {/* Infinite scroll footer for installments */}
-          <InfiniteScrollFooter
-            loading={installmentLoading}
-            hasMore={hasMore}
-            itemCount={installments.length}
-            loaderRef={loaderRef}
-            endMessage=""
-          />
-        </>
+          {orderDetail?.transaction_type && (
+            <div className="d-flex justify-content-between mb-2">
+              <span className="text-secondary">TRANSACTION TYPE</span>
+              <span className="value-font2">
+                {orderDetail.transaction_type}
+              </span>
+            </div>
+          )}
+
+          {orderDetail?.transaction_id && (
+            <div className="d-flex justify-content-between mb-2">
+              <span className="text-secondary">TRANSACTION ID</span>
+              <span className="value-font2">
+                {orderDetail.transaction_id}
+              </span>
+            </div>
+          )}
+
+          {orderDetail?.last_transaction_date && (
+            <div className="d-flex justify-content-between mb-2">
+              <span className="text-secondary">TRANSACTION DATE</span>
+              <span className="value-font2">
+                {dateInStringNumber(orderDetail.last_transaction_date)}
+              </span>
+            </div>
+          )}
+
+          {orderDetail?.bank_name && (
+            <div className="d-flex justify-content-between mb-2">
+              <span className="text-secondary">BANK NAME</span>
+              <span className="value-font2">
+                {orderDetail.bank_name
+                  ?.toLowerCase()
+                  ?.split(" ")
+                  ?.map(
+                    (word) =>
+                      word.charAt(0).toUpperCase() + word.slice(1)
+                  )
+                  ?.join(" ")}
+                {orderDetail?.bank_acc_no &&
+                  ` ****${orderDetail.bank_acc_no.slice(-4)}`}
+              </span>
+            </div>
+          )}
+
+          {orderDetail?.start_date && (
+            <div className="d-flex justify-content-between mb-2">
+              <span className="text-secondary">START DATE</span>
+              <span className="value-font2">
+                {dateInStringNumber(orderDetail.start_date)}
+              </span>
+            </div>
+          )}
+
+          {orderDetail?.end_date && (
+            <div className="d-flex justify-content-between mb-2">
+              <span className="text-secondary">END DATE</span>
+              <span className="value-font2">
+                {dateInStringNumber(orderDetail.end_date)}
+              </span>
+            </div>
+          )}
+
+          {orderDetail?.next_installment_date && (
+            <div className="d-flex justify-content-between mb-2">
+              <span className="text-secondary">
+                NEXT INSTALLMENT DATE
+              </span>
+              <span className="value-font2">
+                {dateInStringNumber(orderDetail.next_installment_date)}
+              </span>
+            </div>
+          )}
+
+          {orderDetail?.transaction_nav_price > 0 && (
+            <div className="d-flex justify-content-between mb-2">
+              <span className="text-secondary">NAV PRICE</span>
+              <span className="value-font2">
+                ₹{orderDetail.transaction_nav_price}
+              </span>
+            </div>
+          )}
+
+          {orderDetail?.transaction_nav_date && (
+            <div className="d-flex justify-content-between mb-2">
+              <span className="text-secondary">NAV DATE</span>
+              <span className="value-font2">
+                {dateInStringNumber(orderDetail.transaction_nav_date)}
+              </span>
+            </div>
+          )}
+        </div>
       )}
+
+
+
 
     </main>
   );
