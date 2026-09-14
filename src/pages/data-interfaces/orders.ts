@@ -260,7 +260,7 @@ export interface transactionDetailsKeys {
     transaction_amount: number,
     transaction_units: number|null, // if we get units from RTA, otherwise null
     transaction_type: string,
-    last_transaction_date: string,
+    transaction_date: string,
     next_installment_date: string|null, // only in case of SIP/STP/SWP transactions
     bank_name: string,
     bank_acc_no: string,

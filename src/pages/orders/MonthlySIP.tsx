@@ -109,7 +109,7 @@ function MonthlySIP() {
                       {item.status?.charAt(0).toUpperCase() + item?.status.slice(1).toLowerCase()}
                     </span>
                   ) : pendingString.includes(item.status) ? (
-                    <span className="pending-badge">{item.status}</span>
+                    <span className="pending-badge">{item.status?.charAt(0).toUpperCase() + item?.status.slice(1).toLowerCase()}</span>
                   ) : (
                     <span className="success-badge">
                       {item.status?.charAt(0).toUpperCase() + item?.status.slice(1).toLowerCase()}

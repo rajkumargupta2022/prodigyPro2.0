@@ -10,10 +10,11 @@ import {
 } from "../data-interfaces/orders";
 import { fetchAdminUser } from "../../services/user/adminUser";
 import { dateInStringNumber } from "../../services/dates/dateFormater";
-import { TransactionSkeletonCard } from "./Skeleton";
+import { TransactionSkeletonCard } from "../orders/Skeleton";
 import InfiniteScrollFooter from "../../components/InfiniteScrollFooter";
 import PortfolioEmpty from "../PortfolioEmpty";
 import emptyImg from "../../assets/img/empty-img.svg"
+import { transactionTypeKeys } from "../../services/utils/keys";
 
 const LIMIT = 10;
 
@@ -200,9 +201,8 @@ const TransactionHistory = () => {
                 {item?.transaction_type && (
                   <div className="col-lg-4 col-md-4 col-12 py-2 text-md-end text-start">
                     <span className="success-badge">
-                      {item.transaction_type === "PURCHASE"
-                        ? "One-time"
-                        : item.transaction_type}
+                      {transactionTypeKeys[item.transaction_type as keyof typeof transactionTypeKeys]
+                        ?? item.transaction_type}
                     </span>
                   </div>
                 )}
@@ -221,7 +221,7 @@ const TransactionHistory = () => {
                       {item?.transaction_date && (
                         <div>
                           <span className="text-secondary small">
-                            Last Order
+                            Transaction Date
                           </span>
                           <br />
                           <span className="fw-semibold">

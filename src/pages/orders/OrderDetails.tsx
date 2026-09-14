@@ -1,4 +1,4 @@
-import { ArrowDown, ArrowLeft } from "react-bootstrap-icons";
+import { ArrowDown, ArrowLeft, Link } from "react-bootstrap-icons";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { imageUrl } from "../../services/utils/urls";
@@ -39,14 +39,26 @@ function SIPOrderDetails() {
   };
 
 
-  const fundDetails = () => {
+ const fundDetails = ()=>{
+      const data = isSwitchOrSTP === keys?.switch || isSwitchOrSTP === keys?.stp ? location.state?.target_scheme : location.state
+
+     navigate("/fund-details?productcode="+data.accord_product_code,{state:{...data,accordSchemeCode:data.accord_product_code,folio:data.folio_number,fromPortfolio:false}}) 
+  }
+  const showMoreDetails = (e: React.MouseEvent) => {
+    e.stopPropagation();
     if (isSwitchOrSTP === keys?.switch || isSwitchOrSTP === keys?.stp) {
-      navigate("/fund-details?productcode=" + location.state?.target_scheme?.accord_product_code, { state: { ...location.state, fromPortfolio: false } })
+      navigate("/transaction-history?accord_product_code=" + location.state?.target_scheme?.accord_product_code + "&folio_number=" + location.state?.target_scheme?.folio_number, { state: { ...location.state, fromPortfolio: true } })
     } else {
-      navigate("/fund-details?productcode=" + location.state?.accord_product_code, { state: { ...location.state, fromPortfolio: false } })
+      navigate("/transaction-history?accord_product_code=" + location.state?.accord_product_code + "&folio_number=" + location.state?.folio_number, { state: { ...location.state, fromPortfolio: true } })
     }
   }
-
+  const isHistoryAvailable = () => {
+     const data = isSwitchOrSTP === keys?.switch || isSwitchOrSTP === keys?.stp ? location.state?.target_scheme : location.state
+    if (data?.accord_product_code && data?.folio_number && data?.status?.toLowerCase() !== "rejected") {
+      return true;
+    }
+    return false;
+  };
 
 
   return (
@@ -60,7 +72,7 @@ function SIPOrderDetails() {
         <>
           <div className="d-flex justify-content-between crPointer">
 
-            <div className="d-flex" onClick={() => fundDetails()}>
+            <div className="d-flex crPointer" onClick={() => fundDetails()}>
               <div className="d-flex align-items-center">
                 <img
                   src={imageUrl + location?.state?.source_scheme?.accord_amc_code + ".png"}
@@ -92,7 +104,7 @@ function SIPOrderDetails() {
                 {/* <p>Selected fund 1</p> */}
               </div>
             </div>
-
+           { isHistoryAvailable() && (   <div className="text-end logoBlueColor crPointer align-self-center" onClick={showMoreDetails}>View Full Transaction History</div> )}
           </div></> : <div className="d-flex mb-3 align-items-center justify-content-between crPointer" onClick={() => fundDetails()}>
           <div className="d-flex align-items-center">
             <img
@@ -104,6 +116,9 @@ function SIPOrderDetails() {
             />
             <span className="fw-bold ms-2">{location.state.scheme_name}</span>
           </div>
+        { isHistoryAvailable() && (
+          <div className="text-end logoBlueColor crPointer" onClick={showMoreDetails}>View Full Transaction History</div>
+        )}
         </div>}
 
 

@@ -45,7 +45,7 @@ const NfoInvestment: React.FC<NfoInvestmentProps> = ({ schemeList, setSchemeList
     ) {
       handleMinAmount(true);
       fetchFolios();
-     setMinimumDate(daysAdded(7,sipDateList))
+      setMinimumDate(daysAdded(30, sipDateList))
       setSchemeList((prev: any) =>
         prev.map((obj: any) => {
           return {
@@ -55,7 +55,7 @@ const NfoInvestment: React.FC<NfoInvestmentProps> = ({ schemeList, setSchemeList
             from_date: "",
             amount: Number(obj.minSIPAmt),
             totalAmount: 0,
-            start_date: daysAdded(7, sipDateList),
+            start_date: daysAdded(30, sipDateList),
           };
         })
       );
@@ -228,14 +228,16 @@ const NfoInvestment: React.FC<NfoInvestmentProps> = ({ schemeList, setSchemeList
 
   }
   const handleSipDeduction = () => {
-     setMinimumDate(!schemeList[0].firstSIPToday ?  daysAdded(7, sipDateList): daysAdded(7, sipDateList))
+    const isChecked = !schemeList[0].firstSIPToday;
+    const newDate = isChecked ? daysAdded(30, sipDateList) : daysAdded(7, sipDateList);
 
+    setMinimumDate(newDate);
     setSchemeList((prev: any) =>
-      prev.map((obj: any, index: number) =>
-        index === 0
-          ? { ...obj, firstSIPToday: !obj.firstSIPToday } // Toggle the value
-          : obj
-      )
+      prev.map((obj: any) => ({
+        ...obj,
+        firstSIPToday: isChecked,
+        start_date: newDate,
+      }))
     );
   };
   return (<>

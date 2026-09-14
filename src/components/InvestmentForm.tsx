@@ -39,7 +39,7 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
 
       fetchFolios();
       handleMinAmount(true);
-      setMinimumDate(daysAdded(7, sipDateList))
+      setMinimumDate(daysAdded(30, sipDateList))
       setSchemeList((prev: any) =>
         prev.map((obj: any) => {
           return {
@@ -49,7 +49,7 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
             from_date: "",
             amount: 0,
             totalAmount: 0,
-            start_date: daysAdded(7, sipDateList),
+            start_date: daysAdded(30, sipDateList),
           };
         })
       );
@@ -188,7 +188,7 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
               minSIPAmt: value ? scheme.minSIPAmt : 0,
               minLumSumAmt: value ? 10000 : 1000000,
               amount: value ? scheme.minSIPAmt : 1000000,
-              start_date: daysAdded(30, sipDateList),
+              start_date: daysAdded(scheme.firstSIPToday !== false ? 30 : 7, sipDateList),
             };
           }
           else {
@@ -196,7 +196,7 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
             return {
               ...scheme,
               amount: minAmount,
-              start_date: daysAdded(30, sipDateList),
+              start_date: daysAdded(scheme.firstSIPToday !== false ? 30 : 7, sipDateList),
             };
           }
 
@@ -264,14 +264,16 @@ const InvestmentForm: React.FC<InvestmentFormProps> = ({ schemeList, setSchemeLi
 
   }
   const handleSipDeduction = () => {
-    setMinimumDate(!schemeList[0].firstSIPToday ? daysAdded(7, sipDateList) : daysAdded(7, sipDateList))
+    const isChecked = !schemeList[0].firstSIPToday;
+    const newDate = isChecked ? daysAdded(30, sipDateList) : daysAdded(7, sipDateList);
 
+    setMinimumDate(newDate);
     setSchemeList((prev: any) =>
-      prev.map((obj: any, index: number) =>
-        index === 0
-          ? { ...obj, firstSIPToday: !obj.firstSIPToday } // Toggle the value
-          : obj
-      )
+      prev.map((obj: any) => ({
+        ...obj,
+        firstSIPToday: isChecked,
+        start_date: newDate,
+      }))
     );
   };
   return (<>

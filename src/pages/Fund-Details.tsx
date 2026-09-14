@@ -164,6 +164,7 @@ const FundDetails = () => {
 
 
   useEffect(() => {
+    console.log("location?.state?.accordSchemeCode", location?.state)
     if (location?.state?.accordSchemeCode) {
       fetchSchemeDetail()
       handleMinAmount()

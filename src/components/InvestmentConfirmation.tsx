@@ -28,11 +28,12 @@ interface investmetProps {
   schemeList: schemeDeatilDataKeys[];
   setSchemeList: (date: any) => void;
   sipDateList: number[],
-  from: string
+  from: string,
+  transactionType?: string
 }
 
 
-const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, schemeList, setSchemeList, sipDateList, from }) => {
+const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, schemeList, setSchemeList, sipDateList, from, transactionType }) => {
   const [openSelectFolio, setOpenSelectFolio] = useState(false)
   const [openBankMandate, setOpenBankMandate] = useState(false)
   const [openSuccess, setOpenSuccess] = useState(false)
@@ -53,9 +54,13 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
 
   useEffect(() => {
     if (!show) return;
-    fetchFolios()
-    setIsSipTransaction(true)
-  }, [show]);
+    fetchFolios();
+    if (transactionType && transactionType.toLowerCase() === 'purchase') {
+      setIsSipTransaction(false);
+    } else {
+      setIsSipTransaction(true);
+    }
+  }, [show, transactionType]);
 
   const dateHandle = (e: Date | null) => {
     setSchemeList((prev: any) =>
@@ -89,7 +94,7 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
           setShortcutValues([base * 2, base * 3, base * 5]);
         }
       } else {
-        handleMinAmount(true);
+        handleMinAmount(transactionType && transactionType.toLowerCase() === 'purchase' ? false : true);
       }
       setFoliosFetched(false);
     }
@@ -334,13 +339,13 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
           minSIPAmt: hasFolioOrSIF ? minSip : 0,
           minLumSumAmt: hasFolioOrSIF ? minLump : 1000000,
           amount: hasFolioOrSIF ? (type ? minSip : minLump) : 1000000,
-          start_date: daysAdded(30, sipDateList),
+          start_date: daysAdded(scheme.firstSIPToday !== false ? 30 : 7, sipDateList),
         } as any;
       } else {
         return {
           ...scheme,
           amount: minAmount,
-          start_date: daysAdded(30, sipDateList),
+          start_date: daysAdded(scheme.firstSIPToday !== false ? 30 : 7, sipDateList),
         } as any;
       }
     });
@@ -400,13 +405,16 @@ const InvetmentConfirmation: React.FC<investmetProps> = ({ show, setShow, scheme
   };
 
   const handleSipDeduction = () => {
-    setMinimumDate(!schemeList[0].firstSIPToday ? daysAdded(7, sipDateList) : daysAdded(7, sipDateList))
+    const isChecked = !schemeList[0].firstSIPToday;
+    const newDate = isChecked ? daysAdded(30, sipDateList) : daysAdded(7, sipDateList);
+    
+    setMinimumDate(newDate);
     setSchemeList((prev: any) =>
-      prev.map((obj: any, index: number) =>
-        index === 0
-          ? { ...obj, firstSIPToday: !obj.firstSIPToday, } // Toggle the value
-          : obj
-      )
+      prev.map((obj: any) => ({
+        ...obj,
+        firstSIPToday: isChecked,
+        start_date: newDate,
+      }))
     );
   };
   const handleTerms = () => {

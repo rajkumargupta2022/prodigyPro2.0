@@ -10,6 +10,12 @@ import {
   transactionHistoryKeys,
 } from "../data-interfaces/orders";
 import { dateInStringNumber } from "../../services/dates/dateFormater";
+import InvetmentConfirmation from "../../components/InvestmentConfirmation";
+import { schemeDeatilDataKeys, schemeDetailType } from "../data-interfaces/transact";
+import { errorToast } from "../../services/utils/toast";
+import { uccMsg, UccStatusEnum } from "../data/ucc-data";
+import { daysAdded } from "../../services/dates/dateFormater";
+import { keys, transactionTypeKeys } from "../../services/utils/keys";
 
 
 
@@ -20,7 +26,11 @@ function TransactionDetails() {
   const [orderDetail, setOrderDetail] = useState<transactionDetailsKeys | null>(null);
   const [detailLoading, setDetailLoading] = useState<boolean>(false);
 
-
+  // Invest More modal state
+  const [openInvestPopup, setOpenInvestPopup] = useState<boolean>(false);
+  const [schemeList, setSchemeList] = useState<schemeDeatilDataKeys[]>([]);
+  const [sipDateList, setSipDateList] = useState<number[]>([]);
+  const [schemeLoading, setSchemeLoading] = useState<boolean>(false);
 
   // ── Fetch transaction detail on mount ──
   useEffect(() => {
@@ -33,7 +43,7 @@ function TransactionDetails() {
   }, []);
 
   const fetchOrderDetails = async () => {
-    const adminUser = fetchAdminUser();
+  const adminUser = fetchAdminUser();
     if (!adminUser?.ucc) return;
     const data = location.state as transactionHistoryKeys;
     try {
@@ -61,29 +71,62 @@ function TransactionDetails() {
     }
   };
 
-  // const requestSxpCancellation = async (userRequestType: string) => {
-  //   const adminUser = fetchAdminUser();
-  //   if (!adminUser?.ucc) return;
-  //   const reqBody = { 
-  //     folio: orderDetail?.folio_number,
-  //      productCode: orderDetail?.accord_product_code, 
-  //      transaction_id: orderDetail?.transaction_id, 
-  //      ucc: adminUser?.ucc, request_type: userRequestType 
-  //     }
-  //     try{
-  //       const res = await postRequest<any>(endPoints.requestSxpCancellation, reqBody);
-  //       if(res.success){
-  //         successToast(res.data.msg)
-  //       }
-  //     }catch(err){
-  //       errorToast(err);
-  //     }
+  // ── Check if transaction type is SIP or PURCHASE ──
+  const isSipOrPurchase = (): boolean => {
+    const txType = (orderDetail?.transaction_type || (location.state as transactionHistoryKeys)?.transaction_type || "").toUpperCase();
+    return txType === "SIP" || txType === "PURCHASE";
+  };
 
-  // }
+  // ── Fetch scheme details for Invest More ──
+  const fetchSchemeDetails = async () => {
+    const productCode = orderDetail?.accord_product_code || (location.state as transactionHistoryKeys)?.accord_product_code;
+    if (!productCode) return;
 
+    try {
+      setSchemeLoading(true);
+      const res = await postRequest<schemeDetailType>(
+        endPoints.getSchemeDetails,
+        { productcode: productCode }
+      );
 
+      if (res?.data && res.data.length > 0) {
+        const updated = res.data.map((obj) => ({
+          ...obj,
+          firstSIPToday: true,
+          to_date: "",
+          from_date: "",
+          mandateId: "",
+          amount: 0,
+          totalAmount: 0,
+          start_date: daysAdded(7, obj.sipDateList),
+        }));
+        setSchemeList(updated);
+        setSipDateList(res.data[0].sipDateList || []);
+        return true;
+      }
+      return false;
+    } catch {
+      return false;
+    } finally {
+      setSchemeLoading(false);
+    }
+  };
 
+  // ── Handle Invest More button click ──
+  const handleInvestMore = async () => {
+    const uccStatus = localStorage.getItem("uccStatus");
+    if (uccStatus !== UccStatusEnum.ACTIVE) {
+      errorToast(uccMsg.uccUpdateMsg);
+      return;
+    }
 
+    const success = await fetchSchemeDetails();
+    if (success) {
+      setOpenInvestPopup(true);
+    } else {
+      errorToast("Unable to fetch scheme details. Please try again.");
+    }
+  };
 
   const state = location.state;
 
@@ -100,7 +143,7 @@ function TransactionDetails() {
       <hr className="fw-light text-secondary" />
 
       {/* ── Scheme header ── */}
-      <div className="d-flex mb-3 align-items-center crPointer" onClick={() => fundDetails(orderDetail as transactionDetailsKeys)}>
+      <div className="d-flex mb-3 align-items-center" onClick={() => fundDetails(orderDetail as transactionDetailsKeys)}>
         <img
           src={imageUrl + (state?.accord_amc_code || orderDetail?.accord_amc_code) + ".png"}
           alt="scheme logo"
@@ -127,7 +170,7 @@ function TransactionDetails() {
       {/* ── Transaction Summary Card ── */}
       {!detailLoading && orderDetail && (
         <div className="p-4 shadow-sm bg-white border-0 rounded-4 mb-3">
-          <span className="fw-bold">Order Summary</span>
+          <span className="fw-bold">Transaction Summary</span>
 
           {orderDetail?.transaction_amount && (
             <div className="d-flex justify-content-between mb-2 mt-3">
@@ -142,7 +185,9 @@ function TransactionDetails() {
             <div className="d-flex justify-content-between mb-2">
               <span className="text-secondary">TRANSACTION TYPE</span>
               <span className="value-font2">
-                {orderDetail.transaction_type}
+                {/* {(orderDetail?.transaction_type?.toLocaleLowerCase()) === keys?.purchase ? keys.oneTime : orderDetail?.transaction_type} */}
+                 {transactionTypeKeys[orderDetail?.transaction_type as keyof typeof transactionTypeKeys]
+                                        ?? orderDetail?.transaction_type}
               </span>
             </div>
           )}
@@ -156,11 +201,11 @@ function TransactionDetails() {
             </div>
           )}
 
-          {orderDetail?.last_transaction_date && (
+          {orderDetail?.transaction_date && (
             <div className="d-flex justify-content-between mb-2">
               <span className="text-secondary">TRANSACTION DATE</span>
               <span className="value-font2">
-                {dateInStringNumber(orderDetail.last_transaction_date)}
+                {dateInStringNumber(orderDetail?.transaction_date)}
               </span>
             </div>
           )}
@@ -183,34 +228,11 @@ function TransactionDetails() {
             </div>
           )}
 
-          {orderDetail?.start_date && (
-            <div className="d-flex justify-content-between mb-2">
-              <span className="text-secondary">START DATE</span>
-              <span className="value-font2">
-                {dateInStringNumber(orderDetail.start_date)}
-              </span>
-            </div>
-          )}
 
-          {orderDetail?.end_date && (
-            <div className="d-flex justify-content-between mb-2">
-              <span className="text-secondary">END DATE</span>
-              <span className="value-font2">
-                {dateInStringNumber(orderDetail.end_date)}
-              </span>
-            </div>
-          )}
+       
 
-          {orderDetail?.next_installment_date && (
-            <div className="d-flex justify-content-between mb-2">
-              <span className="text-secondary">
-                NEXT INSTALLMENT DATE
-              </span>
-              <span className="value-font2">
-                {dateInStringNumber(orderDetail.next_installment_date)}
-              </span>
-            </div>
-          )}
+          
+       
 
           {orderDetail?.transaction_nav_price > 0 && (
             <div className="d-flex justify-content-between mb-2">
@@ -229,12 +251,50 @@ function TransactionDetails() {
               </span>
             </div>
           )}
+            <div className="d-flex justify-content-between mb-2">
+              <span className="text-secondary">
+                FOLIO NUMBER
+              </span>
+              <span className="value-font2">
+                {orderDetail.folio_number||"N/A"}
+              </span>
+            </div>
         </div>
       )}
 
+      {/* ── Invest More Button — only shown for SIP or PURCHASE ── */}
+      {!detailLoading && orderDetail && isSipOrPurchase() && (
+        <div className="text-end">
+          <button
+            type="button"
+            className="customButton px-3 mt-1"
+            onClick={handleInvestMore}
+            disabled={schemeLoading}
+          >
+            {schemeLoading ? (
+              <>
+                <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true" />
+                Loading...
+              </>
+            ) : (
+              "Invest More"
+            )}
+          </button>
+        </div>
+      )}
 
-
-
+      {/* ── Investment Confirmation Modal ── */}
+      {schemeList.length > 0 && (
+        <InvetmentConfirmation
+          show={openInvestPopup}
+          setShow={setOpenInvestPopup}
+          schemeList={schemeList}
+          setSchemeList={setSchemeList}
+          sipDateList={sipDateList}
+          from={"portfolio"}
+          transactionType={orderDetail?.transaction_type || (location.state as transactionHistoryKeys)?.transaction_type}
+        />
+      )}
     </main>
   );
 }

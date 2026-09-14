@@ -63,10 +63,7 @@ import LocateUs from "./components/Locate-us";
 import AboutUs from "./components/About-Us";
 import PrivacyPolicyComponent from "./components/privacyPolicy";
 import AllOrders from "./components/All-orders";
-import SipInstallmentDetails from "./pages/orders/SipInstallmentDetails";
 import OrderDetails from "./pages/orders/OrderDetails";
-// import STPOrderDetails from "./pages/orders/Stp-order-details";
-import SWPOrderDetails from "./pages/orders/SwpOrderDetails";
 import LinkedBankAccount from "./components/Linked-BankAccount";
 import AddBankAccount from "./components/Add-bank-account";
 import AddBankDetails from "./components/add-bank-details";
@@ -84,10 +81,7 @@ import useAuthRedirect from "./services/user/useAuthRedirect";
 import SighnUp from "./pages/Sign-up";
 import SifFunds from "./pages/SifFunds";
 import FundWithh100 from "./pages/FundWith100";
-import PurchaseDetails from "./pages/orders/PurchaseDetails";
-import RedemptionDetails from "./pages/orders/RedemptionDetails";
-import SwpInstallmentDetails from "./pages/orders/SwpInstallmentDetails";
-import TransactionHistory from "./pages/orders/TransactionHistory";
+import TransactionHistory from "./pages/history/TransactionHistory";
 import WhatIsMfSavings from "./pages/mfSavings/What-is-mf-savings";
 import ManualSurplusCalculator from "./pages/mfSavings/ManualSurplusCalculator";
 import MfSavingDashboard from "./pages/mfSavings/MfSavingDashboard";
@@ -104,10 +98,7 @@ import MandateAmount from "./pages/ucc/Mandate-amount";
 import UccSubmit from "./pages/ucc/Ucc-submit";
 import TopPerformers from "./pages/Top-performers";
 import StpOrders from "./pages/orders/StpOrders";
-import SwitchDetails from "./pages/orders/Switch-orders-details";
-import STPOrderDetails from "./pages/orders/Stp-orders-details";
-import TransactionDetails from "./pages/orders/Transaction-details";
-import InstallmentDetails from "./pages/orders/Installment-details";
+import TransactionDetails from "./pages/history/Transaction-details";
 
 const LoaderHandler = () => {
   const { showLoader, hideLoader } = useLoader();
@@ -200,53 +191,24 @@ function App() {
             element={<Account Component={AllOrders} />}
           />
 
-          <Route
-            path="/sip-installment-details"
-            element={<Account Component={SipInstallmentDetails} />}
-          />
+      
            <Route
             path="/transaction-details"
             element={<Account Component={TransactionDetails} />}
           />
-            <Route
-            path="/installment-details"
-            element={<Account Component={InstallmentDetails} />}
-          />
-          <Route
-            path="/swp-installmet-details"
-            element={<Account Component={SwpInstallmentDetails} />}
-          />
-          <Route
-            path="/purchase-details"
-            element={<Account Component={PurchaseDetails} />}
-          />
-          <Route
-            path="/redemption-details"
-            element={<Account Component={RedemptionDetails} />}
-          />
+           
+          
+         
 
           <Route
             path="/order-details"
             element={<Account Component={OrderDetails} />}
           />
-          <Route
-            path="/stp-orders-details"
-            element={<Account Component={STPOrderDetails} />}
-          />
+        
 
-          <Route
-            path="/switch-orders-details"
-            element={<Account Component={SwitchDetails} />}
-          />
-          {/* <Route
-            path="/stp-order"
-            element={<Account Component={STPOrderDetails} />}
-          /> */}
+          
 
-          <Route
-            path="/swp-order"
-            element={<Account Component={SWPOrderDetails} />}
-          />
+          
           <Route
             path="/stp-order"
             element={<Account Component={StpOrders} />}

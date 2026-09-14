@@ -16,6 +16,17 @@ export enum keys {
   active = "Active",
   failed = "Failed",
   bajaj = "bajaj",
+  oneTime = "One-time",
+}
+export enum transactionTypeKeys {
+  SIP = "SIP",
+  PURCHASE = "One-time",
+  SWO = "Switch-out",
+  SWI = "Switch-in",
+  SWP = "SWP",
+  STP = "STP",
+  REDEMPTION = "Redemption",
+  XSIP = "XSIP",
 }
 export enum riskKey {
   aggressive = 3,
@@ -75,7 +86,7 @@ export const succeessString = [
   "COMPLETED",
   "VALID",
 ];
-export const pendingString = ["PENDING", "WAITING", "INPROGRESS", "PROCESSING"];
+export const pendingString = ["PENDING", "WAITING", "INPROGRESS", "PROCESSING","INITIATED"];
 export const failedString = [
   "FAILED",
   "REJECT",
