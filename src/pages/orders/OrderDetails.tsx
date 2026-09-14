@@ -4,12 +4,13 @@ import { useEffect } from "react";
 import { imageUrl } from "../../services/utils/urls";
 import { dateInStringNumber } from "../../services/dates/dateFormater";
 import { inTitleCase } from "../../services/utils/services";
+import { keys } from "../../services/utils/keys";
 
 
 function SIPOrderDetails() {
   const location = useLocation()
   const navigate = useNavigate()
-  const isSwitchOrSTP = location.state?.investment_type;
+  const isSwitchOrSTP = (location.state?.investment_type?.toLowerCase());
   useEffect(() => {
     console.log("location.state", location.state);
 
@@ -38,7 +39,13 @@ function SIPOrderDetails() {
   };
 
 
-
+  const fundDetails = () => {
+    if (isSwitchOrSTP === keys?.switch || isSwitchOrSTP === keys?.stp) {
+      navigate("/fund-details?productcode=" + location.state?.target_scheme?.accord_product_code, { state: { ...location.state, fromPortfolio: false } })
+    } else {
+      navigate("/fund-details?productcode=" + location.state?.accord_product_code, { state: { ...location.state, fromPortfolio: false } })
+    }
+  }
 
 
 
@@ -49,11 +56,11 @@ function SIPOrderDetails() {
         Order Details
       </h4>
       <hr className="fw-light text-secondary " />
-      {isSwitchOrSTP === "SWITCH" || isSwitchOrSTP === "STP" ?
+      {isSwitchOrSTP === keys?.switch || isSwitchOrSTP === keys?.stp ?
         <>
-          <div className="d-flex justify-content-between">
+          <div className="d-flex justify-content-between crPointer">
 
-            <div className="d-flex">
+            <div className="d-flex" onClick={() => fundDetails()}>
               <div className="d-flex align-items-center">
                 <img
                   src={imageUrl + location?.state?.source_scheme?.accord_amc_code + ".png"}
@@ -75,7 +82,7 @@ function SIPOrderDetails() {
             <div className='rounded-4 lightTrxBtn p-1'><ArrowDown /> SWITCH TO</div>
             <hr className="flex-grow-1" />
           </div>
-          <div className="d-flex justify-content-between mb-3">
+          <div className="d-flex justify-content-between mb-3 crPointer" onClick={() => fundDetails()}>
             <div className="d-flex">
               <div className="prod_icon_img">
                 <img src={imageUrl + location.state?.target_scheme?.accord_amc_code + ".png"} className='rounded' height={35} width={35} alt="" />
@@ -86,7 +93,7 @@ function SIPOrderDetails() {
               </div>
             </div>
 
-          </div></> : <div className="d-flex mb-3 align-items-center justify-content-between">
+          </div></> : <div className="d-flex mb-3 align-items-center justify-content-between crPointer" onClick={() => fundDetails()}>
           <div className="d-flex align-items-center">
             <img
               src={imageUrl + location?.state?.accord_amc_code + ".png"}

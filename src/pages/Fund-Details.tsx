@@ -260,7 +260,7 @@ const FundDetails = () => {
 
     const reqBody = {
       ucc: adminUser.ucc,
-      product_code: schemeList[0].accordSchemeCode,
+      product_code: schemeList[0]?.accordSchemeCode,
     };
 
     try {

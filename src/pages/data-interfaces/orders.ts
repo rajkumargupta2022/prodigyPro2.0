@@ -245,9 +245,6 @@ export interface transactionHistoryKeys {
   transaction_type: string,
   transaction_date?: string,
   last_transaction_date?: string,
-  next_installment_date: string | null,
-  NATURE: string,
-  DESC: string
 }
 
 export interface transactionDetailsRes {
@@ -370,4 +367,11 @@ export interface orderDetailsKeys {
   nav_date?: string;
   nav_price?: number;
   installment_amount?: number;
+}
+export interface requestSxpCancellationRes {
+  success: boolean;
+  data: msgKeys;
+}
+export interface msgKeys {
+  msg: string;
 }

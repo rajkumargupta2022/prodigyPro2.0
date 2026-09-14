@@ -139,6 +139,7 @@ export enum endPoints {
   getTransactionDetails = "history/get-transaction-details",
   getInstallments = "history/get-installments",
   getInstallmentDetails="history/get-installment-details",
+  requestSxpCancellation="history/request-sxp-cancellation",
   /* =========================
      REPORTS
   ========================== */

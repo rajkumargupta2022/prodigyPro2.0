@@ -83,4 +83,5 @@ export const failedString = [
   "DECLINED",
   "CANCELLED",
   "INVALID",
+  "REJECTED"
 ];

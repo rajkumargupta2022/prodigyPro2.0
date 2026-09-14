@@ -230,18 +230,6 @@ const TransactionHistory = () => {
                         </div>
                       )}
 
-                      {/* Next Installment Date */}
-                      {item?.next_installment_date && (
-                        <div>
-                          <span className="text-secondary small">
-                            Next {item?.transaction_type || "Installment"}
-                          </span>
-                          <br />
-                          <span className="fw-semibold">
-                            {dateInStringNumber(item.next_installment_date)}
-                          </span>
-                        </div>
-                      )}
 
                       {/* Amount */}
                       {item?.transaction_amount !== null &&

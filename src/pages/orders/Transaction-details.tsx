@@ -61,6 +61,25 @@ function TransactionDetails() {
     }
   };
 
+  // const requestSxpCancellation = async (userRequestType: string) => {
+  //   const adminUser = fetchAdminUser();
+  //   if (!adminUser?.ucc) return;
+  //   const reqBody = { 
+  //     folio: orderDetail?.folio_number,
+  //      productCode: orderDetail?.accord_product_code, 
+  //      transaction_id: orderDetail?.transaction_id, 
+  //      ucc: adminUser?.ucc, request_type: userRequestType 
+  //     }
+  //     try{
+  //       const res = await postRequest<any>(endPoints.requestSxpCancellation, reqBody);
+  //       if(res.success){
+  //         successToast(res.data.msg)
+  //       }
+  //     }catch(err){
+  //       errorToast(err);
+  //     }
+
+  // }
 
 
 
