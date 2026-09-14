@@ -7,8 +7,9 @@ import { ArrowLeft } from "react-bootstrap-icons";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { errorToast, successToast } from "../../services/utils/toast";
 import { endPoints } from "../../services/utils/urls";
-import { postRequest } from "../../services/Api/HandleApi";
+import { postRequest, postRequestSimple } from "../../services/Api/HandleApi";
 import { isnewUser } from "../data/ucc-data";
+import { allFamilyResponseType } from "../data-interfaces/dashboard";
 interface responseType {
   msg: string;
   success: boolean;
@@ -49,14 +50,15 @@ const Otp = () => {
     try {
       const res: any = await postRequest(endPoints.varifyOtp, reqBody);
       if (res) {
+        localStorage.setItem("token", res.token);
+        const isDataExist = await fetchFamilyPortfoloData(res.PAN)
         if (res?.success && res.portfolioUser) {
-          localStorage.setItem("token", res.token);
           res.PAN ? localStorage.setItem("pan", res.PAN) : localStorage.setItem("pan", res.GPAN);
           localStorage.removeItem("isNewUser");
           navigate("/dashboard");
 
         }
-        if (res.success && !res?.portfolioUser) {
+        if ((res.success && !res?.portfolioUser) || !isDataExist) {
           localStorage.setItem("token", res.token);
           localStorage.setItem("isNewUser", isnewUser);
           localStorage.setItem("mobile", location?.state?.mobile);
@@ -73,6 +75,21 @@ const Otp = () => {
 
   };
 
+  const fetchFamilyPortfoloData = async (pan: string) => {
+    try {
+      if (pan) {
+        const res = await postRequestSimple<allFamilyResponseType>(endPoints.getAllFamily, {
+          pan
+        });
+        if (res) {
+          return true
+        }
+      }
+    } catch (err: any) {
+      return false
+    }
+
+  }
   const resendOtp = async () => {
     try {
       const res = await postRequest<responseType>(endPoints.registerUser, {

@@ -116,21 +116,20 @@ export const AdminUserProvider = ({ children }: { children: ReactNode }) => {
 
   const fetchFamilyPortfoloData = async () => {
     const pan = localStorage.getItem("pan")
-    // let adminData: any = localStorage.getItem("familyList")
-    // adminData = JSON.parse(adminData)
-    // remove admin check exist in if conditions
-    if (pan) {
-      const res = await postRequestSimple<allFamilyResponseType>(endPoints.getAllFamily, {
-        pan
-      });
-      if (res) {
-        localStorage.setItem("familyList", JSON.stringify(res.data))
-        filterAdmin(res.data)
+    try {
+      if (pan) {
+        const res = await postRequestSimple<allFamilyResponseType>(endPoints.getAllFamily, {
+          pan
+        });
+        if (res) {
+          localStorage.setItem("familyList", JSON.stringify(res.data))
+          filterAdmin(res.data)
+        }
       }
+    } catch (err: any) {
+      console.log("getting error===>", err)
     }
-    // else if (adminData && adminData.length > 0 && adminData[0]?.ucc) {
-    //   filterAdmin(adminData)
-    // }
+
   }
 
   const filterAdmin = (data: allFamilyListKeys[]) => {
