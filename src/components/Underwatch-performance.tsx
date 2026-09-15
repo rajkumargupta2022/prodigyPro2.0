@@ -8,6 +8,7 @@ import { fetchAdminUser } from '../services/user/adminUser';
 import { ChevronRight } from 'react-bootstrap-icons';
 import { useNavigate } from 'react-router-dom';
 import PortfolioNotes from './PortfolioNotes';
+import { calculateReturnWidths } from '../services/calculation/percentageCalculate';
 
 
 
@@ -16,11 +17,11 @@ interface UnderWatchPerformance {
   show: boolean;
   setShow: (show: boolean) => void;
   productCodes: number[];
-  underWatchDetail: portfolioReviewKeys|null;
-  
+  underWatchDetail: portfolioReviewKeys | null;
+
 }
 
-const UnderWatchPerformance: React.FC<UnderWatchPerformance> = ({ show, setShow, productCodes,underWatchDetail }) => {
+const UnderWatchPerformance: React.FC<UnderWatchPerformance> = ({ show, setShow, productCodes, underWatchDetail }) => {
   const [schemeList, setSchemeList] = useState<schemeSummaryKeys[]>([]);
   const navigate = useNavigate()
 
@@ -54,7 +55,7 @@ const UnderWatchPerformance: React.FC<UnderWatchPerformance> = ({ show, setShow,
   };
 
   const fundDetails = (accordSchemeCode: number) => {
-   
+
     let data = {
       scheme: underWatchDetail?.scheme,
       accordSchemeCode: underWatchDetail?.accordSchemeCode,
@@ -66,8 +67,8 @@ const UnderWatchPerformance: React.FC<UnderWatchPerformance> = ({ show, setShow,
       unit: underWatchDetail?.unit,
       currentvalue: underWatchDetail?.currentvalue,
     }
-   
-    navigate("/fund-details", { state: { ...data,accordSchemeCode, fromPortfolio: true } })
+
+    navigate("/fund-details", { state: { ...data, accordSchemeCode, fromPortfolio: true } })
   }
 
 
@@ -89,16 +90,22 @@ const UnderWatchPerformance: React.FC<UnderWatchPerformance> = ({ show, setShow,
 
           </div>
           {schemeList.map((item, index) => {
+            const { fundWidth, categoryWidth, isFundMax } =
+              calculateReturnWidths(
+                item.fund_returns,
+                item.category_returns
+              );
 
             return (
-              <div className="bg-white px-4 my-2 rounded form_shadow" key={item.accordProductCode ?? index}>
+              <div
+                className="bg-white px-4 my-2 rounded form_shadow"
+                key={item.accordProductCode ?? index}
+              >
                 <div
                   className="row borderColor py-2 crPointer"
                   onClick={() => fundDetails(item?.accordProductCode ?? 0)}
                 >
-                  <div className="round col-11" >
-
-
+                  <div className="round col-11">
                     <img
                       src={`${imageUrl + item?.accordAmcCode}.png`}
                       className="rounded"
@@ -106,70 +113,122 @@ const UnderWatchPerformance: React.FC<UnderWatchPerformance> = ({ show, setShow,
                       width={30}
                       alt=""
                     />
+
                     <small className="mx-2">{item.scheme}</small>
                   </div>
 
-                  <div
-                    className="col-1 adjustText pb-2 crPointer text-end"
-
-                  >
+                  <div className="col-1 adjustText pb-2 crPointer text-end">
                     <ChevronRight />
                   </div>
                 </div>
 
-                <div
-                  className={`performance-panel collapse-anim open`}
-                >
+                <div className="performance-panel collapse-anim open">
                   <div className="row">
-                    {item.ideal_investment_period&&<>
-                    <div className="col-5 d-flex justify-content-end">
-                      <p className='fs12px my-1'>COMPARISON PERIOD</p>
-                    </div>
-                    <div className="col-7 d-flex justify-content-end">
-                      <p className='fs12px my-1 text-dark'>{item.ideal_investment_period} Years</p>
-                    </div></>}
-                    {item?.fund_returns && <>
-                      <div className="col-5 d-flex justify-content-end mb-0">
-                        <p className='fs12px my-1'>FUND 5Y CAGR</p>
-                      </div>
 
-                      <div className="col-5 progress sqrBar mb-0 bg-white">
-                        <div className="progress-bar logobg_color " style={{ width: (item?.fund_returns ?? 0) + "%" }}></div>
-                      </div>
-                      <div className="col-2 d-flex justify-content-end ">
-                        <p className='fs12px my-1 text-dark'>{item.fund_returns ?? 0}%</p>
-                      </div>
-                    </>}
-                    {item?.benchmark_returns && <>
-                      <div className="col-5 d-flex justify-content-end ">
-                        <p className='fs12px my-1'>BENCHMARK 5Y CAGR</p>
-                      </div>
-                      <div className="col-5 progress sqrBar bg-white mb-0">
-                        <div className="progress-bar orangeBg " style={{ width: ((item?.benchmark_returns ?? 0) + "%") }}></div>
-                      </div>
-                      <div className="col-2 d-flex justify-content-end ">
-                        <p className='fs12px my-1 text-dark'>{item.benchmark_returns ?? 0}%</p>
-                      </div>
-                    </>}
-                    {item?.category_returns && <>
-                      <div className="col-5 d-flex justify-content-end bg-white ">
-                        <p className='fs12px my-1'>CATEGORY 5Y CAGR</p>
-                      </div>
-                      <div className="col-5 progress sqrBar bg-white mb-0">
-                        <div className="progress-bar orangeBg " style={{ width: (item.category_returns ?? 0) + "%" }}></div>
-                      </div>
-                      <div className="col-2 d-flex justify-content-end">
-                        <p className='fs12px my-1 text-dark'>{item.category_returns ?? 0}%</p>
-                      </div>
-                    </>}
-                    {item?.negative_observations && <>
-                      <div className="col-5 d-flex justify-content-end">
-                        <p className='fs12px my-1'>NEGATIVE OBSERVATIONS</p>
-                      </div>
-                      <div className="col-7 d-flex justify-content-end">
-                        <p className='fs12px my-1 text-dark'>{item?.negative_observations ?? 0}</p>
-                      </div>
-                    </>}
+                    {item.ideal_investment_period && (
+                      <>
+                        <div className="col-5 d-flex justify-content-end">
+                          <p className="fs12px my-1">
+                            IDEAL INVESTMENT PERIOD
+                          </p>
+                        </div>
+
+                        <div className="col-7 d-flex justify-content-end">
+                          <p className="fs12px my-1 text-dark">
+                            {item.ideal_investment_period} Years
+                          </p>
+                        </div>
+                      </>
+                    )}
+
+                    {item?.fund_returns && (
+                      <>
+                        <div className="col-5 d-flex justify-content-end mb-0">
+                          <p className="fs12px my-1">
+                            FUND 5Y CAGR
+                          </p>
+                        </div>
+
+                        <div className="col-5 progress sqrBar mb-0">
+                          <div
+                            className={`progress-bar ${isFundMax ? "logobg_color" : "orangeBg"
+                              }`}
+                            style={{ width: `${fundWidth}%` }}
+                          />
+                        </div>
+
+                        <div className="col-2 d-flex justify-content-end">
+                          <p className="fs12px my-1 text-dark">
+                            {item.fund_returns ?? 0}%
+                          </p>
+                        </div>
+                      </>
+                    )}
+
+                    {/* {item?.benchmark_returns && (
+                      <>
+                        <div className="col-5 d-flex justify-content-end">
+                          <p className="fs12px my-1">
+                            BENCHMARK 5Y CAGR
+                          </p>
+                        </div>
+
+                        <div className="col-5 progress sqrBar mb-0">
+                          <div
+                            className="progress-bar orangeBg"
+                            style={{
+                              width: `${item?.benchmark_returns ?? 0}%`,
+                            }}
+                          />
+                        </div>
+
+                        <div className="col-2 d-flex justify-content-end">
+                          <p className="fs12px my-1 text-dark">
+                            {item.benchmark_returns ?? 0}%
+                          </p>
+                        </div>
+                      </>
+                    )} */}
+
+                    {item?.category_returns && (
+                      <>
+                        <div className="col-5 d-flex justify-content-end bg-white">
+                          <p className="fs12px my-1">
+                            CATEGORY 5Y CAGR
+                          </p>
+                        </div>
+
+                        <div className="col-5 progress sqrBar mb-0">
+                          <div
+                            className={`progress-bar ${!isFundMax ? "logobg_color" : "orangeBg"
+                              }`}
+                            style={{ width: `${categoryWidth}%` }}
+                          />
+                        </div>
+
+                        <div className="col-2 d-flex justify-content-end">
+                          <p className="fs12px my-1 text-dark">
+                            {item.category_returns ?? 0}%
+                          </p>
+                        </div>
+                      </>
+                    )}
+
+                    {item?.negative_observations && (
+                      <>
+                        <div className="col-5 d-flex justify-content-end">
+                          <p className="fs12px my-1">
+                            NEGATIVE OBSERVATIONS
+                          </p>
+                        </div>
+
+                        <div className="col-7 d-flex justify-content-end">
+                          <p className="fs12px my-1 text-dark">
+                            {item?.negative_observations ?? 0}
+                          </p>
+                        </div>
+                      </>
+                    )}
 
                   </div>
                 </div>

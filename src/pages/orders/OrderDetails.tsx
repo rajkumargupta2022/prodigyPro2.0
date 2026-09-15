@@ -1,4 +1,4 @@
-import { ArrowDown, ArrowLeft, Link } from "react-bootstrap-icons";
+import { ArrowDown, ArrowLeft } from "react-bootstrap-icons";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { imageUrl } from "../../services/utils/urls";

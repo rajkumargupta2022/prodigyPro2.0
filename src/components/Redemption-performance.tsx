@@ -9,31 +9,33 @@ import { endPoints, imageUrl } from '../services/utils/urls';
 import { postRequest } from '../services/Api/HandleApi';
 import RedumptionConfirmation from './RedumptionConfirmation';
 import PortfolioNotes from './PortfolioNotes';
-import DirectSchemeNote from './DirectSchemeNote';
 import { filterDirectSchemeForInvest } from '../services/utils/services';
+import { calculateReturnWidths } from '../services/calculation/percentageCalculate';
+import DirectSchemeNote from './DirectSchemeNote';
+
 
 interface RedemptionPerformanceProp {
   show: boolean;
   setShow: (show: boolean) => void;
   productCodes: number[];
   redemptionList: any[];
-  number:string
+  number: string
 }
 
-const RedemptionPerformance: React.FC<RedemptionPerformanceProp> = ({ show, setShow, productCodes, redemptionList,number }) => {
+const RedemptionPerformance: React.FC<RedemptionPerformanceProp> = ({ show, setShow, productCodes, redemptionList, number }) => {
   const [schemeData, setSchemeData] = useState<Record<number, any>>({});
   const [selectedSchemeList, setSelectedSchemeList] = useState<any[]>([]);
   const [openRedemptionCOnfirmationModel, setOpenRedemptionCOnfirmationModel] = useState<boolean>(false)
-  // openKey will be like "0-source" or "0-target". null means all closed.
-  const [openKey, setOpenKey] = useState<string | null>(null);
- const [openDirectNoteModel, setOpenDirectNoteModel] = useState<boolean>(false)
+  // openKeys will store open state per section key (e.g. "0-source": true)
+  const [openKeys, setOpenKeys] = useState<Record<string, boolean>>({});
+  const [openDirectNoteModel, setOpenDirectNoteModel] = useState<boolean>(false)
 
   useEffect(() => {
     if (productCodes.length > 0) {
       fetchPerformanceScheme();
     }
   }, [productCodes]);
-  
+
 
   const fetchPerformanceScheme = async () => {
     try {
@@ -85,12 +87,15 @@ const RedemptionPerformance: React.FC<RedemptionPerformanceProp> = ({ show, setS
   }
 
   const toggleAtKey = (key: string) => {
-    setOpenKey(prev => (prev === key ? null : key));
+    setOpenKeys(prev => ({
+      ...prev,
+      [key]: !prev[key]
+    }));
   };
 
   const renderCollapsedHeader = (idx: number, keyPrefix: 'source', itemData: any, folio: string = "") => {
     const key = `${idx}-${keyPrefix}`;
-    const isOpen = openKey === key;
+    const isOpen = !!openKeys[key];
 
 
     return (
@@ -119,28 +124,28 @@ const RedemptionPerformance: React.FC<RedemptionPerformanceProp> = ({ show, setS
   };
 
   const handleRedeemTransaction = () => {
-  
-      const hasDirect = selectedSchemeList.some(item =>
+
+    const hasDirect = selectedSchemeList.some(item =>
       item?.scheme?.toLowerCase()?.includes("direct")
     );
     setSelectedSchemeList(filterDirectSchemeForInvest(selectedSchemeList))
-    if (hasDirect|| selectedSchemeList.length===0){ 
+    if (hasDirect || selectedSchemeList.length === 0) {
       setOpenDirectNoteModel(true)
-    }else{
+    } else {
       setShow(false)
       setOpenRedemptionCOnfirmationModel(true)
     }
   }
-    const removeDirectScheme = (type:string)=>{
-    if(type==="RM"){
-      window.location.href = `tel:${(number??"")}`
-    }else{
-    const filtered = selectedSchemeList.filter((item:any)=>{
-      return !item.scheme.toLowerCase().includes("direct")
-     })
-    setSelectedSchemeList(filtered)
-    setOpenRedemptionCOnfirmationModel(true)
-    setShow(false)
+  const removeDirectScheme = (type: string) => {
+    if (type === "RM") {
+      window.location.href = `tel:${(number ?? "")}`
+    } else {
+      const filtered = selectedSchemeList.filter((item: any) => {
+        return !item.scheme.toLowerCase().includes("direct")
+      })
+      setSelectedSchemeList(filtered)
+      setOpenRedemptionCOnfirmationModel(true)
+      setShow(false)
     }
   }
   return (
@@ -160,9 +165,14 @@ const RedemptionPerformance: React.FC<RedemptionPerformanceProp> = ({ show, setS
 
             const sourceData = schemeData[item?.accordSchemeCode] ?? null;
 
+            const { fundWidth, categoryWidth, isFundMax } = calculateReturnWidths(
+              sourceData?.fund_returns,
+              sourceData?.category_returns
+            );
+
             const sourceKey = `${index}-source`;
 
-            const isSourceOpen = openKey === sourceKey;
+            const isSourceOpen = !!openKeys[sourceKey];
 
             return (
               <div key={index} className=' rounded-4 my-2'>
@@ -179,7 +189,7 @@ const RedemptionPerformance: React.FC<RedemptionPerformanceProp> = ({ show, setS
                           <div className=" ps-2">
                             <p className="fs16px">{sourceData?.scheme}</p>
                           </div>
-                        </div> */}
+                        </div>
                         {sourceData?.ideal_investment_period && <>
                           <div className="col-5 d-flex justify-content-end mt-2">
                             <p className='fs12px'>IDEAL INVESTMENT PERIOD</p>
@@ -187,34 +197,24 @@ const RedemptionPerformance: React.FC<RedemptionPerformanceProp> = ({ show, setS
                           <div className="col-7 d-flex justify-content-end">
                             <p className='fs12px text-dark'>{sourceData?.ideal_investment_period} Years</p>
                           </div>
-                        </>}
+                        </>} */}
                         {sourceData?.fund_returns && <>
                           <div className="col-5 d-flex justify-content-end mb-0">
                             <p className='fs12px'>FUND 5Y CAGR</p>
                           </div>
                           <div className="col-5 progress sqrBar mb-0">
-                            <div className="progress-bar logobg_color " style={{ width: (sourceData?.fund_returns ?? 0) + "%" }}></div>
+                            <div className={`progress-bar ${isFundMax ? 'logobg_color' : 'orangeBg'}`} style={{ width: `${fundWidth}%` }}></div>
                           </div>
                           <div className="col-2 d-flex justify-content-end mb-0">
                             <p className='fs12px text-dark'>{sourceData?.fund_returns ?? 0}%</p>
                           </div></>
-                        }{sourceData?.benchmark_returns && <>
-                          <div className="col-5 d-flex justify-content-end mb-0">
-                            <p className='fs12px'>BENCHMARK 5Y CAGR</p>
-                          </div>
-                          <div className="col-5 progress sqrBar bg-white mb-0">
-                            <div className="progress-bar orangeBg " style={{ width: (sourceData?.benchmark_returns ?? 0) + "%" }}></div>
-                          </div>
-                          <div className="col-2 d-flex justify-content-end mb-0">
-                            <p className='fs12px text-dark'>{sourceData?.benchmark_returns ?? 0}%</p>
-                          </div>
-                        </>}
+                        }
                         {sourceData?.category_returns && <>
                           <div className="col-5 d-flex justify-content-end bg-white mb-0">
                             <p className='fs12px'>CATEGORY 5Y CAGR</p>
                           </div>
                           <div className="col-5 progress sqrBar bg-white mb-0">
-                            <div className="progress-bar orangeBg " style={{ width: (sourceData?.category_returns ?? 0) + "%" }}></div>
+                            <div className={`progress-bar ${!isFundMax ? 'logobg_color' : 'orangeBg'}`} style={{ width: `${categoryWidth}%` }}></div>
                           </div>
                           <div className="col-2 d-flex justify-content-end">
                             <p className='fs12px text-dark'>{sourceData?.category_returns ?? 0}%</p>
@@ -245,7 +245,7 @@ const RedemptionPerformance: React.FC<RedemptionPerformanceProp> = ({ show, setS
         </Modal.Footer>
       </Modal>
       <RedumptionConfirmation show={openRedemptionCOnfirmationModel} setShow={setOpenRedemptionCOnfirmationModel} redeemList={selectedSchemeList} setRedeemList={setSelectedSchemeList} />
-            <DirectSchemeNote show={openDirectNoteModel} setShow={setOpenDirectNoteModel} msg={"Your portfolio includes a few investments under the Direct Plan, which cannot be transacted through our app. You may proceed with the Regular Plan schemes or connect with our expert for guidance."} removeDirectScheme={removeDirectScheme} schemeLength={selectedSchemeList.length}/>
+      <DirectSchemeNote show={openDirectNoteModel} setShow={setOpenDirectNoteModel} msg={"Your portfolio includes a few investments under the Direct Plan, which cannot be transacted through our app. You may proceed with the Regular Plan schemes or connect with our expert for guidance."} removeDirectScheme={removeDirectScheme} schemeLength={selectedSchemeList.length} />
     </>
   );
 }

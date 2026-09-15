@@ -42,3 +42,26 @@ export const percentageDetailFolio = (purchase: any, gain: any): any => {
   const profitPercentage = (profit / costPrice) * 100;
   return profitPercentage;
 };
+
+export const calculateReturnWidths = (fundReturns:number|any | null | undefined, categoryReturns:number|any | null | undefined) => {
+  const fundRet = fundReturns ?? Number.NEGATIVE_INFINITY;
+  const categoryRet = categoryReturns ?? Number.NEGATIVE_INFINITY;
+
+  let maxRet = Math.max(fundRet, categoryRet);
+
+  if (maxRet === Number.NEGATIVE_INFINITY || maxRet === 0) {
+    maxRet = 1;
+  }
+
+  const fundWidth = Math.min(((fundReturns ?? 0) / maxRet) * 100, 100);
+  const categoryWidth = Math.min(((categoryReturns ?? 0) / maxRet) * 100, 100);
+
+  const isFundMax = (fundReturns ?? 0) === maxRet;
+
+  return {
+    fundWidth,
+    categoryWidth,
+    isFundMax,
+    maxRet,
+  };
+};

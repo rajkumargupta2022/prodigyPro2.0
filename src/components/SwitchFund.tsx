@@ -11,6 +11,8 @@ import SwitchConfirmation from './SwitchConfirmation';
 import DirectSchemeNote from '../components/DirectSchemeNote';
 import PortfolioNotes from './PortfolioNotes';
 import { filterDirectScheme } from '../services/utils/services';
+import { calculateReturnWidths } from '../services/calculation/percentageCalculate';
+
 
 interface SwitchFundProp {
   show: boolean;
@@ -31,8 +33,8 @@ const SwitchFund: React.FC<SwitchFundProp> = ({
   const [selectedSchemeList, setSelectedSchemeList] = useState<any[]>([]);
   const [openSwitchConfirmationModel, setOpenSwitchConfirmationModel] = useState<boolean>(false);
   const [openDirectNoteModel, setOpenDirectNoteModel] = useState<boolean>(false);
-  // openKey will be like "0-source" or "0-target". null means all closed.
-  const [openKey, setOpenKey] = useState<string | null>(null);
+  // openKeys will store open state per section key (e.g. "0-source": true)
+  const [openKeys, setOpenKeys] = useState<Record<string, boolean>>({});
 
   // when we have less than 2 schemes, keep all sections open by default
   const openAllSchemes = switchSchemeList.length < 2;
@@ -108,7 +110,10 @@ const SwitchFund: React.FC<SwitchFundProp> = ({
     // when we are forcing all open (less than 2 schemes),
     // we keep them always open, so no toggle
     if (openAllSchemes) return;
-    setOpenKey((prev) => (prev === key ? null : key));
+    setOpenKeys((prev) => ({
+      ...prev,
+      [key]: !prev[key]
+    }));
   };
 
   const renderCollapsedHeader = (
@@ -119,7 +124,7 @@ const SwitchFund: React.FC<SwitchFundProp> = ({
     forceOpen: boolean = false
   ) => {
     const key = `${idx}-${keyPrefix}`;
-    const isOpen = forceOpen || openKey === key;
+    const isOpen = forceOpen || !!openKeys[key];
 
     return (
       <div
@@ -164,11 +169,11 @@ const SwitchFund: React.FC<SwitchFundProp> = ({
   };
 
   const handleSwitchTransaction = () => {
-    
+
     const hasDirect = selectedSchemeList.some((item) =>
       item?.fromScheme?.toLowerCase()?.includes('direct')
     );
-  
+
     setSelectedSchemeList(filterDirectScheme(selectedSchemeList));
     if (hasDirect || selectedSchemeList.length === 0) {
       setOpenDirectNoteModel(true);
@@ -209,11 +214,20 @@ const SwitchFund: React.FC<SwitchFundProp> = ({
               const sourceData = schemeData[item?.accordSchemeCode] ?? null;
               const targetData = schemeData[item?.target?.accordProductCode] ?? null;
 
+              const sourceWidths = calculateReturnWidths(
+                sourceData?.fund_returns,
+                sourceData?.category_returns
+              );
+              const targetWidths = calculateReturnWidths(
+                targetData?.fund_returns,
+                targetData?.category_returns
+              );
+
               const sourceKey = `${index}-source`;
               const targetKey = `${index}-target`;
 
-              const isSourceOpen = openAllSchemes || openKey === sourceKey;
-              const isTargetOpen = openAllSchemes || openKey === targetKey;
+              const isSourceOpen = openAllSchemes || !!openKeys[sourceKey];
+              const isTargetOpen = openAllSchemes || !!openKeys[targetKey];
 
               return (
                 <div key={index} className=" rounded-4 my-2">
@@ -250,9 +264,9 @@ const SwitchFund: React.FC<SwitchFundProp> = ({
                               </div>
                               <div className="col-5 progress sqrBar mb-0">
                                 <div
-                                  className="progress-bar logobg_color "
+                                  className={`progress-bar ${sourceWidths.isFundMax ? "logobg_color" : "orangeBg"}`}
                                   style={{
-                                    width: (sourceData?.fund_returns ?? 0) + '%'
+                                    width: `${sourceWidths.fundWidth}%`
                                   }}
                                 ></div>
                               </div>
@@ -272,7 +286,7 @@ const SwitchFund: React.FC<SwitchFundProp> = ({
                                 <div
                                   className="progress-bar orangeBg "
                                   style={{
-                                    width: (sourceData?.benchmark_returns ?? 0) + '%'
+                                    width: `${sourceData?.benchmark_returns ?? 0}%`
                                   }}
                                 ></div>
                               </div>
@@ -290,9 +304,9 @@ const SwitchFund: React.FC<SwitchFundProp> = ({
                               </div>
                               <div className="col-5 progress sqrBar bg-white mb-0">
                                 <div
-                                  className="progress-bar orangeBg "
+                                  className={`progress-bar ${!sourceWidths.isFundMax ? "logobg_color" : "orangeBg"}`}
                                   style={{
-                                    width: (sourceData?.category_returns ?? 0) + '%'
+                                    width: `${sourceWidths.categoryWidth}%`
                                   }}
                                 ></div>
                               </div>
@@ -359,9 +373,9 @@ const SwitchFund: React.FC<SwitchFundProp> = ({
                               </div>
                               <div className="col-5 progress sqrBar mb-0">
                                 <div
-                                  className="progress-bar logobg_color "
+                                  className={`progress-bar ${targetWidths.isFundMax ? "logobg_color" : "orangeBg"}`}
                                   style={{
-                                    width: (targetData?.fund_returns ?? 0) + '%'
+                                    width: `${targetWidths.fundWidth}%`
                                   }}
                                 ></div>
                               </div>
@@ -372,7 +386,7 @@ const SwitchFund: React.FC<SwitchFundProp> = ({
                               </div>
                             </>
                           )}
-                          {targetData?.benchmark_returns && (
+                          {/* {targetData?.benchmark_returns && (
                             <>
                               <div className="col-5 d-flex justify-content-end mb-0">
                                 <p className="fs12px">BENCHMARK 5Y CAGR</p>
@@ -381,7 +395,7 @@ const SwitchFund: React.FC<SwitchFundProp> = ({
                                 <div
                                   className="progress-bar orangeBg "
                                   style={{
-                                    width: (targetData?.benchmark_returns ?? 0) + '%'
+                                    width: `${targetData?.benchmark_returns ?? 0}%`
                                   }}
                                 ></div>
                               </div>
@@ -391,7 +405,7 @@ const SwitchFund: React.FC<SwitchFundProp> = ({
                                 </p>
                               </div>
                             </>
-                          )}
+                          )} */}
                           {targetData?.category_returns && (
                             <>
                               <div className="col-5 d-flex justify-content-end bg-white mb-0">
@@ -399,9 +413,9 @@ const SwitchFund: React.FC<SwitchFundProp> = ({
                               </div>
                               <div className="col-5 progress sqrBar bg-white mb-0">
                                 <div
-                                  className="progress-bar orangeBg "
+                                  className={`progress-bar ${!targetWidths.isFundMax ? "logobg_color" : "orangeBg"}`}
                                   style={{
-                                    width: (targetData?.category_returns ?? 0) + '%'
+                                    width: `${targetWidths.categoryWidth}%`
                                   }}
                                 ></div>
                               </div>

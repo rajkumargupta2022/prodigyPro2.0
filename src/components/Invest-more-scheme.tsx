@@ -13,8 +13,10 @@ import { ChevronRight } from 'react-bootstrap-icons';
 import InvetmentConfirmation from './InvestmentConfirmation';
 import PortfolioNotes from './PortfolioNotes';
 import DirectSchemeNote from './DirectSchemeNote';
-import {  filterDirectSchemeForInvest } from '../services/utils/services';
+import { filterDirectSchemeForInvest } from '../services/utils/services';
 import { errorToast } from '../services/utils/toast';
+import { calculateReturnWidths } from '../services/calculation/percentageCalculate';
+
 
 interface InvestMoreScheme {
   show: boolean;
@@ -38,8 +40,8 @@ const InvestMoreScheme: React.FC<InvestMoreScheme> = ({
   const [sipDateList, setSipDateList] = useState<number[]>([]);
   const [openDirectNoteModel, setOpenDirectNoteModel] = useState<boolean>(false);
 
-  // openIndex will store the index of the currently expanded scheme (or null)
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
+  // openIndexes will store open state for each scheme index
+  const [openIndexes, setOpenIndexes] = useState<Record<number, boolean>>({});
 
   // 👉 If there are 2 or fewer schemes, keep all performance panels open
   const openAll = schemeList.length <= 2;
@@ -150,10 +152,13 @@ const InvestMoreScheme: React.FC<InvestMoreScheme> = ({
     }
   };
 
-  // toggles the panel for a specific index; only one open at a time (when not openAll)
+  // toggles the panel for a specific index without closing other panels
   const toggleAtIndex = (index: number) => {
     if (openAll) return; // 👉 do nothing when all must stay open
-    setOpenIndex((prev) => (prev === index ? null : index));
+    setOpenIndexes((prev) => ({
+      ...prev,
+      [index]: !prev[index]
+    }));
   };
 
   const handleInvestMore = () => {
@@ -199,7 +204,12 @@ const InvestMoreScheme: React.FC<InvestMoreScheme> = ({
           <PortfolioNotes portfolioType="satisfactory_performance" />
 
           {schemeList?.map((item, index) => {
-            
+            const { fundWidth, categoryWidth, isFundMax } =
+              calculateReturnWidths(
+                item.fund_returns,
+                item.category_returns
+              );
+
             const isChecked = selectedSchemeList?.some(
               (scheme) => scheme?.accordProductCode === item.accordProductCode
             );
@@ -207,7 +217,7 @@ const InvestMoreScheme: React.FC<InvestMoreScheme> = ({
             const checkboxId = `checkbox-${item.accordProductCode ?? index}`;
             const idDirect = !item?.scheme?.toLowerCase().includes('direct');
 
-            const isPanelOpen = openAll || openIndex === index;
+            const isPanelOpen = openAll || !!openIndexes[index];
 
             return (
               <div
@@ -295,9 +305,9 @@ const InvestMoreScheme: React.FC<InvestMoreScheme> = ({
                         </div>
                         <div className="col-5 progress sqrBar mb-0 bg-white">
                           <div
-                            className="progress-bar logobg_color "
+                            className={`progress-bar ${isFundMax ? "logobg_color" : "orangeBg"}`}
                             style={{
-                              width: (item.fund_returns ?? 0) + '%'
+                              width: `${fundWidth}%`
                             }}
                           ></div>
                         </div>
@@ -308,7 +318,7 @@ const InvestMoreScheme: React.FC<InvestMoreScheme> = ({
                         </div>
                       </>
                     )}
-                    {item.benchmark_returns && (
+                    {/* {item.benchmark_returns && (
                       <>
                         <div className="col-5 d-flex justify-content-end ">
                           <p className="fs12px my-1">BENCHMARK 5Y CAGR</p>
@@ -317,7 +327,7 @@ const InvestMoreScheme: React.FC<InvestMoreScheme> = ({
                           <div
                             className="progress-bar orangeBg "
                             style={{
-                              width: (item.benchmark_returns ?? 0) + '%'
+                              width: `${item.benchmark_returns ?? 0}%`
                             }}
                           ></div>
                         </div>
@@ -327,7 +337,7 @@ const InvestMoreScheme: React.FC<InvestMoreScheme> = ({
                           </p>
                         </div>
                       </>
-                    )}
+                    )} */}
                     {item.category_returns && (
                       <>
                         <div className="col-5 d-flex justify-content-end bg-white ">
@@ -335,9 +345,9 @@ const InvestMoreScheme: React.FC<InvestMoreScheme> = ({
                         </div>
                         <div className="col-5 progress sqrBar bg-white mb-0">
                           <div
-                            className="progress-bar orangeBg "
+                            className={`progress-bar ${!isFundMax ? "logobg_color" : "orangeBg"}`}
                             style={{
-                              width: (item.category_returns ?? 0) + '%'
+                              width: `${categoryWidth}%`
                             }}
                           ></div>
                         </div>

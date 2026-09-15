@@ -69,6 +69,7 @@ export interface navHistoryResponse {
 export interface navHistoryKeys {
   date: string;
   nav: number;
+  adjustedNav:number
 }
 export interface bankMandateResponse {
   success: boolean;

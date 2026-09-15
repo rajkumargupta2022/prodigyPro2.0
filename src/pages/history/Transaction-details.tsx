@@ -15,7 +15,7 @@ import { schemeDeatilDataKeys, schemeDetailType } from "../data-interfaces/trans
 import { errorToast } from "../../services/utils/toast";
 import { uccMsg, UccStatusEnum } from "../data/ucc-data";
 import { daysAdded } from "../../services/dates/dateFormater";
-import { keys, transactionTypeKeys } from "../../services/utils/keys";
+import {  transactionTypeKeys } from "../../services/utils/keys";
 
 
 

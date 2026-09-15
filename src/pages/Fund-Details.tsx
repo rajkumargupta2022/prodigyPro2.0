@@ -363,7 +363,6 @@ const FundDetails = () => {
 
   }
   const goTransactionHistory = (item: schemeDeatilDataKeys) => {
-    // navigate("/transaction-history", { state: { accord_product_code: item.accordSchemeCode, folio_number: location.state?.folio } })
     navigate("/transaction-history?accord_product_code=" + item?.accordSchemeCode + "&folio_number=" + location.state?.folio, { state: { accord_product_code: item.accordSchemeCode, folio_number: location.state?.folio } })
   }
 
