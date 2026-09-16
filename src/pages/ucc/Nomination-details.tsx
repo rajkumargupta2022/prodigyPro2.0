@@ -110,7 +110,7 @@ const NominationDetails = () => {
               ...prev.nominee_address,
               state: getStateCode(res.data.state),
               country: res.data.country,
-              pincode: res.data.pincode,
+              // pincode: res.data.pincode,
               city: res.data.district,
               address_1: "",
               address_2: "",
@@ -145,6 +145,7 @@ const NominationDetails = () => {
       if (fieldName === "pincode" && newAddressValue.length > 6) {
         return
       }
+      console.log("pincode===>", fieldName, newAddressValue)
       setForm((prev) => ({
         ...prev,
         nominee_address: {

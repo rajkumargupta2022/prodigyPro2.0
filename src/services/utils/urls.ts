@@ -1,6 +1,6 @@
-export const baseUrl: string =
-  "https://prodigypro-new.bfcsofttech.in/api/v2/";
-//   export const baseUrl: string = "https://mnslgxd7-8080.inc1.devtunnels.ms/api/v2/";
+// export const baseUrl: string =
+//   "https://prodigypro-new.bfcsofttech.in/api/v2/";
+  export const baseUrl: string = "https://mnslgxd7-8080.inc1.devtunnels.ms/api/v2/";
 //   export const baseUrl: string = "https://mnslgxd7-8081.inc1.devtunnels.ms/api/v2/";
 
 export const imageUrl: string =
