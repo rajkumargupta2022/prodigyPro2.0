@@ -206,9 +206,6 @@ function App() {
           />
         
 
-          
-
-          
           <Route
             path="/stp-order"
             element={<Account Component={StpOrders} />}

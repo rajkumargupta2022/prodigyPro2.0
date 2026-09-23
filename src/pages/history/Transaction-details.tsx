@@ -72,9 +72,9 @@ function TransactionDetails() {
   };
 
   // ── Check if transaction type is SIP or PURCHASE ──
-  const isSipOrPurchase = (): boolean => {
+  const isSipOrPurchaseSwitchIn = (): boolean => {
     const txType = (orderDetail?.transaction_type || (location.state as transactionHistoryKeys)?.transaction_type || "").toUpperCase();
-    return txType === "SIP" || txType === "PURCHASE";
+    return txType === "SIP" || txType === "PURCHASE" || txType === "SWI";
   };
 
   // ── Fetch scheme details for Invest More ──
@@ -263,7 +263,7 @@ function TransactionDetails() {
       )}
 
       {/* ── Invest More Button — only shown for SIP or PURCHASE ── */}
-      {!detailLoading && orderDetail && isSipOrPurchase() && (
+      {!detailLoading && orderDetail && isSipOrPurchaseSwitchIn() && (
         <div className="text-end">
           <button
             type="button"

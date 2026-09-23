@@ -52,7 +52,7 @@ const Otp = () => {
       if (res) {
         localStorage.setItem("token", res.token);
         const isDataExist = await fetchFamilyPortfoloData(res.PAN)
-        if (res?.success && res.portfolioUser) {
+        if (res?.success && res.portfolioUser && isDataExist) {
           res.PAN ? localStorage.setItem("pan", res.PAN) : localStorage.setItem("pan", res.GPAN);
           localStorage.removeItem("isNewUser");
           navigate("/dashboard");
@@ -84,6 +84,8 @@ const Otp = () => {
         if (res) {
           return true
         }
+      }else{
+        return false
       }
     } catch (err: any) {
       return false

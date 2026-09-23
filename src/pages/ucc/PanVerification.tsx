@@ -38,7 +38,7 @@ const PanVarification = () => {
     if (!tax_status || !holding_nature) {
       navigate("/login")
     }
-    if (adminPan) {
+    if (adminPan && adminPan.length === 10) {
       setUserPan(adminPan)
       completeKyc(adminPan)
     }

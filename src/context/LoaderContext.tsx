@@ -16,6 +16,7 @@ export const LoaderProvider = ({ children }: { children: ReactNode }) => {
   const hideLoader = () => setLoading(false);
 
   return (
+    
     <LoaderContext.Provider value={{ loading, showLoader, hideLoader }}>
       {children}
     </LoaderContext.Provider>

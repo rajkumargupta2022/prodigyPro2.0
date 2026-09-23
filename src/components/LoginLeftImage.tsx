@@ -29,10 +29,10 @@ const LoginLeftImage = ({ LeftImage = journeyImage }) => {
             1000 Crores+ Assets Under Managements
           </li>
           <li className="fs16px logincontent text-white">
-            21+ Years of Wisdom & Trust
+            22+ Years of Wisdom & Trust
           </li>
            <li className="fs16px logincontent text-white">
-            16000+ Retail client Base
+            17000+ Retail client Base
           </li>
           <li className="fs16px logincontent text-white">
            Plan India Presence / Competent Research
@@ -53,7 +53,10 @@ const LoginLeftImage = ({ LeftImage = journeyImage }) => {
         </h4>
         <ul className="text-white px-5">
           <li className="fs16px text-white">
-            SEBI-RIA Registered Mutual Fund Distributor ARN: 21399
+            SEBI-RIA: INA000021669
+          </li>
+           <li className="fs16px text-white">
+            AMFI Registered Mutual Fund Distributor ARN: 21399
           </li>
           <li className="fs16px logincontent text-white">
             Discover mutual funds that help you achieve your financial dreams, step by step
