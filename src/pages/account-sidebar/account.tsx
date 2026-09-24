@@ -1,4 +1,4 @@
-import MyNavbar from "../components/Navbar";
+import MyNavbar from "../../components/Navbar";
 import { ChevronRight } from "react-bootstrap-icons";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
@@ -6,10 +6,10 @@ import { useState } from 'react';
 import {
   Person,
 } from "react-bootstrap-icons";
-import Footer from "../components/Footer";
-import { UccStatusEnum, uccMsg } from "./data/ucc-data";
-import { errorToast } from "../services/utils/toast";
-import AreYouSure from "../components/Are-You-sure";
+import Footer from "../../components/Footer";
+import { UccStatusEnum, uccMsg } from "../data/ucc-data";
+import { errorToast } from "../../services/utils/toast";
+import AreYouSure from "../../components/Are-You-sure";
 
 const Account = ({ Component }: { Component: any }) => {
   const { pathname } = useLocation();

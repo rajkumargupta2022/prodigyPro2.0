@@ -1,9 +1,9 @@
 import { useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import { Rating } from "react-simple-star-rating";
-import { postRequest } from "../services/Api/HandleApi";
-import { endPoints } from "../services/utils/urls";
-import { errorToast, successToast } from "../services/utils/toast";
+import { postRequest } from "../../services/Api/HandleApi";
+import { endPoints } from "../../services/utils/urls";
+import { errorToast, successToast } from "../../services/utils/toast";
 
 interface investmetProps {
   show: boolean;

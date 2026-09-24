@@ -1,16 +1,16 @@
-import NavBar from "../components/Navbar";
+import NavBar from "../../components/Navbar";
 import { ArrowDownCircleFill, ArrowDownUp, ArrowUpCircleFill, CurrencyRupee } from "react-bootstrap-icons";
 import { useEffect, useState } from "react";
-import {  imageUrl } from "../services/utils/urls";
-import { currentDateInStringNumber } from "../services/dates/dateFormater";
-import { getPercentageValue, getValueInSort, percentageDetailFolio } from "../services/calculation/percentageCalculate";
+import {  imageUrl } from "../../services/utils/urls";
+import { currentDateInStringNumber } from "../../services/dates/dateFormater";
+import { getPercentageValue, getValueInSort, percentageDetailFolio } from "../../services/calculation/percentageCalculate";
 import { useNavigate } from "react-router-dom";
-import { useAdminUser } from "../context/AdminContext";
-import { fetchAdminUser } from "../services/user/adminUser";
-import PortfolioEmpty from "./PortfolioEmpty";
-import emptyImg from "../assets/img/empty-img.svg"
-import Footer from "../components/Footer";
-import { detailPortfolioSchemeType } from "./data-interfaces/portfolio";
+import { useAdminUser } from "../../context/AdminContext";
+import { fetchAdminUser } from "../../services/user/adminUser";
+import PortfolioEmpty from "../PortfolioEmpty";
+import emptyImg from "../../assets/img/empty-img.svg"
+import Footer from "../../components/Footer";
+import { detailPortfolioSchemeType } from "../data-interfaces/portfolio";
 import { PortfolioSkeleton } from "./PortfolioSkeleton";
 
 

@@ -1,7 +1,7 @@
 // AboutUs.tsx - Simplified version
 import { useState, useEffect } from "react";
-import { getRequest } from "../services/Api/HandleApi";
-import { endPoints } from "../services/utils/urls";
+import { getRequest } from "../../services/Api/HandleApi";
+import { endPoints } from "../../services/utils/urls";
 
 function AboutUs() {
   const [htmlContent, setHtmlContent] = useState<string>('');

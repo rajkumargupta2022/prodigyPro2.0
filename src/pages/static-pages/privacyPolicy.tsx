@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { getRequest } from "../services/Api/HandleApi";
-import { endPoints } from "../services/utils/urls";
+import { getRequest } from "../../services/Api/HandleApi";
+import { endPoints } from "../../services/utils/urls";
 
 interface PrivacyPolicyResponse {
   success?: boolean;

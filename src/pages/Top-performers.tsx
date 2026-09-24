@@ -15,7 +15,7 @@ import Filters from "./explore/Amcs";
 import { categoryListKeys, assetTypeListKeys, assetTypeListResponse, categoryListResponse } from "./data-interfaces/explore";
 import emptyScheme from "../assets/img/empty-scheme.svg";
 import PortfolioEmpty from "./PortfolioEmpty";
-import { AllMutualFundsSkeleton } from "./AllMutualFundsSkeleton";
+import { AllMutualFundsSkeleton } from "./Mutual-funds/AllMutualFundsSkeleton";
 
 const TopPerformers = () => {
   const navigate = useNavigate()

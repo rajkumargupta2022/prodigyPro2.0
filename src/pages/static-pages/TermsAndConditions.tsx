@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { baseUrl, endPoints } from '../services/utils/urls';
+import { baseUrl, endPoints } from '../../services/utils/urls';
 
 const TermsAndConditions = () => {
   const [content, setContent] = useState('');

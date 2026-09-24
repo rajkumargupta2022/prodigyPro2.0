@@ -15,7 +15,7 @@ import emptyScheme from "../assets/img/empty-scheme.svg"
 import axios from "axios";
 import PortfolioEmpty from "../pages/PortfolioEmpty";
 import { yearKeys } from "../services/utils/keys";
-import { AllMutualFundsSkeleton } from "../pages/AllMutualFundsSkeleton";
+import { AllMutualFundsSkeleton } from "../pages/Mutual-funds/AllMutualFundsSkeleton";
 
 
 type OptionType = {

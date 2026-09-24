@@ -1,17 +1,17 @@
 
 
 import { Container } from "react-bootstrap";
-import MyNavbar from "../components/Navbar";
-import Footer from "../components/Footer";
-import Category from "./explore/Category";
-import Filters from "./explore/Amcs";
+import MyNavbar from "../../components/Navbar";
+import Footer from "../../components/Footer";
+import Category from "../explore/Category";
+import Filters from "../explore/Amcs";
 import { useEffect, useState } from "react";
-import { postRequestSimple, getRequestSimple } from "../services/Api/HandleApi";
-import { endPoints } from "../services/utils/urls";
-import { assetTypeListKeys, assetTypeListResponse, categoryListKeys, categoryListResponse, filteredSchemeResponse, filteredSchemesKeys } from "./data-interfaces/explore";
-import SwitchSchemes from "../components/SwitchSchemes";
+import { postRequestSimple, getRequestSimple } from "../../services/Api/HandleApi";
+import { endPoints } from "../../services/utils/urls";
+import { assetTypeListKeys, assetTypeListResponse, categoryListKeys, categoryListResponse, filteredSchemeResponse, filteredSchemesKeys } from "../data-interfaces/explore";
+import SwitchSchemes from "../../components/SwitchSchemes";
 import { useLocation } from "react-router-dom";
-import Returns from "./explore/SortBy";
+import Returns from "../explore/SortBy";
 
 const AllMutualFunds = () => {
   const location = useLocation();

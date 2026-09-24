@@ -1,5 +1,5 @@
 import { BookFill } from "react-bootstrap-icons";
-import Map from "../assets/img/map.svg";
+import Map from "../../assets/img/map.svg";
 
 function LocateUs() {
 

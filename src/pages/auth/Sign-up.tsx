@@ -1,13 +1,13 @@
-import Logo from "../assets/img/logo/logo.png";
-import LoginLeftImage from "../components/LoginLeftImage";
+import Logo from "../../assets/img/logo/logo.png";
+import LoginLeftImage from "../../components/LoginLeftImage";
 import { useState } from "react";
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
-import { errorToast } from "../services/utils/toast";
-import { postRequest } from "../services/Api/HandleApi";
-import { endPoints } from "../services/utils/urls";
-import RequestSent from "../components/Request-sent";
+import { errorToast } from "../../services/utils/toast";
+import { postRequest } from "../../services/Api/HandleApi";
+import { endPoints } from "../../services/utils/urls";
+import RequestSent from "../../components/Request-sent";
 import { useNavigate } from "react-router-dom";
 
 

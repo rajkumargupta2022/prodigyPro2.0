@@ -7,9 +7,9 @@ import {
 } from "react-bootstrap-icons";
 import RateYourRM from "./Rate-Your-RM";
 import { useEffect, useState } from "react";
-import { helpAndSupportKey, helpAndSupportResponse } from "../pages/data-interfaces/accounts";
-import { postRequest } from "../services/Api/HandleApi";
-import { endPoints } from "../services/utils/urls";
+import { helpAndSupportKey, helpAndSupportResponse } from "../data-interfaces/accounts";
+import { postRequest } from "../../services/Api/HandleApi";
+import { endPoints } from "../../services/utils/urls";
 import { useNavigate } from "react-router-dom";
 
 

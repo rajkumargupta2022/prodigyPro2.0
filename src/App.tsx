@@ -3,7 +3,7 @@ import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
 import { Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/auth/Login";
-import TermsAndConditions from "./components/TermsAndConditions";
+import TermsAndConditions from "./pages/static-pages/TermsAndConditions";
 import PersonalDetails from "./pages/ucc/Personal-details";
 import Declaration from "./pages/ucc/Declaration";
 import AddressDetails from "./pages/ucc/Address-details";
@@ -31,13 +31,11 @@ import NFOApply from "./pages/nfo/NFOApply";
 import PortfolioReview from "./pages/portfolio-review/PortfolioReview";
 import BankDetailsVarification from "./pages/ucc/bank-details-varification";
 import NominationList from "./pages/ucc/Nomination-List";
-import PortfolioImport from "./pages/PortfolioImport";
-import PortfolioUnderReview from "./pages/PortfolioUnderReview";
-import Portfolio from "./pages/Portfolio";
+import Portfolio from "./pages/portfolio/Portfolio";
 import Explore from "./pages/explore";
-import AllMutualFunds from "./pages/All-Mutual-Funds";
+import AllMutualFunds from "./pages/Mutual-funds/All-Mutual-Funds";
 import FundDetails from "./pages/Fund-Details";
-import Account from "./pages/account";
+import Account from "./pages/account-sidebar/account";
 import GoalPlanning from "./pages/planning/GoalPlanning";
 import GoalSummary from "./pages/planning/GoalSummary";
 import Goal from "./pages/planning/Goal";
@@ -59,17 +57,16 @@ import RiskProfile from "./components/RiskProfile";
 import { ToastContainer } from "react-toastify";
 import RiskResult from "./components/Risk-result";
 import Profile from "./components/Profile";
-import LocateUs from "./components/Locate-us";
-import AboutUs from "./components/About-Us";
-import PrivacyPolicyComponent from "./components/privacyPolicy";
+import LocateUs from "./pages/static-pages/Locate-us";
+import AboutUs from "./pages/static-pages/About-Us";
+import PrivacyPolicyComponent from "./pages/static-pages/privacyPolicy";
 import AllOrders from "./components/All-orders";
 import OrderDetails from "./pages/orders/OrderDetails";
 import LinkedBankAccount from "./components/Linked-BankAccount";
-import AddBankAccount from "./components/Add-bank-account";
 import AddBankDetails from "./components/add-bank-details";
 import AddAccountVerification from "./components/bank-account-verification";
 import ChangePassword from "./components/Change-Password";
-import HelpSupport from "./components/help-and-support";
+import HelpSupport from "./pages/static-pages/help-and-support";
 import Statements from "./components/Statements";
 import MyProfile from "./components/Profile-details";
 import Loader from "./services/Loader/Loader";
@@ -78,7 +75,7 @@ import { registerLoaderCallbacks } from "./services/Loader/LoaderController";
 import { useEffect } from "react";
 import StateFolioDetails from "./components/statement-folio-details";
 import useAuthRedirect from "./services/user/useAuthRedirect";
-import SighnUp from "./pages/Sign-up";
+import SighnUp from "./pages/auth/Sign-up";
 import SifFunds from "./pages/SifFunds";
 import FundWithh100 from "./pages/FundWith100";
 import TransactionHistory from "./pages/history/TransactionHistory";
@@ -156,11 +153,7 @@ function App() {
           />
           <Route path="/nomination-list" element={<NominationList />} />
 
-          <Route path="/portfolio-import" element={<PortfolioImport />} />
-          <Route
-            path="/portfolio-under-review"
-            element={<PortfolioUnderReview />}
-          />
+        
           <Route
             path="/mf-saving-account"
             element={<MfSavingAccount />}
@@ -221,10 +214,6 @@ function App() {
             element={<Account Component={BankAndMandateList} />}
           />
 
-          <Route
-            path="/add-bank-account-list"
-            element={<Account Component={AddBankAccount} />}
-          />
 
           <Route
             path="/add-bank-details"
